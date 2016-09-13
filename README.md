@@ -1,6 +1,6 @@
 # New OpenTOSCA UI
 
-1. Install and setup [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com)
+1. Install and setup [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com) for [Angular2](https://angular.io/docs/ts/latest/quickstart.html)
 2. `git clone git@gitlab-as.informatik.uni-stuttgart.de:smartservices/opentosca-ui.git`
 3. `cd opentosca-ui`
 3. `npm install`
