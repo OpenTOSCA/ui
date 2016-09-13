@@ -1,0 +1,37 @@
+<table class="layoutTable" border="0">
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img src="../../assets/img/Marketplace_Header_Icon.png"/>
+            </div>
+            <br/>
+            <a id="descriptionButton" class="selected" href="">OpenTOSCA MP</a>
+            <a id="instancesButtonBY" href="">Blue Yonder</a>
+            <a id="instancesButtonDFKI" href="">DFKI</a>
+        </td>
+        <td>
+            <div id="content">
+
+                <div class="searchBox">
+                    <span>Search: </span>
+                    <input type="text" #term (keyup)="search(term.value)">
+                </div>
+
+                <div *ngFor="let category of categoriesAry">
+                    <h2>{{category.category}}</h2>
+
+                    <div class="applicationTilesContainer">
+                        <div class="applicationTile"
+                             *ngFor="let app of category.apps">
+                            <img src="{{app.logoPath}}"/>
+                            <h1>{{app.name}}</h1>
+                            <a id="marketplaceButton" routerLink="/marketplace/applications/{{app.id}}">Details</a>
+                            |<a href="">Install</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

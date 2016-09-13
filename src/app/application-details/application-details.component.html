@@ -1,0 +1,57 @@
+<table class="layoutTable" border="0">
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img *ngIf="app" src="{{app.logoPath}}"/>
+                <span *ngIf="app">{{app.name}}</span>
+            </div>
+            <br/>
+            <a id="descriptionButton" class="selected" href="">Description</a>
+            <a id="instancesButton" href="">Instances</a>
+            <a id="statisticsButton" href="">Statistics</a>
+            <a routerLink="/marketplace" style="margin-top:40px"><b>«</b> Back to Overview</a>
+        </td>
+        <td>
+            <div id="content">
+
+                <div *ngIf="app" style="width: 48%; display: inline-block; vertical-align: top">
+
+                    <h2>Description</h2>
+                    <p>
+                        {{app.description}}
+                        <br/><br/>
+                        <a href="">Start new instance</a>
+                    </p>
+
+                    <h2>Screenshots</h2>
+                    <p>
+                        <img *ngFor="let screenshot of app.screenshots" src="{{screenshot}}"
+                             style="width: 135px; margin: 10px 0px 0px 10px; 0px 0px;">
+                    </p>
+
+                    <h2>Version</h2>
+                    <p>
+                        {{app.version}}
+                    </p>
+
+                    <h2>Authors</h2>
+                    <p>
+                        {{app.authors}}
+                    </p>
+                </div>
+
+                <div style="width: 2%; display: inline-block; vertical-align: top"></div>
+
+                <div style="width: 48%; display: inline-block;">
+                    <h2>Topology Template</h2>
+
+                    <img *ngIf="app" src="{{app.topologyTemplatePath}}" style="width: 400px;"/>
+
+                    <br/><br/>
+                    <a href="" class="editInWineryButton iconTextButton">Edit in Winery</a>
+                </div>
+
+            </div>
+        </td>
+    </tr>
+</table>
