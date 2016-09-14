@@ -11,13 +11,12 @@
         </td>
         <td>
             <div id="content">
-
                 <div class="searchBox">
                     <span>Search: </span>
                     <input type="text" #term (keyup)="search(term.value)">
                 </div>
 
-                <div *ngFor="let category of categoriesAry">
+                <div *ngFor="let category of filteredCategoriesAry">
                     <h2>{{category.category}}</h2>
 
                     <div class="applicationTilesContainer">
