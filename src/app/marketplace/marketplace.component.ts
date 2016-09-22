@@ -5,6 +5,9 @@ import {Category} from "../shared/category.model";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 
+// JAsmin
+import {Headers, Http, Response} from '@angular/http';
+
 @Component({
     selector: 'opentosca-marketplace',
     templateUrl: 'src/app/marketplace/marketplace.component.html'
@@ -26,17 +29,15 @@ export class MarketplaceComponent implements OnInit {
     }
 
     search(term: string): void {
-        /*
-         * first of all, we filter locally
-         * 0. bin filtered array to template and keep data from server seperatelly
-         * 1. fetch apps from server
-         * 2. generate categories array
-         * 3. enter search term
-         *
-         * 4. iterate all categories and remove all non-matching apps from arrays
-         * 5. this.filteredCategoriesAry = new categories array
-         *
-         */
+        console.log('Entered search name: ' + term);
+
+        this.searchTermStream.next(term);
+
+
+        this.appService.searchApps(term).subscribe(apps => {
+            this.apps = apps;
+            this.filteredCategoriesAry = this.generateCategoriesAry(apps);
+        });
     }
 
     getApps(): void {
@@ -48,7 +49,7 @@ export class MarketplaceComponent implements OnInit {
     }
 
     generateCategoriesAry(apps: Application[]): Category[] {
-        let ary = [];
+        let ary: Category[] = [];
         for (let app of apps) {
             for (let category of app.categories) {
                 this.addToCategoriesAry(category, app, ary);

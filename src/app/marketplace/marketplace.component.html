@@ -13,12 +13,10 @@
             <div id="content">
                 <div class="searchBox">
                     <span>Search: </span>
-                    <input type="text" #term (keyup)="search(term.value)">
+                    <input type="text" id="term" #term (keyup)="search(term.value)">
                 </div>
-
                 <div *ngFor="let category of filteredCategoriesAry">
                     <h2>{{category.category}}</h2>
-
                     <div class="applicationTilesContainer">
                         <div class="applicationTile"
                              *ngFor="let app of category.apps">

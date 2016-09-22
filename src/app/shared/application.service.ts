@@ -27,7 +27,7 @@ export class ApplicationService {
 
     searchApps(term: string): Observable<Application[]> {
         console.log('Searching Apps');
-        return this.http.get(`{this.applicationsUrl}/?name=${term}`)
+        return  this.http.get(this.applicationsUrl + `/?name=${term}`)
             .map((r: Response) => r.json().data as Application[]);
     }
 
@@ -37,7 +37,7 @@ export class ApplicationService {
     }
 
     updateApp(app: Application): Promise<Application> {
-        const url = `{this.applicationsUrl}/${app.id}`;
+        const url = this.applicationsUrl + `/${app.id}`;
         return this.http
             .put(url, JSON.stringify(app), {headers: this.headers})
             .toPromise()
@@ -48,7 +48,7 @@ export class ApplicationService {
     createApp(name: string): Promise<Application> {
         let app = new Application();
         app.name = name;
-        const url = `{this.applicationsUrl}/${name}`;
+        const url = this.applicationsUrl + `/${name}`;
         return this.http
             .post(url, JSON.stringify(app), {headers: this.headers})
             .toPromise()
@@ -57,7 +57,7 @@ export class ApplicationService {
     }
 
     deleteApp(id: number): Promise<void> {
-        let url = `${this.applicationsUrl}/${id}`;
+        let url = `$` + this.applicationsUrl + `/${id}`;
         return this.http.delete(url, {headers: this.headers})
             .toPromise()
             .then(() => null)
