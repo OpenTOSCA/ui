@@ -17,7 +17,7 @@
                 </div>
                 <div *ngFor="let category of filteredCategoriesAry">
                     <h2>{{category.category}}</h2>
-                    <div class="applicationTilesContainer">
+                    <div class="applicationTilesContainer" @fadeInOut>
                         <div class="applicationTile"
                              *ngFor="let app of category.apps">
                             <img src="{{app.logoPath}}"/>

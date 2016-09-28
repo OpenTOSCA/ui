@@ -1,16 +1,26 @@
-import {Component, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Output, EventEmitter, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {ApplicationService} from "../shared/application.service";
 import {Application} from "../shared/application.model";
 import {Category} from "../shared/category.model";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 
-// JAsmin
-import {Headers, Http, Response} from '@angular/http';
-
 @Component({
     selector: 'opentosca-marketplace',
-    templateUrl: 'src/app/marketplace/marketplace.component.html'
+    templateUrl: 'src/app/marketplace/marketplace.component.html',
+    animations: [
+        trigger('fadeInOut', [
+            state('in', style({'opacity': 1})),
+            transition('void => *', [
+                style({'opacity': 0}),
+                animate('500ms ease-out')
+            ]),
+            transition('* => void', [
+                style({'opacity' : 1}),
+                animate('500ms ease-in')
+            ])
+        ])
+    ]
 })
 
 export class MarketplaceComponent implements OnInit {

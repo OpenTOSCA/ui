@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ApplicationService} from "../shared/application.service";
 import {Application} from "../shared/application.model";
-
 @Component({
     selector: 'opentosca-applications',
     templateUrl: 'src/app/applications/applications.component.html'

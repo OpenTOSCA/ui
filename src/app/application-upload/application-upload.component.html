@@ -1,0 +1,59 @@
+<div class="breadcrumbContainer">
+    »&nbsp; <a href="">Applications</a> &nbsp;»&nbsp; OpenTOSCA MP
+</div>
+<table class="layoutTable" border="0">
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img src="../../assets/img/Applications_Header_Icon.png"/>
+            </div>
+            <br/>
+            <a id="descriptionButton" routerLink="/applications" routerLinkActive="selected"
+               [routerLinkActiveOptions]="{ exact: true }">Installed Apps</a>
+            <a id="instancesButton" routerLink="/applications/upload" routerLinkActive="selected">Upload new App</a>
+        </td>
+        <td>
+            <div id="content">
+
+                <div class="container-fluent">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>Upload new Application</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="file"
+                                   name="myFile"
+                                   ngFileSelect
+                                   [options]="options"
+                                   (onUpload)="handleUpload($event)">
+                            <!--<div>
+                                Response: {{ uploadFile | json }}
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="uploadInProgress" style="margin-top: 20px">
+                        <div class="col-md-12">
+                            <h2>Upload Progress</h2>
+                            <progressbar [max]="max" [value]="dynamic" [type]="deploymentInProgress ? 'success' : 'default'"><span style="color:white; white-space:nowrap;">{{dynamic}}%</span>
+                            </progressbar>
+                            <small><em>current upload speed: {{currentSpeed}}</em></small>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="deploymentInProgress" style="margin-top: 20px">
+                        <div class="col-md-12">
+                            <h2>Deploying Archive</h2>
+                            <sk-circle [isRunning]="true" [delay]="0" *ngIf="!deploymentDone"></sk-circle>
+                            <div *ngIf="deploymentDone" class="alert alert-success" role="alert">
+                                <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                Deployment done!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </td>
+    </tr>
+</table>
