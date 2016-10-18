@@ -40,10 +40,7 @@ export class MarketplaceComponent implements OnInit {
 
     search(term: string): void {
         console.log('Entered search name: ' + term);
-
         this.searchTermStream.next(term);
-
-
         this.appService.searchApps(term).subscribe(apps => {
             this.apps = apps;
             this.filteredCategoriesAry = this.generateCategoriesAry(apps);

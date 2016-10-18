@@ -1,20 +1,36 @@
-import {Component, OnInit, NgZone} from '@angular/core';
+import {Component, OnInit, NgZone, trigger, state, style, transition, animate} from '@angular/core';
 import {ApplicationService} from "../shared/application.service";
 
 @Component({
     selector: 'opentosca-application-upload',
-    templateUrl: 'src/app/application-upload/application-upload.component.html'
+    templateUrl: 'src/app/application-upload/application-upload.component.html',
+    animations: [
+        trigger('fadeInOut', [
+            state('in', style({'opacity': 1})),
+            transition('void => *', [
+                style({'opacity': 0}),
+                animate('500ms ease-out')
+            ]),
+            transition('* => void', [
+                style({'opacity' : 1}),
+                animate('500ms ease-in')
+            ])
+        ])
+    ]
 })
 
 export class ApplicationUploadComponent implements OnInit {
-    private zone: NgZone;
     public uploadInProgress: boolean = true;
     public deploymentInProgress: boolean = false;
     public deploymentDone: boolean = false;
     public max: number = 100;
     public dynamic: number = 0;
-    currentSpeed: string;
-    uploadFile: any;
+    public currentSpeed: string;
+    public failureMessage: string;
+
+    private zone: NgZone;
+    private lastUpdate: number;
+    private uploadFile: any;
     private options: Object;
 
     ngOnInit(): void {
@@ -34,11 +50,6 @@ export class ApplicationUploadComponent implements OnInit {
     constructor(private appService: ApplicationService) {
     }
 
-    startUpload(data: any): void {
-        this.uploadFile = data;
-
-    }
-
     handleUpload(data: any): void {
         this.zone.run(() => {
             this.uploadFile = data;
@@ -52,12 +63,19 @@ export class ApplicationUploadComponent implements OnInit {
             if(data.status === 201){
                 this.deploymentDone = true;
             }
+            if(data.status === 500){
+                this.failureMessage = data.statusText;
+            }
             this.updateCurrentSpeed(data.progress.speedHumanized);
 
         });
     }
 
-    private lastUpdate: number;
+    resetUploadStats(): void {
+        this.uploadInProgress = true;
+        this.deploymentInProgress = false;
+        this.dynamic = 0;
+    }
 
     updateCurrentSpeed(speed: string): void {
         if (this.lastUpdate === undefined) {

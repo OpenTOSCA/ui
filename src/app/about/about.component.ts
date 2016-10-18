@@ -1,11 +1,11 @@
 import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {ActivatedRoute, Params} from "@angular/router";
 import {ApplicationService} from "../shared/application.service";
-import {Application} from "../shared/application.model";
+import {About} from "../shared/about.model";
 
 @Component({
-    selector: 'opentosca-application-details',
-    templateUrl: 'src/app/application-details/application-details.component.html',
+    selector: 'opentosca-about',
+    templateUrl: 'src/app/about/about.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -21,17 +21,20 @@ import {Application} from "../shared/application.model";
     ]
 })
 
-export class ApplicationDetailsComponent implements OnInit {
+export class AboutComponent implements OnInit{
 
-    app: Application;
+    public about: About;
 
-    constructor(private route: ActivatedRoute,
-                private appService: ApplicationService) {
+    constructor(private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {
-        this.route.params.forEach((params: Params) => {
-            this.appService.getApp(+params['id']).then(app => this.app = app);
-        });
+
+    }
+
+    setAbout(): void {
+        this.about = new About();
+        this.about.copyright = "Copyright (c) 2012-2016 University of Stuttgart\nAll rights reserved. This program and the accompanying materials are made available under the terms of the Apache License 2.0."
+        this.about.notice = ""
     }
 }

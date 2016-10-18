@@ -1,15 +1,15 @@
-<table class="layoutTable" border="0">
+<table class="layoutTable" border="0" @fadeInOut>
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img *ngIf="app" src="{{app.logoPath}}"/>
+                <img *ngIf="app" src="{{app.logoPath}}" @fadeInOut/>
                 <span *ngIf="app">{{app.name}}</span>
             </div>
             <br/>
             <a id="descriptionButton" class="selected" href="">Description</a>
             <a id="instancesButton" href="">Instances</a>
             <a id="statisticsButton" href="">Statistics</a>
-            <a routerLink="/marketplace" style="margin-top:40px"><b>«</b> Back to Overview</a>
+            <a routerLink="/applications" style="margin-top:40px"><b>«</b> Back to Overview</a>
         </td>
         <td>
             <div id="content">
@@ -26,7 +26,7 @@
                     <h2>Screenshots</h2>
                     <p>
                         <img *ngFor="let screenshot of app.screenshots" src="{{screenshot}}"
-                             style="width: 135px; margin: 10px 0px 0px 10px; 0px 0px;">
+                             style="width: 135px; margin: 10px 0px 0px 10px;">
                     </p>
 
                     <h2>Version</h2>

@@ -1,7 +1,14 @@
 <div class="breadcrumbContainer">
-    »&nbsp; <a href="">Applications</a> &nbsp;»&nbsp; OpenTOSCA MP
+    <ol class="breadcrumb">
+        <li>
+            <a id="appsBreadcrumb" routerLink="/applications">Applications</a>
+        </li>
+        <li class="active">
+            Installed Apps
+        </li>
+    </ol>
 </div>
-<table class="layoutTable" border="0">
+<table class="layoutTable" border="0" @fadeInOut>
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
@@ -16,42 +23,12 @@
 
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
-                         *ngFor="let app of apps">
+                         *ngFor="let app of apps" @fadeInOut>
                         <img src="{{app.logoPath}}"/>
                         <h1>{{app.name}}</h1>
                         <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
-                        |<a href="">Install</a>
                     </div>
                 </div>
-
-                <!--
-                <div class="container-fluent">
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <div class="list-group">
-                                        <a href="#" class="list-group-item active">
-                                            Cras justo odio
-                                        </a>
-                                        <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                                        <a href="#" class="list-group-item">Morbi leo risus</a>
-                                        <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                                        <a href="#" class="list-group-item">Vestibulum at eros</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                    <span class="sr-only">60% Complete</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                -->
 
             </div>
         </td>

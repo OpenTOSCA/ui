@@ -1,15 +1,27 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {ApplicationService} from "../shared/application.service";
 import {Application} from "../shared/application.model";
+
 @Component({
     selector: 'opentosca-applications',
-    templateUrl: 'src/app/applications/applications.component.html'
+    templateUrl: 'src/app/applications/applications.component.html',
+    animations: [
+        trigger('fadeInOut', [
+            state('in', style({'opacity': 1})),
+            transition('void => *', [
+                style({'opacity': 0}),
+                animate('500ms ease-out')
+            ]),
+            transition('* => void', [
+                style({'opacity' : 1}),
+                animate('500ms ease-in')
+            ])
+        ])
+    ]
 })
-
 export class ApplicationsComponent implements OnInit {
 
-    apps: Array<Application>;
-
+    apps = <Application[]>[];
 
     constructor(private appService: ApplicationService) {
     }
