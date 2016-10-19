@@ -1,7 +1,5 @@
-import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
-import {ApplicationService} from "../shared/application.service";
-import {About} from "../shared/about.model";
+import {Component, trigger, state, style, transition, animate} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: 'opentosca-about',
@@ -21,20 +19,8 @@ import {About} from "../shared/about.model";
     ]
 })
 
-export class AboutComponent implements OnInit{
-
-    public about: About;
+export class AboutComponent{
 
     constructor(private route: ActivatedRoute) {
-    }
-
-    ngOnInit(): void {
-
-    }
-
-    setAbout(): void {
-        this.about = new About();
-        this.about.copyright = "Copyright (c) 2012-2016 University of Stuttgart\nAll rights reserved. This program and the accompanying materials are made available under the terms of the Apache License 2.0."
-        this.about.notice = ""
     }
 }
