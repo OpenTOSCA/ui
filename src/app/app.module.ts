@@ -5,7 +5,7 @@ import {NgModule}      from '@angular/core';
 
 import './rxjs-extensions';
 
-import {InMemoryWebApiModule} from 'angular2-in-memory-web-api';
+import {InMemoryWebApiModule} from 'angular-in-memory-web-api';
 import {InMemoryDataService} from './shared/in-memory-data.service';
 
 import {AboutComponent} from "./about/about.component";
@@ -27,7 +27,7 @@ import {FoldingCubeComponent, CircleComponent} from 'ng2-spin-kit/app/spinners';
         BrowserModule,
         FormsModule,
         HttpModule,
-        InMemoryWebApiModule.forRoot(InMemoryDataService),
+        InMemoryWebApiModule.forRoot(InMemoryDataService, {passThruUnknownUrl: true}),
         Ng2BootstrapModule,
         routing
     ],

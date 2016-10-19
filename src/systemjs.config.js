@@ -8,7 +8,7 @@
         'app': 'app', // 'dist',
 
         '@angular': 'node_modules/@angular',
-        'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
+        'angular-in-memory-web-api': 'node_modules/angular-in-memory-web-api',
         'moment': 'node_modules/moment',
         'ng2-bootstrap': 'node_modules/ng2-bootstrap',
         'ng2-uploader': 'node_modules/ng2-uploader',
@@ -20,7 +20,7 @@
     var packages = {
         'app': {main: 'main.js', defaultExtension: 'js'},
 
-        'angular2-in-memory-web-api': {main: 'index.js', defaultExtension: 'js'},
+        'angular-in-memory-web-api': {main: 'index.js', defaultExtension: 'js'},
         'moment': {main: 'moment.js', defaultExtension: 'js'},
         'ng2-bootstrap': {main: 'ng2-bootstrap.js', defaultExtension: 'js'},
         'ng2-uploader': {main: 'ng2-uploader.js', defaultExtension: 'js'},

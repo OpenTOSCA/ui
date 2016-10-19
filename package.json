@@ -32,7 +32,7 @@
     "@angular/platform-browser-dynamic": "2.0.0",
     "@angular/router": "3.0.0",
     "@angular/upgrade": "2.0.0",
-    "angular2-in-memory-web-api": "0.0.20",
+    "angular-in-memory-web-api": "0.1.9",
     "bootstrap": "3.3.7",
     "core-js": "2.4.1",
     "ng2-bootstrap": "1.1.5",
