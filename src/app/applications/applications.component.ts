@@ -1,6 +1,7 @@
 import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {ApplicationService} from "../shared/application.service";
 import {Application} from "../shared/application.model";
+import {ApplicationReference} from "../shared/application-reference.model";
 
 @Component({
     selector: 'opentosca-applications',
@@ -13,7 +14,7 @@ import {Application} from "../shared/application.model";
                 animate('500ms ease-out')
             ]),
             transition('* => void', [
-                style({'opacity' : 1}),
+                style({'opacity': 1}),
                 animate('500ms ease-in')
             ])
         ])
@@ -21,17 +22,25 @@ import {Application} from "../shared/application.model";
 })
 export class ApplicationsComponent implements OnInit {
 
-    apps = <Application[]>[];
+    public apps: Application[] = [];
 
     constructor(private appService: ApplicationService) {
     }
 
     ngOnInit(): void {
-        this.getApps();
+        this.getAppReferences();
     }
 
-    getApps(): void {
-        this.appService.getApps().then(apps => this.apps = this.sortAppArray(apps));
+    getAppReferences(): void {
+        this.appService.getApps().then(references => {
+            for (let ref: ApplicationReference of references) {
+                if (ref.title !== 'Self') {
+                    this.appService.getAppDescription(ref.title).then(app => {
+                        this.apps.push(app)
+                    });
+                }
+            }
+        });
     }
 
     sortAppArray(apps: Array<Application>): Array<Application> {

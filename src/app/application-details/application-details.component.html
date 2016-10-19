@@ -2,8 +2,8 @@
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img *ngIf="app" src="{{app.logoPath}}" @fadeInOut/>
-                <span *ngIf="app">{{app.name}}</span>
+                <img *ngIf="app" src="{{app.iconUrl}}" @fadeInOut/>
+                <span *ngIf="app">{{app.displayName}}</span>
             </div>
             <br/>
             <a id="descriptionButton" class="selected" href="">Description</a>
@@ -25,7 +25,7 @@
 
                     <h2>Screenshots</h2>
                     <p>
-                        <img *ngFor="let screenshot of app.screenshots" src="{{screenshot}}"
+                        <img *ngFor="let screenshotUrl of app.screenshotUrls" src="{{screenshotUrl}}"
                              style="width: 135px; margin: 10px 0px 0px 10px;">
                     </p>
 
@@ -45,7 +45,7 @@
                 <div style="width: 48%; display: inline-block;">
                     <h2>Topology Template</h2>
 
-                    <img *ngIf="app" src="{{app.topologyTemplatePath}}" style="width: 400px;"/>
+                    <img *ngIf="app" src="{{app.imageUrl}}" style="width: 400px;"/>
 
                     <br/><br/>
                     <a href="" class="editInWineryButton iconTextButton">Edit in Winery</a>

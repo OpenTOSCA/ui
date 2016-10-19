@@ -31,7 +31,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.params.forEach((params: Params) => {
-            this.appService.getApp(+params['id']).then(app => this.app = app);
+            this.appService.getAppDescription(params['id']).then(app => this.app = app);
         });
     }
 }
