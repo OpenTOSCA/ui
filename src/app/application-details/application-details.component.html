@@ -73,7 +73,7 @@
                 <h4 class="modal-title">Please fill in following parameters</h4>
             </div>
             <div class="modal-body">
-                <div *ngFor="let param of buildPlanParameters.InputParameters">
+                <div *ngFor="let param of buildPlanParameters?.InputParameters">
                     <div class="panel panel-default" *ngIf="showParam(param.InputParameter)">
                         <div class="panel-heading">
                             <h3 class="panel-title">{{param.InputParameter.Name}}</h3>

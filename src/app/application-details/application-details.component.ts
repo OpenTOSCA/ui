@@ -27,7 +27,7 @@ import {PlanParameters} from "../shared/plan-parameters.model";
 export class ApplicationDetailsComponent implements OnInit {
 
     public app: Application;
-    public buildPlanParameters = <PlanParameters>[];
+    public buildPlanParameters: PlanParameters;
     public selfserviceApplicationUrl = '';
     public provisioningInProgress = false;
     public provisioningDone = false;
