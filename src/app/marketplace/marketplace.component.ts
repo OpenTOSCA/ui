@@ -1,9 +1,10 @@
 import {Component, Output, EventEmitter, OnInit, trigger, state, style, transition, animate} from '@angular/core';
-import {ApplicationService} from "../shared/application.service";
+import {MarketplaceService} from "../shared/marketplace.service";
 import {Application} from "../shared/application.model";
 import {Category} from "../shared/category.model";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
+import {MarketplaceApplicationReference} from "../shared/marketplace-application-reference.model";
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -25,35 +26,50 @@ import {Subject} from "rxjs/Subject";
 
 export class MarketplaceComponent implements OnInit {
 
-    apps: Application[];
+    private apps = <Application[]>[];
     categoriesAry = <Category[]>[];
     filteredCategoriesAry = <Category[]>[];
     private searchTermStream = new Subject<string>();
+    private wineryApi:string = 'http://localhost:8080/servicetemplates/';
 
-    constructor(private appService: ApplicationService) {
+    constructor(private marketService: MarketplaceService) {
     }
-
 
     ngOnInit(): void {
         this.getApps();
     }
 
-    search(term: string): void {
-        console.log('Entered search name: ' + term);
-        this.searchTermStream.next(term);
-        this.appService.searchApps(term).subscribe(apps => {
-            this.apps = apps;
-            this.filteredCategoriesAry = this.generateCategoriesAry(apps);
-        });
-    }
+    // search(term: string): void {
+    //     console.log('Entered search name: ' + term);
+    //     this.searchTermStream.next(term);
+    //     this.marketService.searchApps(term).subscribe(apps => {
+    //         this.apps = apps;
+    //         this.filteredCategoriesAry = this.generateCategoriesAry(apps);
+    //     });
+    // }
 
     getApps(): void {
+        this.marketService.getAppsFromMarketPlace(this.wineryApi)
+            .then(references => {
+                for(let reference of references){
+                    this.marketService.getAppFromMarketPlace(reference, this.wineryApi)
+                        .then(app => console.log(app));
+
+                    // this.apps.push(app);
+                    // this.categoriesAry = this.generateCategoriesAry(this.apps);
+                    // this.filteredCategoriesAry = this.generateCategoriesAry(this.apps);
+                }
+
+            })
+    }
+
+    /*getApps(): void {
         this.appService.getApps().then(apps => {
             this.apps = apps;
             this.categoriesAry = this.generateCategoriesAry(apps);
             this.filteredCategoriesAry = this.generateCategoriesAry(apps);
         });
-    }
+    }*/
 
     generateCategoriesAry(apps: Application[]): Category[] {
         let ary: Category[] = [];
@@ -79,5 +95,3 @@ export class MarketplaceComponent implements OnInit {
         }
     }
 }
-
-

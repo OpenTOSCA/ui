@@ -21,10 +21,10 @@
         </td>
         <td>
             <div id="content">
-                <div class="searchBox">
+                <!--<div class="searchBox">
                     <span>Search: </span>
                     <input type="text" id="term" #term (keyup)="search(term.value)">
-                </div>
+                </div>-->
                 <div *ngFor="let category of filteredCategoriesAry">
                     <h2>{{category.category}}</h2>
                     <div class="applicationTilesContainer" @fadeInOut>

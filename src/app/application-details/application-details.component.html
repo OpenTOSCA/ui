@@ -20,7 +20,13 @@
                     <p>
                         {{app.description}}
                         <br/><br/>
-                        <a href="">Start new instance</a>
+                        <button class="btn btn-primary" (click)="showChildModal()">Provision New Instance</button>
+
+                        <!--<button class="btn btn-success" disabled *ngIf="true"
+                           href="" role="button"><span><sk-circle [isRunning]="true" [delay]="0" *ngIf="true"></sk-circle></span></button>-->
+                        <button class="btn btn-success" disabled *ngIf="provisioningInProgress">Start Application</button>
+                        <a class="btn btn-success" *ngIf="provisioningDone"
+                           href="{{selfserviceApplicationUrl}}" role="button" target="_blank">Start Application</a>
                     </p>
 
                     <h2>Screenshots</h2>
@@ -55,3 +61,34 @@
         </td>
     </tr>
 </table>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="hideChildModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Please fill in following parameters</h4>
+            </div>
+            <div class="modal-body">
+                <div *ngFor="let param of buildPlanParameters.InputParameters">
+                    <div class="panel panel-default" *ngIf="showParam(param.InputParameter)">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{param.InputParameter.Name}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <input type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                   [(ngModel)]="param.InputParameter.Value">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="hideChildModal()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="startProvisioning()">Start Provisioning</button>
+            </div>
+        </div>
+    </div>
+</div>

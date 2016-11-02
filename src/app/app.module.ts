@@ -15,12 +15,14 @@ import {ApplicationUploadComponent} from "./application-upload/application-uploa
 import {MainNavComponent}  from './nav/main-nav.component';
 import {MarketplaceComponent} from "./marketplace/marketplace.component";
 
+import {ApplicationService} from "./shared/application.service";
+import {MarketplaceService} from "./shared/marketplace.service";
+
 import {routing} from "./app.routing";
 
-import {ApplicationService} from "./shared/application.service";
+import {FoldingCubeComponent, CircleComponent} from 'ng2-spin-kit/app/spinners';
 import {Ng2BootstrapModule} from "ng2-bootstrap/ng2-bootstrap";
 import {UPLOAD_DIRECTIVES} from "ng2-uploader/ng2-uploader";
-import {FoldingCubeComponent, CircleComponent} from 'ng2-spin-kit/app/spinners';
 
 @NgModule({
     imports: [
@@ -44,7 +46,8 @@ import {FoldingCubeComponent, CircleComponent} from 'ng2-spin-kit/app/spinners';
         FoldingCubeComponent
     ],
     providers: [
-        ApplicationService
+        ApplicationService,
+        MarketplaceService
     ],
     bootstrap: [
         MainNavComponent

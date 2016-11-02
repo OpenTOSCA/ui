@@ -3,6 +3,7 @@ import {ApplicationService} from "../shared/application.service";
 import {Application} from "../shared/application.model";
 import {ApplicationReference} from "../shared/application-reference.model";
 
+
 @Component({
     selector: 'opentosca-applications',
     templateUrl: 'src/app/applications/applications.component.html',
@@ -33,7 +34,7 @@ export class ApplicationsComponent implements OnInit {
 
     getAppReferences(): void {
         this.appService.getApps().then(references => {
-            for (let ref: ApplicationReference of references) {
+            for (let ref of references) {
                 if (ref.title !== 'Self') {
                     this.appService.getAppDescription(ref.title).then(app => {
                         this.apps.push(app)
