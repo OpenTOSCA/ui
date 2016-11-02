@@ -20,11 +20,8 @@
                     <p>
                         {{app.description}}
                         <br/><br/>
-                        <button class="btn btn-primary" (click)="showChildModal()">Provision New Instance</button>
-
-                        <!--<button class="btn btn-success" disabled *ngIf="true"
-                           href="" role="button"><span><sk-circle [isRunning]="true" [delay]="0" *ngIf="true"></sk-circle></span></button>-->
-                        <button class="btn btn-success" disabled *ngIf="provisioningInProgress">Start Application</button>
+                        <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary" (click)="showChildModal()">Provision New Instance</button>
+                        <sk-circle [isRunning]="true" [delay]="0" *ngIf="provisioningInProgress"></sk-circle>
                         <a class="btn btn-success" *ngIf="provisioningDone"
                            href="{{selfserviceApplicationUrl}}" role="button" target="_blank">Start Application</a>
                     </p>
