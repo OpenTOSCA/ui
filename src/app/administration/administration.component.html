@@ -1,0 +1,29 @@
+<div class="breadcrumbContainer">
+    <ol class="breadcrumb">
+        <li class="active">
+            Administration
+        </li>
+    </ol>
+</div>
+<table class="layoutTable" border="0" @fadeInOut>
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img src="../../assets/img/Applications_Header_Icon.png" />
+            </div>
+        </td>
+        <td>
+            <div id="content">
+                <h2>Container Connection</h2>
+                <div class="form-group">
+                    <label for="containerAPI">Container API</label>
+                    <input type="text" class="form-control" id="containerAPI" [(ngModel)]="containerAPI" placeholder="Container API URL">
+                </div>
+                <div class="form-group">
+                    <label for="containerAPI">Build Plan Path</label>
+                    <input type="text" class="form-control" id="buildPlanPath" [(ngModel)]="buildPlanPath" placeholder="API Build Plan Path">
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

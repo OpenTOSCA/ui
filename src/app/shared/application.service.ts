@@ -2,24 +2,19 @@
  * Created by Michael Falkenthal on 01.09.16.
  */
 import {Injectable} from '@angular/core';
-import {Headers, Http, Response} from '@angular/http';
+import {Headers, Http} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
 import {Application} from './application.model';
-import {toPromise} from "rxjs/operator/toPromise";
-import {Observable} from 'rxjs/Observable';
-import {ApplicationReference} from "./application-reference.model";
-import {PlanParameters} from "./plan-parameters.model";
-import {timeout} from "rxjs/operator/timeout";
+import {ApplicationReference} from './application-reference.model';
+import {PlanParameters} from './plan-parameters.model';
+import {AdministrationService} from './administration.service';
 
 @Injectable()
 export class ApplicationService {
-    //private applicationsUrl = 'app/applications';
 
-    private containerAPI = 'http://192.168.209.229:1337/containerapi';
-
-    constructor(private http: Http) {
+    constructor(private http: Http, private adminService: AdministrationService) {
     }
 
     /**
@@ -27,7 +22,7 @@ export class ApplicationService {
      * @returns {Promise<ApplicationReference[]>}
      */
     getApps(): Promise<ApplicationReference[]> {
-        const url = this.containerAPI + '/CSARs';
+        const url = this.adminService.getContainerAPIUrl() + '/CSARs';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -39,8 +34,8 @@ export class ApplicationService {
         // /containerapi/CSARs/FlinkApp_ServiceTemplate_DUMMY.csar/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/
         // Operations/instantiate/Plan/FlinkApp_ServiceTemplate_buildPlan
 
-        //firstly, fetch plans to find buildplan --> don't use self reference
-        const url = this.containerAPI + '/CSARs/' + appID + '.csar' + '/BoundaryDefinitions/Interfaces/BuildPlanNoImpl/Operations/initiate/Plan';
+        // firstly, fetch plans to find buildplan --> don't use self reference
+        const url = this.adminService.getContainerAPIUrl() + '/CSARs/' + appID + '.csar' + this.adminService.getBuildPlanPath();
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -48,11 +43,11 @@ export class ApplicationService {
                     let references = response.json().References as ApplicationReference[];
 
                     for (let ref of references) {
-                        //we pick the first reference that is not the self reference to the plan resource
+                        // we pick the first reference that is not the self reference to the plan resource
                         if (ref.title !== 'Self') {
                             return this.http.get(ref.href, {headers: headers})
                                 .toPromise()
-                                .then(response => response.json() as PlanParameters)
+                                .then(planParam => planParam.json() as PlanParameters)
                                 .catch(this.handleError);
                         }
                     }
@@ -64,8 +59,9 @@ export class ApplicationService {
     }
 
     startProvisioning(appID: string, params: PlanParameters): Promise<any> {
-        const url = this.containerAPI + '/CSARs/' + appID + '.csar' + '/Instances';
+        const url = this.adminService.getContainerAPIUrl() + '/CSARs/' + appID + '.csar' + '/Instances';
         console.log(JSON.stringify(params));
+
         let headers = new Headers({
             'Accept': 'application/json',
             'Content-Type': 'text/plain'
@@ -74,7 +70,7 @@ export class ApplicationService {
             .toPromise()
             .then(response => {
                 console.log('Server responded to post: ' + response);
-                return response.json()
+                return response.json();
             })
             .catch(this.handleError);
     }
@@ -117,12 +113,12 @@ export class ApplicationService {
      * @returns {Promise<Application>}
      */
     getAppDescription(appID: string): Promise<Application> {
-        //Remove .csar if present
+        // Remove .csar if present
         if (appID.indexOf('.csar') > -1) {
             appID = appID.split('.')[0];
         }
 
-        const metaDataUrl = this.containerAPI + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
+        const metaDataUrl = this.adminService.getContainerAPIUrl() + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
 
@@ -134,7 +130,9 @@ export class ApplicationService {
                 app.iconUrl = metaDataUrl + '/' + app.iconUrl;
                 app.imageUrl = metaDataUrl + '/' + app.imageUrl;
                 for (let i in app.screenshotUrls) {
-                    app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
+                    if (app.screenshotUrls[i]) {
+                        app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
+                    }
                 }
                 return app;
             })

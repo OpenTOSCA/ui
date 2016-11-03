@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewChild, trigger, state, style, transition, animate} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
-import {ApplicationService} from "../shared/application.service";
-import {Application} from "../shared/application.model";
+import {ActivatedRoute, Params} from '@angular/router';
+import {ApplicationService} from '../shared/application.service';
+import {Application} from '../shared/application.model';
 import {ModalDirective} from '../../../node_modules/ng2-bootstrap/components/modal/modal.component';
-import {PlanParameter} from "../shared/plan-parameter.model";
-import {PlanParameters} from "../shared/plan-parameters.model";
+import {PlanParameter} from '../shared/plan-parameter.model';
+import {PlanParameters} from '../shared/plan-parameters.model';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -28,14 +29,15 @@ export class ApplicationDetailsComponent implements OnInit {
 
     public app: Application;
     public buildPlanParameters: PlanParameters;
-    public selfserviceApplicationUrl = '';
+    public selfserviceApplicationUrl: SafeUrl;
     public provisioningInProgress = false;
     public provisioningDone = false;
 
-    @ViewChild('childModal') public childModal:ModalDirective;
+    @ViewChild('childModal') public childModal: ModalDirective;
 
     constructor(private route: ActivatedRoute,
-                private appService: ApplicationService) {
+                private appService: ApplicationService,
+                private sanitizer: DomSanitizer) {
     }
 
     ngOnInit(): void {
@@ -49,11 +51,11 @@ export class ApplicationDetailsComponent implements OnInit {
         });
     }
 
-    public showChildModal():void {
+    public showChildModal(): void {
         this.childModal.show();
     }
 
-    public hideChildModal():void {
+    public hideChildModal(): void {
         this.childModal.hide();
     }
 
@@ -73,10 +75,10 @@ export class ApplicationDetailsComponent implements OnInit {
                         console.log('Received plan result: ' + JSON.stringify(result));
                         for (let para of result.OutputParameters) {
                             if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
-                                this.selfserviceApplicationUrl = para.OutputParameter.Value;
+                                this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(para.OutputParameter.Value);
                             }
                         }
-                        if(this.selfserviceApplicationUrl === ''){
+                        if (this.selfserviceApplicationUrl === '') {
                             console.error('Did not receive a selfserviceApplicationUrl');
                         }
                         this.provisioningDone = true;
@@ -87,13 +89,14 @@ export class ApplicationDetailsComponent implements OnInit {
             .catch(this.handleError);
     }
 
+
     showParam(param: PlanParameter) {
-        return (param.Name === "CorrelationID" ||
-        param.Name === "csarName" ||
-        param.Name === "containerApiAddress" ||
-        param.Name === "instanceDataAPIUrl" ||
-        param.Name === "planCallbackAddress_invoker" ||
-        param.Name === "csarEntrypoint") ? false : true;
+        return (param.Name === 'CorrelationID' ||
+        param.Name === 'csarName' ||
+        param.Name === 'containerApiAddress' ||
+        param.Name === 'instanceDataAPIUrl' ||
+        param.Name === 'planCallbackAddress_invoker' ||
+        param.Name === 'csarEntrypoint') ? false : true;
     }
 
     /**

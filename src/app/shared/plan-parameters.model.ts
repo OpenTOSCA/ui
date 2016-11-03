@@ -1,4 +1,4 @@
-import {PlanParameter} from "./plan-parameter.model";
+import {PlanParameter} from './plan-parameter.model';
 /**
  * Created by Michael Falkenthal on 27.10.16.
  */

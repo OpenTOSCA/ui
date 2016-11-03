@@ -23,6 +23,8 @@ import {routing} from "./app.routing";
 import {FoldingCubeComponent, CircleComponent} from 'ng2-spin-kit/app/spinners';
 import {Ng2BootstrapModule} from "ng2-bootstrap/ng2-bootstrap";
 import {UPLOAD_DIRECTIVES} from "ng2-uploader/ng2-uploader";
+import {AdministrationComponent} from "./administration/administration.component";
+import {AdministrationService} from "./shared/administration.service";
 
 @NgModule({
     imports: [
@@ -35,6 +37,7 @@ import {UPLOAD_DIRECTIVES} from "ng2-uploader/ng2-uploader";
     ],
     declarations: [
         AboutComponent,
+        AdministrationComponent,
         ApplicationsComponent,
         ApplicationDetailsComponent,
         ApplicationUploadComponent,
@@ -47,6 +50,7 @@ import {UPLOAD_DIRECTIVES} from "ng2-uploader/ng2-uploader";
     ],
     providers: [
         ApplicationService,
+        AdministrationService,
         MarketplaceService
     ],
     bootstrap: [

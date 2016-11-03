@@ -2,14 +2,12 @@
  * Created by Michael Falkenthal on 01.09.16.
  */
 import {Injectable} from '@angular/core';
-import {Headers, Http, Response} from '@angular/http';
+import {Headers, Http} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
 import {Application} from './application.model';
-import {toPromise} from "rxjs/operator/toPromise";
-import {Observable} from 'rxjs/Observable';
-import {MarketplaceApplicationReference} from "./marketplace-application-reference.model";
+import {MarketplaceApplicationReference} from './marketplace-application-reference.model';
 
 @Injectable()
 export class MarketplaceService {
@@ -60,7 +58,7 @@ export class MarketplaceService {
      * @returns {Promise<Application>}
      */
     getAppDescription(appID: string): Promise<Application> {
-        //Remove .csar if present
+        // Remove .csar if present
         if (appID.indexOf('.csar') > -1) {
             appID = appID.split('.')[0];
         }
@@ -77,7 +75,9 @@ export class MarketplaceService {
                 app.iconUrl = metaDataUrl + '/' + app.iconUrl;
                 app.imageUrl = metaDataUrl + '/' + app.imageUrl;
                 for (let i in app.screenshotUrls) {
-                    app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
+                    if (app.screenshotUrls[i]) {
+                        app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
+                    }
                 }
                 return app;
             })

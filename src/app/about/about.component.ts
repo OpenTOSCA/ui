@@ -1,5 +1,5 @@
 import {Component, trigger, state, style, transition, animate} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'opentosca-about',
@@ -12,14 +12,14 @@ import {ActivatedRoute} from "@angular/router";
                 animate('500ms ease-out')
             ]),
             transition('* => void', [
-                style({'opacity' : 1}),
+                style({'opacity': 1}),
                 animate('500ms ease-in')
             ])
         ])
     ]
 })
 
-export class AboutComponent{
+export class AboutComponent {
 
     constructor(private route: ActivatedRoute) {
     }

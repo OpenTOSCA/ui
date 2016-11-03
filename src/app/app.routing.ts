@@ -6,12 +6,17 @@ import {ApplicationsComponent} from "./applications/applications.component";
 import {MarketplaceComponent} from "./marketplace/marketplace.component";
 import {ApplicationDetailsComponent} from "./application-details/application-details.component";
 import {ApplicationUploadComponent} from "./application-upload/application-upload.component";
+import {AdministrationComponent} from "./administration/administration.component";
 
 
 const appRoutes: Routes = [
     {
         path: 'about',
         component: AboutComponent
+    },
+    {
+        path: 'administration',
+        component: AdministrationComponent
     },
     {
         path: 'applications',

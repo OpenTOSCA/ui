@@ -1,7 +1,6 @@
 import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
-import {ApplicationService} from "../shared/application.service";
-import {Application} from "../shared/application.model";
-import {ApplicationReference} from "../shared/application-reference.model";
+import {ApplicationService} from '../shared/application.service';
+import {Application} from '../shared/application.model';
 
 
 @Component({
@@ -37,7 +36,7 @@ export class ApplicationsComponent implements OnInit {
             for (let ref of references) {
                 if (ref.title !== 'Self') {
                     this.appService.getAppDescription(ref.title).then(app => {
-                        this.apps.push(app)
+                        this.apps.push(app);
                     });
                 }
             }

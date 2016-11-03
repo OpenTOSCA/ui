@@ -23,7 +23,7 @@
                         <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary" (click)="showChildModal()">Provision New Instance</button>
                         <sk-circle [isRunning]="true" [delay]="0" *ngIf="provisioningInProgress"></sk-circle>
                         <a class="btn btn-success" *ngIf="provisioningDone"
-                           href="{{selfserviceApplicationUrl}}" role="button" target="_blank">Start Application</a>
+                           [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
                     </p>
 
                     <h2>Screenshots</h2>
@@ -76,7 +76,12 @@
                             <h3 class="panel-title">{{param.InputParameter.Name}}</h3>
                         </div>
                         <div class="panel-body">
-                            <input type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
+
+                            <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                   [(ngModel)]="param.InputParameter.Value"></textarea>
+                            <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                   [(ngModel)]="param.InputParameter.Value">
+                            <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)" type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
                                    [(ngModel)]="param.InputParameter.Value">
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import {Component, OnInit, NgZone, trigger, state, style, transition, animate} from '@angular/core';
-import {ApplicationService} from "../shared/application.service";
+import {ApplicationService} from '../shared/application.service';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -12,7 +12,7 @@ import {ApplicationService} from "../shared/application.service";
                 animate('500ms ease-out')
             ]),
             transition('* => void', [
-                style({'opacity' : 1}),
+                style({'opacity': 1}),
                 animate('500ms ease-in')
             ])
         ])
@@ -37,12 +37,11 @@ export class ApplicationUploadComponent implements OnInit {
         this.zone = new NgZone({enableLongStackTrace: false});
         this.options = {
             url: 'http://192.168.209.229:1337/containerapi/CSARs',
-            //url: 'http://localhost:10050/upload',
             customHeaders: {
                 'Accept': 'application/octet-stream'
             },
-            //filterExtensions: true,
-            //allowedExtensions: ['csar'],
+            filterExtensions: true,
+            allowedExtensions: ['csar'],
             calculateSpeed: true
         };
     }
@@ -54,16 +53,16 @@ export class ApplicationUploadComponent implements OnInit {
         this.zone.run(() => {
             this.uploadFile = data;
             this.dynamic = data.progress.percent;
-            if(this.dynamic < 100){
+            if (this.dynamic < 100) {
                 this.deploymentInProgress = false;
                 this.deploymentDone = false;
-            }else{
+            } else {
                 this.deploymentInProgress = true;
             }
-            if(data.status === 201){
+            if (data.status === 201) {
                 this.deploymentDone = true;
             }
-            if(data.status === 500){
+            if (data.status === 500) {
                 this.failureMessage = data.statusText;
             }
             this.updateCurrentSpeed(data.progress.speedHumanized);

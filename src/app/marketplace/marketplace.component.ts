@@ -17,7 +17,7 @@ import {MarketplaceApplicationReference} from "../shared/marketplace-application
                 animate('500ms ease-out')
             ]),
             transition('* => void', [
-                style({'opacity' : 1}),
+                style({'opacity': 1}),
                 animate('500ms ease-in')
             ])
         ])
@@ -30,7 +30,7 @@ export class MarketplaceComponent implements OnInit {
     categoriesAry = <Category[]>[];
     filteredCategoriesAry = <Category[]>[];
     private searchTermStream = new Subject<string>();
-    private wineryApi:string = 'http://localhost:8080/servicetemplates/';
+    private wineryApi: string = 'http://localhost:8080/servicetemplates/';
 
     constructor(private marketService: MarketplaceService) {
     }
@@ -51,7 +51,7 @@ export class MarketplaceComponent implements OnInit {
     getApps(): void {
         this.marketService.getAppsFromMarketPlace(this.wineryApi)
             .then(references => {
-                for(let reference of references){
+                for (let reference of references) {
                     this.marketService.getAppFromMarketPlace(reference, this.wineryApi)
                         .then(app => console.log(app));
 
@@ -60,16 +60,16 @@ export class MarketplaceComponent implements OnInit {
                     // this.filteredCategoriesAry = this.generateCategoriesAry(this.apps);
                 }
 
-            })
+            });
     }
 
     /*getApps(): void {
-        this.appService.getApps().then(apps => {
-            this.apps = apps;
-            this.categoriesAry = this.generateCategoriesAry(apps);
-            this.filteredCategoriesAry = this.generateCategoriesAry(apps);
-        });
-    }*/
+     this.appService.getApps().then(apps => {
+     this.apps = apps;
+     this.categoriesAry = this.generateCategoriesAry(apps);
+     this.filteredCategoriesAry = this.generateCategoriesAry(apps);
+     });
+     }*/
 
     generateCategoriesAry(apps: Application[]): Category[] {
         let ary: Category[] = [];
@@ -82,7 +82,7 @@ export class MarketplaceComponent implements OnInit {
     }
 
     addToCategoriesAry(category: string, app: Application, categoriesAry: Category[]): void {
-        let found: boolean = false;
+        let found = false;
         for (let i in categoriesAry) {
             if (categoriesAry[i].category === category) {
                 categoriesAry[i].apps.push(app);
