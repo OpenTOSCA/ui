@@ -22,7 +22,7 @@ export class ApplicationService {
      * @returns {Promise<ApplicationReference[]>}
      */
     getApps(): Promise<ApplicationReference[]> {
-        const url = this.adminService.getContainerAPIUrl() + '/CSARs';
+        const url = this.adminService.containerAPIURL + '/CSARs';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -35,7 +35,7 @@ export class ApplicationService {
         // Operations/instantiate/Plan/FlinkApp_ServiceTemplate_buildPlan
 
         // firstly, fetch plans to find buildplan --> don't use self reference
-        const url = this.adminService.getContainerAPIUrl() + '/CSARs/' + appID + '.csar' + this.adminService.getBuildPlanPath();
+        const url = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + this.adminService.buildPlanPath;
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -59,7 +59,7 @@ export class ApplicationService {
     }
 
     startProvisioning(appID: string, params: PlanParameters): Promise<any> {
-        const url = this.adminService.getContainerAPIUrl() + '/CSARs/' + appID + '.csar' + '/Instances';
+        const url = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + '/Instances';
         console.log(JSON.stringify(params));
 
         let headers = new Headers({
@@ -118,7 +118,7 @@ export class ApplicationService {
             appID = appID.split('.')[0];
         }
 
-        const metaDataUrl = this.adminService.getContainerAPIUrl() + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
+        const metaDataUrl = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
 

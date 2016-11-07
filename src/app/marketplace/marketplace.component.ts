@@ -5,6 +5,7 @@ import {Category} from "../shared/category.model";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {MarketplaceApplicationReference} from "../shared/marketplace-application-reference.model";
+import {AdministrationService} from "../shared/administration.service";
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -30,9 +31,8 @@ export class MarketplaceComponent implements OnInit {
     categoriesAry = <Category[]>[];
     filteredCategoriesAry = <Category[]>[];
     private searchTermStream = new Subject<string>();
-    private wineryApi: string = 'http://localhost:8080/servicetemplates/';
 
-    constructor(private marketService: MarketplaceService) {
+    constructor(private marketService: MarketplaceService, private adminService: AdministrationService) {
     }
 
     ngOnInit(): void {
@@ -49,10 +49,10 @@ export class MarketplaceComponent implements OnInit {
     // }
 
     getApps(): void {
-        this.marketService.getAppsFromMarketPlace(this.wineryApi)
+        this.marketService.getAppsFromMarketPlace(this.adminService.wineryAPIURL)
             .then(references => {
                 for (let reference of references) {
-                    this.marketService.getAppFromMarketPlace(reference, this.wineryApi)
+                    this.marketService.getAppFromMarketPlace(reference, this.adminService.wineryAPIURL)
                         .then(app => console.log(app));
 
                     // this.apps.push(app);

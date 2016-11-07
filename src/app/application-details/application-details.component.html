@@ -20,7 +20,9 @@
                     <p>
                         {{app.description}}
                         <br/><br/>
-                        <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary" (click)="showChildModal()">Provision New Instance</button>
+                        <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary"
+                                (click)="showChildModal()">Provision New Instance
+                        </button>
                         <sk-circle [isRunning]="true" [delay]="0" *ngIf="provisioningInProgress"></sk-circle>
                         <a class="btn btn-success" *ngIf="provisioningDone"
                            [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
@@ -28,8 +30,10 @@
 
                     <h2>Screenshots</h2>
                     <p>
-                        <img *ngFor="let screenshotUrl of app.screenshotUrls" src="{{screenshotUrl}}"
-                             style="width: 135px; margin: 10px 0px 0px 10px;">
+                        <a *ngFor="let screenshotUrl of app.screenshotUrls" target="_blank" [href]="screenshotUrl">
+                            <img [src]="screenshotUrl"
+                                 style="width: 135px; margin: 10px 0px 0px 10px;">
+                        </a>
                     </p>
 
                     <h2>Version</h2>
@@ -47,11 +51,9 @@
 
                 <div style="width: 48%; display: inline-block;">
                     <h2>Topology Template</h2>
-
-                    <img *ngIf="app" src="{{app.imageUrl}}" style="width: 400px;"/>
-
-                    <br/><br/>
-                    <a href="" class="editInWineryButton iconTextButton">Edit in Winery</a>
+                    <a *ngIf="app" [href]="app.imageUrl" target="_blank">
+                        <img *ngIf="app" [src]="app.imageUrl" style="width: 400px;"/>
+                    </a>
                 </div>
 
             </div>
@@ -76,12 +78,14 @@
                             <h3 class="panel-title">{{param.InputParameter.Name}}</h3>
                         </div>
                         <div class="panel-body">
-
-                            <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
-                                   [(ngModel)]="param.InputParameter.Value"></textarea>
-                            <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                            <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
+                                      class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                      [(ngModel)]="param.InputParameter.Value"></textarea>
+                            <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
+                                   class="form-control" placeholder="{{param.InputParameter.Name}}"
                                    [(ngModel)]="param.InputParameter.Value">
-                            <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)" type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                            <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)"
+                                   type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
                                    [(ngModel)]="param.InputParameter.Value">
                         </div>
                     </div>

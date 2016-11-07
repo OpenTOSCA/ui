@@ -6,26 +6,35 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class AdministrationService {
 
-    private containerAPI = 'http://192.168.209.229:1337/containerapi';
-    private buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
+    private _containerAPI = 'http://192.168.209.229:1337/containerapi';
+    private _buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
+    private _wineryAPI = 'http://192.168.209.229:8080/servicetemplates/';
 
     constructor() {
     }
 
-    getContainerAPIUrl(): string {
-        return this.containerAPI;
+    get wineryAPIURL(): string {
+        return this._wineryAPI;
     }
 
-    setContainerAPIUrl(url: string): void {
-        this.containerAPI = url;
+    set wineryAPIURL(url: string) {
+        this._wineryAPI = url;
     }
 
-    getBuildPlanPath(): string {
-        return this.buildPlanPath;
+    get containerAPIURL(): string {
+        return this._containerAPI;
     }
 
-    setBuildPlanPath(path: string): void {
-        this.buildPlanPath = path;
+    set containerAPIURL(url: string) {
+        this._containerAPI = url;
+    }
+
+    get buildPlanPath(): string {
+        return this._buildPlanPath;
+    }
+
+    set buildPlanPath(path: string) {
+        this._buildPlanPath = path;
     }
 
 }

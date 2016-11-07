@@ -8,13 +8,12 @@ import 'rxjs/add/operator/toPromise';
 
 import {Application} from './application.model';
 import {MarketplaceApplicationReference} from './marketplace-application-reference.model';
+import {AdministrationService} from "./administration.service";
 
 @Injectable()
 export class MarketplaceService {
 
-    private containerAPI = 'http://192.168.209.229:1337/containerapi';
-
-    constructor(private http: Http) {
+    constructor(private http: Http, private adminService: AdministrationService) {
     }
 
     /**
@@ -63,7 +62,7 @@ export class MarketplaceService {
             appID = appID.split('.')[0];
         }
 
-        const metaDataUrl = this.containerAPI + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
+        const metaDataUrl = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
 
