@@ -166,6 +166,11 @@ a.editInWineryButton:before {
     background-repeat: no-repeat;
 }
 
+#mainMenu > a.selected#aboutButton:before {
+    background: url('../assets/img/About_Button_Icon_Hover.png');
+    background-repeat: no-repeat;
+}
+
 #subMenu {
     width: 210px;
 }
