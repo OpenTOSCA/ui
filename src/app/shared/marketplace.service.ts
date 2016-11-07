@@ -33,7 +33,7 @@ export class MarketplaceService {
 
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string) {
         ///{ns}/[id}/selfserviceportal/
-        const url = marketPlaceUrl + encodeURIComponent(appReference.namespace) + '/' + appReference.id + '/selfserviceportal/';
+        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal/';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
