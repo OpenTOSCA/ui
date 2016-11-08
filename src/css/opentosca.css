@@ -255,6 +255,15 @@ a.editInWineryButton:before {
     padding-top: 8px;
 }
 
+#content div.applicationTilesContainer div.applicationTile > span{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 130px;
+    float: left;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
 #content div.applicationTilesContainer div.applicationTile {
     width: 150px;
     height: 205px;
