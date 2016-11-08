@@ -75,6 +75,9 @@ table.layoutTable {
     padding: 0px 15px;
     text-align: center;
     font-style: italic;
+    text-overflow: ellipsis;
+    width: 190px;
+    overflow: hidden;
 }
 
 a.iconTextButton {
