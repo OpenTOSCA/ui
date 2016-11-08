@@ -22,7 +22,7 @@ export class ApplicationService {
      * @returns {Promise<ApplicationReference[]>}
      */
     getApps(): Promise<ApplicationReference[]> {
-        const url = this.adminService.containerAPIURL + '/CSARs';
+        const url = this.adminService.getContainerAPIURL() + '/CSARs';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -35,7 +35,7 @@ export class ApplicationService {
         // Operations/instantiate/Plan/FlinkApp_ServiceTemplate_buildPlan
 
         // firstly, fetch plans to find buildplan --> don't use self reference
-        const url = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + this.adminService.buildPlanPath;
+        const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + this.adminService.getBuildPlanPath();
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -59,7 +59,7 @@ export class ApplicationService {
     }
 
     startProvisioning(appID: string, params: PlanParameters): Promise<any> {
-        const url = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + '/Instances';
+        const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Instances';
         console.log(JSON.stringify(params));
 
         let headers = new Headers({
@@ -113,12 +113,9 @@ export class ApplicationService {
      * @returns {Promise<Application>}
      */
     getAppDescription(appID: string): Promise<Application> {
-        // Remove .csar if present
-        if (appID.indexOf('.csar') > -1) {
-            appID = appID.split('.')[0];
-        }
-
-        const metaDataUrl = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
+        // ensure that appID always ends with .csar
+        appID = appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
+        const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
 
@@ -126,7 +123,8 @@ export class ApplicationService {
             .toPromise()
             .then(response => {
                 let app = response.json() as Application;
-                app.id = appID;
+                // we only use appIDs without .csar for navigation in new ui, since angular2 router did not route to paths containing '.'
+                app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
                 app.iconUrl = metaDataUrl + '/' + app.iconUrl;
                 app.imageUrl = metaDataUrl + '/' + app.imageUrl;
                 for (let i in app.screenshotUrls) {
@@ -136,7 +134,22 @@ export class ApplicationService {
                 }
                 return app;
             })
-            .catch(this.handleError);
+            .catch(err => {
+                if (err.status === 404) {
+                    // we found a csar that does not contain a data.json, so use default values
+                    let app = new Application();
+                    app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
+                    app.csarName = appID;
+                    app.displayName = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
+                    app.categories = ['others'];
+                    // TODO: Here we have to set default images
+                    app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
+                    app.imageUrl = '../../assets/img/Applications_Header_Icon.png';
+                    return app;
+                } else {
+                    this.handleError(err);
+                }
+            });
     }
 
     /*deleteApp(id: number): Promise<void> {
@@ -154,7 +167,7 @@ export class ApplicationService {
      */
     private handleError(error: any): Promise<any> {
         console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+        return Promise.reject(error);
     }
 
 }
