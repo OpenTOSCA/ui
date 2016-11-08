@@ -8,32 +8,32 @@ export class AdministrationService {
 
     private _containerAPI = 'http://192.168.209.229:1337/containerapi';
     private _buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
-    private _wineryAPI = 'http://192.168.209.229:8080/servicetemplates/';
+    private _wineryAPI = 'http://localhost:8080/servicetemplates/';
 
     constructor() {
     }
 
-    get wineryAPIURL(): string {
+    getWineryAPIURL(): string {
         return this._wineryAPI;
     }
 
-    set wineryAPIURL(url: string) {
+    setWineryAPIURL(url: string) {
         this._wineryAPI = url;
     }
 
-    get containerAPIURL(): string {
+    getContainerAPIURL(): string {
         return this._containerAPI;
     }
 
-    set containerAPIURL(url: string) {
+    setContainerAPIURL(url: string) {
         this._containerAPI = url;
     }
 
-    get buildPlanPath(): string {
+    getBuildPlanPath(): string {
         return this._buildPlanPath;
     }
 
-    set buildPlanPath(path: string) {
+    setBuildPlanPath(path: string) {
         this._buildPlanPath = path;
     }
 

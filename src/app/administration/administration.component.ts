@@ -28,7 +28,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.containerAPI = this.adminService.getContainerAPIUrl();
+        this.containerAPI = this.adminService.getContainerAPIURL();
         this.buildPlanPath = this.adminService.getBuildPlanPath();
     }
 
