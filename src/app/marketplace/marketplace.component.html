@@ -1,10 +1,10 @@
 <div class="breadcrumbContainer">
     <ol class="breadcrumb">
         <li>
-            <a id="installedAppsBreadcrumb" routerLink="/marketplace">Marketplace</a>
+            <a id="installedAppsBreadcrumb" routerLink="/marketplace">Repository</a>
         </li>
         <li class="active">
-            OpenTOSCA Marketplace
+            OpenTOSCA Repository
         </li>
     </ol>
 </div>
@@ -15,9 +15,7 @@
                 <img src="../../assets/img/Marketplace_Header_Icon.png"/>
             </div>
             <br/>
-            <a id="descriptionButton" class="selected" href="">OpenTOSCA MP</a>
-            <a id="instancesButtonBY" href="">Blue Yonder</a>
-            <a id="instancesButtonDFKI" href="">DFKI</a>
+            <a id="descriptionButton" class="selected" href="">OpenTOSCA Repo</a>
         </td>
         <td>
             <div id="content">
@@ -25,7 +23,17 @@
                     <span>Search: </span>
                     <input type="text" id="term" #term (keyup)="search(term.value)">
                 </div>-->
-                <div *ngFor="let category of filteredCategoriesAry">
+                <div class="applicationTilesContainer">
+                    <div class="applicationTile"
+                         *ngFor="let app of apps" @fadeInOut>
+                        <img src="{{app.iconUrl}}"/>
+                        <span>{{app.displayName}}</span>
+                        <a id="applicationsButton" routerLink="">Details</a>
+                        |<button type="button" class="btn btn-link" (click)="installInContainer(app.csarURL)">Install</button>
+                        |<a href="{{app.csarURL}}">Download</a>
+                    </div>
+                </div>
+                <!--<div *ngFor="let category of filteredCategoriesAry">
                     <h2>{{category.category}}</h2>
                     <div class="applicationTilesContainer" @fadeInOut>
                         <div class="applicationTile"
@@ -37,7 +45,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div>-->
             </div>
         </td>
     </tr>

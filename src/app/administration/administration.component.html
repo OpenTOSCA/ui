@@ -23,6 +23,11 @@
                     <label for="containerAPI">Build Plan Path</label>
                     <input type="text" class="form-control" id="buildPlanPath" [(ngModel)]="buildPlanPath" placeholder="API Build Plan Path">
                 </div>
+                <h2>Repository Connection</h2>
+                <div class="form-group">
+                    <label for="repositoryAPI">Repository API</label>
+                    <input type="text" class="form-control" id="repositoryAPI" [(ngModel)]="repositoryAPI" (change)="updateRepositoryURL(event)" placeholder="Repository API URL">
+                </div>
             </div>
         </td>
     </tr>

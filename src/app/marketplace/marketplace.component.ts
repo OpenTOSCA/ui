@@ -1,11 +1,22 @@
-import {Component, Output, EventEmitter, OnInit, trigger, state, style, transition, animate} from '@angular/core';
+/*******************************************************************************
+ * Copyright (c) 2016 University of Stuttgart.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * and the Apache License 2.0 which both accompany this distribution,
+ * and are available at http://www.eclipse.org/legal/epl-v10.html
+ * and http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Contributors:
+ *     Michael Falkenthal - initial implementation
+ *     Jasmin Guth - initial implementation
+ *******************************************************************************/
+import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {MarketplaceService} from "../shared/marketplace.service";
 import {Application} from "../shared/application.model";
 import {Category} from "../shared/category.model";
-import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
-import {MarketplaceApplicationReference} from "../shared/marketplace-application-reference.model";
 import {AdministrationService} from "../shared/administration.service";
+
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -39,6 +50,10 @@ export class MarketplaceComponent implements OnInit {
         this.getApps();
     }
 
+    installInContainer(url: string): void {
+        this.marketService.installAppOnContainer(url, this.adminService.getContainerAPIURL())
+    }
+
     // search(term: string): void {
     //     console.log('Entered search name: ' + term);
     //     this.searchTermStream.next(term);
@@ -49,11 +64,14 @@ export class MarketplaceComponent implements OnInit {
     // }
 
     getApps(): void {
-        this.marketService.getAppsFromMarketPlace(this.adminService.wineryAPIURL)
+        this.marketService.getAppsFromMarketPlace()
             .then(references => {
                 for (let reference of references) {
-                    this.marketService.getAppFromMarketPlace(reference, this.adminService.wineryAPIURL)
-                        .then(app => console.log(app));
+                    this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
+                        .then(app => {
+                            console.log(app);
+                            this.apps.push(app)
+                        });
 
                     // this.apps.push(app);
                     // this.categoriesAry = this.generateCategoriesAry(this.apps);

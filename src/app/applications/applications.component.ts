@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 University of Stuttgart.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * and the Apache License 2.0 which both accompany this distribution,
+ * and are available at http://www.eclipse.org/legal/epl-v10.html
+ * and http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Contributors:
+ *     Michael Falkenthal - initial implementation
+ *******************************************************************************/
 import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {ApplicationService} from '../shared/application.service';
 import {Application} from '../shared/application.model';
@@ -35,9 +46,22 @@ export class ApplicationsComponent implements OnInit {
         this.appService.getApps().then(references => {
             for (let ref of references) {
                 if (ref.title !== 'Self') {
-                    this.appService.getAppDescription(ref.title).then(app => {
-                        this.apps.push(app);
-                    });
+                    this.appService.getAppDescription(ref.title)
+                        .then(app => {
+                            this.apps.push(app);
+                        })
+                        .catch(err => {
+                            if(err.status === 404) {
+                                // we found a csar that does not contain a data.json, so use default values
+                                let app = new Application();
+                                app.id = ref.title.split('.')[0];
+                                app.csarName = ref.title;
+                                app.displayName = ref.title.split('.')[0];
+                                app.categories = ['others'];
+                                app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
+                                this.apps.push(app);
+                            }
+                        });
                 }
             }
         });

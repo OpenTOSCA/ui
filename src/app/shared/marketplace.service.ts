@@ -1,6 +1,15 @@
-/**
- * Created by Michael Falkenthal on 01.09.16.
- */
+/*******************************************************************************
+ * Copyright (c) 2016 University of Stuttgart.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * and the Apache License 2.0 which both accompany this distribution,
+ * and are available at http://www.eclipse.org/legal/epl-v10.html
+ * and http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Contributors:
+ *     Michael Falkenthal - initial implementation
+ *     Oliver Kopp - fixing of URL encoding
+ *******************************************************************************/
 import {Injectable} from '@angular/core';
 import {Headers, Http} from '@angular/http';
 
@@ -18,11 +27,10 @@ export class MarketplaceService {
 
     /**
      * Retrieve a list of references to applications available on the marketplace
-     * @param marketPlaceUrl URL to marketplace
      * @returns {Promise<ApplicationReference[]>}
      */
-    getAppsFromMarketPlace(marketPlaceUrl: string): Promise<MarketplaceApplicationReference[]> {
-        const url = marketPlaceUrl;
+    getAppsFromMarketPlace(): Promise<MarketplaceApplicationReference[]> {
+        const url = this.adminService.getWineryAPIURL();
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -32,11 +40,30 @@ export class MarketplaceService {
 
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string) {
         ///{ns}/[id}/selfserviceportal/
-        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal/';
+        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
-            .then(response => response.json());
+            .then(response => {
+                let app = response.json();
+                // TODO: create model for marketplace applications
+                app.iconUrl = url + '/' + app.iconUrl;
+                app.imageUrl = url + '/' + app.imageUrl;
+                app.csarURL = url.substr(0, url.lastIndexOf('/selfserviceportal')) + '?csar';
+                return app;
+            })
+            .catch(this.handleError);
+    }
+
+    installAppOnContainer(csarURL: string, containerURL: string): Promise<any> {
+
+        const postURL = containerURL + '/CSARs?url=' + encodeURIComponent(csarURL);
+        console.log(postURL);
+        const headers = new Headers({'Accept': 'application/octet-stream'});
+        return this.http.post(postURL, null, {headers: headers})
+            .toPromise()
+            .then(response => console.log(response.json()))
+            .catch(this.handleError);
     }
 
     /*searchApps(term: string): Observable<Application[]> {
@@ -62,7 +89,7 @@ export class MarketplaceService {
             appID = appID.split('.')[0];
         }
 
-        const metaDataUrl = this.adminService.containerAPIURL + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
+        const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
 
