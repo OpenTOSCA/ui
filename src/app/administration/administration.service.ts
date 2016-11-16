@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,41 +8,42 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Injectable} from '@angular/core';
+ */
+
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AdministrationService {
 
-    private _containerAPI = 'http://192.168.209.229:1337/containerapi';
-    private _buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
-    private _wineryAPI = 'http://192.168.209.229:8080/winery/servicetemplates/';
+    private containerAPI = 'http://192.168.209.229:1337/containerapi';
+    private buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
+    private wineryAPI = 'http://192.168.209.229:8080/winery/servicetemplates/';
 
     constructor() {
     }
 
     getWineryAPIURL(): string {
-        return this._wineryAPI;
+        return this.wineryAPI;
     }
 
     setWineryAPIURL(url: string) {
-        this._wineryAPI = url;
+        this.wineryAPI = url;
     }
 
     getContainerAPIURL(): string {
-        return this._containerAPI;
+        return this.containerAPI;
     }
 
     setContainerAPIURL(url: string) {
-        this._containerAPI = url;
+        this.containerAPI = url;
     }
 
     getBuildPlanPath(): string {
-        return this._buildPlanPath;
+        return this.buildPlanPath;
     }
 
     setBuildPlanPath(path: string) {
-        this._buildPlanPath = path;
+        this.buildPlanPath = path;
     }
 
 }

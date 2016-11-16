@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,14 +8,14 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
-import {AdministrationService} from '../shared/administration.service';
+ */
+import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { AdministrationService } from './administration.service';
 
 
 @Component({
     selector: 'opentosca-administration',
-    templateUrl: 'src/app/administration/administration.component.html',
+    templateUrl: 'administration.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -51,5 +51,16 @@ export class AdministrationComponent implements OnInit {
         console.log(this.adminService.getWineryAPIURL());
     }
 
+    updateContainerURL(event: any): void {
+        console.log(this.containerAPI);
+        this.adminService.setContainerAPIURL(this.containerAPI);
+        console.log(this.adminService.getContainerAPIURL());
+    }
+
+    updateBuildPlanPath(event: any): void {
+        console.log(this.buildPlanPath);
+        this.adminService.setBuildPlanPath(this.buildPlanPath);
+        console.log(this.adminService.getBuildPlanPath());
+    }
 
 }

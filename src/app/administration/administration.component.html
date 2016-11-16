@@ -17,11 +17,11 @@
                 <h2>Container Connection</h2>
                 <div class="form-group">
                     <label for="containerAPI">Container API</label>
-                    <input type="text" class="form-control" id="containerAPI" [(ngModel)]="containerAPI" placeholder="Container API URL">
+                    <input type="text" class="form-control" id="containerAPI" [(ngModel)]="containerAPI" (change)="updateContainerURL(event)" placeholder="Container API URL">
                 </div>
                 <div class="form-group">
                     <label for="containerAPI">Build Plan Path</label>
-                    <input type="text" class="form-control" id="buildPlanPath" [(ngModel)]="buildPlanPath" placeholder="API Build Plan Path">
+                    <input type="text" class="form-control" id="buildPlanPath" [(ngModel)]="buildPlanPath" (change)="updateBuildPlanPath(event)" placeholder="API Build Plan Path">
                 </div>
                 <h2>Repository Connection</h2>
                 <div class="form-group">
