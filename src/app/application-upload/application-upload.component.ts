@@ -49,7 +49,7 @@ export class ApplicationUploadComponent implements OnInit {
         this.options = {
             url: this.adminService.getContainerAPIURL() + '/CSARs',
             customHeaders: {
-                'Accept': 'application/octet-stream'
+                'Accept': 'application/json'
             },
             filterExtensions: true,
             allowedExtensions: ['csar'],

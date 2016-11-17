@@ -28,9 +28,7 @@
                         <a class="btn btn-success" *ngIf="provisioningDone"
                            [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
                     </p>
-                    <div id="loader-wrapper" *ngIf="provisioningInProgress">
-                        <div id="loader"></div>
-                    </div>
+                    <div id="loader" *ngIf="provisioningInProgress"></div>
 
                     <h2>Screenshots</h2>
                     <p>

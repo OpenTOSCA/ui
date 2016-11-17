@@ -58,7 +58,7 @@
                          style="margin-top: 20px">
                         <div class="col-md-12">
                             <h2>Deploying Archive</h2>
-                            <div id="loader" *ngIf="true"></div>
+                            <div id="loader" *ngIf="!deploymentDone"></div>
                             <div *ngIf="deploymentDone" class="alert alert-success" role="alert">
                                 <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 Deployment done!
