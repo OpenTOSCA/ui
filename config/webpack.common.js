@@ -27,7 +27,6 @@ module.exports = {
         filename: '[name].bundle.js',
         sourceMapFilename: '[name].map',
         chunkFilename: '[id].chunk.js',
-        //publicPath: '/OpenTOSCAUi/'
     },
 
     /*
