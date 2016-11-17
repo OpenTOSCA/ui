@@ -25,12 +25,13 @@
                 </div>-->
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
-                         *ngFor="let app of apps" @fadeInOut>
-                        <img src="{{app.iconUrl}}"/>
+                         *ngFor="let app of apps" [tooltip]="app.displayName" @fadeInOut>
+                        <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
                         <span>{{app.displayName}}</span>
-                        <a id="applicationsButton" routerLink="">Details</a><br>
-                        <button style="font-size: 12pt; font-family: Calibri, Arial;" type="button" class="btn btn-link" (click)="installInContainer(app.csarURL)">Install</button><br>
-                        <a href="{{app.csarURL}}">Download</a>
+                        <!--<a id="applicationsButton">Details</a><br>-->
+                        Details<br>
+                        <button style="font-size: 12pt; font-family: Calibri, Arial; line-height: 0.8px" type="button" class="btn btn-link" (click)="installInContainer(app.csarURL)">Install</button><br>
+                        <a style="" href="{{app.csarURL}}">Download</a>
                     </div>
                 </div>
                 <!--<div *ngFor="let category of filteredCategoriesAry">
