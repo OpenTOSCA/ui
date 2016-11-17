@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,19 +8,19 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Component, OnInit, ViewChild, trigger, state, style, transition, animate} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import {ApplicationService} from '../shared/application.service';
-import {Application} from '../shared/application.model';
-import {ModalDirective} from '../../../node_modules/ng2-bootstrap/components/modal/modal.component';
-import {PlanParameter} from '../shared/plan-parameter.model';
-import {PlanParameters} from '../shared/plan-parameters.model';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+ */
+import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ApplicationService } from '../shared/application.service';
+import { Application } from '../shared/model/application.model';
+import { ModalDirective } from '../../../node_modules/ng2-bootstrap';
+import { PlanParameter } from '../shared/model/plan-parameter.model';
+import { PlanParameters } from '../shared/model/plan-parameters.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'opentosca-application-details',
-    templateUrl: 'src/app/application-details/application-details.component.html',
+    templateUrl: 'application-details.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),

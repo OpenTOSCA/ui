@@ -28,9 +28,9 @@
                          *ngFor="let app of apps" @fadeInOut>
                         <img src="{{app.iconUrl}}"/>
                         <span>{{app.displayName}}</span>
-                        <a id="applicationsButton" routerLink="">Details</a>
-                        |<button type="button" class="btn btn-link" (click)="installInContainer(app.csarURL)">Install</button>
-                        |<a href="{{app.csarURL}}">Download</a>
+                        <a id="applicationsButton" routerLink="">Details</a><br>
+                        <button style="font-size: 12pt; font-family: Calibri, Arial;" type="button" class="btn btn-link" (click)="installInContainer(app.csarURL)">Install</button><br>
+                        <a href="{{app.csarURL}}">Download</a>
                     </div>
                 </div>
                 <!--<div *ngFor="let category of filteredCategoriesAry">

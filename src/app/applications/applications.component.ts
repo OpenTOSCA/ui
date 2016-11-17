@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,15 +8,15 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
-import {ApplicationService} from '../shared/application.service';
-import {Application} from '../shared/application.model';
+ */
+import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { ApplicationService } from '../shared/application.service';
+import { Application } from '../shared/model/application.model';
 
 
 @Component({
     selector: 'opentosca-applications',
-    templateUrl: 'src/app/applications/applications.component.html',
+    templateUrl: 'applications.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -51,7 +51,7 @@ export class ApplicationsComponent implements OnInit {
                             this.apps.push(app);
                         })
                         .catch(err => {
-                            if(err.status === 404) {
+                            if (err.status === 404) {
                                 // we found a csar that does not contain a data.json, so use default values
                                 let app = new Application();
                                 app.id = ref.title.split('.')[0];

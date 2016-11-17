@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,16 +9,16 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  *     Jasmin Guth - initial implementation
- *******************************************************************************/
-import {Injectable} from '@angular/core';
-import {Headers, Http} from '@angular/http';
+ */
+import { Injectable } from '@angular/core';
+import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {Application} from './application.model';
-import {ApplicationReference} from './application-reference.model';
-import {PlanParameters} from './plan-parameters.model';
-import {AdministrationService} from './administration.service';
+import { Application } from './model/application.model';
+import { ApplicationReference } from './model/application-reference.model';
+import { PlanParameters } from './model/plan-parameters.model';
+import { AdministrationService } from '../administration/administration.service';
 
 @Injectable()
 export class ApplicationService {

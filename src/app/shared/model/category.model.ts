@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,10 +8,11 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-export class PlanParameter {
-    public Name: string;
-    public Type: string;
-    public Required: string;
-    public Value: string;
+ */
+
+import { Application } from './application.model';
+
+export class Category {
+    public category: string;
+    public apps: Application[];
 }

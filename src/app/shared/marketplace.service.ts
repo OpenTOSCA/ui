@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,15 +9,15 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  *     Oliver Kopp - fixing of URL encoding
- *******************************************************************************/
-import {Injectable} from '@angular/core';
-import {Headers, Http} from '@angular/http';
+ */
+import { Injectable } from '@angular/core';
+import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {Application} from './application.model';
-import {MarketplaceApplicationReference} from './marketplace-application-reference.model';
-import {AdministrationService} from "./administration.service";
+import { Application } from './model/application.model';
+import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
+import { AdministrationService } from '../administration/administration.service';
 
 @Injectable()
 export class MarketplaceService {
@@ -55,14 +55,20 @@ export class MarketplaceService {
             .catch(this.handleError);
     }
 
-    installAppOnContainer(csarURL: string, containerURL: string): Promise<any> {
+    installAppInContainer(csarURL: string, containerURL: string): Promise<any> {
 
-        const postURL = containerURL + '/CSARs?url=' + encodeURIComponent(csarURL);
+        // const postURL = containerURL + '/CSARs?url=' + encodeURIComponent(csarURL);
+        const postURL = containerURL + '/CSARs';
         console.log(postURL);
-        const headers = new Headers({'Accept': 'application/octet-stream'});
-        return this.http.post(postURL, null, {headers: headers})
+        //const url = csarURL.substr(0, csarURL.lastIndexOf('?')) + '?csar';
+        const body = {
+            'URL': csarURL
+        };
+        console.log(JSON.stringify(body));
+        const headers = new Headers({'Accept': 'application/json'});
+        return this.http.post(postURL, body, {headers: headers})
             .toPromise()
-            .then(response => console.log(response.json()))
+            .then(response => console.log(response.headers, response.headers.get('Location')))
             .catch(this.handleError);
     }
 

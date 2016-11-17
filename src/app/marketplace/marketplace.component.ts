@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,18 +9,18 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  *     Jasmin Guth - initial implementation
- *******************************************************************************/
-import {Component, OnInit, trigger, state, style, transition, animate} from '@angular/core';
-import {MarketplaceService} from "../shared/marketplace.service";
-import {Application} from "../shared/application.model";
-import {Category} from "../shared/category.model";
-import {Subject} from "rxjs/Subject";
-import {AdministrationService} from "../shared/administration.service";
+ */
+import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { MarketplaceService } from '../shared/marketplace.service';
+import { Application } from '../shared/model/application.model';
+import { Category } from '../shared/model/category.model';
+import { Subject } from 'rxjs/Subject';
+import { AdministrationService } from '../administration/administration.service';
 
 
 @Component({
     selector: 'opentosca-marketplace',
-    templateUrl: 'src/app/marketplace/marketplace.component.html',
+    templateUrl: 'marketplace.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -38,9 +38,9 @@ import {AdministrationService} from "../shared/administration.service";
 
 export class MarketplaceComponent implements OnInit {
 
+    public categoriesAry = <Category[]>[];
+    public filteredCategoriesAry = <Category[]>[];
     private apps = <Application[]>[];
-    categoriesAry = <Category[]>[];
-    filteredCategoriesAry = <Category[]>[];
     private searchTermStream = new Subject<string>();
 
     constructor(private marketService: MarketplaceService, private adminService: AdministrationService) {
@@ -51,7 +51,7 @@ export class MarketplaceComponent implements OnInit {
     }
 
     installInContainer(url: string): void {
-        this.marketService.installAppOnContainer(url, this.adminService.getContainerAPIURL())
+        this.marketService.installAppInContainer(url, this.adminService.getContainerAPIURL());
     }
 
     // search(term: string): void {
@@ -70,7 +70,7 @@ export class MarketplaceComponent implements OnInit {
                     this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
                         .then(app => {
                             console.log(app);
-                            this.apps.push(app)
+                            this.apps.push(app);
                         });
 
                     // this.apps.push(app);

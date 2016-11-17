@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,13 +8,13 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Component, trigger, state, style, transition, animate} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+ */
+import { Component, trigger, state, style, transition, animate } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'opentosca-about',
-    templateUrl: 'src/app/about/about.component.html',
+    templateUrl: 'about.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,11 +8,11 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Component, trigger, state, style, transition, animate, ViewContainerRef} from '@angular/core';
+ */
+import { Component, trigger, state, style, transition, animate, ViewContainerRef } from '@angular/core';
 @Component({
     selector: 'opentosca-ui',
-    templateUrl: 'src/app/nav/main-nav.component.html',
+    templateUrl: 'app.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -28,7 +28,7 @@ import {Component, trigger, state, style, transition, animate, ViewContainerRef}
     ]
 })
 
-export class MainNavComponent {
+export class AppComponent {
     // hack for ng2-bootstrap MODALS
     private viewContainerRef: ViewContainerRef;
 

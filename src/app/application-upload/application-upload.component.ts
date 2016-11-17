@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,14 +8,13 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {Component, OnInit, NgZone, trigger, state, style, transition, animate} from '@angular/core';
-import {ApplicationService} from '../shared/application.service';
-import {AdministrationService} from "../shared/administration.service";
+ */
+import { Component, OnInit, NgZone, trigger, state, style, transition, animate } from '@angular/core';
+import { AdministrationService } from '../administration/administration.service';
 
 @Component({
     selector: 'opentosca-application-upload',
-    templateUrl: 'src/app/application-upload/application-upload.component.html',
+    templateUrl: 'application-upload.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),

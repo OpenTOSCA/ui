@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,8 +8,8 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *******************************************************************************/
-import {InMemoryDbService} from 'angular-in-memory-web-api';
+ */
+import { InMemoryDbService } from 'angular2-in-memory-web-api';
 export class InMemoryDataService implements InMemoryDbService {
     createDb() {
         let applications = [
