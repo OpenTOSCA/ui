@@ -152,8 +152,8 @@ export class ApplicationService {
                     app.displayName = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
                     app.categories = ['others'];
                     // TODO: Here we have to set default images
-                    app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
-                    app.imageUrl = '../../assets/img/Applications_Header_Icon.png';
+                    app.iconUrl = '';
+                    app.imageUrl = '';
                     return app;
                 } else {
                     this.handleError(err);
