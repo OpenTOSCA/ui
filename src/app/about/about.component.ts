@@ -1,5 +1,6 @@
-import {Component, trigger, state, style, transition, animate} from '@angular/core';
+import {Component, trigger, state, style, transition, animate, OnChanges, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {Input} from "@angular/core/src/metadata/directives";
 
 @Component({
     selector: 'opentosca-about',
@@ -19,7 +20,7 @@ import {ActivatedRoute} from '@angular/router';
     ]
 })
 
-export class AboutComponent {
+export class AboutComponent{
 
     constructor(private route: ActivatedRoute) {
     }
