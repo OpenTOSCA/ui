@@ -25,7 +25,7 @@
                     <div class="applicationTile"
                          *ngFor="let app of apps" @fadeInOut>
                         <img src="{{app.iconUrl}}"/>
-                        <h1>{{app.displayName}}</h1>
+                        <span>{{app.displayName}}</span>
                         <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
                     </div>
                 </div>
