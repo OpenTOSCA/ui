@@ -10,6 +10,7 @@
  *     Michael Falkenthal - initial implementation
  *     Jasmin Guth - initial implementation
  */
+
 import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 import { MarketplaceService } from '../shared/marketplace.service';
 import { Application } from '../shared/model/application.model';
@@ -17,6 +18,7 @@ import { Category } from '../shared/model/category.model';
 import { Subject } from 'rxjs/Subject';
 import { AdministrationService } from '../administration/administration.service';
 
+import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -69,8 +71,8 @@ export class MarketplaceComponent implements OnInit {
                 for (let reference of references) {
                     this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
                         .then(app => {
-                            console.log(app);
                             this.apps.push(app);
+                            this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
                         });
 
                     // this.apps.push(app);
