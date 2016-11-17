@@ -1,6 +1,16 @@
-import {Component, trigger, state, style, transition, animate, OnChanges, SimpleChanges} from '@angular/core';
+/*******************************************************************************
+ * Copyright (c) 2016 University of Stuttgart.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * and the Apache License 2.0 which both accompany this distribution,
+ * and are available at http://www.eclipse.org/legal/epl-v10.html
+ * and http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Contributors:
+ *     Michael Falkenthal - initial implementation
+ *******************************************************************************/
+import {Component, trigger, state, style, transition, animate} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Input} from "@angular/core/src/metadata/directives";
 
 @Component({
     selector: 'opentosca-about',
@@ -20,7 +30,7 @@ import {Input} from "@angular/core/src/metadata/directives";
     ]
 })
 
-export class AboutComponent{
+export class AboutComponent {
 
     constructor(private route: ActivatedRoute) {
     }
