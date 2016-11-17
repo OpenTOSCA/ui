@@ -38,8 +38,13 @@ export class MarketplaceService {
             .catch(this.handleError);
     }
 
+    /**
+     * Fetch data.json from winery
+     * @param appReference Reference object that contains namespace and id of application
+     * @param marketPlaceUrl URL to winery instance
+     * @returns {Promise<TResult>}
+     */
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string) {
-        ///{ns}/[id}/selfserviceportal/
         const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
@@ -55,16 +60,17 @@ export class MarketplaceService {
             .catch(this.handleError);
     }
 
+    /**
+     * Deploy CSAR in container via URL to CSAR
+     * @param csarURL URL to CSAR
+     * @param containerURL Container endpoint URL (e.g., http://localhost:1337/containerapi)
+     * @returns {Promise<TResult>}
+     */
     installAppInContainer(csarURL: string, containerURL: string): Promise<any> {
-
-        // const postURL = containerURL + '/CSARs?url=' + encodeURIComponent(csarURL);
         const postURL = containerURL + '/CSARs';
-        console.log(postURL);
-        //const url = csarURL.substr(0, csarURL.lastIndexOf('?')) + '?csar';
         const body = {
             'URL': csarURL
         };
-        console.log(JSON.stringify(body));
         const headers = new Headers({'Accept': 'application/json'});
         return this.http.post(postURL, body, {headers: headers})
             .toPromise()
