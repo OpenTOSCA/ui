@@ -6,9 +6,9 @@
                 <span *ngIf="app">{{app.displayName}}</span>
             </div>
             <br/>
-            <a id="descriptionButton" class="selected" href="">Description</a>
-            <a id="instancesButton" href="">Instances</a>
-            <a id="statisticsButton" href="">Statistics</a>
+            <a id="descriptionButton" class="selected">Description</a>
+            <!--<a id="instancesButton" href="">Instances</a>
+            <a id="statisticsButton" href="">Statistics</a>-->
             <a routerLink="/applications" style="margin-top:40px"><b>«</b> Back to Overview</a>
         </td>
         <td>
@@ -28,7 +28,7 @@
                         <a class="btn btn-success" *ngIf="provisioningDone"
                            [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
                     </p>
-                    <div id="loader" *ngIf="provisioningInProgress"></div>
+                        <div id="loader" *ngIf="provisioningInProgress"></div>
 
                     <h2>Screenshots</h2>
                     <p>
