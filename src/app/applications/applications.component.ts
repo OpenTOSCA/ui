@@ -13,6 +13,7 @@ import { Component, OnInit, trigger, state, style, transition, animate } from '@
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
+import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-applications',
@@ -49,6 +50,7 @@ export class ApplicationsComponent implements OnInit {
                     this.appService.getAppDescription(ref.title)
                         .then(app => {
                             this.apps.push(app);
+                            this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
                         })
                         .catch(err => {
                             if (err.status === 404) {
@@ -60,6 +62,7 @@ export class ApplicationsComponent implements OnInit {
                                 app.categories = ['others'];
                                 app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
                                 this.apps.push(app);
+                                this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
                             }
                         });
                 }
