@@ -2,7 +2,7 @@
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img *ngIf="app" src="{{app.iconUrl}}" @fadeInOut/>
+                <img *ngIf="app" [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'" @fadeInOut/>
                 <span *ngIf="app">{{app.displayName}}</span>
             </div>
             <br/>
