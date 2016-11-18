@@ -20,11 +20,10 @@
         </td>
         <td>
             <div id="content">
-                
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
                          *ngFor="let app of apps" @fadeInOut>
-                        <img src="{{app.iconUrl}}"/>
+                        <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
                         <span>{{app.displayName}}</span>
                         <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
                     </div>
