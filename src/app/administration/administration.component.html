@@ -9,25 +9,45 @@
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img src="../../assets/img/Applications_Header_Icon.png" />
+                <img src="../../assets/img/Applications_Header_Icon.png"/>
             </div>
         </td>
         <td>
             <div id="content">
-                <h2>Container Connection</h2>
-                <div class="form-group">
-                    <label for="containerAPI">Container API</label>
-                    <input type="text" class="form-control" id="containerAPI" [(ngModel)]="containerAPI" (change)="updateContainerURL(event)" placeholder="Container API URL">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Connections</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group has-feedback" [ngClass]="{'has-success': containerAPIAvailable, 'has-error': !containerAPIAvailable}">
+                            <label class="control-label" for="containerAPI">Container API</label>
+                            <input type="text" class="form-control" id="containerAPI" [ngModel]="containerAPI"
+                                   (ngModelChange)="updateContainerURL($event)" placeholder="Enter Container API URL here">
+                            <span class="glyphicon glyphicon-ok form-control-feedback" [ngClass]="{'glyphicon-ok': containerAPIAvailable, 'glyphicon-remove': !containerAPIAvailable}" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="form-group has-feedback" [ngClass]="{'has-success': repositoryAPIAvailable, 'has-error': !repositoryAPIAvailable}">
+                            <label class="control-label" for="repositoryAPI">Repository API</label>
+                            <input type="text" class="form-control" id="repositoryAPI" [ngModel]="repositoryAPI"
+                                   (ngModelChange)="updateRepositoryURL($event)" placeholder="Enter Repository API URL here">
+                            <span class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': repositoryAPIAvailable, 'glyphicon-remove': !repositoryAPIAvailable}" aria-hidden="true"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="containerAPI">Build Plan Path</label>
-                    <input type="text" class="form-control" id="buildPlanPath" [(ngModel)]="buildPlanPath" (change)="updateBuildPlanPath(event)" placeholder="API Build Plan Path">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Smart Service Archive Parameters</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="control-label" for="containerAPI">Build Plan Path</label>
+                            <input type="text" class="form-control" id="buildPlanPath" [ngModel]="buildPlanPath"
+                                   (ngModelChange)="updateBuildPlanPath($event)" placeholder="Enter Build Plan Path here">
+                        </div>
+                    </div>
                 </div>
-                <h2>Repository Connection</h2>
-                <div class="form-group">
-                    <label for="repositoryAPI">Repository API</label>
-                    <input type="text" class="form-control" id="repositoryAPI" [(ngModel)]="repositoryAPI" (change)="updateRepositoryURL(event)" placeholder="Repository API URL">
-                </div>
+
             </div>
         </td>
     </tr>

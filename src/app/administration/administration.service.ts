@@ -11,15 +11,18 @@
  */
 
 import { Injectable } from '@angular/core';
+import { Http, Headers } from "@angular/http";
 
 @Injectable()
 export class AdministrationService {
 
+    // Default values
     private containerAPI = 'http://192.168.209.229:1337/containerapi';
     private buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
     private wineryAPI = 'http://192.168.209.229:8080/winery/servicetemplates/';
+    private defaultAcceptHeaders = new Headers({'Accept': 'application/json'});
 
-    constructor() {
+    constructor(private http: Http) {
     }
 
     getWineryAPIURL(): string {
@@ -46,4 +49,13 @@ export class AdministrationService {
         this.buildPlanPath = path;
     }
 
+    isContainerAvailable(): Promise<any> {
+        return this.http.get(this.containerAPI, this.defaultAcceptHeaders)
+            .toPromise();
+    }
+
+    isRepositoryAvailable(): Promise<any> {
+        return this.http.get(this.wineryAPI, this.defaultAcceptHeaders)
+            .toPromise();
+    }
 }
