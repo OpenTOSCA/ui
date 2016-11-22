@@ -27,26 +27,28 @@
                     <div class="applicationTile"
                          *ngFor="let app of apps" [tooltip]="app.displayName" @fadeInOut>
                         <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
-                        <div style="padding-top: 5px">
+                        <div style="padding-top: 2px">
                             <span>{{app.displayName}}</span>
                         </div>
                         <!--<a id="applicationsButton">Details</a><br>-->
-                        <div style="padding-top: 25px">
+                        <div style="padding-top: 2px">
                             Details
                         </div>
-                        <div>
-                            <button style="font-size: 12pt; font-family: Calibri, Arial;" type="button"
-                                    class="btn btn-link" (click)="installInContainer(app.csarURL)">Install
+                        <div *ngIf="app.inContainer" style="padding-top: 0">
+                            Already Installed
+                        </div>
+                        <div *ngIf="!app.inContainer" style="padding-top: 0; padding-bottom: 0">
+                            <button style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;" type="button"
+                                    class="btn btn-link" (click)="installInContainer(app)">Install
                             </button>
                         </div>
-                        <div>
-                            <a href="{{app.csarURL}}">Download</a>
+                        <div style="padding-top: 0">
+                            <a style="padding-top: 0; margin-top: 0" [href]="app.csarURL">Download</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- TODO: Add loader to indicate installation of csar in container, on success set Install to disabled Already Installed -->
-                <div style="margin: -75px 0 0 -75px" id="loader" *ngIf="true"></div>
+                <div style="margin: -75px 0 0 -75px" id="loader" *ngIf="showLoader"></div>
                 <!--<div *ngFor="let category of filteredCategoriesAry">
                     <h2>{{category.category}}</h2>
                     <div class="applicationTilesContainer" @fadeInOut>

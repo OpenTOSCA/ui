@@ -12,9 +12,9 @@
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img src="../../assets/img/Applications_Header_Icon.png" />
+                <img src="../../assets/img/Applications_Header_Icon.png"/>
             </div>
-            <br />
+            <br/>
             <a id="descriptionButton" class="selected" href="">Installed Apps</a>
             <a id="instancesButton" routerLink="/applications/upload" routerLinkActive="selected">Upload new App</a>
         </td>
@@ -24,8 +24,12 @@
                     <div class="applicationTile"
                          *ngFor="let app of apps" @fadeInOut>
                         <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
-                        <span>{{app.displayName}}</span>
-                        <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
+                        <div style="padding-top: 5px">
+                            <span>{{app.displayName}}</span>
+                        </div>
+                        <div style="padding-top: 25px">
+                            <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
+                        </div>
                     </div>
                 </div>
 

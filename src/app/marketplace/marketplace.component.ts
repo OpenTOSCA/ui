@@ -19,6 +19,8 @@ import { Subject } from 'rxjs/Subject';
 import { AdministrationService } from '../administration/administration.service';
 
 import * as _ from 'lodash';
+import { ApplicationService } from "../shared/application.service";
+import { MarketplaceApplication } from "../shared/model/marketplace-application.model";
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -42,23 +44,33 @@ export class MarketplaceComponent implements OnInit {
 
     public categoriesAry = <Category[]>[];
     public filteredCategoriesAry = <Category[]>[];
-    private apps = <Application[]>[];
+    private apps = <MarketplaceApplication[]>[];
     private searchTermStream = new Subject<string>();
+    public showLoader = false;
 
-    constructor(private marketService: MarketplaceService, private adminService: AdministrationService) {
+    constructor(private adminService: AdministrationService, private appService: ApplicationService, private marketService: MarketplaceService) {
     }
 
     ngOnInit(): void {
         this.getApps();
     }
 
-    installInContainer(url: string): void {
-        this.marketService.installAppInContainer(url, this.adminService.getContainerAPIURL())
+    installInContainer(app: MarketplaceApplication): void {
+        this.showLoader = true;
+        this.marketService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
             .then(response => {
-                // console.log(response.headers, response.headers.get('Location'))
-                console.log(response)
+                this.showLoader = false;
+                this.containerContainsApp(app)
+                    .then(result => app.inContainer = result)
+                    .catch(result => app.inContainer = result);
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                this.showLoader = false;
+                this.containerContainsApp(app)
+                    .then(result => app.inContainer = result)
+                    .catch(result => app.inContainer = result);
+                console.error(err)
+            });
     }
 
     // search(term: string): void {
@@ -76,6 +88,9 @@ export class MarketplaceComponent implements OnInit {
                 for (let reference of references) {
                     this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
                         .then(app => {
+                            this.containerContainsApp(app)
+                                .then(result => app.inContainer = result)
+                                .catch(result => app.inContainer = result);
                             this.apps.push(app);
                             this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
                         });
@@ -88,6 +103,17 @@ export class MarketplaceComponent implements OnInit {
             });
     }
 
+    containerContainsApp(app: MarketplaceApplication): Promise<boolean> {
+        console.log(app);
+        return this.appService.getAppDescription(app.id)
+            .then(cApp => {
+                return true;
+            })
+            .catch(err => {
+                return false;
+            });
+    }
+
     /*getApps(): void {
      this.appService.getApps().then(apps => {
      this.apps = apps;
@@ -96,7 +122,7 @@ export class MarketplaceComponent implements OnInit {
      });
      }*/
 
-    generateCategoriesAry(apps: Application[]): Category[] {
+    /*generateCategoriesAry(apps: Application[]): Category[] {
         let ary: Category[] = [];
         for (let app of apps) {
             for (let category of app.categories) {
@@ -118,5 +144,5 @@ export class MarketplaceComponent implements OnInit {
         if (!found) {
             categoriesAry.push({category: category, apps: [app]});
         }
-    }
+    }*/
 }

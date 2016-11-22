@@ -15,9 +15,10 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
+import { AdministrationService } from '../administration/administration.service';
 import { Application } from './model/application.model';
 import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
-import { AdministrationService } from '../administration/administration.service';
+import { MarketplaceApplication } from './model/marketplace-application.model';
 
 @Injectable()
 export class MarketplaceService {
@@ -35,7 +36,7 @@ export class MarketplaceService {
         return this.http.get(url, {headers: headers})
             .toPromise()
             .then(response => {
-                // TODO: Check, which if Apps are already installed in container
+                // TODO: Check, if Apps are already installed in container
                 return response.json() as MarketplaceApplicationReference[];
             })
             .catch(this.handleError);
@@ -47,17 +48,18 @@ export class MarketplaceService {
      * @param marketPlaceUrl URL to winery instance
      * @returns {Promise<TResult>}
      */
-    getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string) {
+    getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
         const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
             .then(response => {
-                let app = response.json();
+                let app = response.json() as MarketplaceApplication;
                 // TODO: create model for marketplace applications
                 app.iconUrl = url + '/' + app.iconUrl;
                 app.imageUrl = url + '/' + app.imageUrl;
                 app.csarURL = url.substr(0, url.lastIndexOf('/selfserviceportal')) + '?csar';
+                app.id = appReference.id;
                 return app;
             })
             .catch(this.handleError);
@@ -97,7 +99,7 @@ export class MarketplaceService {
      * @param appID CSAR id/name (e.g. XYZ.csar)
      * @returns {Promise<Application>}
      */
-    getAppDescription(appID: string): Promise<Application> {
+    getAppDescription(appID: string): Promise<MarketplaceApplication> {
         // Remove .csar if present
         if (appID.indexOf('.csar') > -1) {
             appID = appID.split('.')[0];
@@ -110,7 +112,7 @@ export class MarketplaceService {
         return this.http.get(dataJSONUrl, {headers: headers})
             .toPromise()
             .then(response => {
-                let app = response.json() as Application;
+                let app = response.json() as MarketplaceApplication;
                 app.id = appID;
                 app.iconUrl = metaDataUrl + '/' + app.iconUrl;
                 app.imageUrl = metaDataUrl + '/' + app.imageUrl;
