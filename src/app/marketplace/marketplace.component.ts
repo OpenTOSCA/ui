@@ -53,7 +53,12 @@ export class MarketplaceComponent implements OnInit {
     }
 
     installInContainer(url: string): void {
-        this.marketService.installAppInContainer(url, this.adminService.getContainerAPIURL());
+        this.marketService.installAppInContainer(url, this.adminService.getContainerAPIURL())
+            .then(response => {
+                // console.log(response.headers, response.headers.get('Location'))
+                console.log(response)
+            })
+            .catch(err => console.error(err));
     }
 
     // search(term: string): void {

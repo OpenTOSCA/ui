@@ -41,6 +41,7 @@ export class ApplicationDetailsComponent implements OnInit {
     public app: Application;
     public buildPlanParameters: PlanParameters;
     public selfserviceApplicationUrl: SafeUrl;
+    public planOutputParameters: {OutputParameter: PlanParameter}[];
     public provisioningInProgress = false;
     public provisioningDone = false;
 
@@ -90,7 +91,8 @@ export class ApplicationDetailsComponent implements OnInit {
                             }
                         }
                         if (this.selfserviceApplicationUrl === '') {
-                            console.error('Did not receive a selfserviceApplicationUrl');
+                            this.planOutputParameters = result.OutputParameters;
+                            console.log('Did not receive a selfserviceApplicationUrl');
                         }
                         this.provisioningDone = true;
                         this.provisioningInProgress = false;
@@ -100,14 +102,49 @@ export class ApplicationDetailsComponent implements OnInit {
             .catch(this.handleError);
     }
 
+    setDummyOutput(): void {
+        this.planOutputParameters = [
+            {
+                OutputParameter: {
+                    "Name": "MQTTTopicName",
+                    "Type": "String",
+                    "Value": "falkisTopic",
+                    "Required": "yes"
+                }
+            },
+            {
+                OutputParameter: {
+                    "Name": "MQTTBrokerEndpoint",
+                    "Type": "String",
+                    "Value": "129.69.214.245",
+                    "Required": "yes"
+                }
+            }
+        ]
+    }
 
+    /**
+     * Checks if out parameter should be shown as result for users after provisioning
+     * @param param
+     * @returns {boolean}
+     */
+    showOutputParameter(param: {OutputParameter: PlanParameter}): boolean {
+        return (!(param.OutputParameter.Name === 'instanceId' ||
+        param.OutputParameter.Name === 'CorrelationID'));
+    }
+
+    /**
+     * Checks if given param should be shown in the start privisioning dialog
+     * @param param
+     * @returns {boolean}
+     */
     showParam(param: PlanParameter) {
-        return (param.Name === 'CorrelationID' ||
+        return (!(param.Name === 'CorrelationID' ||
         param.Name === 'csarName' ||
         param.Name === 'containerApiAddress' ||
         param.Name === 'instanceDataAPIUrl' ||
         param.Name === 'planCallbackAddress_invoker' ||
-        param.Name === 'csarEntrypoint') ? false : true;
+        param.Name === 'csarEntrypoint'));
     }
 
     /**

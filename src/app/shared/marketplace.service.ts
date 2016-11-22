@@ -34,7 +34,10 @@ export class MarketplaceService {
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
-            .then(response => response.json() as MarketplaceApplicationReference[])
+            .then(response => {
+                // TODO: Check, which if Apps are already installed in container
+                return response.json() as MarketplaceApplicationReference[];
+            })
             .catch(this.handleError);
     }
 
@@ -72,10 +75,9 @@ export class MarketplaceService {
             'URL': csarURL
         };
         const headers = new Headers({'Accept': 'application/json'});
+        // TODO: Check if App is already installed in container, if true then don't post
         return this.http.post(postURL, body, {headers: headers})
-            .toPromise()
-            .then(response => console.log(response.headers, response.headers.get('Location')))
-            .catch(this.handleError);
+            .toPromise();
     }
 
     /*searchApps(term: string): Observable<Application[]> {
