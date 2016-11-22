@@ -94,8 +94,8 @@ export class ApplicationService {
             .then(response => {
                 let res = response.json() as {result: {status: string}};
                 if (res.result && res.result.status && res.result.status === 'PENDING') {
-                    console.log('Received not final plan result, polling again in 500ms');
-                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForResult(pollUrl)), 500));
+                    console.log('Received not final plan result, polling again in 1000ms');
+                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForResult(pollUrl)), 1000));
                 } else {
                     // we got a plan result
                     return Promise.resolve(response.json());
@@ -151,7 +151,6 @@ export class ApplicationService {
                     app.csarName = appID;
                     app.displayName = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
                     app.categories = ['others'];
-                    // TODO: Here we have to set default images
                     app.iconUrl = '';
                     app.imageUrl = '';
                     return app;
