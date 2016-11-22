@@ -15,7 +15,7 @@
                <accordion>
                    <accordion-group #accGroupTech [isOpen]="true">
                        <div accordion-heading>
-                           <h3 class="panel-title">Overview technologies
+                           <h3 class="panel-title">Used and Supported Technologies
                                <i class="pull-right glyphicon"
                                   [ngClass]="{'glyphicon-chevron-down': accGroupTech?.isOpen, 'glyphicon-chevron-right': !accGroupTech?.isOpen}">
                                </i>
@@ -279,7 +279,7 @@
                             <p>APPENDIX: How to apply the Apache License to your work.</p>
 
                             <p>To apply the Apache License to your work, attach the following
-                                boilerplate notice, with the fields enclosed by brackets "{{ '{' }}{{ '}' }}"
+                                boilerplate notice, with the fields enclosed by brackets "{{ '{}' }}"
                                 replaced with your own identifying information. (Don't include
                                 the brackets!)  The text should be enclosed in the appropriate
                                 comment syntax for the file format. We also recommend that a
@@ -287,7 +287,7 @@
                                 same "printed page" as the copyright notice for easier
                                 identification within third-party archives.</p>
 
-                            <p>Copyright {{ '{' }}yyyy{{ '}' }} {{ '{' }}name of copyright owner{{ '}' }}</p>
+                            <p>Copyright {{ '{yyyy} {name of copyright owner}' }}</p>
 
                             <p>Licensed under the Apache License, Version 2.0 (the "License");
                                 you may not use this file except in compliance with the License.
