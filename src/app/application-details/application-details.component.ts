@@ -63,14 +63,24 @@ export class ApplicationDetailsComponent implements OnInit {
         });
     }
 
+    /**
+     * Shows modal to key in required buildplan parameters and start provisioning
+     */
     public showChildModal(): void {
         this.childModal.show();
     }
 
+    /**
+     * Hides modal key in required buildplan parameters and start provisioning
+     */
     public hideChildModal(): void {
         this.childModal.hide();
     }
 
+    /**
+     * Delegates the provisioning of a new instance to the ApplicationService
+     * and hides the modal
+     */
     startProvisioning(): void {
         this.hideChildModal();
         this.selfserviceApplicationUrl = '';
@@ -102,6 +112,9 @@ export class ApplicationDetailsComponent implements OnInit {
             .catch(this.handleError);
     }
 
+    /**
+     * Can be used to set dummy plan output parameters for testing purposes
+     */
     setDummyOutput(): void {
         this.planOutputParameters = [
             {
@@ -158,6 +171,9 @@ export class ApplicationDetailsComponent implements OnInit {
         return Promise.reject(error.message || error);
     }
 
+    /**
+     * Reset all state variables
+     */
     private resetProvisioningState(): void {
         this.provisioningDone = true;
         this.provisioningInProgress = false;

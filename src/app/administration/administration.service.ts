@@ -25,35 +25,67 @@ export class AdministrationService {
     constructor(private http: Http) {
     }
 
+    /**
+     * Returns wineryAPI
+     * @returns {string}
+     */
     getWineryAPIURL(): string {
         return this.wineryAPI;
     }
 
+    /**
+     * Sets wineryAPI to new value
+     * @param url
+     */
     setWineryAPIURL(url: string) {
         this.wineryAPI = url;
     }
 
+    /**
+     * Returns containerAPIURL
+     * @returns {string}
+     */
     getContainerAPIURL(): string {
         return this.containerAPI;
     }
 
+    /**
+     * Sets containerAPIURL to new value
+     * @param url
+     */
     setContainerAPIURL(url: string) {
         this.containerAPI = url;
     }
 
+    /**
+     * Returns buildPlanPath
+     * @returns {string}
+     */
     getBuildPlanPath(): string {
         return this.buildPlanPath;
     }
 
+    /**
+     * Sets buildPlanPath to new value
+     * @param path
+     */
     setBuildPlanPath(path: string) {
         this.buildPlanPath = path;
     }
 
+    /**
+     * Checks if container API responds
+     * @returns {Promise<any>}
+     */
     isContainerAvailable(): Promise<any> {
         return this.http.get(this.containerAPI, this.defaultAcceptHeaders)
             .toPromise();
     }
 
+    /**
+     * Checks if repository API responds
+     * @returns {Promise<any>}
+     */
     isRepositoryAvailable(): Promise<any> {
         return this.http.get(this.wineryAPI, this.defaultAcceptHeaders)
             .toPromise();

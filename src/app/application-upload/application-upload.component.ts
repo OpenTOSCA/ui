@@ -60,6 +60,10 @@ export class ApplicationUploadComponent implements OnInit {
     constructor(private adminService: AdministrationService) {
     }
 
+    /**
+     * Callback for ng2-uploader to process progress and status of file upload
+     * @param data
+     */
     handleUpload(data: any): void {
         this.zone.run(() => {
             this.uploadFile = data;
@@ -81,12 +85,19 @@ export class ApplicationUploadComponent implements OnInit {
         });
     }
 
+    /**
+     * Reset upload state variables
+     */
     resetUploadStats(): void {
         this.uploadInProgress = true;
         this.deploymentInProgress = false;
         this.dynamic = 0;
     }
 
+    /**
+     * Trigger update of variable to show current upload speed
+     * @param speed
+     */
     updateCurrentSpeed(speed: string): void {
         if (this.lastUpdate === undefined) {
             this.lastUpdate = Date.now();
@@ -98,6 +109,10 @@ export class ApplicationUploadComponent implements OnInit {
         }
     }
 
+    /**
+     * Update variable to show current upload speed
+     * @param speed
+     */
     setCurrentSpeed(speed: string): void {
         if (speed) {
             this.currentSpeed = speed;

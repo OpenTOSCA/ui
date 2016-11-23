@@ -50,24 +50,38 @@ export class AdministrationComponent implements OnInit {
         this.checkAvailabilityOfRepository();
     }
 
+    /**
+     * Checks if container API responds
+     */
     checkAvailabilityOfContainer(): void {
         this.adminService.isContainerAvailable()
             .then(success => this.containerAPIAvailable = true)
             .catch(err => this.containerAPIAvailable = false);
     }
 
+    /**
+     * Checks if repository API responds
+     */
     checkAvailabilityOfRepository(): void {
         this.adminService.isRepositoryAvailable()
             .then(success => this.repositoryAPIAvailable = true)
             .catch(err => this.repositoryAPIAvailable = false);
     }
 
+    /**
+     * Delegates update of buildplan path to AdministrationService
+     * @param newValue
+     */
     updateBuildPlanPath(newValue: string): void {
         this.buildPlanPath = newValue;
         this.adminService.setBuildPlanPath(this.buildPlanPath);
         console.log(this.adminService.getBuildPlanPath());
     }
 
+    /**
+     * Delegates update of container API URL to AdministrationService
+     * @param newValue
+     */
     updateContainerURL(newValue: string): void {
         this.containerAPI = newValue;
         this.adminService.setContainerAPIURL(this.containerAPI);
@@ -75,6 +89,10 @@ export class AdministrationComponent implements OnInit {
         console.log(this.adminService.getContainerAPIURL());
     }
 
+    /**
+     * Delegates update of repository API URL to AdministrationService
+     * @param newValue
+     */
     updateRepositoryURL(newValue: string): void {
         this.repositoryAPI = newValue;
         this.adminService.setWineryAPIURL(this.repositoryAPI);

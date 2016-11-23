@@ -55,6 +55,10 @@ export class MarketplaceComponent implements OnInit {
         this.getApps();
     }
 
+    /**
+     * Trigger install of CSAR in container via URL to CSAR
+     * @param app
+     */
     installInContainer(app: MarketplaceApplication): void {
         this.showLoader = true;
         this.marketService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
@@ -82,6 +86,9 @@ export class MarketplaceComponent implements OnInit {
     //     });
     // }
 
+    /**
+     * Fetch apps from repository
+     */
     getApps(): void {
         this.marketService.getAppsFromMarketPlace()
             .then(references => {
@@ -103,6 +110,11 @@ export class MarketplaceComponent implements OnInit {
             });
     }
 
+    /**
+     * Check if app is already installed in container
+     * @param app
+     * @returns {Promise<boolean>}
+     */
     containerContainsApp(app: MarketplaceApplication): Promise<boolean> {
         console.log(app);
         return this.appService.getAppDescription(app.id)
