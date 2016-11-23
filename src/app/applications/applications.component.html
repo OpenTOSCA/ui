@@ -27,8 +27,13 @@
                         <div style="padding-top: 5px">
                             <span>{{app.displayName}}</span>
                         </div>
-                        <div style="padding-top: 25px">
+                        <div style="padding-top: 10px">
                             <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
+                        </div>
+                        <div style="padding-top: 0; padding-bottom: 0">
+                            <button style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;" type="button"
+                                    class="btn btn-link" (click)="deleteFromContainer(app)">Delete
+                            </button>
                         </div>
                     </div>
                 </div>

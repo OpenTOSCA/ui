@@ -43,6 +43,27 @@ export class ApplicationsComponent implements OnInit {
         this.getAppReferences();
     }
 
+    /**
+     * Delegate app deletion to the ApplicationService
+     * @param app
+     */
+    deleteFromContainer(app: Application): void {
+        this.appService.deleteAppFromContainer(app.id + '.csar')
+            .then(response => {
+                console.log(response);
+                for (let i = 0; i < this.apps.length; i++){
+                    if (this.apps[i].id === app.id){
+                        this.apps.splice(i, 1);
+                    }
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    /**
+     * Fetch application descriptions from container.
+     * Fetch application references from container and app description of each reference.
+     */
     getAppReferences(): void {
         this.appService.getApps().then(references => {
             for (let ref of references) {

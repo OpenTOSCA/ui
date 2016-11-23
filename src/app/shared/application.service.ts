@@ -19,11 +19,24 @@ import { Application } from './model/application.model';
 import { ApplicationReference } from './model/application-reference.model';
 import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
+import { BuildplanPollResource } from "./model/buildplan-poll-resource.model";
 
 @Injectable()
 export class ApplicationService {
 
     constructor(private http: Http, private adminService: AdministrationService) {
+    }
+
+    /**
+     * Deletes the app from the container
+     * @param appID
+     * @returns {Promise<any>}
+     */
+    deleteAppFromContainer(appID: string): Promise<any> {
+        const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID;
+        let headers = new Headers({'Accept': 'text/plain'});
+        return this.http.delete(url, {headers: headers})
+            .toPromise();
     }
 
     /**
@@ -39,6 +52,11 @@ export class ApplicationService {
             .catch(this.handleError);
     }
 
+    /**
+     * Lookup the parameters required by the buildplan of a CSAR
+     * @param appID
+     * @returns {Promise<TResult>}
+     */
     getBuildPlanParameters(appID: string): Promise<PlanParameters> {
         // /containerapi/CSARs/FlinkApp_ServiceTemplate_DUMMY.csar/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/
         // Operations/instantiate/Plan/FlinkApp_ServiceTemplate_buildPlan
@@ -61,13 +79,19 @@ export class ApplicationService {
                         }
                     }
                     // okay, we did not get a reference to a plan, so reject the promise
-                    this.handleError(new Error('No reference to build plan available'));
+                    this.handleError(new Error('No reference to buildplan available'));
                 }
             )
             .catch(this.handleError);
     }
 
-    startProvisioning(appID: string, params: PlanParameters): Promise<any> {
+    /**
+     * Triggers the provisioning of a new service instance
+     * @param appID ID (CSAR name) of the service which shall be provisioned
+     * @param params PlanParameters object that containes required input parameters for the buildplan
+     * @returns {Promise<BuildplanPollResource>}
+     */
+    startProvisioning(appID: string, params: PlanParameters): Promise<BuildplanPollResource> {
         const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Instances';
         console.log(JSON.stringify(params));
 
@@ -84,6 +108,11 @@ export class ApplicationService {
             .catch(this.handleError);
     }
 
+    /**
+     * Poll for finishing of a buildplan
+     * @param pollUrl URL retrieved from buildplan call (POST to CSAR resource)
+     * @returns {Promise<PlanParameters>}
+     */
     pollForResult(pollUrl: string): Promise<PlanParameters> {
         let headers = new Headers({
             'Accept': 'application/json'
@@ -176,9 +205,9 @@ export class ApplicationService {
      }*/
 
     /**
-     * Print errors to console
+     * Print errors to console and reject promise
      * @param error
-     * @returns {Promise<void>|Promise<T>}
+     * @returns {Promise<any>}
      */
     private handleError(error: any): Promise<any> {
         console.error('An error occurred', error);
