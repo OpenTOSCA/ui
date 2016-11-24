@@ -119,21 +119,21 @@ export class ApplicationDetailsComponent implements OnInit {
         this.planOutputParameters = [
             {
                 OutputParameter: {
-                    "Name": "MQTTTopicName",
-                    "Type": "String",
-                    "Value": "falkisTopic",
-                    "Required": "yes"
+                    'Name': 'MQTTTopicName',
+                    'Type': 'String',
+                    'Value': 'falkisTopic',
+                    'Required': 'yes'
                 }
             },
             {
                 OutputParameter: {
-                    "Name": "MQTTBrokerEndpoint",
-                    "Type": "String",
-                    "Value": "129.69.214.245",
-                    "Required": "yes"
+                    'Name': 'MQTTBrokerEndpoint',
+                    'Type': 'String',
+                    'Value': '129.69.214.245',
+                    'Required': 'yes'
                 }
             }
-        ]
+        ];
     }
 
     /**
@@ -163,7 +163,7 @@ export class ApplicationDetailsComponent implements OnInit {
     /**
      * Print errors to console
      * @param error
-     * @returns {Promise<void>|Promise<T>}
+     * @returns {Promise<void>|Promise<any>}
      */
     private handleError(error: any): Promise<any> {
         this.resetProvisioningState();

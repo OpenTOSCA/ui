@@ -19,8 +19,8 @@ import { Subject } from 'rxjs/Subject';
 import { AdministrationService } from '../administration/administration.service';
 
 import * as _ from 'lodash';
-import { ApplicationService } from "../shared/application.service";
-import { MarketplaceApplication } from "../shared/model/marketplace-application.model";
+import { ApplicationService } from '../shared/application.service';
+import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -42,11 +42,11 @@ import { MarketplaceApplication } from "../shared/model/marketplace-application.
 
 export class MarketplaceComponent implements OnInit {
 
+    public apps = <MarketplaceApplication[]>[];
     public categoriesAry = <Category[]>[];
     public filteredCategoriesAry = <Category[]>[];
-    private apps = <MarketplaceApplication[]>[];
-    private searchTermStream = new Subject<string>();
     public showLoader = false;
+    private searchTermStream = new Subject<string>();
 
     constructor(private adminService: AdministrationService, private appService: ApplicationService, private marketService: MarketplaceService) {
     }
@@ -73,7 +73,7 @@ export class MarketplaceComponent implements OnInit {
                 this.containerContainsApp(app)
                     .then(result => app.inContainer = result)
                     .catch(result => app.inContainer = result);
-                console.error(err)
+                console.error(err);
             });
     }
 

@@ -19,7 +19,7 @@ import { Application } from './model/application.model';
 import { ApplicationReference } from './model/application-reference.model';
 import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
-import { BuildplanPollResource } from "./model/buildplan-poll-resource.model";
+import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
 
 @Injectable()
 export class ApplicationService {
@@ -156,13 +156,10 @@ export class ApplicationService {
         const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
-        console.log('Fetching App description');
 
         return this.http.get(dataJSONUrl, {headers: headers})
             .toPromise()
             .then(response => {
-                console.log('fetched App description');
-
                 let app = response.json() as Application;
                 // we only use appIDs without .csar for navigation in new ui, since angular2 router did not route to paths containing '.'
                 app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
@@ -186,9 +183,8 @@ export class ApplicationService {
                     app.iconUrl = '';
                     app.imageUrl = '';
                     return app;
-                } else if(err.status === 400){
+                } else if (err.status === 400) {
                     // there is no CSAR with that id
-                    console.log('OH YEAH');
                     return Promise.reject(err);
                 } else {
                     this.handleError(err);

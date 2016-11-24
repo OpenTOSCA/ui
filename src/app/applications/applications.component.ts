@@ -51,8 +51,8 @@ export class ApplicationsComponent implements OnInit {
         this.appService.deleteAppFromContainer(app.id + '.csar')
             .then(response => {
                 console.log(response);
-                for (let i = 0; i < this.apps.length; i++){
-                    if (this.apps[i].id === app.id){
+                for (let i = 0; i < this.apps.length; i++) {
+                    if (this.apps[i].id === app.id) {
                         this.apps.splice(i, 1);
                     }
                 }

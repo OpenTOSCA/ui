@@ -10,5 +10,5 @@
  *     Michael Falkenthal - initial implementation
  */
 export class BuildplanPollResource {
-    PlanURL: string;
+    PlanURL: string;    // tslint:disable-line:variable-name
 }
