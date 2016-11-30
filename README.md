@@ -4,5 +4,4 @@
 2. `git clone git@gitlab-as.informatik.uni-stuttgart.de:smartservices/opentosca-ui.git`
 3. `cd opentosca-ui`
 3. `npm install`
-4. `npm run postinstall`
-5. `npm start` (be sure that no other application is listening on port 3000)
+4. `npm start` (be sure that no other application is listening on port 3000)
