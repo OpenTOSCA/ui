@@ -13,16 +13,16 @@
     - if you need to switch to another port adapt config/webpack.dev.js
 
 ## Production Build
-Instead of step 4 do
-5. `npm run build`
-6. optional: if you want to serve the production build
+After step 3 at setting up local development server do
+1. `npm run build`
+2. optional: if you want to serve the production build
     - `npm run build:serve`
     
 ## Just do Linting
-7. `npm run lint`
+1. `npm run lint`
 
 
 ## Generate OpenTOSCAUi.war
-8. Do production build
-9. `cd dist`
-10. `jar cvf OpenTOSCAUi.war .`
+1. Do production build
+2. `cd dist`
+3. `jar cvf OpenTOSCAUi.war .`
