@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
+
 const helpers = require('./helpers');
 
 module.exports = {
@@ -112,6 +114,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
         }),
+
+        /*
+         * https://github.com/Microsoft/Typedoc-Webpack-Plugin
+         */
+        new TypedocWebpackPlugin({}),
     ],
 
     /*
