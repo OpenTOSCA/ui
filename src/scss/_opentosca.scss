@@ -250,6 +250,31 @@ a.editInWineryButton:before {
     min-height: 400px;
 }
 
+#description-block {
+    margin-right: 2%;
+    width: 48%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#topology-block {
+    width: 48%;
+    display: inline-block;
+}
+
+#topology-block > a > img {
+    width: 100%;
+}
+
+.screenshotThumb {
+    width: 135px;
+    margin: 10px 0px 0px 10px;
+}
+
+#loaderContainer {
+    margin: 100px 0px 0px 0px;
+}
+
 #content h2 {
     border-bottom: 1px solid #adadad;
     height: 26px;

@@ -1,3 +1,13 @@
+<div class="breadcrumbContainer">
+    <ol class="breadcrumb">
+        <li>
+            <a id="appsBreadcrumb" routerLink="/applications">Applications</a>
+        </li>
+        <li class="active">
+            {{app?.displayName}}
+        </li>
+    </ol>
+</div>
 <table class="layoutTable" border="0" @fadeInOut>
     <tr>
         <td class="menu" id="subMenu">
@@ -9,12 +19,12 @@
             <a id="descriptionButton" class="selected">Description</a>
             <!--<a id="instancesButton" href="">Instances</a>
             <a id="statisticsButton" href="">Statistics</a>-->
-            <a routerLink="/applications" style="margin-top:40px"><b>«</b> Back to Overview</a>
+            <a id="backToOverviewButton" routerLink="/applications"><b>«</b> Back to Overview</a>
         </td>
         <td>
             <div id="content">
 
-                <div *ngIf="app" style="width: 48%; display: inline-block; vertical-align: top">
+                <div id="description-block" *ngIf="app">
 
                     <h2>Description</h2>
                     <p>
@@ -22,7 +32,6 @@
                         <br/>
                     </p>
 
-                    <!-- TODO: Show Output params if selfserviceApplicationUrl is empty -->
                     <div class="panel panel-success" *ngIf="planOutputParameters">
                         <div class="panel-heading">Provisioning Successful</div>
                         <div class="panel-body">
@@ -52,7 +61,7 @@
                     <p>
                         <a *ngFor="let screenshotUrl of app.screenshotUrls" target="_blank" [href]="screenshotUrl">
                             <img [src]="screenshotUrl"
-                                 style="width: 135px; margin: 10px 0px 0px 10px;">
+                                 class="screenshotThumb">
                         </a>
                     </p>
 
@@ -73,15 +82,15 @@
                     <!-- Buttons -->
                     <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
                        [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
-                    <div style="margin: 0 0 0 0; left:28%; top: 10px;" id="loader" *ngIf="provisioningInProgress"></div>
+                    <div id="loaderContainer">
+                        <div id="loader" *ngIf="provisioningInProgress"></div>
+                    </div>
                 </div>
 
-                <div style="width: 2%; display: inline-block; vertical-align: top"></div>
-
-                <div style="width: 48%; display: inline-block;">
+                <div id="topology-block">
                     <h2>Topology Template</h2>
                     <a *ngIf="app" [href]="app.imageUrl" target="_blank">
-                        <img *ngIf="app" [src]="app.imageUrl" style="width: 400px;"/>
+                        <img *ngIf="app" [src]="app.imageUrl"/>
                     </a>
                 </div>
 
