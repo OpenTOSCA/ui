@@ -25,47 +25,45 @@
                 <div class="container-fluent">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="page-header">
-                                <h2>Upload new Application
-                                </h2>
-                            </div>
+                            <h2>Upload new Application
+                            </h2>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-2">
                             <span class="btn btn-primary btn-file">
-                                Select File <input type="file"
-                                                   class="btn btn-primary"
-                                                   name="myFile"
-                                                   ngFileSelect
-                                                   [options]="options"
-                                                   (onUpload)="handleUpload($event)"
-                                                   (onClick)="resetUploadStats()">
+                                Select Archive <input type="file"
+                                                      class="btn btn-primary"
+                                                      name="myFile"
+                                                      ngFileSelect
+                                                      [options]="options"
+                                                      (onUpload)="handleUpload($event)"
+                                                      (onClick)="resetUploadStats()">
                             </span>
                         </div>
-                    </div>
-                    <div class="row" *ngIf="uploadInProgress" style="margin-top: 20px">
-                        <div class="col-md-12">
-                            <h2>Upload Progress</h2>
-                            <progressbar [max]="max" [value]="dynamic"
-                                         [type]="deploymentInProgress ? 'success' : 'default'"><span
-                                style="color:white; white-space:nowrap;">{{dynamic}}%</span>
-                            </progressbar>
-                            <small><em>current upload speed: {{currentSpeed}}</em></small>
+                        <div class="col-md-10">
+                            <div>
+                                <progressbar [max]="max" [value]="dynamic"
+                                             [type]="deploymentInProgress ? 'success' : 'default'"><span
+                                    style="color:white; white-space:nowrap;">{{dynamic}}%</span>
+                                </progressbar>
+                                <small><em>current upload speed: {{currentSpeed}}</em></small>
+                            </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="deploymentInProgress && !(uploadFile?.status === 500)"
-                         style="margin-top: 20px">
+                    <div class="row uploadMarginRow" *ngIf="deploymentInProgress && !(uploadFile?.status === 500)">
                         <div class="col-md-12">
                             <h2>Deploying Archive</h2>
-                            <div id="loader" *ngIf="!deploymentDone"></div>
+                            <div id="loaderContainer">
+                                <div id="loader" *ngIf="!deploymentDone"></div>
+                            </div>
                             <div *ngIf="deploymentDone" class="alert alert-success" role="alert">
                                 <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 Deployment done!
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="uploadFile?.status === 500" style="margin-top: 20px">
+                    <div class="row uploadMarginRow" *ngIf="uploadFile?.status === 500">
                         <div class="col-md-12">
                             <h2>Failure</h2>
                             <div class="alert alert-danger" role="alert">

@@ -31,7 +31,6 @@ import { AdministrationService } from '../administration/administration.service'
 })
 
 export class ApplicationUploadComponent implements OnInit {
-    public uploadInProgress: boolean = true;
     public deploymentInProgress: boolean = false;
     public deploymentDone: boolean = false;
     public max: number = 100;
@@ -89,7 +88,6 @@ export class ApplicationUploadComponent implements OnInit {
      * Reset upload state variables
      */
     resetUploadStats(): void {
-        this.uploadInProgress = true;
         this.deploymentInProgress = false;
         this.dynamic = 0;
     }
