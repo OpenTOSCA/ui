@@ -224,13 +224,28 @@ a.editInWineryButton:before {
     background-repeat: no-repeat;
 }
 
+#subMenu > a#descriptionButton:before {
+    background: url('../assets/img/Description_Button_Icon.png');
+    background-repeat: no-repeat;
+}
+
 #subMenu > a#statisticsButton:before {
     background: url('../assets/img/Statistics_Button_Icon.png');
     background-repeat: no-repeat;
 }
 
+#subMenu > a.selected#statisticsButton:before {
+    background: url('../assets/img/Statistics_Button_Icon_Hover.png');
+    background-repeat: no-repeat;
+}
+
 #subMenu > a#instancesButton:before {
     background: url('../assets/img/Instances_Button_Icon.png');
+    background-repeat: no-repeat;
+}
+
+#subMenu > a.selected#instancesButton:before {
+    background: url('../assets/img/Instances_Button_Icon_Hover.png');
     background-repeat: no-repeat;
 }
 
