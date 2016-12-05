@@ -1,10 +1,13 @@
 <div class="breadcrumbContainer">
     <ol class="breadcrumb">
         <li>
-            <a id="appsBreadcrumb" routerLink="/applications">Applications</a>
+            <a routerLink="/applications">Applications</a>
+        </li>
+        <li>
+            <a routerLink="/applications/{{app?.id}}">{{app?.displayName}}</a>
         </li>
         <li class="active">
-            {{app?.displayName}}
+            Description
         </li>
     </ol>
 </div>
@@ -12,13 +15,13 @@
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img *ngIf="app" [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'" @fadeInOut/>
-                <span *ngIf="app">{{app.displayName}}</span>
+                <img [src]="app?.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'" @fadeInOut/>
+                <span>{{app?.displayName}}</span>
             </div>
             <br/>
             <a id="descriptionButton" class="selected">Description</a>
-            <!--<a id="instancesButton" href="">Instances</a>
-            <a id="statisticsButton" href="">Statistics</a>-->
+            <a id="instancesButton" routerLink="/applications/{{app?.id}}/instances">Instances</a>
+            <!--<a id="statisticsButton" href="">Statistics</a>-->
             <a id="backToOverviewButton" routerLink="/applications"><b>«</b> Back to Overview</a>
         </td>
         <td>
@@ -28,7 +31,7 @@
 
                     <h2>Description</h2>
                     <p>
-                        {{app.description}}
+                        {{app?.description}}
                         <br/>
                     </p>
 
@@ -59,7 +62,7 @@
 
                     <h2>Screenshots</h2>
                     <p>
-                        <a *ngFor="let screenshotUrl of app.screenshotUrls" target="_blank" [href]="screenshotUrl">
+                        <a *ngFor="let screenshotUrl of app?.screenshotUrls" target="_blank" [href]="screenshotUrl">
                             <img [src]="screenshotUrl"
                                  class="screenshotThumb">
                         </a>
@@ -67,7 +70,7 @@
 
                     <h2>Version</h2>
                     <p>
-                        {{app.version}}
+                        {{app?.version}}
                     </p>
 
                     <h2>Authors</h2>
@@ -89,8 +92,8 @@
 
                 <div id="topology-block">
                     <h2>Topology Template</h2>
-                    <a *ngIf="app" [href]="app.imageUrl" target="_blank">
-                        <img *ngIf="app" [src]="app.imageUrl"/>
+                    <a *ngIf="app" [href]="app?.imageUrl" target="_blank">
+                        <img *ngIf="app" [src]="app?.imageUrl"/>
                     </a>
                 </div>
 

@@ -18,6 +18,7 @@ import { AboutComponent } from './about/about.component';
 import { AppComponent }  from './app.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
+import { ApplicationInstancesComponent } from "./application-instances/application-instances.component";
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 
@@ -45,6 +46,7 @@ import { AdministrationService } from './administration/administration.service';
         AppComponent,
         ApplicationsComponent,
         ApplicationDetailsComponent,
+        ApplicationInstancesComponent,
         ApplicationUploadComponent,
         MarketplaceComponent,
         UPLOAD_DIRECTIVES

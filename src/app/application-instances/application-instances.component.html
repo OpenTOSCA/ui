@@ -1,0 +1,71 @@
+<div class="breadcrumbContainer">
+    <ol class="breadcrumb">
+        <li>
+            <a routerLink="/applications">Applications</a>
+        </li>
+        <li>
+            <a routerLink="/applications/{{app?.id}}">{{app?.displayName}}</a>
+        </li>
+        <li class="active">
+            Instances
+        </li>
+    </ol>
+</div>
+<table class="layoutTable" border="0" @fadeInOut>
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img [src]="app?.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'" @fadeInOut/>
+                <span>{{app?.displayName}}</span>
+            </div>
+            <br/>
+            <a id="descriptionButton" routerLink="/applications/{{app?.id}}">Description</a>
+            <a id="instancesButton" class="selected">Instances</a>
+            <!--<a id="statisticsButton" href="">Statistics</a>-->
+            <a id="backToOverviewButton" routerLink="/applications"><b>«</b> Back to Overview</a>
+        </td>
+        <td>
+            <div id="content">
+                This is my house!!!
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="hideChildModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Please fill in following parameters</h4>
+            </div>
+            <div class="modal-body">
+                <div *ngFor="let param of buildPlanParameters?.InputParameters">
+                    <div class="panel panel-default" *ngIf="showParam(param.InputParameter)">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{param.InputParameter.Name}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
+                                      class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                      [(ngModel)]="param.InputParameter.Value"></textarea>
+                            <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
+                                   class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                   [(ngModel)]="param.InputParameter.Value">
+                            <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)"
+                                   type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                                   [(ngModel)]="param.InputParameter.Value">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="hideChildModal()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="startProvisioning()">Start Provisioning</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@ import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { AdministrationComponent } from './administration/administration.component';
+import { ApplicationInstancesComponent } from "./application-instances/application-instances.component";
 
 
 const appRoutes: Routes = [
@@ -40,6 +41,10 @@ const appRoutes: Routes = [
     {
         path: 'applications/:id',
         component: ApplicationDetailsComponent
+    },
+    {
+        path: 'applications/:id/instances',
+        component: ApplicationInstancesComponent
     },
     {
         path: 'repository',
