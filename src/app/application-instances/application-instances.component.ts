@@ -17,6 +17,7 @@ import { ModalDirective } from 'ng2-bootstrap/ng2-bootstrap';
 import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { PlanParameters } from '../shared/model/plan-parameters.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ResourceReference } from "../shared/model/resource-reference.model";
 
 @Component({
     selector: 'opentosca-application-instances',
@@ -37,8 +38,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 
 export class ApplicationInstancesComponent implements OnInit {
-
     public app: Application;
+    public instancesList: Array<ResourceReference>;
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -47,9 +48,14 @@ export class ApplicationInstancesComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.appService.getAllInstances()
+            .then(result => this.instancesList = result);
+
+        // TODO: why iteration?
         this.route.params.forEach((params: Params) => {
             this.appService.getAppDescription(params['id'])
                 .then(app => this.app = app);
         });
+
     }
 }

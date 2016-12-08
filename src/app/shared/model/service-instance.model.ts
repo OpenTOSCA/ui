@@ -1,3 +1,4 @@
+import { ResourceReference } from "./resource-reference.model";
 /**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
@@ -9,8 +10,11 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-export class ApplicationReference {
-    type: string;
-    href: string;
-    title: string;
+export class ServiceInstance {
+    createdAt: string;
+    csarID: string;
+    serviceInstanceID: string;
+    serviceTemplateID: string;
+    serviceTemplateName: string;
+    nodeInstances: Array<ResourceReference>;
 }

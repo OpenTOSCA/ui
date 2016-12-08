@@ -16,10 +16,11 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Application } from './model/application.model';
-import { ApplicationReference } from './model/application-reference.model';
+import { ResourceReference } from './model/resource-reference.model';
 import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
+import { ServiceInstance } from "./model/service-instance.model";
 
 @Injectable()
 export class ApplicationService {
@@ -41,14 +42,14 @@ export class ApplicationService {
 
     /**
      * Retrieve a list of references to deployed applications
-     * @returns {Promise<ApplicationReference[]>}
+     * @returns {Promise<ResourceReference[]>}
      */
-    getApps(): Promise<ApplicationReference[]> {
+    getApps(): Promise<ResourceReference[]> {
         const url = this.adminService.getContainerAPIURL() + '/CSARs';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
-            .then(response => response.json().References as ApplicationReference[])
+            .then(response => response.json().References as ResourceReference[])
             .catch(this.handleError);
     }
 
@@ -67,7 +68,7 @@ export class ApplicationService {
         return this.http.get(url, {headers: headers})
             .toPromise()
             .then(response => {
-                    let references = response.json().References as ApplicationReference[];
+                    let references = response.json().References as ResourceReference[];
 
                     for (let ref of references) {
                         // we pick the first reference that is not the self reference to the plan resource
@@ -142,14 +143,29 @@ export class ApplicationService {
     /**
      * Returns a list of instances for the given appID
      * @param appID
-     * @returns {Promise<InstancesList>}
+     * @returns {Promise<ServiceInstance>}
      */
-    getInstancesOfApp(appID: string): Promise<any> {
+    getInstancesOfApp(appID: string): Promise<ServiceInstance> {
         appID = this.fixAppID(appID);
         const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances';
         const headers = {headers: new Headers({'Accept': 'application/json'})};
         return this.http.get(instanceAPIUrl, headers)
-            .toPromise();
+            .toPromise()
+            .then(result => result.json() as ServiceInstance)
+            .catch(this.handleError);
+    }
+
+    /**
+     * Returns a list of all service instances
+     * @returns {Promise<ServiceInstance>}
+     */
+    getAllInstances(): Promise<Array<ResourceReference>> {
+        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances';
+        const headers = {headers: new Headers({'Accept': 'application/json'})};
+        return this.http.get(instanceAPIUrl, headers)
+            .toPromise()
+            .then(result => result.json().References as Array<ResourceReference>)
+            .catch(this.handleError);
     }
 
     /**

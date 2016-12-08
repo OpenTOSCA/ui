@@ -26,7 +26,11 @@
         </td>
         <td>
             <div id="content">
-                This is my house!!!
+                <div *ngFor="let res of instancesList">
+                    {{res.type}}<br>
+                    {{res.href}}<br>
+                    {{res.title}}
+                </div>
             </div>
         </td>
     </tr>
