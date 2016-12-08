@@ -139,11 +139,28 @@ export class ApplicationService {
      .map((r: Response) => r.json().data as Application[]);
      }*/
 
-    /*getApp(id: string): Promise<Application> {
-     return this.getApps()
-     .then(references => references.find(ref => ref.title === id))
-     .catch(this.handleError);;
-     }*/
+    /**
+     * Returns a list of instances for the given appID
+     * @param appID
+     * @returns {Promise<InstancesList>}
+     */
+    getInstancesOfApp(appID: string): Promise<any> {
+        appID = this.fixAppID(appID);
+        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances';
+        const headers = {headers: new Headers({'Accept': 'application/json'})};
+        return this.http.get(instanceAPIUrl, headers)
+            .toPromise();
+    }
+
+    /**
+     * Helper that ensures that appID always ends with .csar
+     * @param appID
+     * @returns {string}
+     */
+    fixAppID(appID: string): string {
+        // ensure that appID always ends with .csar
+        return appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
+    }
 
     /**
      * Retrieve app description from data.json
@@ -151,8 +168,7 @@ export class ApplicationService {
      * @returns {Promise<Application>}
      */
     getAppDescription(appID: string): Promise<Application> {
-        // ensure that appID always ends with .csar
-        appID = appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
+        appID = this.fixAppID(appID);
         const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
@@ -191,14 +207,6 @@ export class ApplicationService {
                 }
             });
     }
-
-    /*deleteApp(id: number): Promise<void> {
-     let url = `$` + this.applicationsUrl + `/${id}`;
-     return this.http.delete(url, {headers: this.headers})
-     .toPromise()
-     .then(() => null)
-     .catch(this.handleError);
-     }*/
 
     /**
      * Print errors to console and reject promise
