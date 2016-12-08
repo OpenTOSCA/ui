@@ -3,6 +3,7 @@
 ## Prerequisites
 1. Install [git](https://git-scm.com)
 2. Install and setup [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com) for [Angular2](https://angular.io/docs/ts/latest/quickstart.html)
+3. For Windows: `npm install --global --production windows-build-tools` (required by [node-gyp](https://github.com/nodejs/node-gyp))
 
 ## Setup Local Development Server
 1. `git clone git@gitlab-as.informatik.uni-stuttgart.de:smartservices/opentosca-ui.git`
