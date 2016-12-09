@@ -1,7 +1,7 @@
 <div class="breadcrumbContainer">
     <ol class="breadcrumb">
         <li>
-            <a id="appsBreadcrumb" routerLink="/applications">Applications</a>
+            <a id="appsBreadcrumb" [routerLink]="['/applications']">Applications</a>
         </li>
         <li class="active">
             Installed Apps
@@ -16,7 +16,7 @@
             </div>
             <br/>
             <a id="descriptionButton" class="selected" href="">Installed Apps</a>
-            <a id="instancesButton" routerLink="/applications/upload" routerLinkActive="selected">Upload new App</a>
+            <a id="instancesButton" [routerLink]="['/applications', 'upload']" routerLinkActive="selected">Upload new App</a>
         </td>
         <td>
             <div id="content">
@@ -28,7 +28,7 @@
                             <span>{{app.displayName}}</span>
                         </div>
                         <div>
-                            <a id="applicationsButton" routerLink="/applications/{{app.id}}">Details</a>
+                            <a id="applicationsButton" [routerLink]="['/applications', app.id]">Details</a>
                         </div>
                         <div style="padding-top: 0; padding-bottom: 0">
                             <button style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;" type="button"
