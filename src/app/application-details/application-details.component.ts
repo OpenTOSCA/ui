@@ -52,15 +52,20 @@ export class ApplicationDetailsComponent implements OnInit {
                 private sanitizer: DomSanitizer) {
     }
 
+    /**
+     * Initialize component by extracting csar id from route params,
+     * then load app description and build plan parameters
+     */
     ngOnInit(): void {
-        this.route.params.forEach((params: Params) => {
-            this.appService.getAppDescription(params['id'])
-                .then(app => this.app = app);
-            this.appService.getBuildPlanParameters(params['id'])
-                .then(planParameters => {
-                    this.buildPlanParameters = planParameters;
-                });
-        });
+        this.route.params
+            .subscribe(params => {
+                this.appService.getAppDescription(params['id'])
+                    .then(app => this.app = app);
+                this.appService.getBuildPlanParameters(params['id'])
+                    .then(planParameters => {
+                        this.buildPlanParameters = planParameters;
+                    });
+            });
     }
 
     /**

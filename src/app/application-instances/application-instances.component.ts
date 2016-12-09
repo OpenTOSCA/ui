@@ -51,11 +51,10 @@ export class ApplicationInstancesComponent implements OnInit {
         this.appService.getAllInstances()
             .then(result => this.instancesList = result);
 
-        // TODO: why iteration?
-        this.route.params.forEach((params: Params) => {
-            this.appService.getAppDescription(params['id'])
-                .then(app => this.app = app);
-        });
-
+        this.route.params
+            .subscribe(params => {
+                this.appService.getAppDescription(params['id'])
+                    .then(app => this.app = app);
+            });
     }
 }
