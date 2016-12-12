@@ -1,9 +1,10 @@
 <div class="breadcrumbContainer">
     <ol class="breadcrumb">
         <li>
-            <a routerLink="/applications">Applications</a>
+            <a [routerLink]="['/applications']">Applications</a>
         </li>
         <li>
+            <!-- We do not use routerLink directive with array notation of link since app? does not work that way -->
             <a routerLink="/applications/{{app?.id}}">{{app?.displayName}}</a>
         </li>
         <li class="active">
