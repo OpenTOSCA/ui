@@ -11,7 +11,7 @@
  *     Jasmin Guth - initial implementation
  */
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -20,7 +20,6 @@ import { ResourceReference } from './model/resource-reference.model';
 import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
-import { ServiceInstance } from "./model/service-instance.model";
 
 @Injectable()
 export class ApplicationService {
@@ -50,13 +49,13 @@ export class ApplicationService {
         return this.http.get(url, {headers: headers})
             .toPromise()
             .then(response => response.json().References as ResourceReference[])
-            .catch(this.handleError);
+            .catch(ApplicationService.handleError);
     }
 
     /**
      * Lookup the parameters required by the buildplan of a CSAR
      * @param appID
-     * @returns {Promise<TResult>}
+     * @returns {Promise<PlanParameters>}
      */
     getBuildPlanParameters(appID: string): Promise<PlanParameters> {
         // /containerapi/CSARs/FlinkApp_ServiceTemplate_DUMMY.csar/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/
@@ -76,14 +75,14 @@ export class ApplicationService {
                             return this.http.get(ref.href, {headers: headers})
                                 .toPromise()
                                 .then(planParam => planParam.json() as PlanParameters)
-                                .catch(this.handleError);
+                                .catch(ApplicationService.handleError);
                         }
                     }
                     // okay, we did not get a reference to a plan, so reject the promise
-                    this.handleError(new Error('No reference to buildplan available'));
+                ApplicationService.handleError(new Error('No reference to buildplan available'));
                 }
             )
-            .catch(this.handleError);
+            .catch(ApplicationService.handleError);
     }
 
     /**
@@ -106,7 +105,7 @@ export class ApplicationService {
                 console.log('Server responded to post: ' + response);
                 return response.json();
             })
-            .catch(this.handleError);
+            .catch(ApplicationService.handleError);
     }
 
     /**
@@ -115,11 +114,9 @@ export class ApplicationService {
      * @returns {Promise<PlanParameters>}
      */
     pollForResult(pollUrl: string): Promise<PlanParameters> {
-        let headers = new Headers({
-            'Accept': 'application/json'
-        });
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
         console.log('Polling for plan result');
-        return this.http.get(pollUrl, {headers: headers})
+        return this.http.get(pollUrl, reqOpts)
             .toPromise()
             .then(response => {
                 let res = response.json() as {result: {status: string}};
@@ -131,7 +128,7 @@ export class ApplicationService {
                     return Promise.resolve(response.json());
                 }
             })
-            .catch(this.handleError);
+            .catch(ApplicationService.handleError);
     }
 
     /*searchApps(term: string): Observable<Application[]> {
@@ -143,29 +140,29 @@ export class ApplicationService {
     /**
      * Returns a list of instances for the given appID
      * @param appID
-     * @returns {Promise<ServiceInstance>}
+     * @returns {Promise<Array<ResourceReference>>}
      */
-    getInstancesOfApp(appID: string): Promise<ServiceInstance> {
-        appID = this.fixAppID(appID);
+    getServiceTemplateInstancesByCsarName(appID: string): Promise<Array<ResourceReference>> {
+        appID = ApplicationService.fixAppID(appID);
         const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances';
-        const headers = {headers: new Headers({'Accept': 'application/json'})};
-        return this.http.get(instanceAPIUrl, headers)
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
-            .then(result => result.json() as ServiceInstance)
-            .catch(this.handleError);
+            .then(result => result.json().References as Array<ResourceReference>)
+            .catch(ApplicationService.handleError);
     }
 
     /**
      * Returns a list of all service instances
-     * @returns {Promise<ServiceInstance>}
+     * @returns {Promise<Array<ResourceReference>>}
      */
     getAllInstances(): Promise<Array<ResourceReference>> {
         const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances';
-        const headers = {headers: new Headers({'Accept': 'application/json'})};
-        return this.http.get(instanceAPIUrl, headers)
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
             .then(result => result.json().References as Array<ResourceReference>)
-            .catch(this.handleError);
+            .catch(ApplicationService.handleError);
     }
 
     /**
@@ -173,7 +170,7 @@ export class ApplicationService {
      * @param appID
      * @returns {string}
      */
-    fixAppID(appID: string): string {
+    static fixAppID(appID: string): string {
         // ensure that appID always ends with .csar
         return appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
     }
@@ -184,7 +181,7 @@ export class ApplicationService {
      * @returns {Promise<Application>}
      */
     getAppDescription(appID: string): Promise<Application> {
-        appID = this.fixAppID(appID);
+        appID = ApplicationService.fixAppID(appID);
         const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
@@ -219,7 +216,7 @@ export class ApplicationService {
                     // there is no CSAR with that id
                     return Promise.reject(err);
                 } else {
-                    this.handleError(err);
+                    ApplicationService.handleError(err);
                 }
             });
     }
@@ -229,8 +226,8 @@ export class ApplicationService {
      * @param error
      * @returns {Promise<any>}
      */
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
+    private static handleError(error: any): Promise<any> {
+        console.error('An error occurred in ApplicationService', error);
         return Promise.reject(error);
     }
 
