@@ -44,6 +44,7 @@ export class ApplicationDetailsComponent implements OnInit {
     public planOutputParameters: {OutputParameter: PlanParameter}[];
     public provisioningInProgress = false;
     public provisioningDone = false;
+    public allInputsFilled = true;
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -183,5 +184,20 @@ export class ApplicationDetailsComponent implements OnInit {
         this.provisioningDone = true;
         this.provisioningInProgress = false;
         this.selfserviceApplicationUrl = '';
+    }
+
+    /**
+     *Check if all input fields are filled and enable button
+     * @returns {boolean}
+     */
+    checkAllInputsFilled(): boolean {
+        if (this.buildPlanParameters) {
+            for (let par of this.buildPlanParameters.InputParameters) {
+                if (!(par.InputParameter.Value) && this.showParam(par.InputParameter)) {
+                    return this.allInputsFilled = true;
+                }
+            }
+            return this.allInputsFilled = false;
+        }
     }
 }
