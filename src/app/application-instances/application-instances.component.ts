@@ -10,13 +10,10 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 import { ModalDirective } from 'ng2-bootstrap/ng2-bootstrap';
-import { PlanParameter } from '../shared/model/plan-parameter.model';
-import { PlanParameters } from '../shared/model/plan-parameters.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ResourceReference } from "../shared/model/resource-reference.model";
 
 @Component({
@@ -47,14 +44,17 @@ export class ApplicationInstancesComponent implements OnInit {
                 private appService: ApplicationService) {
     }
 
+    /**
+     * Initialize component by loading service instances of the csarID given in route params
+     */
     ngOnInit(): void {
-        this.appService.getAllInstances()
-            .then(result => this.instancesList = result);
 
         this.route.params
             .subscribe(params => {
                 this.appService.getAppDescription(params['id'])
                     .then(app => this.app = app);
+                this.appService.getServiceTemplateInstancesByCsarName(params['id'])
+                    .then(result => this.instancesList = result);
             });
     }
 }
