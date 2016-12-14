@@ -14,7 +14,7 @@ import { ActivatedRoute} from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 import { ModalDirective } from 'ng2-bootstrap/ng2-bootstrap';
-import { ResourceReference } from "../shared/model/resource-reference.model";
+import { ResourceReference } from '../shared/model/resource-reference.model';
 
 @Component({
     selector: 'opentosca-application-instances',
