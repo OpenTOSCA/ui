@@ -31,6 +31,7 @@ import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { UPLOAD_DIRECTIVES } from 'ng2-uploader/ng2-uploader';
 import { AdministrationComponent } from './administration/administration.component';
 import { AdministrationService } from './administration/administration.service';
+import {ApplicationInstanceDetailsComponent} from "./application-instance-details/application-instance-details.component";
 
 @NgModule({
     imports: [
@@ -47,6 +48,7 @@ import { AdministrationService } from './administration/administration.service';
         ApplicationsComponent,
         ApplicationDetailsComponent,
         ApplicationInstancesComponent,
+        ApplicationInstanceDetailsComponent,
         ApplicationUploadComponent,
         MarketplaceComponent,
         UPLOAD_DIRECTIVES

@@ -20,6 +20,8 @@ import { ResourceReference } from './model/resource-reference.model';
 import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
+import {ApplicationInstance} from "./model/application-instance.model";
+import {ApplicationInstanceSmartServiceDetails} from "./model/application-instance-smartservice-details.model";
 
 @Injectable()
 export class ApplicationService {
@@ -151,6 +153,35 @@ export class ApplicationService {
             .then(result => result.json().References as Array<ResourceReference>)
             .catch(ApplicationService.handleError);
     }
+
+    /**
+     * Returns the details for a given service instance
+     * @param appID, instanceID
+     * @returns {Promise<ApplicationInstance>}
+     */
+    /*getInstanceDetails(instanceID: string): Promise<ApplicationInstance> {
+        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances/1';
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(instanceAPIUrl, reqOpts)
+            .toPromise()
+            .then(result => result.json() as ApplicationInstance)
+            .catch(ApplicationService.handleError);
+    }*/
+
+    /**
+     * Returns the smart service properties for a given service instance
+     * @param appID, instanceID
+     * @returns {Promise<ApplicationInstanceSmartServiceProperties>}
+     */
+   /* getInstanceSmartServiceProperties(appID: string, instanceID: string): Promise<ApplicationInstanceSmartServiceDetails> {
+        appID = ApplicationService.fixAppID(appID);
+        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances/' + instanceID + 'properties';
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(instanceAPIUrl, reqOpts)
+            .toPromise()
+            .then(result => result.json() as ApplicationInstanceSmartServiceDetails)
+            .catch(ApplicationService.handleError);
+    }*/
 
     /**
      * Returns a list of all service instances

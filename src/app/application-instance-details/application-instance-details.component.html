@@ -6,8 +6,11 @@
         <li>
             <a routerLink="/applications/{{app?.id}}">{{app?.displayName}}</a>
         </li>
+        <li>
+            <a routerLink="/applications/{{app?.id}}/instances">Instances</a>
+        </li>
         <li class="active">
-            Instances
+            Instance-ID 1
         </li>
     </ol>
 </div>
@@ -26,23 +29,7 @@
         </td>
         <td>
             <div id="content">
-                <div *ngFor="let inst of instancesList">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a routerLink="/applications/{{app?.id}}/instances/1"><h3 class="panel-title">Instance-ID {{inst.title}} - created at 2016-12-16T11:45:13.826+01:00</h3></a>
-                        </div>
-                        <div class="panel-body">
-                            <table width="90%" border="0">
-                                <tr>
-                                    <td>API-Reference:</td>
-                                    <td>{{inst.href}}</td>
-                                    <td> Type:</td>
-                                    <td>{{inst.type}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+               <!-- TODO Instance Details-->
             </div>
         </td>
     </tr>

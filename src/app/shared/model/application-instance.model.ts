@@ -10,7 +10,7 @@ import { ResourceReference } from "./resource-reference.model";
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-export class ServiceInstance {
+export class ApplicationInstance {
     createdAt: string;
     csarID: string;
     serviceInstanceID: string;
