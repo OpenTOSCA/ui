@@ -13,7 +13,6 @@
 
 import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 import { MarketplaceService } from '../shared/marketplace.service';
-import { Application } from '../shared/model/application.model';
 import { Category } from '../shared/model/category.model';
 import { Subject } from 'rxjs/Subject';
 import { AdministrationService } from '../administration/administration.service';
