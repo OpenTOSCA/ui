@@ -22,15 +22,17 @@
                 <!--<div class="searchBox">
                     <span>Search: </span>
                     <input type="text" id="term" #term (keyup)="search(term.value)">
-                </div>-->
+                </div>
+                -->
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
                          *ngFor="let app of apps" [tooltip]="app.displayName" @fadeInOut>
+
                         <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
+
                         <div style="padding-top: 2px">
                             <span>{{app.displayName}}</span>
                         </div>
-                        <!--<a id="applicationsButton">Details</a><br>-->
                         <div style="padding-top: 2px">
                             Details
                         </div>
@@ -38,14 +40,17 @@
                             Already Installed
                         </div>
                         <div *ngIf="!app.inContainer" style="padding-top: 0; padding-bottom: 0">
-                            <button style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;" type="button"
-                                    class="btn btn-link" (click)="installInContainer(app)">Install
+                            <button
+                                style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;"
+                                type="button"
+                                class="btn btn-link" (click)="installInContainer(app)">Install
                             </button>
                         </div>
                         <div style="padding-top: 0">
                             <a style="padding-top: 0; margin-top: 0" [href]="app.csarURL">Download</a>
                         </div>
                     </div>
+
                 </div>
 
                 <div style="margin: -75px 0 0 -75px" id="loader" *ngIf="showLoader"></div>
