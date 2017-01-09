@@ -27,7 +27,7 @@ import { MarketplaceService } from './shared/marketplace.service';
 
 import { routing } from './app.routing';
 
-import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { UPLOAD_DIRECTIVES } from 'ng2-uploader/ng2-uploader';
 import { AdministrationComponent } from './administration/administration.component';
 import { AdministrationService } from './administration/administration.service';
@@ -37,7 +37,7 @@ import { AdministrationService } from './administration/administration.service';
         BrowserModule,
         FormsModule,
         HttpModule,
-        Ng2BootstrapModule,
+        Ng2BootstrapModule.forRoot(),
         routing
     ],
     declarations: [
