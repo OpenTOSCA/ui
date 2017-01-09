@@ -20,6 +20,8 @@ import { Application } from './model/application.model';
 import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
 import { MarketplaceApplication } from './model/marketplace-application.model';
 
+import { ErrorHandler } from '../shared/helper';
+
 @Injectable()
 export class MarketplaceService {
 
@@ -39,7 +41,7 @@ export class MarketplaceService {
                 // TODO: Check, if Apps are already installed in container
                 return response.json() as MarketplaceApplicationReference[];
             })
-            .catch(this.handleError);
+            .catch(ErrorHandler.handleError);
     }
 
     /**
@@ -62,7 +64,7 @@ export class MarketplaceService {
                 app.id = appReference.id;
                 return app;
             })
-            .catch(this.handleError);
+            .catch(ErrorHandler.handleError);
     }
 
     /**
@@ -81,18 +83,6 @@ export class MarketplaceService {
         return this.http.post(postURL, body, {headers: headers})
             .toPromise();
     }
-
-    /*searchApps(term: string): Observable<Application[]> {
-     console.log('Searching Apps');
-     return  this.http.get(this.containerAPI + `/?name=${term}`)
-     .map((r: Response) => r.json().data as Application[]);
-     }*/
-
-    /*getApp(id: string): Promise<Application> {
-     return this.getApps()
-     .then(references => references.find(ref => ref.title === id))
-     .catch(this.handleError);;
-     }*/
 
     /**
      * Retrieve app description from data.json
@@ -123,25 +113,6 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(this.handleError);
+            .catch(ErrorHandler.handleError);
     }
-
-    /*deleteApp(id: number): Promise<void> {
-     let url = `$` + this.applicationsUrl + `/${id}`;
-     return this.http.delete(url, {headers: this.headers})
-     .toPromise()
-     .then(() => null)
-     .catch(this.handleError);
-     }*/
-
-    /**
-     * Print errors to console
-     * @param error
-     * @returns {Promise<void>|Promise<T>}
-     */
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    }
-
 }

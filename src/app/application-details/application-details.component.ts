@@ -17,6 +17,7 @@ import { ModalDirective } from 'ng2-bootstrap';
 import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { PlanParameters } from '../shared/model/plan-parameters.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ErrorHandler } from '../shared/helper';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -113,9 +114,9 @@ export class ApplicationDetailsComponent implements OnInit {
                         this.provisioningDone = true;
                         this.provisioningInProgress = false;
                     })
-                    .catch(this.handleError);
+                    .catch(ErrorHandler.handleError);
             })
-            .catch(this.handleError);
+            .catch(ErrorHandler.handleError);
     }
 
     /**
@@ -164,17 +165,6 @@ export class ApplicationDetailsComponent implements OnInit {
         param.Name === 'instanceDataAPIUrl' ||
         param.Name === 'planCallbackAddress_invoker' ||
         param.Name === 'csarEntrypoint'));
-    }
-
-    /**
-     * Print errors to console
-     * @param error
-     * @returns {Promise<void>|Promise<any>}
-     */
-    private handleError(error: any): Promise<any> {
-        this.resetProvisioningState();
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
     }
 
     /**

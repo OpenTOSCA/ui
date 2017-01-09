@@ -19,11 +19,6 @@
         </td>
         <td>
             <div id="content">
-                <!--<div class="searchBox">
-                    <span>Search: </span>
-                    <input type="text" id="term" #term (keyup)="search(term.value)">
-                </div>
-                -->
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
                          *ngFor="let app of apps" [tooltip]="app.displayName" @fadeInOut>
@@ -50,23 +45,9 @@
                             <a style="padding-top: 0; margin-top: 0" [href]="app.csarURL">Download</a>
                         </div>
                     </div>
-
                 </div>
 
                 <div style="margin: -75px 0 0 -75px" id="loader" *ngIf="showLoader"></div>
-                <!--<div *ngFor="let category of filteredCategoriesAry">
-                    <h2>{{category.category}}</h2>
-                    <div class="applicationTilesContainer" @fadeInOut>
-                        <div class="applicationTile"
-                             *ngFor="let app of category.apps">
-                            <img src="{{app.logoPath}}"/>
-                            <h1>{{app.name}}</h1>
-                            <a id="marketplaceButton" routerLink="/marketplace/applications/{{app.id}}">Details</a>
-                            |<a href="">Install</a>
-                        </div>
-                    </div>
-
-                </div>-->
             </div>
         </td>
     </tr>
