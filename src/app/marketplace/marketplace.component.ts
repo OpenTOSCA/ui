@@ -84,17 +84,14 @@ export class MarketplaceComponent implements OnInit {
         this.marketService.getAppsFromMarketPlace()
             .then(references => {
                 for (let reference of references) {
-                    console.log(reference);
                     this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
                         .then(app => {
                             this.containerContainsApp(app)
                                 .then(result => app.inContainer = result)
                                 .catch(result => app.inContainer = result);
                             this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications([app]));
-                            console.log(this.ngRedux.getState())
                         });
                 }
-
             });
     }
 
