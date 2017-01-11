@@ -41,14 +41,14 @@ export class MarketplaceService {
                 // TODO: Check, if Apps are already installed in container
                 return response.json() as MarketplaceApplicationReference[];
             })
-            .catch(ErrorHandler.handleError);
+            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
     }
 
     /**
      * Fetch data.json from winery
      * @param appReference Reference object that contains namespace and id of application
      * @param marketPlaceUrl URL to winery instance
-     * @returns {Promise<TResult>}
+     * @returns {Promise<MarketplaceApplication>}
      */
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
         const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id));
@@ -65,7 +65,7 @@ export class MarketplaceService {
                 app.id = appReference.id;
                 return app;
             })
-            .catch(ErrorHandler.handleError);
+            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppFromMarketPlace]', err));
     }
 
     /**
@@ -114,6 +114,6 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(ErrorHandler.handleError);
+            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppDescription]', err));
     }
 }

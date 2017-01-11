@@ -128,9 +128,9 @@ export class ApplicationDetailsComponent implements OnInit {
                         this.provisioningDone = true;
                         this.provisioningInProgress = false;
                     })
-                    .catch(ErrorHandler.handleError);
+                    .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning][pollForResults]', err));
             })
-            .catch(ErrorHandler.handleError);
+            .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
     }
 
     /**
