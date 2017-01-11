@@ -31,27 +31,27 @@ export class OpenTOSCAUiActions {
         return {
             type: OpenTOSCAUiActions.ADD_CONTAINER_APPLICATIONS,
             payload: apps
-        }
+        };
     }
 
     static removeContainerApplication(app: Application): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.REMOVE_CONTAINER_APPLICATION,
             payload: app
-        }
+        };
     }
 
     static addRepositoryApplications(apps: Array<MarketplaceApplication>): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.ADD_REPOSITORY_APPLICATIONS,
             payload: apps
-        }
+        };
     }
 
     static removeRepositoryApplication(app: MarketplaceApplication): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.REMOVE_REPOSITORY_APPLICATION,
             payload: app
-        }
+        };
     }
 }
