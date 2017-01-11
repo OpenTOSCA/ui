@@ -18,7 +18,7 @@ export class ErrorHandler {
      * @returns {Promise<void>|Promise<T>}
      */
     public static handleError(location: string, error: any): Promise<any> {
-        console.error('An error occurred in ', location, ': ', error);
+        console.error(location, ': ', error);
         return Promise.reject(error.message || error);
     }
 }
