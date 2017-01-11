@@ -32,6 +32,14 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
                 },
                 administration: state.administration
             };
+        case OpenTOSCAUiActions.REMOVE_CONTAINER_APPLICATION:
+            return {
+                container: {
+                    applications: _.filter(state.container.applications, function(a){return !(a.id === action.payload.id); })
+                },
+                repository: state.repository,
+                administration: state.administration
+            };
         case OpenTOSCAUiActions.REMOVE_REPOSITORY_APPLICATION:
             return {
                 container: state.container,

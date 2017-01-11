@@ -13,11 +13,11 @@ import { Component, OnInit, trigger, state, style, transition, animate } from '@
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
-import * as _ from 'lodash';
-import { NgRedux } from 'ng2-redux';
+import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { ErrorHandler } from '../shared/helper/handleError';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-applications',
@@ -38,7 +38,7 @@ import { ErrorHandler } from '../shared/helper/handleError';
 })
 export class ApplicationsComponent implements OnInit {
 
-    public apps: Application[] = [];
+    @select(['container', 'applications']) apps: Observable<Array<Application>>;
 
     constructor(private appService: ApplicationService, private ngRedux: NgRedux<IAppState>) {
     }
@@ -55,11 +55,7 @@ export class ApplicationsComponent implements OnInit {
         this.appService.deleteAppFromContainer(app.id + '.csar')
             .then(response => {
                 console.log(response);
-                for (let i = 0; i < this.apps.length; i++) {
-                    if (this.apps[i].id === app.id) {
-                        this.apps.splice(i, 1);
-                    }
-                }
+                this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
             })
             .catch(err => ErrorHandler.handleError('[applications.component][deleteFromContainer]', err));
     }
@@ -74,8 +70,6 @@ export class ApplicationsComponent implements OnInit {
                 if (ref.title !== 'Self') {
                     this.appService.getAppDescription(ref.title)
                         .then(app => {
-                            this.apps.push(app);
-                            this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
                             this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications([app]));
                         })
                         .catch(err => {
@@ -87,25 +81,11 @@ export class ApplicationsComponent implements OnInit {
                                 app.displayName = ref.title.split('.')[0];
                                 app.categories = ['others'];
                                 app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
-                                this.apps.push(app);
-                                this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
+                                this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications([app]));
                             }
                         });
                 }
             }
         });
-    }
-
-    sortAppArray(apps: Array<Application>): Array<Application> {
-        apps.sort((left: Application, right: Application): number => {
-            if (left.name < right.name) {
-                return -1;
-            } else if (left.name > right.name) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-        return apps;
     }
 }
