@@ -1,4 +1,3 @@
-import { ResourceReference } from "./resource-reference.model";
 /**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
@@ -8,8 +7,12 @@ import { ResourceReference } from "./resource-reference.model";
  * and http://www.apache.org/licenses/LICENSE-2.0
  *
  * Contributors:
+ *     Karoline Saatkamp - initial implementation
  *     Michael Falkenthal - initial implementation
  */
+
+import { ResourceReference } from './resource-reference.model';
+
 export class ServiceInstance {
     createdAt: string;
     csarID: string;
