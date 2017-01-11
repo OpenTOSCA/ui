@@ -73,7 +73,6 @@ export class MarketplaceComponent implements OnInit {
                 this.containerContainsApp(app)
                     .then(result => app.inContainer = result)
                     .catch(result => app.inContainer = result);
-                console.error(err);
             });
     }
 
@@ -101,7 +100,6 @@ export class MarketplaceComponent implements OnInit {
      * @returns {Promise<boolean>}
      */
     containerContainsApp(app: MarketplaceApplication): Promise<boolean> {
-        console.log(app);
         return this.appService.getAppDescription(app.id)
             .then(cApp => {
                 return true;
