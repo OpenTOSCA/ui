@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 import { NgRedux } from 'ng2-redux';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
+import { ErrorHandler } from '../shared/helper/handleError';
 
 @Component({
     selector: 'opentosca-applications',
@@ -60,7 +61,7 @@ export class ApplicationsComponent implements OnInit {
                     }
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => ErrorHandler.handleError('[applications.component][deleteFromContainer]', err));
     }
 
     /**
