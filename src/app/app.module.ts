@@ -15,6 +15,7 @@ import { HttpModule } from '@angular/http';
 import { NgModule }      from '@angular/core';
 
 import { AboutComponent } from './about/about.component';
+import { AdministrationComponent } from './administration/administration.component';
 import { AppComponent }  from './app.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
@@ -22,23 +23,30 @@ import { ApplicationInstancesComponent } from "./application-instances/applicati
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 
+import { AdministrationService } from './administration/administration.service';
 import { ApplicationService } from './shared/application.service';
 import { MarketplaceService } from './shared/marketplace.service';
+
+import { SortPipe } from './shared/sort/sort.pipe';
 
 import { routing } from './app.routing';
 
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { UPLOAD_DIRECTIVES } from 'ng2-uploader/ng2-uploader';
-import { AdministrationComponent } from './administration/administration.component';
-import { AdministrationService } from './administration/administration.service';
+
+import { NgReduxModule, NgRedux } from 'ng2-redux';
+import { OpenTOSCAUiActions } from './redux/actions'
+import { IAppState, INITIAL_STATE } from './redux/store';
+import { rootReducer } from './redux/rootReducer.reducer';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
+        NgReduxModule,
         Ng2BootstrapModule.forRoot(),
-        routing
+        routing,
     ],
     declarations: [
         AboutComponent,
@@ -49,16 +57,22 @@ import { AdministrationService } from './administration/administration.service';
         ApplicationInstancesComponent,
         ApplicationUploadComponent,
         MarketplaceComponent,
+        SortPipe,
         UPLOAD_DIRECTIVES
     ],
     providers: [
-        ApplicationService,
         AdministrationService,
-        MarketplaceService
+        ApplicationService,
+        MarketplaceService,
+        OpenTOSCAUiActions
     ],
     bootstrap: [
         AppComponent
     ]
 })
+
 export class AppModule {
+    constructor(ngRedux: NgRedux<IAppState>) {
+        ngRedux.configureStore(rootReducer, INITIAL_STATE, []);
+    }
 }
