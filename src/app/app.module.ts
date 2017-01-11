@@ -10,16 +10,16 @@
  *     Michael Falkenthal - initial implementation
  */
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { NgModule }      from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { AboutComponent } from './about/about.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { AppComponent }  from './app.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
-import { ApplicationInstancesComponent } from "./application-instances/application-instances.component";
+import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 
@@ -35,7 +35,7 @@ import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { UPLOAD_DIRECTIVES } from 'ng2-uploader/ng2-uploader';
 
 import { NgReduxModule, NgRedux } from 'ng2-redux';
-import { OpenTOSCAUiActions } from './redux/actions'
+import { OpenTOSCAUiActions } from './redux/actions';
 import { IAppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
 

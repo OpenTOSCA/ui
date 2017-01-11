@@ -9,6 +9,7 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
+
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -18,8 +19,7 @@ import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { AdministrationComponent } from './administration/administration.component';
-import { ApplicationInstancesComponent } from "./application-instances/application-instances.component";
-
+import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 
 const appRoutes: Routes = [
     {
