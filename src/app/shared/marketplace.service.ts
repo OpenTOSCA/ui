@@ -51,16 +51,17 @@ export class MarketplaceService {
      * @returns {Promise<TResult>}
      */
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
-        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal';
+        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id));
+        const selfServiceURL = url + '/selfserviceportal';
         let headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(url, {headers: headers})
+        return this.http.get(selfServiceURL, {headers: headers})
             .toPromise()
             .then(response => {
                 let app = response.json() as MarketplaceApplication;
-                // TODO: create model for marketplace applications
-                app.iconUrl = url + '/' + app.iconUrl;
-                app.imageUrl = url + '/' + app.imageUrl;
-                app.csarURL = url.substr(0, url.lastIndexOf('/selfserviceportal')) + '?csar';
+                app.iconUrl = selfServiceURL + '/' + app.iconUrl;
+                app.imageUrl = selfServiceURL + '/' + app.imageUrl;
+                app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
+                app.repositoryURL = url;
                 app.id = appReference.id;
                 return app;
             })
