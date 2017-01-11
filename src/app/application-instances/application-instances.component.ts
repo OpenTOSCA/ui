@@ -10,7 +10,7 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 import { ModalDirective } from 'ng2-bootstrap';

@@ -16,7 +16,7 @@ import { Application } from '../shared/model/application.model';
 import * as _ from 'lodash';
 import { NgRedux } from 'ng2-redux';
 import { IAppState } from '../redux/store';
-import { OpenTOSCAUiActions } from "../redux/actions";
+import { OpenTOSCAUiActions } from '../redux/actions';
 
 @Component({
     selector: 'opentosca-applications',

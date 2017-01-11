@@ -49,6 +49,20 @@ export class ApplicationDetailsComponent implements OnInit {
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
+    /**
+     * Checks if given param should be shown in the start privisioning dialog
+     * @param param
+     * @returns {boolean}
+     */
+    static showParam(param: PlanParameter) {
+        return (!(param.Name === 'CorrelationID' ||
+        param.Name === 'csarName' ||
+        param.Name === 'containerApiAddress' ||
+        param.Name === 'instanceDataAPIUrl' ||
+        param.Name === 'planCallbackAddress_invoker' ||
+        param.Name === 'csarEntrypoint'));
+    }
+
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationService,
                 private sanitizer: DomSanitizer) {
@@ -154,17 +168,18 @@ export class ApplicationDetailsComponent implements OnInit {
     }
 
     /**
-     * Checks if given param should be shown in the start privisioning dialog
-     * @param param
+     * Check if all input fields are filled and enable button
      * @returns {boolean}
      */
-    showParam(param: PlanParameter) {
-        return (!(param.Name === 'CorrelationID' ||
-        param.Name === 'csarName' ||
-        param.Name === 'containerApiAddress' ||
-        param.Name === 'instanceDataAPIUrl' ||
-        param.Name === 'planCallbackAddress_invoker' ||
-        param.Name === 'csarEntrypoint'));
+    checkAllInputsFilled(): boolean {
+        if (this.buildPlanParameters) {
+            for (let par of this.buildPlanParameters.InputParameters) {
+                if (!(par.InputParameter.Value) && ApplicationDetailsComponent.showParam(par.InputParameter)) {
+                    return this.allInputsFilled = true;
+                }
+            }
+            return this.allInputsFilled = false;
+        }
     }
 
     /**
@@ -174,20 +189,5 @@ export class ApplicationDetailsComponent implements OnInit {
         this.provisioningDone = true;
         this.provisioningInProgress = false;
         this.selfserviceApplicationUrl = '';
-    }
-
-    /**
-     *Check if all input fields are filled and enable button
-     * @returns {boolean}
-     */
-    checkAllInputsFilled(): boolean {
-        if (this.buildPlanParameters) {
-            for (let par of this.buildPlanParameters.InputParameters) {
-                if (!(par.InputParameter.Value) && this.showParam(par.InputParameter)) {
-                    return this.allInputsFilled = true;
-                }
-            }
-            return this.allInputsFilled = false;
-        }
     }
 }
