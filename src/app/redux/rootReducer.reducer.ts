@@ -36,7 +36,7 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
             return {
                 container: state.container,
                 repository: {
-                    applications: _.filter(state.repository.applications, function(a){return !(a.id === action.payload.id);})
+                    applications: _.filter(state.repository.applications, function(a){return !(a.id === action.payload.id); })
                 }
             };
         default:
