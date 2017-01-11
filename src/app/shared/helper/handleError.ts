@@ -9,14 +9,16 @@
  * Contributors:
  *     Michael Falkenthal
  */
+
 export class ErrorHandler {
     /**
      * Print errors to console
+     * @param location string that indicates where the error occurred
      * @param error
      * @returns {Promise<void>|Promise<T>}
      */
-    public static handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
+    public static handleError(location: string, error: any): Promise<any> {
+        console.error('An error occurred in ', location, ': ', error);
         return Promise.reject(error.message || error);
     }
 }
