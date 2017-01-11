@@ -13,13 +13,14 @@
 
 import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 import { MarketplaceService } from '../shared/marketplace.service';
-import { Category } from '../shared/model/category.model';
-import { Subject } from 'rxjs/Subject';
 import { AdministrationService } from '../administration/administration.service';
 
-import * as _ from 'lodash';
 import { ApplicationService } from '../shared/application.service';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
+import { NgRedux, select } from 'ng2-redux';
+import { IAppState } from '../redux/store';
+import { OpenTOSCAUiActions } from '../redux/actions';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -40,14 +41,14 @@ import { MarketplaceApplication } from '../shared/model/marketplace-application.
 })
 
 export class MarketplaceComponent implements OnInit {
+    @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
 
-    public apps = <MarketplaceApplication[]>[];
-    public categoriesAry = <Category[]>[];
-    public filteredCategoriesAry = <Category[]>[];
     public showLoader = false;
-    private searchTermStream = new Subject<string>();
 
-    constructor(private adminService: AdministrationService, private appService: ApplicationService, private marketService: MarketplaceService) {
+    constructor(private adminService: AdministrationService,
+                private appService: ApplicationService,
+                private marketService: MarketplaceService,
+                private ngRedux: NgRedux<IAppState>) {
     }
 
     ngOnInit(): void {
@@ -76,15 +77,6 @@ export class MarketplaceComponent implements OnInit {
             });
     }
 
-    // search(term: string): void {
-    //     console.log('Entered search name: ' + term);
-    //     this.searchTermStream.next(term);
-    //     this.marketService.searchApps(term).subscribe(apps => {
-    //         this.apps = apps;
-    //         this.filteredCategoriesAry = this.generateCategoriesAry(apps);
-    //     });
-    // }
-
     /**
      * Fetch apps from repository
      */
@@ -92,18 +84,15 @@ export class MarketplaceComponent implements OnInit {
         this.marketService.getAppsFromMarketPlace()
             .then(references => {
                 for (let reference of references) {
+                    console.log(reference);
                     this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
                         .then(app => {
                             this.containerContainsApp(app)
                                 .then(result => app.inContainer = result)
                                 .catch(result => app.inContainer = result);
-                            this.apps.push(app);
-                            this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
+                            this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications([app]));
+                            console.log(this.ngRedux.getState())
                         });
-
-                    // this.apps.push(app);
-                    // this.categoriesAry = this.generateCategoriesAry(this.apps);
-                    // this.filteredCategoriesAry = this.generateCategoriesAry(this.apps);
                 }
 
             });
@@ -124,36 +113,4 @@ export class MarketplaceComponent implements OnInit {
                 return false;
             });
     }
-
-    /*getApps(): void {
-     this.appService.getApps().then(apps => {
-     this.apps = apps;
-     this.categoriesAry = this.generateCategoriesAry(apps);
-     this.filteredCategoriesAry = this.generateCategoriesAry(apps);
-     });
-     }*/
-
-    /*generateCategoriesAry(apps: Application[]): Category[] {
-        let ary: Category[] = [];
-        for (let app of apps) {
-            for (let category of app.categories) {
-                this.addToCategoriesAry(category, app, ary);
-            }
-        }
-        return ary;
-    }
-
-    addToCategoriesAry(category: string, app: Application, categoriesAry: Category[]): void {
-        let found = false;
-        for (let i in categoriesAry) {
-            if (categoriesAry[i].category === category) {
-                categoriesAry[i].apps.push(app);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            categoriesAry.push({category: category, apps: [app]});
-        }
-    }*/
 }

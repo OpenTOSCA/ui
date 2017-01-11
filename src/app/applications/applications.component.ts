@@ -14,6 +14,9 @@ import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
 import * as _ from 'lodash';
+import { NgRedux } from 'ng2-redux';
+import { IAppState } from '../redux/store';
+import { OpenTOSCAUiActions } from "../redux/actions";
 
 @Component({
     selector: 'opentosca-applications',
@@ -36,7 +39,7 @@ export class ApplicationsComponent implements OnInit {
 
     public apps: Application[] = [];
 
-    constructor(private appService: ApplicationService) {
+    constructor(private appService: ApplicationService, private ngRedux: NgRedux<IAppState>) {
     }
 
     ngOnInit(): void {
@@ -72,6 +75,7 @@ export class ApplicationsComponent implements OnInit {
                         .then(app => {
                             this.apps.push(app);
                             this.apps = _.orderBy(this.apps, ['displayName'], ['asc']);
+                            this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications([app]));
                         })
                         .catch(err => {
                             if (err.status === 404) {

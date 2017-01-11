@@ -21,7 +21,7 @@
             <div id="content">
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
-                         *ngFor="let app of apps" [tooltip]="app.displayName" @fadeInOut>
+                         *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: app?.id" [tooltip]="app.displayName" @fadeInOut>
 
                         <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
 
@@ -29,7 +29,7 @@
                             <span>{{app.displayName}}</span>
                         </div>
                         <div style="padding-top: 2px">
-                            Details
+                            <a style="padding-top: 0; margin-top: 0" [href]="app.repositoryURL" target="_blank">Details</a>
                         </div>
                         <div *ngIf="app.inContainer" style="padding-top: 0">
                             Already Installed
