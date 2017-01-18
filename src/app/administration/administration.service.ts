@@ -19,7 +19,7 @@ export class AdministrationService {
     // Default values
     private containerAPI = 'http://opentosca-dev.iaas.uni-stuttgart.de:1337/containerapi';
     private buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
-    private wineryAPI = 'http://192.168.209.229:8080/winery/servicetemplates/';
+    private wineryAPI = 'http://dev.winery.opentosca.org:8080/winery/servicetemplates/';
     private defaultAcceptHeaders = new Headers({'Accept': 'application/json'});
 
     constructor(private http: Http) {
