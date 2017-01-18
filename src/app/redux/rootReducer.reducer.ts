@@ -13,13 +13,15 @@
 import { INITIAL_STATE, IAppState } from './store';
 import { OpenTOSCAUiAction, OpenTOSCAUiActions } from './actions';
 import * as _ from 'lodash';
+import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
+import { Application } from '../shared/model/application.model';
 
 export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAUiAction): IAppState {
     switch (action.type) {
         case OpenTOSCAUiActions.ADD_CONTAINER_APPLICATIONS:
             return {
                 container: {
-                    applications: _.concat(state.container.applications, action.payload)
+                    applications: addContainerApplications(state.container.applications, action.payload)
                 },
                 repository: state.repository,
                 administration: state.administration
@@ -28,7 +30,7 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
             return {
                 container: state.container,
                 repository : {
-                    applications: _.concat(state.repository.applications, action.payload)
+                    applications: addRepositoryApplications(state.repository.applications, action.payload)
                 },
                 administration: state.administration
             };
@@ -50,4 +52,36 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
         default:
             return state;
     }
+}
+
+function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsToAdd: Array<MarketplaceApplication>): Array<MarketplaceApplication> {
+    // Clone the old state and then let it untouched
+    let newApps = _.concat(oldApps, []);
+
+    for (let app of appsToAdd){
+        let i = _.findIndex(newApps, {'id': app.id});
+        if (i >= 0){
+            // todo: check if angular updates changes if app is already in array
+            newApps[i] = app;
+        } else {
+            newApps.push(app);
+        }
+    }
+    return newApps;
+}
+
+function addContainerApplications(oldApps: Array<Application>, appsToAdd: Array<Application>): Array<Application> {
+    // Clone the old state and then let it untouched
+    let newApps = _.concat(oldApps, []);
+
+    for (let app of appsToAdd){
+        let i = _.findIndex(newApps, {'id': app.id});
+        if (i >= 0){
+            // todo: check if angular updates changes if app is already in array
+            newApps[i] = app;
+        } else {
+            newApps.push(app);
+        }
+    }
+    return newApps;
 }
