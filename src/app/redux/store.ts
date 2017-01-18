@@ -11,13 +11,14 @@
  */
 
 import { Application } from '../shared/model/application.model';
+import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 
 export interface IAppState {
     container?: {
         applications?: Array<Application>
     };
     repository?: {
-        applications?: Array<Application>
+        applications?: Array<MarketplaceApplication>
     };
     administration?: {
         containerAPI?: string,
