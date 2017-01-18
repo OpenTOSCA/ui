@@ -11,6 +11,7 @@
  */
 import { Component, OnInit, NgZone, trigger, state, style, transition, animate } from '@angular/core';
 import { AdministrationService } from '../administration/administration.service';
+import { NgUploaderOptions } from 'ngx-uploader';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -41,7 +42,7 @@ export class ApplicationUploadComponent implements OnInit {
     private zone: NgZone;
     private lastUpdate: number;
     private uploadFile: any;
-    private options: Object;
+    private options: NgUploaderOptions;
 
     ngOnInit(): void {
         this.zone = new NgZone({enableLongStackTrace: false});
@@ -50,8 +51,8 @@ export class ApplicationUploadComponent implements OnInit {
             customHeaders: {
                 'Accept': 'application/json'
             },
-            filterExtensions: true,
-            allowedExtensions: ['csar'],
+            //filterExtensions: true,
+            //allowedExtensions: ['csar'],
             calculateSpeed: true
         };
     }

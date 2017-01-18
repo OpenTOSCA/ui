@@ -33,7 +33,7 @@ import { SortPipe } from './shared/sort/sort.pipe';
 import { routing } from './app.routing';
 
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
-import { UPLOAD_DIRECTIVES } from 'ng2-uploader/ng2-uploader';
+import { NgUploaderModule } from 'ngx-uploader';
 
 import { NgReduxModule, NgRedux } from 'ng2-redux';
 import { OpenTOSCAUiActions } from './redux/actions';
@@ -49,6 +49,7 @@ import { ApplicationInstanceDetailsComponent } from './application-instance-deta
         NgReduxModule,
         Ng2BootstrapModule.forRoot(),
         routing,
+        NgUploaderModule
     ],
     declarations: [
         AboutComponent,
@@ -60,8 +61,7 @@ import { ApplicationInstanceDetailsComponent } from './application-instance-deta
         ApplicationInstanceDetailsComponent,
         ApplicationUploadComponent,
         MarketplaceComponent,
-        SortPipe,
-        UPLOAD_DIRECTIVES
+        SortPipe
     ],
     providers: [
         AdministrationService,
