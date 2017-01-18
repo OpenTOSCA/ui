@@ -54,6 +54,12 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
     }
 }
 
+/**
+ * Function ensured redux style for repository.applications by cloning state array and then pushing apps to it or updates them if already present
+ * @param oldApps
+ * @param appsToAdd
+ * @returns {MarketplaceApplication[]}
+ */
 function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsToAdd: Array<MarketplaceApplication>): Array<MarketplaceApplication> {
     // Clone the old state and then let it untouched
     let newApps = _.concat(oldApps, []);
@@ -61,7 +67,7 @@ function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsT
     for (let app of appsToAdd){
         let i = _.findIndex(newApps, {'id': app.id});
         if (i >= 0){
-            // todo: check if angular updates changes if app is already in array
+            // todo: check if angular updates changes if app is already in applications repository array
             newApps[i] = app;
         } else {
             newApps.push(app);
@@ -70,6 +76,12 @@ function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsT
     return newApps;
 }
 
+/**
+ * Function ensured redux style for container.applications by cloning state array and then pushing apps to it or updates them if already present
+ * @param oldApps
+ * @param appsToAdd
+ * @returns {MarketplaceApplication[]}
+ */
 function addContainerApplications(oldApps: Array<Application>, appsToAdd: Array<Application>): Array<Application> {
     // Clone the old state and then let it untouched
     let newApps = _.concat(oldApps, []);
@@ -77,7 +89,7 @@ function addContainerApplications(oldApps: Array<Application>, appsToAdd: Array<
     for (let app of appsToAdd){
         let i = _.findIndex(newApps, {'id': app.id});
         if (i >= 0){
-            // todo: check if angular updates changes if app is already in array
+            // todo: check if angular updates changes if app is already in applications container array
             newApps[i] = app;
         } else {
             newApps.push(app);
