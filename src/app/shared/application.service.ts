@@ -20,11 +20,22 @@ import { ResourceReference } from './model/resource-reference.model';
 import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
-import {ApplicationInstance} from "./model/application-instance.model";
-import {ApplicationInstanceSmartServiceDetails} from "./model/application-instance-smartservice-details.model";
+import { ApplicationInstance } from './model/application-instance.model';
+import { ApplicationInstanceSmartServiceDetails } from './model/application-instance-smartservice-details.model';
+import { ErrorHandler } from './helper/handleError';
 
 @Injectable()
 export class ApplicationService {
+
+    /**
+     * Helper that ensures that appID always ends with .csar
+     * @param appID
+     * @returns {string}
+     */
+    static fixAppID(appID: string): string {
+        // ensure that appID always ends with .csar
+        return appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
+    }
 
     constructor(private http: Http, private adminService: AdministrationService) {
     }
@@ -51,7 +62,7 @@ export class ApplicationService {
         return this.http.get(url, {headers: headers})
             .toPromise()
             .then(response => response.json().References as ResourceReference[])
-            .catch(ApplicationService.handleError);
+            .catch(err => ErrorHandler.handleError('[application.service][getApps]', err));
     }
 
     /**
@@ -77,14 +88,14 @@ export class ApplicationService {
                             return this.http.get(ref.href, {headers: headers})
                                 .toPromise()
                                 .then(planParam => planParam.json() as PlanParameters)
-                                .catch(ApplicationService.handleError);
+                                .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
                         }
                     }
                     // okay, we did not get a reference to a plan, so reject the promise
-                ApplicationService.handleError(new Error('No reference to buildplan available'));
+                    ErrorHandler.handleError('[application.service][getBuildPlanParameters]', new Error('No reference to buildplan available'));
                 }
             )
-            .catch(ApplicationService.handleError);
+            .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
     }
 
     /**
@@ -107,7 +118,7 @@ export class ApplicationService {
                 console.log('Server responded to post: ' + response);
                 return response.json();
             })
-            .catch(ApplicationService.handleError);
+            .catch(err => ErrorHandler.handleError('[application.service][startProvisioning]', err));
     }
 
     /**
@@ -130,14 +141,8 @@ export class ApplicationService {
                     return Promise.resolve(response.json());
                 }
             })
-            .catch(ApplicationService.handleError);
+            .catch(err => ErrorHandler.handleError('[application.service][pollForResult]', err));
     }
-
-    /*searchApps(term: string): Observable<Application[]> {
-     console.log('Searching Apps');
-     return  this.http.get(this.containerAPI + `/?name=${term}`)
-     .map((r: Response) => r.json().data as Application[]);
-     }*/
 
     /**
      * Returns a list of instances for the given appID
@@ -151,37 +156,8 @@ export class ApplicationService {
         return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
             .then(result => result.json().References as Array<ResourceReference>)
-            .catch(ApplicationService.handleError);
+            .catch(err => ErrorHandler.handleError('[application.service][getServiceTemplateInstancesByCsarName]', err));
     }
-
-    /**
-     * Returns the details for a given service instance
-     * @param appID, instanceID
-     * @returns {Promise<ApplicationInstance>}
-     */
-    /*getInstanceDetails(instanceID: string): Promise<ApplicationInstance> {
-        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances/1';
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(instanceAPIUrl, reqOpts)
-            .toPromise()
-            .then(result => result.json() as ApplicationInstance)
-            .catch(ApplicationService.handleError);
-    }*/
-
-    /**
-     * Returns the smart service properties for a given service instance
-     * @param appID, instanceID
-     * @returns {Promise<ApplicationInstanceSmartServiceProperties>}
-     */
-   /* getInstanceSmartServiceProperties(appID: string, instanceID: string): Promise<ApplicationInstanceSmartServiceDetails> {
-        appID = ApplicationService.fixAppID(appID);
-        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances/' + instanceID + 'properties';
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(instanceAPIUrl, reqOpts)
-            .toPromise()
-            .then(result => result.json() as ApplicationInstanceSmartServiceDetails)
-            .catch(ApplicationService.handleError);
-    }*/
 
     /**
      * Returns a list of all service instances
@@ -193,17 +169,7 @@ export class ApplicationService {
         return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
             .then(result => result.json().References as Array<ResourceReference>)
-            .catch(ApplicationService.handleError);
-    }
-
-    /**
-     * Helper that ensures that appID always ends with .csar
-     * @param appID
-     * @returns {string}
-     */
-    static fixAppID(appID: string): string {
-        // ensure that appID always ends with .csar
-        return appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
+            .catch(err => ErrorHandler.handleError('[application.service][getAllInstances]', err));
     }
 
     /**
@@ -245,21 +211,10 @@ export class ApplicationService {
                     return app;
                 } else if (err.status === 400) {
                     // there is no CSAR with that id
-                    return Promise.reject(err);
+                    return ErrorHandler.handleError('[application.service][getAppDescription]', err);
                 } else {
-                    ApplicationService.handleError(err);
+                    ErrorHandler.handleError('[application.service][getAppDescription]', err);
                 }
             });
     }
-
-    /**
-     * Print errors to console and reject promise
-     * @param error
-     * @returns {Promise<any>}
-     */
-    private static handleError(error: any): Promise<any> {
-        console.error('An error occurred in ApplicationService', error);
-        return Promise.reject(error);
-    }
-
 }

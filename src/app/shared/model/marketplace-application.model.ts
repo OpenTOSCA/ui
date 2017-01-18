@@ -17,6 +17,7 @@ export class MarketplaceApplication {
     id: string;
     csarName: string;
     csarURL: string;
+    repositoryURL: string;
     displayName: string;
     categories: string[];
     version: string;

@@ -94,6 +94,12 @@ table.layoutTable {
     overflow: hidden;
 }
 
+.applicationTile div > span {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 a.iconTextButton {
     padding: 6px 9px;
     border: 1px solid #adadad;

@@ -20,6 +20,8 @@ import { Application } from './model/application.model';
 import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
 import { MarketplaceApplication } from './model/marketplace-application.model';
 
+import { ErrorHandler } from '../shared/helper';
+
 @Injectable()
 export class MarketplaceService {
 
@@ -39,30 +41,31 @@ export class MarketplaceService {
                 // TODO: Check, if Apps are already installed in container
                 return response.json() as MarketplaceApplicationReference[];
             })
-            .catch(this.handleError);
+            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
     }
 
     /**
      * Fetch data.json from winery
      * @param appReference Reference object that contains namespace and id of application
      * @param marketPlaceUrl URL to winery instance
-     * @returns {Promise<TResult>}
+     * @returns {Promise<MarketplaceApplication>}
      */
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
-        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id)) + '/selfserviceportal';
+        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id));
+        const selfServiceURL = url + '/selfserviceportal';
         let headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(url, {headers: headers})
+        return this.http.get(selfServiceURL, {headers: headers})
             .toPromise()
             .then(response => {
                 let app = response.json() as MarketplaceApplication;
-                // TODO: create model for marketplace applications
-                app.iconUrl = url + '/' + app.iconUrl;
-                app.imageUrl = url + '/' + app.imageUrl;
-                app.csarURL = url.substr(0, url.lastIndexOf('/selfserviceportal')) + '?csar';
+                app.iconUrl = selfServiceURL + '/' + app.iconUrl;
+                app.imageUrl = selfServiceURL + '/' + app.imageUrl;
+                app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
+                app.repositoryURL = url;
                 app.id = appReference.id;
                 return app;
             })
-            .catch(this.handleError);
+            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppFromMarketPlace]', err));
     }
 
     /**
@@ -81,18 +84,6 @@ export class MarketplaceService {
         return this.http.post(postURL, body, {headers: headers})
             .toPromise();
     }
-
-    /*searchApps(term: string): Observable<Application[]> {
-     console.log('Searching Apps');
-     return  this.http.get(this.containerAPI + `/?name=${term}`)
-     .map((r: Response) => r.json().data as Application[]);
-     }*/
-
-    /*getApp(id: string): Promise<Application> {
-     return this.getApps()
-     .then(references => references.find(ref => ref.title === id))
-     .catch(this.handleError);;
-     }*/
 
     /**
      * Retrieve app description from data.json
@@ -123,25 +114,6 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(this.handleError);
+            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppDescription]', err));
     }
-
-    /*deleteApp(id: number): Promise<void> {
-     let url = `$` + this.applicationsUrl + `/${id}`;
-     return this.http.delete(url, {headers: this.headers})
-     .toPromise()
-     .then(() => null)
-     .catch(this.handleError);
-     }*/
-
-    /**
-     * Print errors to console
-     * @param error
-     * @returns {Promise<void>|Promise<T>}
-     */
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    }
-
 }

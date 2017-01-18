@@ -7,17 +7,6 @@
  * and http://www.apache.org/licenses/LICENSE-2.0
  *
  * Contributors:
- *     Karoline Saatkamp - initial implementation
- *     Michael Falkenthal - initial implementation
+ *     Michael Falkenthal
  */
-
-import { ResourceReference } from './resource-reference.model';
-
-export class ApplicationInstance {
-    createdAt: string;
-    csarID: string;
-    serviceInstanceID: string;
-    serviceTemplateID: string;
-    serviceTemplateName: string;
-    nodeInstances: Array<ResourceReference>;
-}
+export * from './handleError';
