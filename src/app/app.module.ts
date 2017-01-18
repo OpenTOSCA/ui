@@ -8,6 +8,7 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
+ *     Karoline Saatkamp - initial implementation
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +39,7 @@ import { NgReduxModule, NgRedux } from 'ng2-redux';
 import { OpenTOSCAUiActions } from './redux/actions';
 import { IAppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
+import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 
 @NgModule({
     imports: [
