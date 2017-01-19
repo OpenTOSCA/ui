@@ -90,4 +90,12 @@ export class AdministrationService {
         return this.http.get(this.wineryAPI, this.defaultAcceptHeaders)
             .toPromise();
     }
+
+    /**
+     * Returns default headers to accept application/json
+     * @returns {Headers}
+     */
+    getDefaultAcceptJSONHeaders(): Headers {
+        return this.defaultAcceptHeaders;
+    }
 }
