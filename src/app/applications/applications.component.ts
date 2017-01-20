@@ -52,7 +52,7 @@ export class ApplicationsComponent implements OnInit {
      * @param app
      */
     deleteFromContainer(app: Application): void {
-        this.appService.deleteAppFromContainer(app.id + '.csar')
+        this.appService.deleteAppFromContainer(app.id)
             .then(response => {
                 console.log(response);
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
