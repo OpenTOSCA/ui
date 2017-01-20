@@ -66,7 +66,7 @@ function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsT
 
     for (let app of appsToAdd){
         let i = _.findIndex(newApps, {'id': app.id});
-        if (i >= 0){
+        if (i >= 0) {
             // todo: check if angular updates changes if app is already in applications repository array
             newApps[i] = app;
         } else {
@@ -88,7 +88,7 @@ function addContainerApplications(oldApps: Array<Application>, appsToAdd: Array<
 
     for (let app of appsToAdd){
         let i = _.findIndex(newApps, {'id': app.id});
-        if (i >= 0){
+        if (i >= 0) {
             // todo: check if angular updates changes if app is already in applications container array
             newApps[i] = app;
         } else {

@@ -135,7 +135,6 @@ export class ApplicationService {
      * @returns {Promise<BuildplanPollResource>}
      */
     startProvisioning(appID: string, planMetaData: BuildPlanOperationMetaData): Promise<BuildplanPollResource> {
-        //const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Instances';
         console.log(JSON.stringify(planMetaData));
 
         let headers = this.adminService.getDefaultAcceptJSONHeaders();
@@ -162,9 +161,9 @@ export class ApplicationService {
                         }
                     }
                     // ohoh, we did not find
-                    ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'))
+                    ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));
                 } else {
-                    //ServiceTemplateInstance not created yet, query again
+                    // ServiceTemplateInstance not created yet, query again
                     return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), 1000));
                 }
             })

@@ -15,15 +15,15 @@ import * as _ from 'lodash';
 export class Path {
     private pathSegments: Array<string> = [];
 
-    constructor(path: string){
+    constructor(path: string) {
         this.append(path);
     }
 
-    public append(path: string): Path{
-        if (path && path.startsWith('/')){
+    public append(path: string): Path {
+        if (path && path.startsWith('/')) {
             path = path.substr(1);
         }
-        if (path && path.endsWith('/')){
+        if (path && path.endsWith('/')) {
             path = path.substring(0, path.length - 1);
         }
         this.pathSegments.push(path);
