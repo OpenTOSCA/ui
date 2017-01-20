@@ -14,6 +14,6 @@ import { PlanParameters } from './plan-parameters.model';
 import { ResourceReference } from './resource-reference.model';
 
 export class BuildPlanOperationMetaData {
-    Plan: PlanParameters;
-    Reference: ResourceReference;
+    Plan: PlanParameters;               // tslint:disable-line:variable-name
+    Reference: ResourceReference;       // tslint:disable-line:variable-name
 }
