@@ -8,6 +8,7 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
+ *     Karoline Saatkamp - initial implementation
  */
 import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
