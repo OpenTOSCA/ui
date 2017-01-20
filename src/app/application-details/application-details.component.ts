@@ -18,6 +18,9 @@ import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { PlanParameters } from '../shared/model/plan-parameters.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ErrorHandler } from '../shared/helper';
+import { BuildPlanOperationMetaData } from "../shared/model/BuildPlanOperationMetaData";
+import { timeout } from "rxjs/operator/timeout";
+import { Path } from "../shared/helper/Path";
 
 @Component({
     selector: 'opentosca-application-details',
@@ -40,7 +43,7 @@ import { ErrorHandler } from '../shared/helper';
 export class ApplicationDetailsComponent implements OnInit {
 
     public app: Application;
-    public buildPlanParameters: PlanParameters;
+    public buildPlanOperationMetaData: BuildPlanOperationMetaData;
     public selfserviceApplicationUrl: SafeUrl;
     public planOutputParameters: {OutputParameter: PlanParameter}[];
     public provisioningInProgress = false;
@@ -49,23 +52,24 @@ export class ApplicationDetailsComponent implements OnInit {
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
+    constructor(private route: ActivatedRoute,
+                private appService: ApplicationService,
+                private sanitizer: DomSanitizer) {
+    }
+
     /**
      * Checks if given param should be shown in the start privisioning dialog
      * @param param
      * @returns {boolean}
      */
-    static showParam(param: PlanParameter) {
+    public showParam(param: PlanParameter): boolean {
         return (!(param.Name === 'CorrelationID' ||
-        param.Name === 'csarName' ||
+        param.Name === 'csarID' ||
+        param.Name === 'serviceTemplateID' ||
         param.Name === 'containerApiAddress' ||
         param.Name === 'instanceDataAPIUrl' ||
         param.Name === 'planCallbackAddress_invoker' ||
         param.Name === 'csarEntrypoint'));
-    }
-
-    constructor(private route: ActivatedRoute,
-                private appService: ApplicationService,
-                private sanitizer: DomSanitizer) {
     }
 
     /**
@@ -79,7 +83,8 @@ export class ApplicationDetailsComponent implements OnInit {
                     .then(app => this.app = app);
                 this.appService.getBuildPlanParameters(params['id'])
                     .then(planParameters => {
-                        this.buildPlanParameters = planParameters;
+                        this.buildPlanOperationMetaData = planParameters;
+                        console.log(planParameters);
                     });
             });
     }
@@ -107,30 +112,65 @@ export class ApplicationDetailsComponent implements OnInit {
         this.selfserviceApplicationUrl = '';
         this.provisioningInProgress = true;
         this.provisioningDone = false;
-        this.appService.startProvisioning(this.app.id, this.buildPlanParameters)
+        this.appService.startProvisioning(this.app.id, this.buildPlanOperationMetaData)
             .then(response => {
                 console.log('Received post result: ' + JSON.stringify(response));
                 console.log('Now starting to poll for plan results');
-                this.appService.pollForResult(response.PlanURL)
-                    .then(result => {
-                        // we received the plan result
-                        // go find and present selfServiceApplicationUrl to user
-                        console.log('Received plan result: ' + JSON.stringify(result));
-                        for (let para of result.OutputParameters) {
-                            if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
-                                this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(para.OutputParameter.Value);
-                            }
-                        }
-                        if (this.selfserviceApplicationUrl === '') {
-                            this.planOutputParameters = result.OutputParameters;
-                            console.log('Did not receive a selfserviceApplicationUrl');
-                        }
-                        this.provisioningDone = true;
-                        this.provisioningInProgress = false;
+                /*
+                 1. use response.PlanURL to poll on instances ressource via query
+                 2. if returned array.length === 2 then we can use that ResourceReference to
+                 3. append PlanInstances/<CorrelationID>/State for polling the final result
+                 4. if State returns finished then we can reveive the planoutput via PlanInstances/<CorrelationID>/Output
+                 */
+                this.appService.pollForServiceTemplateInstanceCreation(response.PlanURL)
+                    .then(urlToServiceTemplateInstance => {
+                        console.log('ServiceTemplateInstance created: ', urlToServiceTemplateInstance);
+                        let urlToPlanInstanceOutput = new Path(urlToServiceTemplateInstance)
+                            .append('PlanInstances')
+                            .append(this.extractCorrelationID(response.PlanURL))
+                            .append('Output')
+                            .toString();
+
+                        let urlToPlanInstanceState = new Path(urlToServiceTemplateInstance)
+                            .append('PlanInstances')
+                            .append(this.extractCorrelationID(response.PlanURL))
+                            .append('State')
+                            .toString();
+
+                        this.appService.pollForPlanFinish(urlToPlanInstanceState)
+                            .then(result => {
+                                // we received the plan result
+                                // go find and present selfServiceApplicationUrl to user
+                                console.log('Received plan result: ' + JSON.stringify(result));
+                                this.appService.getPlanOutput(urlToPlanInstanceOutput)
+                                    .then(result => {
+                                        for (let para of result.OutputParameters) {
+                                            if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
+                                                this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(para.OutputParameter.Value);
+                                            }
+                                        }
+                                        if (this.selfserviceApplicationUrl === '') {
+                                            this.planOutputParameters = result.OutputParameters;
+                                            console.log('Did not receive a selfserviceApplicationUrl');
+                                        }
+                                    })
+                                    .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
+                                this.provisioningDone = true;
+                                this.provisioningInProgress = false;
+                            })
+                            .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning][pollForResults]', err));
                     })
-                    .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning][pollForResults]', err));
+                    .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
             })
             .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
+    }
+
+    extractCorrelationID(queryString: string): string {
+        if (queryString.lastIndexOf('=') >= 0) {
+            return queryString.substring(queryString.lastIndexOf('=') + 1);
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -172,9 +212,9 @@ export class ApplicationDetailsComponent implements OnInit {
      * @returns {boolean}
      */
     checkAllInputsFilled(): boolean {
-        if (this.buildPlanParameters) {
-            for (let par of this.buildPlanParameters.InputParameters) {
-                if (!(par.InputParameter.Value) && ApplicationDetailsComponent.showParam(par.InputParameter)) {
+        if (this.buildPlanOperationMetaData) {
+            for (let par of this.buildPlanOperationMetaData.Plan.InputParameters) {
+                if (!(par.InputParameter.Value) && this.showParam(par.InputParameter)) {
                     return this.allInputsFilled = true;
                 }
             }

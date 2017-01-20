@@ -15,14 +15,19 @@ import { Headers, Http, RequestOptions } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { Application } from './model/application.model';
-import { ResourceReference } from './model/resource-reference.model';
-import { PlanParameters } from './model/plan-parameters.model';
 import { AdministrationService } from '../administration/administration.service';
-import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
+import { Application } from './model/application.model';
 import { ApplicationInstance } from './model/application-instance.model';
 import { ApplicationInstanceSmartServiceDetails } from './model/application-instance-smartservice-details.model';
+import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
 import { ErrorHandler } from './helper/handleError';
+import { Path } from './helper/Path';
+import { PlanParameters } from './model/plan-parameters.model';
+import { ReferenceHelper } from './helper/ReferenceHelper';
+import { ResourceReference } from './model/resource-reference.model';
+import { BuildPlanOperationMetaData } from './model/BuildPlanOperationMetaData';
+
+import * as _ from 'lodash';
 
 @Injectable()
 export class ApplicationService {
@@ -33,8 +38,7 @@ export class ApplicationService {
      * @returns {string}
      */
     static fixAppID(appID: string): string {
-        // ensure that appID always ends with .csar
-        return appID.indexOf('.csar') === -1 ? appID + '.csar' : appID;
+        return _.endsWith(appID.toLowerCase(), '.csar') ? appID : appID + '.csar';
     }
 
     constructor(private http: Http, private adminService: AdministrationService) {
@@ -46,7 +50,10 @@ export class ApplicationService {
      * @returns {Promise<any>}
      */
     deleteAppFromContainer(appID: string): Promise<any> {
-        const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID;
+        const url = new Path(this.adminService.getContainerAPIURL())
+            .append('CSARs')
+            .append(ApplicationService.fixAppID(appID))
+            .toString();
         let headers = new Headers({'Accept': 'text/plain'});
         return this.http.delete(url, {headers: headers})
             .toPromise();
@@ -58,11 +65,22 @@ export class ApplicationService {
      */
     getApps(): Promise<ResourceReference[]> {
         const url = this.adminService.getContainerAPIURL() + '/CSARs';
-        let headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(url, {headers: headers})
+        return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(response => response.json().References as ResourceReference[])
             .catch(err => ErrorHandler.handleError('[application.service][getApps]', err));
+    }
+
+    /**
+     * Fetches PlanParameters
+     * @param url
+     * @returns {Promise<PlanParameters>}
+     */
+    getPlanOutputParameter(url: string): Promise<PlanParameters> {
+        return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
+            .toPromise()
+            .then(result => result.json() as PlanParameters)
+            .catch(err => ErrorHandler.handleError('[application.service][getPlanOutputParameter]', err));
     }
 
     /**
@@ -70,49 +88,60 @@ export class ApplicationService {
      * @param appID
      * @returns {Promise<PlanParameters>}
      */
-    getBuildPlanParameters(appID: string): Promise<PlanParameters> {
-        // /containerapi/CSARs/FlinkApp_ServiceTemplate_DUMMY.csar/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/
+    getBuildPlanParameters(appID: string): Promise<BuildPlanOperationMetaData> {
+        // /containerapi/CSARs/FlinkApp_ServiceTemplate_DUMMY.csar/ServiceTemplates/<pick first>/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/
         // Operations/instantiate/Plan/FlinkApp_ServiceTemplate_buildPlan
 
-        // firstly, fetch plans to find buildplan --> don't use self reference
-        const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + this.adminService.getBuildPlanPath();
-        let headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(url, {headers: headers})
+        return this.getServiceTemplatePath(appID)
+            .then(serviceTemplatePath => {
+                const url = new Path(serviceTemplatePath).append(this.adminService.getBuildPlanPath()).toString();
+                return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
+                    .toPromise()
+                    .then(response => response.json() as BuildPlanOperationMetaData)
+                    .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
+            })
+            .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
+    }
+
+    /**
+     * Fetches the URL to the ServiceTemplate of the given AppID
+     * @param appID
+     * @returns {Promise<string>}
+     */
+    getServiceTemplatePath(appID: string): Promise<string> {
+        const url = new Path(this.adminService.getContainerAPIURL())
+            .append('CSARs')
+            .append(ApplicationService.fixAppID(appID))
+            .append('ServiceTemplates').toString();
+
+        return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(response => {
-                    let references = response.json().References as ResourceReference[];
-
-                    for (let ref of references) {
-                        // we pick the first reference that is not the self reference to the plan resource
-                        if (ref.title !== 'Self') {
-                            return this.http.get(ref.href, {headers: headers})
-                                .toPromise()
-                                .then(planParam => planParam.json() as PlanParameters)
-                                .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
-                        }
+                let resRefs = response.json().References as Array<ResourceReference>;
+                for (let ref of resRefs) {
+                    if (!ReferenceHelper.isSelfReference(ref)) {
+                        return ref.href;
                     }
-                    // okay, we did not get a reference to a plan, so reject the promise
-                    ErrorHandler.handleError('[application.service][getBuildPlanParameters]', new Error('No reference to buildplan available'));
                 }
-            )
-            .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
+                Promise.reject(new Error(JSON.stringify(resRefs)));
+            })
+            .catch(err => ErrorHandler.handleError('[application.service][getServiceTemplatePath]', err));
     }
 
     /**
      * Triggers the provisioning of a new service instance
      * @param appID ID (CSAR name) of the service which shall be provisioned
-     * @param params PlanParameters object that containes required input parameters for the buildplan
+     * @param planMetaData PlanParameters object that containes required input parameters for the buildplan
      * @returns {Promise<BuildplanPollResource>}
      */
-    startProvisioning(appID: string, params: PlanParameters): Promise<BuildplanPollResource> {
-        const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Instances';
-        console.log(JSON.stringify(params));
+    startProvisioning(appID: string, planMetaData: BuildPlanOperationMetaData): Promise<BuildplanPollResource> {
+        //const url = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Instances';
+        console.log(JSON.stringify(planMetaData));
 
-        let headers = new Headers({
-            'Accept': 'application/json',
-            'Content-Type': 'text/plain'
-        });
-        return this.http.post(url, params, {headers: headers})
+        let headers = this.adminService.getDefaultAcceptJSONHeaders();
+        headers.append('Content-Type', 'text/plain');
+
+        return this.http.post(planMetaData.Reference.href, planMetaData.Plan, {headers: headers})
             .toPromise()
             .then(response => {
                 console.log('Server responded to post: ' + response);
@@ -121,27 +150,56 @@ export class ApplicationService {
             .catch(err => ErrorHandler.handleError('[application.service][startProvisioning]', err));
     }
 
+    pollForServiceTemplateInstanceCreation(pollURL: string): Promise<string> {
+        return this.http.get(pollURL, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
+            .toPromise()
+            .then(result => {
+                let references = result.json().References as Array<ResourceReference>;
+                if (references.length === 2) {
+                    for (let ref of references) {
+                        if (!ReferenceHelper.isSelfReference(ref)) {
+                            return ref.href;
+                        }
+                    }
+                    // ohoh, we did not find
+                    ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'))
+                } else {
+                    //ServiceTemplateInstance not created yet, query again
+                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), 1000));
+                }
+            })
+            .catch(err => ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', err));
+    }
+
+    getPlanOutput(url: string): Promise<PlanParameters> {
+        return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
+            .toPromise()
+            .then(response => response.json())
+            .catch(err => ErrorHandler.handleError('[application.service][getPlanoutput]', err));
+    }
+
     /**
      * Poll for finishing of a buildplan
      * @param pollUrl URL retrieved from buildplan call (POST to CSAR resource)
      * @returns {Promise<PlanParameters>}
      */
-    pollForResult(pollUrl: string): Promise<PlanParameters> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+    pollForPlanFinish(pollUrl: string): Promise<{PlanInstance: {PlanName: string, CorrelationID: string, State: string}}> {
+        const reqOpts = new RequestOptions({headers: this.adminService.getDefaultAcceptJSONHeaders()});
         console.log('Polling for plan result');
         return this.http.get(pollUrl, reqOpts)
             .toPromise()
             .then(response => {
-                let res = response.json() as {result: {status: string}};
-                if (res.result && res.result.status && res.result.status === 'PENDING') {
-                    console.log('Received not final plan result, polling again in 1000ms');
-                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForResult(pollUrl)), 1000));
+                let res = response.json() as {PlanInstance: {PlanName: string, CorrelationID: string, State: string}};
+                if (res.PlanInstance && res.PlanInstance.State === 'running') {
+                    console.log('Plan is still running, polling again in 1000ms');
+                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForPlanFinish(pollUrl)), 1000));
                 } else {
-                    // we got a plan result
+                    // now fetch the output
+
                     return Promise.resolve(response.json());
                 }
             })
-            .catch(err => ErrorHandler.handleError('[application.service][pollForResult]', err));
+            .catch(err => ErrorHandler.handleError('[application.service][pollForPlanFinish]', err));
     }
 
     /**
