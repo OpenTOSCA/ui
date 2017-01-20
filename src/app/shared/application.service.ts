@@ -25,7 +25,7 @@ import { Path } from './helper/Path';
 import { PlanParameters } from './model/plan-parameters.model';
 import { ReferenceHelper } from './helper/ReferenceHelper';
 import { ResourceReference } from './model/resource-reference.model';
-import { BuildPlanOperationMetaData } from './model/BuildPlanOperationMetaData';
+import { BuildPlanOperationMetaData } from './model/buildPlanOperationMetaData.model';
 
 import * as _ from 'lodash';
 
