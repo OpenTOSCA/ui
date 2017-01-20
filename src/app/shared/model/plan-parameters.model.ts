@@ -12,11 +12,11 @@
 import { PlanParameter } from './plan-parameter.model';
 
 export class PlanParameters {
-    public ID: string;                                              // tslint:disable-line:variable-name
-    public Name: string;                                            // tslint:disable-line:variable-name
-    public PlanType: string;                                        // tslint:disable-line:variable-name
-    public PlanLanguage: string;                                    // tslint:disable-line:variable-name
-    public InputParameters: {InputParameter: PlanParameter}[];      // tslint:disable-line:variable-name
-    public OutputParameters: {OutputParameter: PlanParameter}[];    // tslint:disable-line:variable-name
-    public PlanModelReference: {Reference: string};                 // tslint:disable-line:variable-name
+    public ID: string;                                                  // tslint:disable-line:variable-name
+    public Name: string;                                                // tslint:disable-line:variable-name
+    public PlanType: string;                                            // tslint:disable-line:variable-name
+    public PlanLanguage: string;                                        // tslint:disable-line:variable-name
+    public InputParameters: Array<{InputParameter: PlanParameter}>;     // tslint:disable-line:variable-name
+    public OutputParameters: Array<{OutputParameter: PlanParameter}>;   // tslint:disable-line:variable-name
+    public PlanModelReference: {Reference: string};                     // tslint:disable-line:variable-name
 }
