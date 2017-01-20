@@ -18,9 +18,8 @@ import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { PlanParameters } from '../shared/model/plan-parameters.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ErrorHandler } from '../shared/helper';
-import { BuildPlanOperationMetaData } from "../shared/model/BuildPlanOperationMetaData";
-import { timeout } from "rxjs/operator/timeout";
-import { Path } from "../shared/helper/Path";
+import { BuildPlanOperationMetaData } from '../shared/model/BuildPlanOperationMetaData';
+import { Path } from '../shared/helper/Path';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -143,14 +142,14 @@ export class ApplicationDetailsComponent implements OnInit {
                                 // go find and present selfServiceApplicationUrl to user
                                 console.log('Received plan result: ' + JSON.stringify(result));
                                 this.appService.getPlanOutput(urlToPlanInstanceOutput)
-                                    .then(result => {
-                                        for (let para of result.OutputParameters) {
+                                    .then(planOutput => {
+                                        for (let para of planOutput.OutputParameters) {
                                             if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
                                                 this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(para.OutputParameter.Value);
                                             }
                                         }
                                         if (this.selfserviceApplicationUrl === '') {
-                                            this.planOutputParameters = result.OutputParameters;
+                                            this.planOutputParameters = planOutput.OutputParameters;
                                             console.log('Did not receive a selfserviceApplicationUrl');
                                         }
                                     })

@@ -51,8 +51,8 @@ export class ApplicationUploadComponent implements OnInit {
             customHeaders: {
                 'Accept': 'application/json'
             },
-            //filterExtensions: true,
-            //allowedExtensions: ['csar'],
+            // filterExtensions: true,
+            // allowedExtensions: ['csar'],
             calculateSpeed: true
         };
     }

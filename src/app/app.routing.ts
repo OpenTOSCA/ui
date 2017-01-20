@@ -20,8 +20,7 @@ import { ApplicationDetailsComponent } from './application-details/application-d
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
-import {ApplicationInstanceDetailsComponent} from './application-instance-details/application-instance-details.component';
-
+import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 
 
 const appRoutes: Routes = [
