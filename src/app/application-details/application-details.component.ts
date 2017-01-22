@@ -18,7 +18,7 @@ import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { PlanParameters } from '../shared/model/plan-parameters.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ErrorHandler } from '../shared/helper';
-import { BuildPlanOperationMetaData } from '../shared/model/BuildPlanOperationMetaData';
+import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
 import { Path } from '../shared/helper/Path';
 
 @Component({
