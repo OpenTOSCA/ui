@@ -32,7 +32,7 @@
                         </div>
                         <div style="padding-top: 0; padding-bottom: 0">
                             <button style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;" type="button"
-                                    class="btn btn-link" (click)="deleteFromContainer(app)">Delete
+                                    class="btn btn-link" (click)="showDeleteConfirmationModal(app)">Delete
                             </button>
                         </div>
                     </div>
@@ -42,3 +42,27 @@
         </td>
     </tr>
 </table>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="hideDeleteConfirmationModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Really delete App?</h4>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete the App "{{appToDelete?.displayName}}"?
+                <div id="loaderContainer" *ngIf="removingApp">
+                    <div id="loader"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Cancle</button>
+                <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled] ="false" (click)="deleteFromContainer(appToDelete)">Delete</button>
+                <button *ngIf="removingApp" type="button" class="btn btn-danger" [disabled] ="true">Removing...</button>
+            </div>
+        </div>
+    </div>
+</div>

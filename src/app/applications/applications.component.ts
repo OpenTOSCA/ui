@@ -9,7 +9,7 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit, trigger, state, style, transition, animate, ViewChild } from '@angular/core';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
@@ -18,6 +18,8 @@ import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { ErrorHandler } from '../shared/helper/handleError';
 import { Observable } from 'rxjs';
+import { ModalDirective } from 'ng2-bootstrap';
+
 
 @Component({
     selector: 'opentosca-applications',
@@ -40,6 +42,12 @@ export class ApplicationsComponent implements OnInit {
 
     @select(['container', 'applications']) apps: Observable<Array<Application>>;
 
+    @ViewChild('childModal') public childModal: ModalDirective;
+
+    public removingApp: boolean = false;
+
+    public appToDelete: Application;
+
     constructor(private appService: ApplicationService, private ngRedux: NgRedux<IAppState>) {
     }
 
@@ -52,12 +60,29 @@ export class ApplicationsComponent implements OnInit {
      * @param app
      */
     deleteFromContainer(app: Application): void {
+        this.removingApp = true;
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
                 console.log(response);
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
+                this.removingApp = false;
+                this.hideDeleteConfirmationModal();
             })
-            .catch(err => ErrorHandler.handleError('[applications.component][deleteFromContainer]', err));
+            .catch(err => {
+                this.removingApp = false;
+                this.hideDeleteConfirmationModal();
+                ErrorHandler.handleError('[applications.component][deleteFromContainer]', err)
+            });
+    }
+
+    hideDeleteConfirmationModal(): void {
+        this.childModal.hide();
+        this.appToDelete = null;
+    }
+
+    showDeleteConfirmationModal(appToDelete: Application): void {
+        this.appToDelete = appToDelete;
+        this.childModal.show();
     }
 
     /**
