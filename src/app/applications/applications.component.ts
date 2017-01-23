@@ -71,7 +71,7 @@ export class ApplicationsComponent implements OnInit {
             .catch(err => {
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
-                ErrorHandler.handleError('[applications.component][deleteFromContainer]', err)
+                ErrorHandler.handleError('[applications.component][deleteFromContainer]', err);
             });
     }
 
