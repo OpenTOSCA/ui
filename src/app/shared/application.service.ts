@@ -136,8 +136,8 @@ export class ApplicationService {
      */
     startProvisioning(appID: string, planMetaData: BuildPlanOperationMetaData): Promise<BuildplanPollResource> {
         console.log(JSON.stringify(planMetaData));
-
-        let headers = this.adminService.getDefaultAcceptJSONHeaders();
+        let headers = new Headers(this.adminService.getDefaultAcceptJSONHeaders());
+        //let headers = JSON.parse(JSON.stringify(this.adminService.getDefaultAcceptJSONHeaders()));
         headers.append('Content-Type', 'text/plain');
 
         return this.http.post(planMetaData.Reference.href, planMetaData.Plan, {headers: headers})
@@ -160,7 +160,7 @@ export class ApplicationService {
                             return ref.href;
                         }
                     }
-                    // ohoh, we did not find
+                    // ohoh, we did not find a reference that is not self reference
                     ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));
                 } else {
                     // ServiceTemplateInstance not created yet, query again

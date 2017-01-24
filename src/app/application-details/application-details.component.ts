@@ -112,14 +112,8 @@ export class ApplicationDetailsComponent implements OnInit {
         this.provisioningDone = false;
         this.appService.startProvisioning(this.app.id, this.buildPlanOperationMetaData)
             .then(response => {
-                console.log('Received post result: ' + JSON.stringify(response));
-                console.log('Now starting to poll for plan results');
-                /*
-                 1. use response.PlanURL to poll on instances ressource via query
-                 2. if returned array.length === 2 then we can use that ResourceReference to
-                 3. append PlanInstances/<CorrelationID>/State for polling the final result
-                 4. if State returns finished then we can reveive the planoutput via PlanInstances/<CorrelationID>/Output
-                 */
+                console.log('Received result after post: ' + JSON.stringify(response));
+                console.log('Now starting to poll for service template instance creation');
                 this.appService.pollForServiceTemplateInstanceCreation(response.PlanURL)
                     .then(urlToServiceTemplateInstance => {
                         console.log('ServiceTemplateInstance created: ', urlToServiceTemplateInstance);
