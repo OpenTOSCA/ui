@@ -137,7 +137,6 @@ export class ApplicationService {
     startProvisioning(appID: string, planMetaData: BuildPlanOperationMetaData): Promise<BuildplanPollResource> {
         console.log(JSON.stringify(planMetaData));
         let headers = new Headers(this.adminService.getDefaultAcceptJSONHeaders());
-        //let headers = JSON.parse(JSON.stringify(this.adminService.getDefaultAcceptJSONHeaders()));
         headers.append('Content-Type', 'text/plain');
 
         return this.http.post(planMetaData.Reference.href, planMetaData.Plan, {headers: headers})
