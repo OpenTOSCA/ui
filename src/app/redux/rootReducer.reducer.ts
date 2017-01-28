@@ -42,11 +42,58 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
                 repository: state.repository,
                 administration: state.administration
             };
+        case OpenTOSCAUiActions.CLEAR_CONTAINER_APPLICATIONS:
+            return {
+                container: {
+                    applications: []
+                },
+                repository: state.repository,
+                administration: state.administration
+            };
         case OpenTOSCAUiActions.REMOVE_REPOSITORY_APPLICATION:
             return {
                 container: state.container,
                 repository: {
                     applications: _.filter(state.repository.applications, function(a){return !(a.id === action.payload.id); })
+                },
+                administration: state.administration
+            };
+        case OpenTOSCAUiActions.CLEAR_REPOSITORY_APPLICATIONS:
+            return {
+                container: state.container,
+                repository: {
+                    applications: []
+                },
+                administration: state.administration
+            };
+        case OpenTOSCAUiActions.UPDATE_REPOSITORY_URL:
+            return {
+                container: state.container,
+                repository: state.repository,
+                administration: {
+                    containerAPI: state.administration.containerAPI,
+                    repositoryAPI: action.payload,
+                    buildPlanPath: state.administration.buildPlanPath
+                }
+            };
+        case OpenTOSCAUiActions.UPDATE_CONTAINER_URL:
+            return {
+                container: state.container,
+                repository: state.repository,
+                administration: {
+                    containerAPI: action.payload,
+                    repositoryAPI: state.administration.repositoryAPI,
+                    buildPlanPath: state.administration.buildPlanPath
+                }
+            };
+        case OpenTOSCAUiActions.UPDATE_BUILDPLANPATH:
+            return {
+                container: state.container,
+                repository: state.repository,
+                administration: {
+                    containerAPI: state.administration.containerAPI,
+                    repositoryAPI: state.administration.repositoryAPI,
+                    buildPlanPath: action.payload
                 }
             };
         default:
