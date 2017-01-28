@@ -30,9 +30,9 @@ export class MarketplaceService {
 
     /**
      * Retrieve a list of references to applications available on the marketplace
-     * @returns {Promise<ApplicationReference[]>}
+     * @returns {Promise<Array<MarketplaceApplicationReference>>}
      */
-    getAppsFromMarketPlace(): Promise<MarketplaceApplicationReference[]> {
+    getAppsFromMarketPlace(): Promise<Array<MarketplaceApplicationReference>> {
         const url = this.adminService.getWineryAPIURL();
         console.log('[marketplace.service][getAppsFromMarketPlace] Loading Apps from repo: ', url);
         let headers = new Headers({'Accept': 'application/json'});
