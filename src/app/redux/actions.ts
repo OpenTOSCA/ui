@@ -65,7 +65,7 @@ export class OpenTOSCAUiActions {
         return {
             type: OpenTOSCAUiActions.CLEAR_REPOSITORY_APPLICATIONS,
             payload: null
-        }
+        };
     }
 
     static removeRepositoryApplication(app: MarketplaceApplication): OpenTOSCAUiAction {
@@ -79,20 +79,20 @@ export class OpenTOSCAUiActions {
         return {
             type: OpenTOSCAUiActions.UPDATE_REPOSITORY_URL,
             payload: url
-        }
+        };
     }
 
     static updateContainerURL(url: string): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.UPDATE_CONTAINER_URL,
             payload: url
-        }
+        };
     }
 
     static updateBuildPlanPath(path: string): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.UPDATE_BUILDPLANPATH,
             payload: path
-        }
+        };
     }
 }
