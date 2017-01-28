@@ -34,15 +34,16 @@ export class AdministrationComponent implements OnInit {
 
     public buildPlanPath: string;
     public containerAPI: string;
+    // TODO: Change containerAPIAvailable to @select using redux observable an async pipe in template
     public containerAPIAvailable: boolean;
     public repositoryAPI: string;
+    // TODO: Change repositoryAPIAvailable to @select using redux observable an async pipe in template
     public repositoryAPIAvailable: boolean;
 
     constructor(private adminService: AdministrationService) {
     }
 
     ngOnInit(): void {
-        // TODO: check if containerAPI and winery API is available
         this.buildPlanPath = this.adminService.getBuildPlanPath();
         this.containerAPI = this.adminService.getContainerAPIURL();
         this.repositoryAPI = this.adminService.getWineryAPIURL();
@@ -75,7 +76,7 @@ export class AdministrationComponent implements OnInit {
     updateBuildPlanPath(newValue: string): void {
         this.buildPlanPath = newValue;
         this.adminService.setBuildPlanPath(this.buildPlanPath);
-        console.log(this.adminService.getBuildPlanPath());
+        console.log('[administration.component][updateRepositoryURL] Updated build plan path to: ', this.adminService.getBuildPlanPath());
     }
 
     /**
@@ -86,7 +87,7 @@ export class AdministrationComponent implements OnInit {
         this.containerAPI = newValue;
         this.adminService.setContainerAPIURL(this.containerAPI);
         this.checkAvailabilityOfContainer();
-        console.log(this.adminService.getContainerAPIURL());
+        console.log('[administration.component][updateRepositoryURL] Updated container URL to: ', this.adminService.getContainerAPIURL());
     }
 
     /**
@@ -97,6 +98,6 @@ export class AdministrationComponent implements OnInit {
         this.repositoryAPI = newValue;
         this.adminService.setWineryAPIURL(this.repositoryAPI);
         this.checkAvailabilityOfRepository();
-        console.log(this.adminService.getWineryAPIURL());
+        console.log('[administration.component][updateRepositoryURL] Updated repository URL to: ', this.adminService.getWineryAPIURL());
     }
 }
