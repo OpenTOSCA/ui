@@ -25,5 +25,9 @@ After step 3 at setting up local development server do
 
 ## Generate OpenTOSCAUi.war
 1. Do production build
+2. `npm run war`
+
+or alternatively
+1. Do production build
 2. `cd dist`
 3. `jar cvf OpenTOSCAUi.war .`
