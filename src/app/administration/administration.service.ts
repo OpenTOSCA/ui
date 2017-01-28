@@ -12,17 +12,18 @@
 
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import { NgRedux } from 'ng2-redux';
+import { IAppState } from '../redux/store';
+import { OpenTOSCAUiActions } from '../redux/actions';
 
 @Injectable()
 export class AdministrationService {
 
     // Default values
-    private containerAPI = 'http://opentosca-dev.iaas.uni-stuttgart.de:1337/containerapi';
-    private buildPlanPath = '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan';
-    private wineryAPI = 'http://dev.winery.opentosca.org:8080/winery/servicetemplates/';
     private defaultAcceptHeaders = new Headers({'Accept': 'application/json'});
 
-    constructor(private http: Http) {
+    constructor(private http: Http,
+                private ngRedux: NgRedux<IAppState>) {
     }
 
     /**
@@ -30,7 +31,7 @@ export class AdministrationService {
      * @returns {string}
      */
     getWineryAPIURL(): string {
-        return this.wineryAPI;
+        return this.ngRedux.getState().administration.repositoryAPI;
     }
 
     /**
@@ -38,7 +39,8 @@ export class AdministrationService {
      * @param url
      */
     setWineryAPIURL(url: string) {
-        this.wineryAPI = url;
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateRepositoryURL(url));
+        this.ngRedux.dispatch(OpenTOSCAUiActions.clearRepositoryApplications());
     }
 
     /**
@@ -46,7 +48,7 @@ export class AdministrationService {
      * @returns {string}
      */
     getContainerAPIURL(): string {
-        return this.containerAPI;
+        return this.ngRedux.getState().administration.containerAPI;
     }
 
     /**
@@ -54,7 +56,8 @@ export class AdministrationService {
      * @param url
      */
     setContainerAPIURL(url: string) {
-        this.containerAPI = url;
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateContainerURL(url));
+        this.ngRedux.dispatch(OpenTOSCAUiActions.clearContainerApplication());
     }
 
     /**
@@ -62,7 +65,7 @@ export class AdministrationService {
      * @returns {string}
      */
     getBuildPlanPath(): string {
-        return this.buildPlanPath;
+        return this.ngRedux.getState().administration.buildPlanPath;
     }
 
     /**
@@ -70,7 +73,7 @@ export class AdministrationService {
      * @param path
      */
     setBuildPlanPath(path: string) {
-        this.buildPlanPath = path;
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateBuildPlanPath(path));
     }
 
     /**
@@ -78,7 +81,7 @@ export class AdministrationService {
      * @returns {Promise<any>}
      */
     isContainerAvailable(): Promise<any> {
-        return this.http.get(this.containerAPI, this.defaultAcceptHeaders)
+        return this.http.get(this.ngRedux.getState().administration.containerAPI, this.defaultAcceptHeaders)
             .toPromise();
     }
 
@@ -87,7 +90,7 @@ export class AdministrationService {
      * @returns {Promise<any>}
      */
     isRepositoryAvailable(): Promise<any> {
-        return this.http.get(this.wineryAPI, this.defaultAcceptHeaders)
+        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, this.defaultAcceptHeaders)
             .toPromise();
     }
 
