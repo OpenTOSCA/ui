@@ -15,7 +15,7 @@
 
 ## Production Build
 After step 3 at setting up local development server do
-1. `npm run build`
+1. `npm run build` (please note that production build is only triggerd if linting returns with no errors!)
 2. optional: if you want to serve the production build
     - `npm run build:serve`
     
