@@ -6,7 +6,7 @@
     "scripts": {
         "clean": "rimraf node_modules typings dist && npm cache clean",
         "lint": "tslint \"src/**/*.ts\"",
-        "build": "rimraf dist && npm run lint && webpack --config config/webpack.prod.js --progress --profile --bail",
+        "build": "rimraf dist war && npm run lint && webpack --config config/webpack.prod.js --progress --profile --bail",
         "build:serve": "lite-server --config config/lite-server.json",
         "start": "webpack-dev-server --inline --progress",
         "postinstall": "typings install",
