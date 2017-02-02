@@ -115,10 +115,6 @@ module.exports = {
             template: 'src/index.html',
         }),
 
-        /*
-         * https://github.com/Microsoft/Typedoc-Webpack-Plugin
-         */
-        new TypedocWebpackPlugin({}),
     ],
 
     /*
