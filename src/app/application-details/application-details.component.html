@@ -39,24 +39,25 @@
                     <div class="panel panel-success" *ngIf="planOutputParameters">
                         <div class="panel-heading">Provisioning Successful</div>
                         <div class="panel-body">
-                            <p>The provisioning of the instance was successful. The output parameters are listed bellow:</p>
+                            <p>The provisioning of the instance was successful. The output parameters are listed
+                                bellow:</p>
                         </div>
 
                         <!-- Table -->
                         <table class="table table-hover">
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Parameter</th>
-                                    <th>Value</th>
-                                </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let param of planOutputParameters; let i = index">
-                                    <td *ngIf="showOutputParameter(param)">{{i + 1}}</td>
-                                    <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Name}}</td>
-                                    <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Value}}</td>
-                                </tr>
+                            <tr *ngFor="let param of planOutputParameters; let i = index">
+                                <td *ngIf="showOutputParameter(param)">{{i + 1}}</td>
+                                <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Name}}</td>
+                                <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Value}}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -75,9 +76,11 @@
                     </p>
 
                     <h2>Authors</h2>
-                    <p>
-                        {{app.authors}}
-                    </p>
+                    <ul>
+                        <li *ngFor="let author of app?.authors">
+                            {{author}}
+                        </li>
+                    </ul>
 
                     <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary"
                             (click)="showChildModal()">Provision New Instance
@@ -113,7 +116,7 @@
                 </button>
                 <h4 class="modal-title">Please fill in following parameters</h4>
             </div>
-             <div class="modal-body">
+            <div class="modal-body">
 
                 <div *ngFor="let param of buildPlanOperationMetaData?.Plan.InputParameters">
                     <div class="panel panel-default" *ngIf="showParam(param.InputParameter)">
@@ -123,7 +126,8 @@
                         <div class="panel-body">
                             <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
                                       class="form-control" placeholder="{{param.InputParameter.Name}}"
-                                      [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()"></textarea>
+                                      [(ngModel)]="param.InputParameter.Value"
+                                      (ngModelChange)="checkAllInputsFilled()"></textarea>
                             <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
                                    class="form-control" placeholder="{{param.InputParameter.Name}}"
                                    [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
@@ -136,7 +140,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" (click)="hideChildModal()">Close</button>
-                <button type="button" class="btn btn-primary" [disabled] ="false" (click)="startProvisioning()">Start Provisioning</button>
+                <button type="button" class="btn btn-primary" [disabled]="false" (click)="startProvisioning()">Start
+                    Provisioning
+                </button>
             </div>
 
         </div>
