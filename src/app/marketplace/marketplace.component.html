@@ -23,26 +23,22 @@
                     <div class="applicationTile"
                          *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: app?.id" @fadeInOut>
 
-                        <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
-
-                        <div style="padding-top: 2px">
+                        <div class="applicationTileImageContainer">
+                            <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
+                        </div>
+                        <div id="applicationDisplayName">
                             <span>{{app.displayName}}</span>
                         </div>
-                        <div style="padding-top: 2px">
-                            <a style="padding-top: 0; margin-top: 0" [href]="app.repositoryURL" target="_blank">Details</a>
-                        </div>
-                        <div *ngIf="app.inContainer" style="padding-top: 0">
-                            Already Installed
-                        </div>
-                        <div *ngIf="!app.inContainer" style="padding-top: 0; padding-bottom: 0">
-                            <button
-                                style="font-size: 12pt; font-family: Calibri, Arial; padding-top: 0; padding-bottom: 0; line-height: 1;"
-                                type="button"
-                                class="btn btn-link" (click)="installInContainer(app)">Install
-                            </button>
-                        </div>
-                        <div style="padding-top: 0">
-                            <a style="padding-top: 0; margin-top: 0" [href]="app.csarURL">Download</a>
+                        <div class="applicationTileButtonContainer">
+                            <a tooltip="Details" type="button" [href]="app.repositoryURL" class="btn btn-default btn-sm"
+                               target="_blank"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                            <button tooltip="Install in Container" *ngIf="!app.inContainer" type="button"
+                                    class="btn btn-default btn-sm" (click)="installInContainer(app)"><span
+                                    class="glyphicon glyphicon-plus-sign"></span></button>
+                            <a tooltip="Already installed in Container" *ngIf="app.inContainer"
+                               class="btn btn-success btn-sm"><span class="glyphicon glyphicon-check"></span></a>
+                            <a tooltip="Download" class="btn btn-default btn-sm" [href]="app.csarURL"><span
+                                    class="glyphicon glyphicon-download-alt"></span></a>
                         </div>
                     </div>
                 </div>

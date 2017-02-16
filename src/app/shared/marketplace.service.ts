@@ -64,6 +64,9 @@ export class MarketplaceService {
                 app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
                 app.repositoryURL = url;
                 app.id = appReference.id;
+                if (!app.displayName || app.displayName === '') {
+                    app.displayName = appReference.id
+                }
                 return app;
             })
             .catch(err => ErrorHandler.handleError('[marketplace.service][getAppFromMarketPlace]', err));

@@ -21,7 +21,11 @@ body {
 }
 
 a, p, div {
-    font-size: 12pt;
+    font-size: 11pt;
+}
+
+.dropdown-menu > li > a {
+    cursor: pointer;
 }
 
 a {
@@ -98,6 +102,18 @@ table.layoutTable {
     display: block;
     text-overflow: ellipsis;
     overflow: hidden;
+    width: 130px;
+    margin-left: 10px;
+    text-align: center;
+    white-space: nowrap;
+    font-style: italic;
+    text-shadow: #c7c7c7 1px 1px 1px;
+}
+
+.applicationTileImageContainer {
+    height: 120px;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 a.iconTextButton {
@@ -319,11 +335,6 @@ a.editInWineryButton:before {
     padding: 0px 10px;
 }
 
-/* #content div.applicationTilesContainer > div{
-   font-family: Calibri, Arial;
-    line-height: 1.8px
-}*/
-
 #content div.applicationTilesContainer {
     margin: 20px;
     padding-top: 8px;
@@ -338,6 +349,9 @@ a.editInWineryButton:before {
     font-size: 14px;
 }
 
+.applicationTileButtonContainer {
+    margin-top: 18px;
+}
 #content div.applicationTilesContainer div.applicationTile {
     width: 150px;
     height: 205px;
@@ -351,7 +365,6 @@ a.editInWineryButton:before {
     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
     background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2', GradientType=0);
-    overflow-y: hidden;
     transition: all 0.2s ease;
     margin-bottom: 25px;
     display: inline-block;
@@ -368,6 +381,7 @@ a.editInWineryButton:before {
     max-width: 100px;
     margin-left: 25px;
     margin-top: 20px;
+    border-radius: 5px 5px;
 }
 
 #content div.applicationTilesContainer div.applicationTile h1 {
