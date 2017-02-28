@@ -65,7 +65,7 @@ export class MarketplaceService {
                 app.repositoryURL = url;
                 app.id = appReference.id;
                 if (!app.displayName || app.displayName === '') {
-                    app.displayName = appReference.id
+                    app.displayName = appReference.id;
                 }
                 return app;
             })
