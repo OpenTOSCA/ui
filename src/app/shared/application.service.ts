@@ -26,6 +26,7 @@ import { PlanParameters } from './model/plan-parameters.model';
 import { ReferenceHelper } from './helper/ReferenceHelper';
 import { ResourceReference } from './model/resource-reference.model';
 import { BuildPlanOperationMetaData } from './model/buildPlanOperationMetaData.model';
+import { PlanInstance } from './model/plan-instance.model';
 
 import * as _ from 'lodash';
 
@@ -181,20 +182,20 @@ export class ApplicationService {
      * @param pollUrl URL retrieved from buildplan call (POST to CSAR resource)
      * @returns {Promise<PlanParameters>}
      */
-    pollForPlanFinish(pollUrl: string): Promise<{PlanInstance: {PlanName: string, CorrelationID: string, State: string}}> {
+    pollForPlanFinish(pollUrl: string): Promise<PlanInstance> {
         const reqOpts = new RequestOptions({headers: this.adminService.getDefaultAcceptJSONHeaders()});
         console.log('Polling for plan result');
         return this.http.get(pollUrl, reqOpts)
             .toPromise()
             .then(response => {
-                let res = response.json() as {PlanInstance: {PlanName: string, CorrelationID: string, State: string}};
+                let res = response.json() as PlanInstance;
+
                 if (res.PlanInstance && res.PlanInstance.State === 'running') {
                     console.log('Plan is still running, polling again in 1000ms');
                     return new Promise((resolve) => setTimeout(() => resolve(this.pollForPlanFinish(pollUrl)), 1000));
                 } else {
                     // now fetch the output
-
-                    return Promise.resolve(response.json());
+                    return res;
                 }
             })
             .catch(err => ErrorHandler.handleError('[application.service][pollForPlanFinish]', err));
