@@ -44,7 +44,7 @@ export class ApplicationsComponent implements OnInit {
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
-    public removingApp: boolean = false;
+    public removingApp = false;
 
     public appToDelete: Application;
 

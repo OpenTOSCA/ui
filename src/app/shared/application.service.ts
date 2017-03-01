@@ -161,7 +161,7 @@ export class ApplicationService {
                         }
                     }
                     // ohoh, we did not find a reference that is not self reference
-                    ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));
+                    ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));    // tslint:disable-line:max-line-length
                 } else {
                     // ServiceTemplateInstance not created yet, query again
                     return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), 1000));

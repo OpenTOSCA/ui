@@ -15,5 +15,5 @@ export class PlanInstance {
         PlanName: string,
         CorrelationID: string,
         State: string
-    }
+    };
 }
