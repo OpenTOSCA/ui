@@ -52,7 +52,7 @@ export class MarketplaceService {
      * @returns {Promise<MarketplaceApplication>}
      */
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
-        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id));
+        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id));    // tslint:disable-line:max-line-length
         const selfServiceURL = url + '/selfserviceportal';
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(selfServiceURL, {headers: headers})

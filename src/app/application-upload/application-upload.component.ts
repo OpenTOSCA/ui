@@ -32,10 +32,10 @@ import { NgUploaderOptions } from 'ngx-uploader';
 })
 
 export class ApplicationUploadComponent implements OnInit {
-    public deploymentInProgress: boolean = false;
-    public deploymentDone: boolean = false;
-    public max: number = 100;
-    public dynamic: number = 0;
+    public deploymentInProgress = false;
+    public deploymentDone = false;
+    public max = 100;
+    public dynamic = 0;
     public currentSpeed: string;
     public failureMessage: string;
 
