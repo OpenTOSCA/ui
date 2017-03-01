@@ -2,7 +2,7 @@
   "rules": {
     "max-line-length": [
       true,
-      120
+      160
     ],
     "no-inferrable-types": true,
     "class-name": true,
