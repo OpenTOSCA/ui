@@ -23,7 +23,7 @@
             <div id="content">
                 <div class="applicationTilesContainer">
                     <div class="applicationTile"
-                         *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: app?.id" @fadeInOut>
+                         *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn" @fadeInOut>
                         <div class="applicationTileImageContainer">
                             <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
                         </div>

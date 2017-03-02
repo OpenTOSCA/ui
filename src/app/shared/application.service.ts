@@ -230,6 +230,21 @@ export class ApplicationService {
     }
 
     /**
+     * Checks if an App with given appID is already deployed in container
+     * @param appID
+     * @returns {Promise<boolean>}
+     */
+    isAppDeployedInContainer(appID: string): Promise<boolean> {
+        appID = ApplicationService.fixAppID(appID);
+        const csarUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID;
+        let headers = new Headers({'Accept': 'application/json'});
+        return this.http.get(csarUrl, {headers: headers})
+            .toPromise()
+            .then(response => true)
+            .catch(reason => false);
+    }
+
+    /**
      * Retrieve app description from data.json
      * @param appID CSAR id/name (e.g. XYZ.csar)
      * @returns {Promise<Application>}
@@ -263,12 +278,9 @@ export class ApplicationService {
                     app.csarName = appID;
                     app.displayName = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
                     app.categories = ['others'];
-                    app.iconUrl = '';
+                    app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
                     app.imageUrl = '';
                     return app;
-                } else if (err.status === 400) {
-                    // there is no CSAR with that id
-                    return ErrorHandler.handleError('[application.service][getAppDescription]', err);
                 } else {
                     ErrorHandler.handleError('[application.service][getAppDescription]', err);
                 }

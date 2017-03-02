@@ -91,26 +91,29 @@ export class ApplicationsComponent implements OnInit {
      */
     getAppReferences(): void {
         this.appService.getApps().then(references => {
+            let appPromises = [] as Array<Promise<Application>>;
             for (let ref of references) {
                 if (ref.title !== 'Self') {
-                    this.appService.getAppDescription(ref.title)
-                        .then(app => {
-                            this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications([app]));
-                        })
-                        .catch(err => {
-                            if (err.status === 404) {
-                                // we found a csar that does not contain a data.json, so use default values
-                                let app = new Application();
-                                app.id = ref.title.split('.')[0];
-                                app.csarName = ref.title;
-                                app.displayName = ref.title.split('.')[0];
-                                app.categories = ['others'];
-                                app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
-                                this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications([app]));
-                            }
-                        });
+                    appPromises.push(this.appService.getAppDescription(ref.title));
                 }
             }
+            Promise.all(appPromises)
+                .then(apps => {
+                    this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
+                })
+                .catch(reason => {
+                    ErrorHandler.handleError('[applications.component][getAppReferences]', reason)
+                });
         });
+    }
+
+    /**
+     * Tracking for ngFor to enable tracking of id field of Application
+     * @param index
+     * @param app
+     * @returns {string}
+     */
+    trackAppsFn(index: number, app: Application) {
+        return app.id;
     }
 }

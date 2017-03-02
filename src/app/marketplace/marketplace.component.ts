@@ -21,6 +21,7 @@ import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';
+import { ErrorHandler } from "../shared/helper/handleError";
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -82,15 +83,23 @@ export class MarketplaceComponent implements OnInit {
     getApps(): void {
         this.marketService.getAppsFromMarketPlace()
             .then(references => {
+                let appPromises = [] as Array<Promise<MarketplaceApplication>>;
                 for (let reference of references) {
-                    this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL())
-                        .then(app => {
-                            this.containerContainsApp(app)
-                                .then(result => app.inContainer = result)
-                                .catch(result => app.inContainer = result);
-                            this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications([app]));
-                        });
+                    appPromises.push(this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL()));
                 }
+                Promise.all(appPromises)
+                    .then(apps => {
+                        for (let app of apps) {
+                            this.appService.isAppDeployedInContainer(app.id)
+                                .then(result => app.inContainer = result)
+                                .catch(reason => {
+                                    app.inContainer = false;
+                                    ErrorHandler.handleError('[marketplace.component][getApps][isAppDeployedInContainer]', reason);
+                                });
+                        }
+                        this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications(apps));
+                    })
+                    .catch(reason => ErrorHandler.handleError('[marketplace.component][getApps]', reason));
             });
     }
 
@@ -100,12 +109,25 @@ export class MarketplaceComponent implements OnInit {
      * @returns {Promise<boolean>}
      */
     containerContainsApp(app: MarketplaceApplication): Promise<boolean> {
+        console.log('CHECKING APP: ', JSON.stringify(app));
         return this.appService.getAppDescription(app.id)
             .then(cApp => {
+                console.log('CHECKED APP: ', app.id, true);
                 return true;
             })
             .catch(err => {
+                console.log('CHECKED APP: ', app.id, false);
                 return false;
             });
+    }
+
+    /**
+     * Tracking for ngFor to enable tracking of id field of MarketplaceApplication
+     * @param index
+     * @param app
+     * @returns {string}
+     */
+    trackAppsFn(index: number, app: MarketplaceApplication) {
+        return app.id;
     }
 }
