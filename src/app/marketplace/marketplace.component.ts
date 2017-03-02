@@ -21,7 +21,7 @@ import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';
-import { ErrorHandler } from "../shared/helper/handleError";
+import { ErrorHandler } from '../shared/helper/handleError';
 
 @Component({
     selector: 'opentosca-marketplace',

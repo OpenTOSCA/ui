@@ -102,7 +102,7 @@ export class ApplicationsComponent implements OnInit {
                     this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
                 })
                 .catch(reason => {
-                    ErrorHandler.handleError('[applications.component][getAppReferences]', reason)
+                    ErrorHandler.handleError('[applications.component][getAppReferences]', reason);
                 });
         });
     }
