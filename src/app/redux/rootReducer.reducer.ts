@@ -108,19 +108,7 @@ export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAU
  * @returns {MarketplaceApplication[]}
  */
 function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsToAdd: Array<MarketplaceApplication>): Array<MarketplaceApplication> {
-    // Clone the old state and then let it untouched
-    let newApps = _.concat(oldApps, []);
-
-    for (let app of appsToAdd){
-        let i = _.findIndex(newApps, {'id': app.id});
-        if (i >= 0) {
-            // todo: check if angular updates changes if app is already in applications repository array
-            newApps[i] = app;
-        } else {
-            newApps.push(app);
-        }
-    }
-    return newApps;
+    return appsToAdd;
 }
 
 /**
@@ -130,17 +118,5 @@ function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsT
  * @returns {MarketplaceApplication[]}
  */
 function addContainerApplications(oldApps: Array<Application>, appsToAdd: Array<Application>): Array<Application> {
-    // Clone the old state and then let it untouched
-    let newApps = _.concat(oldApps, []);
-
-    for (let app of appsToAdd){
-        let i = _.findIndex(newApps, {'id': app.id});
-        if (i >= 0) {
-            // todo: check if angular updates changes if app is already in applications container array
-            newApps[i] = app;
-        } else {
-            newApps.push(app);
-        }
-    }
-    return newApps;
+    return appsToAdd;
 }
