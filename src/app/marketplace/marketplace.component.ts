@@ -65,15 +65,21 @@ export class MarketplaceComponent implements OnInit {
         this.marketService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
             .then(response => {
                 this.showLoader = false;
-                this.containerContainsApp(app)
+                this.appService.isAppDeployedInContainer(app.id)
                     .then(result => app.inContainer = result)
-                    .catch(result => app.inContainer = result);
+                    .catch(reason => {
+                        app.inContainer = false;
+                        ErrorHandler.handleError('[marketplace.component][installInContainer]', reason);
+                    });
             })
             .catch(err => {
                 this.showLoader = false;
-                this.containerContainsApp(app)
+                this.appService.isAppDeployedInContainer(app.id)
                     .then(result => app.inContainer = result)
-                    .catch(result => app.inContainer = result);
+                    .catch(reason => {
+                        app.inContainer = false;
+                        ErrorHandler.handleError('[marketplace.component][installInContainer]', reason);
+                    });
             });
     }
 
@@ -100,24 +106,6 @@ export class MarketplaceComponent implements OnInit {
                         this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications(apps));
                     })
                     .catch(reason => ErrorHandler.handleError('[marketplace.component][getApps]', reason));
-            });
-    }
-
-    /**
-     * Check if app is already installed in container
-     * @param app
-     * @returns {Promise<boolean>}
-     */
-    containerContainsApp(app: MarketplaceApplication): Promise<boolean> {
-        console.log('CHECKING APP: ', JSON.stringify(app));
-        return this.appService.getAppDescription(app.id)
-            .then(cApp => {
-                console.log('CHECKED APP: ', app.id, true);
-                return true;
-            })
-            .catch(err => {
-                console.log('CHECKED APP: ', app.id, false);
-                return false;
             });
     }
 
