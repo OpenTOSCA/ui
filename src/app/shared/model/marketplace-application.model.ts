@@ -28,5 +28,6 @@ export class MarketplaceApplication {
     screenshotUrls: string[];
     options: Object[];
     inContainer: boolean;
+    isInstalling: boolean;
 
 }

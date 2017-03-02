@@ -61,7 +61,7 @@ export class MarketplaceComponent implements OnInit {
      * @param app
      */
     installInContainer(app: MarketplaceApplication): void {
-        this.showLoader = true;
+        app.isInstalling = true;
         this.marketService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
             .then(response => {
                 this.showLoader = false;
@@ -73,11 +73,11 @@ export class MarketplaceComponent implements OnInit {
                     });
             })
             .catch(err => {
-                this.showLoader = false;
+                app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)
                     .then(result => app.inContainer = result)
                     .catch(reason => {
-                        app.inContainer = false;
+                        app.isInstalling = false;
                         ErrorHandler.handleError('[marketplace.component][installInContainer]', reason);
                     });
             });

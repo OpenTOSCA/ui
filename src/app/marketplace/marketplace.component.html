@@ -40,10 +40,9 @@
                             <a tooltip="Download" class="btn btn-default btn-sm" [href]="app.csarURL"><span
                                     class="glyphicon glyphicon-download-alt"></span></a>
                         </div>
+                        <sk-three-bounce *ngIf="app.isInstalling" class="spinner-small"></sk-three-bounce>
                     </div>
                 </div>
-
-                <div style="margin: -75px 0 0 -75px" id="loader" *ngIf="showLoader"></div>
             </div>
         </td>
     </tr>

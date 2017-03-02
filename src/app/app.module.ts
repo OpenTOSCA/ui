@@ -34,6 +34,7 @@ import { routing } from './app.routing';
 
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
+import { NgSpinKitModule } from 'ng-spin-kit';
 
 import { NgReduxModule, NgRedux } from 'ng2-redux';
 import { OpenTOSCAUiActions } from './redux/actions';
@@ -49,6 +50,7 @@ import { ApplicationInstanceDetailsComponent } from './application-instance-deta
         NgReduxModule,
         Ng2BootstrapModule.forRoot(),
         routing,
+        NgSpinKitModule,
         NgUploaderModule
     ],
     declarations: [

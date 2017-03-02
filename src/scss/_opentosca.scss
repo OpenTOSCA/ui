@@ -422,3 +422,15 @@ a.editInWineryButton:before {
     cursor: inherit;
     display: block;
 }
+.spinner-small {
+    .three-bounce-spinner {
+        margin-top: 5px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .bounce1, .bounce2, .bounce3 {
+        width: 8px !important;
+        height: 8px !important;
+    }
+}
+
