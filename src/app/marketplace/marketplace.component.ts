@@ -64,7 +64,7 @@ export class MarketplaceComponent implements OnInit {
         app.isInstalling = true;
         this.marketService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
             .then(response => {
-                this.showLoader = false;
+                app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)
                     .then(result => app.inContainer = result)
                     .catch(reason => {
