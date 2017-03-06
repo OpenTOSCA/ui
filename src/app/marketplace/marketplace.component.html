@@ -32,15 +32,18 @@
                         <div class="applicationTileButtonContainer">
                             <a tooltip="Details" type="button" [href]="app.repositoryURL" class="btn btn-default btn-sm"
                                target="_blank"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                            <button tooltip="Install in Container" *ngIf="!app.inContainer" type="button"
+                            <button tooltip="Install in Container" *ngIf="!app.inContainer && !app.isInstalling" type="button"
                                     class="btn btn-default btn-sm" (click)="installInContainer(app)"><span
                                     class="glyphicon glyphicon-plus-sign"></span></button>
-                            <a tooltip="Already installed in Container" *ngIf="app.inContainer"
+                            <button *ngIf="app.isInstalling"
+                               class="btn btn-default btn-sm loading-indicator">
+                                <sk-three-bounce class="spinner-small"></sk-three-bounce>
+                            </button>
+                            <a tooltip="Already installed in Container" *ngIf="!app.isInstalling && app.inContainer"
                                class="btn btn-success btn-sm"><span class="glyphicon glyphicon-check"></span></a>
                             <a tooltip="Download" class="btn btn-default btn-sm" [href]="app.csarURL"><span
                                     class="glyphicon glyphicon-download-alt"></span></a>
                         </div>
-                        <sk-three-bounce *ngIf="app.isInstalling" class="spinner-small"></sk-three-bounce>
                     </div>
                 </div>
             </div>
