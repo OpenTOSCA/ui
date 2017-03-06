@@ -424,8 +424,10 @@ a.editInWineryButton:before {
 }
 .spinner-small {
     .three-bounce-spinner {
-        margin-top: 5px !important;
-        margin-bottom: 0 !important;
+        width: 6px !important;
+        height: 6px !important;
+        margin: 0 4px !important;
+        border-radius: 100% !important;
     }
 
     .bounce1, .bounce2, .bounce3 {
@@ -434,3 +436,8 @@ a.editInWineryButton:before {
     }
 }
 
+.loading-indicator {
+    height: 24px;
+    width: 34px;
+    padding: 0;
+}
