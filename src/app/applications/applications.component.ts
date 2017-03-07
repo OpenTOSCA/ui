@@ -61,9 +61,10 @@ export class ApplicationsComponent implements OnInit {
      */
     deleteFromContainer(app: Application): void {
         this.removingApp = true;
+        Logger.log('[applications.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
-                console.log(response);
+                Logger.log('[applications.component][deleteFromContainer]', 'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();

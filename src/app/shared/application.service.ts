@@ -56,6 +56,7 @@ export class ApplicationService {
             .append(ApplicationService.fixAppID(appID))
             .toString();
         let headers = new Headers({'Accept': 'text/plain'});
+        Logger.log('[application.service][deleteAppFromContainer]', 'Sending delete to ' + url);
         return this.http.delete(url, {headers: headers})
             .toPromise();
     }
