@@ -17,8 +17,6 @@ import 'rxjs/add/operator/toPromise';
 
 import { AdministrationService } from '../administration/administration.service';
 import { Application } from './model/application.model';
-import { ApplicationInstance } from './model/application-instance.model';
-import { ApplicationInstanceSmartServiceDetails } from './model/application-instance-smartservice-details.model';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
 import { Logger } from './helper';
 import { Path } from './helper';
@@ -91,9 +89,6 @@ export class ApplicationService {
      * @returns {Promise<PlanParameters>}
      */
     getBuildPlanParameters(appID: string): Promise<BuildPlanOperationMetaData> {
-        // /containerapi/CSARs/FlinkApp_ServiceTemplate_DUMMY.csar/ServiceTemplates/<pick first>/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/
-        // Operations/instantiate/Plan/FlinkApp_ServiceTemplate_buildPlan
-
         return this.getServiceTemplatePath(appID)
             .then(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath).append(this.adminService.getBuildPlanPath()).toString();
@@ -162,18 +157,18 @@ export class ApplicationService {
                 let references = result.json().References as Array<ResourceReference>;
                 Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Poll returned: ' + JSON.stringify(references));
                 if (references.length === 2) {
-                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');
+                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');   // tslint:disable-line:max-line-length
                     for (let ref of references) {
                         if (!ReferenceHelper.isSelfReference(ref)) {
-                            Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));
+                            Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));                               // tslint:disable-line:max-line-length
                             return ref.href;
                         }
                     }
                     // ohoh, we did not find a reference that is not self reference
-                    Logger.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));    // tslint:disable-line:max-line-length
+                    Logger.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));  // tslint:disable-line:max-line-length
                 } else {
                     // ServiceTemplateInstance not created yet, query again
-                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');
+                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');                   // tslint:disable-line:max-line-length
                     return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), waitTime));
                 }
             })
