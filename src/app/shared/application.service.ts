@@ -193,17 +193,19 @@ export class ApplicationService {
      */
     pollForPlanFinish(pollUrl: string): Promise<PlanInstance> {
         const reqOpts = new RequestOptions({headers: this.adminService.getDefaultAcceptJSONHeaders()});
-        console.log('Polling for plan result');
+        Logger.log('[application.service][pollForPlanFinish]', 'Polling for plan result');
+        const waitTime = 1000;
         return this.http.get(pollUrl, reqOpts)
             .toPromise()
             .then(response => {
                 let res = response.json() as PlanInstance;
 
                 if (res.PlanInstance && res.PlanInstance.State === 'running') {
-                    console.log('Plan is still running, polling again in 1000ms');
-                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForPlanFinish(pollUrl)), 1000));
+                    Logger.log('[application.service][pollForPlanFinish]', 'Plan still running, polling again in ' + waitTime + ' ms');
+                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForPlanFinish(pollUrl)), waitTime));
                 } else {
                     // now fetch the output
+                    Logger.log('[application.service][pollForPlanFinish]', 'Plan finished with result ' + JSON.stringify(res));
                     return res;
                 }
             })
