@@ -20,10 +20,10 @@ import { Application } from './model/application.model';
 import { ApplicationInstance } from './model/application-instance.model';
 import { ApplicationInstanceSmartServiceDetails } from './model/application-instance-smartservice-details.model';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
-import { ErrorHandler } from './helper/handleError';
-import { Path } from './helper/Path';
+import { Logger } from './helper';
+import { Path } from './helper';
 import { PlanParameters } from './model/plan-parameters.model';
-import { ReferenceHelper } from './helper/ReferenceHelper';
+import { ReferenceHelper } from './helper';
 import { ResourceReference } from './model/resource-reference.model';
 import { BuildPlanOperationMetaData } from './model/buildPlanOperationMetaData.model';
 import { PlanInstance } from './model/plan-instance.model';
@@ -69,7 +69,7 @@ export class ApplicationService {
         return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(response => response.json().References as ResourceReference[])
-            .catch(err => ErrorHandler.handleError('[application.service][getApps]', err));
+            .catch(err => Logger.handleError('[application.service][getApps]', err));
     }
 
     /**
@@ -81,7 +81,7 @@ export class ApplicationService {
         return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(result => result.json() as PlanParameters)
-            .catch(err => ErrorHandler.handleError('[application.service][getPlanOutputParameter]', err));
+            .catch(err => Logger.handleError('[application.service][getPlanOutputParameter]', err));
     }
 
     /**
@@ -99,9 +99,9 @@ export class ApplicationService {
                 return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
                     .toPromise()
                     .then(response => response.json() as BuildPlanOperationMetaData)
-                    .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
+                    .catch(err => Logger.handleError('[application.service][getBuildPlanParameters]', err));
             })
-            .catch(err => ErrorHandler.handleError('[application.service][getBuildPlanParameters]', err));
+            .catch(err => Logger.handleError('[application.service][getBuildPlanParameters]', err));
     }
 
     /**
@@ -126,7 +126,7 @@ export class ApplicationService {
                 }
                 Promise.reject(new Error(JSON.stringify(resRefs)));
             })
-            .catch(err => ErrorHandler.handleError('[application.service][getServiceTemplatePath]', err));
+            .catch(err => Logger.handleError('[application.service][getServiceTemplatePath]', err));
     }
 
     /**
@@ -136,45 +136,54 @@ export class ApplicationService {
      * @returns {Promise<BuildplanPollResource>}
      */
     startProvisioning(appID: string, planMetaData: BuildPlanOperationMetaData): Promise<BuildplanPollResource> {
-        console.log(JSON.stringify(planMetaData));
+        Logger.log('[application.service][startProvisioning]', 'Starting Provisioning');
+        Logger.log('[application.service][startProvisioning]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(planMetaData));
+        Logger.log('[application.service][startProvisioning]', 'Posting to: ' + planMetaData.Reference.href);
         let headers = new Headers(this.adminService.getDefaultAcceptJSONHeaders());
         headers.append('Content-Type', 'text/plain');
 
         return this.http.post(planMetaData.Reference.href, planMetaData.Plan, {headers: headers})
             .toPromise()
             .then(response => {
-                console.log('Server responded to post: ' + response);
+                Logger.log('[application.service][startProvisioning]', 'Server responded to post: ' + response);
                 return response.json();
             })
-            .catch(err => ErrorHandler.handleError('[application.service][startProvisioning]', err));
+            .catch(err => Logger.handleError('[application.service][startProvisioning]', err));
     }
 
     pollForServiceTemplateInstanceCreation(pollURL: string): Promise<string> {
+        const waitTime = 1000;
+
+        Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Polling for service template instance creation: ' + pollURL);
         return this.http.get(pollURL, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(result => {
                 let references = result.json().References as Array<ResourceReference>;
+                Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Poll returned: ' + JSON.stringify(references));
                 if (references.length === 2) {
+                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');
                     for (let ref of references) {
                         if (!ReferenceHelper.isSelfReference(ref)) {
+                            Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));
                             return ref.href;
                         }
                     }
                     // ohoh, we did not find a reference that is not self reference
-                    ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));    // tslint:disable-line:max-line-length
+                    Logger.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));    // tslint:disable-line:max-line-length
                 } else {
                     // ServiceTemplateInstance not created yet, query again
-                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), 1000));
+                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');
+                    return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), waitTime));
                 }
             })
-            .catch(err => ErrorHandler.handleError('[application.service][pollForServiceTemplateInstanceCreation]', err));
+            .catch(err => Logger.handleError('[application.service][pollForServiceTemplateInstanceCreation]', err));
     }
 
     getPlanOutput(url: string): Promise<PlanParameters> {
         return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(response => response.json())
-            .catch(err => ErrorHandler.handleError('[application.service][getPlanoutput]', err));
+            .catch(err => Logger.handleError('[application.service][getPlanoutput]', err));
     }
 
     /**
@@ -198,7 +207,7 @@ export class ApplicationService {
                     return res;
                 }
             })
-            .catch(err => ErrorHandler.handleError('[application.service][pollForPlanFinish]', err));
+            .catch(err => Logger.handleError('[application.service][pollForPlanFinish]', err));
     }
 
     /**
@@ -213,7 +222,7 @@ export class ApplicationService {
         return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
             .then(result => result.json().References as Array<ResourceReference>)
-            .catch(err => ErrorHandler.handleError('[application.service][getServiceTemplateInstancesByCsarName]', err));
+            .catch(err => Logger.handleError('[application.service][getServiceTemplateInstancesByCsarName]', err));
     }
 
     /**
@@ -226,7 +235,7 @@ export class ApplicationService {
         return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
             .then(result => result.json().References as Array<ResourceReference>)
-            .catch(err => ErrorHandler.handleError('[application.service][getAllInstances]', err));
+            .catch(err => Logger.handleError('[application.service][getAllInstances]', err));
     }
 
     /**
@@ -282,7 +291,7 @@ export class ApplicationService {
                     app.imageUrl = '';
                     return app;
                 } else {
-                    ErrorHandler.handleError('[application.service][getAppDescription]', err);
+                    Logger.handleError('[application.service][getAppDescription]', err);
                 }
             });
     }

@@ -10,6 +10,7 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, trigger, state, style, transition, animate, ViewContainerRef } from '@angular/core';
+
 @Component({
     selector: 'opentosca-ui',
     templateUrl: 'app.component.html',

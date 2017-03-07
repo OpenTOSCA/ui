@@ -20,7 +20,7 @@ import { Application } from './model/application.model';
 import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
 import { MarketplaceApplication } from './model/marketplace-application.model';
 
-import { ErrorHandler } from '../shared/helper';
+import { Logger } from './helper';
 
 @Injectable()
 export class MarketplaceService {
@@ -42,7 +42,7 @@ export class MarketplaceService {
                 // TODO: Check, if Apps are already installed in container
                 return response.json() as MarketplaceApplicationReference[];
             })
-            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
+            .catch(err => Logger.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
     }
 
     /**
@@ -70,7 +70,7 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppFromMarketPlace]', err));
+            .catch(err => Logger.handleError('[marketplace.service][getAppFromMarketPlace]', err));
     }
 
     /**
@@ -119,6 +119,6 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(err => ErrorHandler.handleError('[marketplace.service][getAppDescription]', err));
+            .catch(err => Logger.handleError('[marketplace.service][getAppDescription]', err));
     }
 }

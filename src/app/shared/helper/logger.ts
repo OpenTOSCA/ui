@@ -10,7 +10,7 @@
  *     Michael Falkenthal
  */
 
-export class ErrorHandler {
+export class Logger {
     /**
      * Print errors to console
      * @param location string that indicates where the error occurred
@@ -18,7 +18,11 @@ export class ErrorHandler {
      * @returns {Promise<void>|Promise<T>}
      */
     public static handleError(location: string, error: any): Promise<any> {
-        console.error(location, ': ', error);
+        console.error('[', new Date(), ']', location, ': ', error);
         return Promise.reject(error.message || error);
+    }
+
+    public static log(location: string, message: string): void {
+        console.log('[', new Date(), ']', location, ': ', message);
     }
 }

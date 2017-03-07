@@ -16,9 +16,9 @@ import { Application } from '../shared/model/application.model';
 import { ModalDirective } from 'ng2-bootstrap';
 import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ErrorHandler } from '../shared/helper';
+import { Logger } from '../shared/helper';
 import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
-import { Path } from '../shared/helper/Path';
+import { Path } from '../shared/helper';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -82,7 +82,6 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.appService.getBuildPlanParameters(params['id'])
                     .then(planParameters => {
                         this.buildPlanOperationMetaData = planParameters;
-                        console.log(planParameters);
                     });
             });
     }
@@ -112,11 +111,11 @@ export class ApplicationDetailsComponent implements OnInit {
         this.provisioningDone = false;
         this.appService.startProvisioning(this.app.id, this.buildPlanOperationMetaData)
             .then(response => {
-                console.log('Received result after post: ' + JSON.stringify(response));
-                console.log('Now starting to poll for service template instance creation');
+                Logger.log('[application-details.component][startProvisioning]', 'Received result after post ' + JSON.stringify(response));
+                Logger.log('[application-details.component][startProvisioning]', 'Now starting to poll for service template instance creation');
                 this.appService.pollForServiceTemplateInstanceCreation(response.PlanURL)
                     .then(urlToServiceTemplateInstance => {
-                        console.log('ServiceTemplateInstance created: ', urlToServiceTemplateInstance);
+                        Logger.log('[application-details.component][startProvisioning]', 'ServiceTemplateInstance created: ' + urlToServiceTemplateInstance);
                         let urlToPlanInstanceOutput = new Path(urlToServiceTemplateInstance)
                             .append('PlanInstances')
                             .append(this.extractCorrelationID(response.PlanURL))
@@ -129,11 +128,13 @@ export class ApplicationDetailsComponent implements OnInit {
                             .append('State')
                             .toString();
 
+                        Logger.log('[application-details.component][startProvisioning]', 'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
+
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
                                 // we received the plan result
                                 // go find and present selfServiceApplicationUrl to user
-                                console.log('Received plan result: ' + JSON.stringify(result));
+                                Logger.log('[application-details.component][startProvisioning]', 'Received plan result: ' + JSON.stringify(result));
                                 this.appService.getPlanOutput(urlToPlanInstanceOutput)
                                     .then(planOutput => {
                                         for (let para of planOutput.OutputParameters) {
@@ -143,18 +144,18 @@ export class ApplicationDetailsComponent implements OnInit {
                                         }
                                         if (this.selfserviceApplicationUrl === '') {
                                             this.planOutputParameters = planOutput.OutputParameters;
-                                            console.log('Did not receive a selfserviceApplicationUrl');
+                                            Logger.log('[application-details.component][startProvisioning]', 'Did not receive a selfserviceApplicationUrl');
                                         }
                                     })
-                                    .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
+                                    .catch(err => Logger.handleError('[application-details.component][startProvisioning]', err));
                                 this.provisioningDone = true;
                                 this.provisioningInProgress = false;
                             })
-                            .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning][pollForResults]', err));
+                            .catch(err => Logger.handleError('[application-details.component][startProvisioning][pollForResults]', err));
                     })
-                    .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
+                    .catch(err => Logger.handleError('[application-details.component][startProvisioning]', err));
             })
-            .catch(err => ErrorHandler.handleError('[application-details.component][startProvisioning]', err));
+            .catch(err => Logger.handleError('[application-details.component][startProvisioning]', err));
     }
 
     extractCorrelationID(queryString: string): string {

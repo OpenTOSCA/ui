@@ -16,7 +16,7 @@ import { Application } from '../shared/model/application.model';
 import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
-import { ErrorHandler } from '../shared/helper/handleError';
+import { Logger } from '../shared/helper';
 import { Observable } from 'rxjs';
 import { ModalDirective } from 'ng2-bootstrap';
 
@@ -71,7 +71,7 @@ export class ApplicationsComponent implements OnInit {
             .catch(err => {
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
-                ErrorHandler.handleError('[applications.component][deleteFromContainer]', err);
+                Logger.handleError('[applications.component][deleteFromContainer]', err);
             });
     }
 
@@ -102,7 +102,7 @@ export class ApplicationsComponent implements OnInit {
                     this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
                 })
                 .catch(reason => {
-                    ErrorHandler.handleError('[applications.component][getAppReferences]', reason);
+                    Logger.handleError('[applications.component][getAppReferences]', reason);
                 });
         });
     }

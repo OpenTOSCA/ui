@@ -9,4 +9,6 @@
  * Contributors:
  *     Michael Falkenthal
  */
-export * from './handleError';
+export * from './logger';
+export * from './Path';
+export * from './ReferenceHelper';

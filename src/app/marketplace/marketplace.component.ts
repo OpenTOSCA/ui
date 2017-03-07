@@ -21,7 +21,7 @@ import { NgRedux, select } from 'ng2-redux';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';
-import { ErrorHandler } from '../shared/helper/handleError';
+import { Logger } from '../shared/helper';
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -69,7 +69,7 @@ export class MarketplaceComponent implements OnInit {
                     .then(result => app.inContainer = result)
                     .catch(reason => {
                         app.inContainer = false;
-                        ErrorHandler.handleError('[marketplace.component][installInContainer]', reason);
+                        Logger.handleError('[marketplace.component][installInContainer]', reason);
                     });
             })
             .catch(err => {
@@ -78,7 +78,7 @@ export class MarketplaceComponent implements OnInit {
                     .then(result => app.inContainer = result)
                     .catch(reason => {
                         app.isInstalling = false;
-                        ErrorHandler.handleError('[marketplace.component][installInContainer]', reason);
+                        Logger.handleError('[marketplace.component][installInContainer]', reason);
                     });
             });
     }
@@ -100,12 +100,12 @@ export class MarketplaceComponent implements OnInit {
                                 .then(result => app.inContainer = result)
                                 .catch(reason => {
                                     app.inContainer = false;
-                                    ErrorHandler.handleError('[marketplace.component][getApps][isAppDeployedInContainer]', reason);
+                                    Logger.handleError('[marketplace.component][getApps][isAppDeployedInContainer]', reason);
                                 });
                         }
                         this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications(apps));
                     })
-                    .catch(reason => ErrorHandler.handleError('[marketplace.component][getApps]', reason));
+                    .catch(reason => Logger.handleError('[marketplace.component][getApps]', reason));
             });
     }
 
