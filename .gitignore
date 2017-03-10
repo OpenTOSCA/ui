@@ -14,3 +14,7 @@ target/
 /src/**/*.js
 /src/**/*.js.map
 npm-debug.log
+
+### Custom ###
+src/main/resources/static/**/*
+!src/main/resources/static/.gitignore
