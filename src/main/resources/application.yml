@@ -1,0 +1,3 @@
+server:
+  contextPath: /opentosca-ui
+  port: 8080
