@@ -14,20 +14,13 @@ module.exports = webpackMerge(common, {
     devtool: 'source-map',
 
     /*
-    htmlLoader: {
-        // Workaround for Angular2
-        minimize: false
-    },*/
-
-    /*
      * https://webpack.github.io/docs/list-of-plugins.html
      */
     plugins: [
 
         new ExtractTextPlugin('[name].[hash].css'),
 
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.DedupePlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.optimize.UglifyJsPlugin(),
 
         /*
