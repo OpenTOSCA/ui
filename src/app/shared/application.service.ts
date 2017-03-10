@@ -161,10 +161,12 @@ export class ApplicationService {
                 let references = result.json().References as Array<ResourceReference>;
                 Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Poll returned: ' + JSON.stringify(references));
                 if (references.length === 2) {
-                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');
+                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
+                               'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');
                     for (let ref of references) {
                         if (!ReferenceHelper.isSelfReference(ref)) {
-                            Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));
+                            Logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
+                                       'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));
                             return ref.href;
                         }
                     }
@@ -172,7 +174,8 @@ export class ApplicationService {
                     Logger.handleError('[application.service][pollForServiceTemplateInstanceCreation]', new Error('There are only self references in returned list of ServiceTemplateInstances'));    // tslint:disable-line:max-line-length
                 } else {
                     // ServiceTemplateInstance not created yet, query again
-                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');
+                    Logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
+                               'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');
                     return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), waitTime));
                 }
             })

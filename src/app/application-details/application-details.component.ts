@@ -128,7 +128,8 @@ export class ApplicationDetailsComponent implements OnInit {
                             .append('State')
                             .toString();
 
-                        Logger.log('[application-details.component][startProvisioning]', 'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
+                        Logger.log('[application-details.component][startProvisioning]',
+                                   'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
 
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
