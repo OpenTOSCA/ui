@@ -10,113 +10,53 @@
  *     Michael Falkenthal
  */
 
-import { INITIAL_STATE, IAppState } from './store';
+import { INITIAL_STATE, AppState } from './store';
 import { OpenTOSCAUiAction, OpenTOSCAUiActions } from './actions';
 import * as _ from 'lodash';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 import { Application } from '../shared/model/application.model';
 
-export function rootReducer(state: IAppState = INITIAL_STATE, action: OpenTOSCAUiAction): IAppState {
+export function rootReducer(state: AppState = INITIAL_STATE, action: OpenTOSCAUiAction): AppState {
+    let newState = _.cloneDeep(state);
     switch (action.type) {
         case OpenTOSCAUiActions.ADD_CONTAINER_APPLICATIONS:
-            return {
-                container: {
-                    applications: addContainerApplications(state.container.applications, action.payload)
-                },
-                repository: state.repository,
-                administration: state.administration
-            };
+            newState.container.applications = action.payload;
+            return newState;
         case OpenTOSCAUiActions.ADD_REPOSITORY_APPLICATIONS:
-            return {
-                container: state.container,
-                repository : {
-                    applications: addRepositoryApplications(state.repository.applications, action.payload)
-                },
-                administration: state.administration
-            };
+            newState.repository.applications = action.payload;
+            return newState;
         case OpenTOSCAUiActions.REMOVE_CONTAINER_APPLICATION:
-            return {
-                container: {
-                    applications: _.filter(state.container.applications, function(a){return !(a.id === action.payload.id); })
-                },
-                repository: state.repository,
-                administration: state.administration
-            };
+            newState.container.applications = _.filter(newState.container.applications, function (a) {
+                return !(a.id === action.payload.id);
+            });
+            return newState;
         case OpenTOSCAUiActions.CLEAR_CONTAINER_APPLICATIONS:
-            return {
-                container: {
-                    applications: []
-                },
-                repository: state.repository,
-                administration: state.administration
-            };
+            newState.container.applications = [];
+            return newState;
         case OpenTOSCAUiActions.REMOVE_REPOSITORY_APPLICATION:
-            return {
-                container: state.container,
-                repository: {
-                    applications: _.filter(state.repository.applications, function(a){return !(a.id === action.payload.id); })
-                },
-                administration: state.administration
-            };
+            newState.repository.applications = _.filter(newState.repository.applications, function (a) {
+                return !(a.id === action.payload.id);
+            });
+            return newState;
         case OpenTOSCAUiActions.CLEAR_REPOSITORY_APPLICATIONS:
-            return {
-                container: state.container,
-                repository: {
-                    applications: []
-                },
-                administration: state.administration
-            };
+            newState.repository.applications = [];
+            return newState;
         case OpenTOSCAUiActions.UPDATE_REPOSITORY_URL:
-            return {
-                container: state.container,
-                repository: state.repository,
-                administration: {
-                    containerAPI: state.administration.containerAPI,
-                    repositoryAPI: action.payload,
-                    buildPlanPath: state.administration.buildPlanPath
-                }
-            };
+            newState.administration.repositoryAPI = action.payload;
+            return newState;
         case OpenTOSCAUiActions.UPDATE_CONTAINER_URL:
-            return {
-                container: state.container,
-                repository: state.repository,
-                administration: {
-                    containerAPI: action.payload,
-                    repositoryAPI: state.administration.repositoryAPI,
-                    buildPlanPath: state.administration.buildPlanPath
-                }
-            };
+            newState.administration.containerAPI = action.payload;
+            return newState;
         case OpenTOSCAUiActions.UPDATE_BUILDPLANPATH:
-            return {
-                container: state.container,
-                repository: state.repository,
-                administration: {
-                    containerAPI: state.administration.containerAPI,
-                    repositoryAPI: state.administration.repositoryAPI,
-                    buildPlanPath: action.payload
-                }
-            };
+            newState.administration.buildPlanPath = action.payload;
+            return newState;
+        case OpenTOSCAUiActions.UPDATE_BREADCRUMB:
+            newState.breadcrumb = action.payload;
+            return newState;
+        case OpenTOSCAUiActions.APPEND_BREADCRUMB:
+            newState.breadcrumb.push(action.payload);
+            return newState;
         default:
             return state;
     }
-}
-
-/**
- * Function ensured redux style for repository.applications by cloning state array and then pushing apps to it or updates them if already present
- * @param oldApps
- * @param appsToAdd
- * @returns {MarketplaceApplication[]}
- */
-function addRepositoryApplications(oldApps: Array<MarketplaceApplication>, appsToAdd: Array<MarketplaceApplication>): Array<MarketplaceApplication> {
-    return appsToAdd;
-}
-
-/**
- * Function ensured redux style for container.applications by cloning state array and then pushing apps to it or updates them if already present
- * @param oldApps
- * @param appsToAdd
- * @returns {MarketplaceApplication[]}
- */
-function addContainerApplications(oldApps: Array<Application>, appsToAdd: Array<Application>): Array<Application> {
-    return appsToAdd;
 }

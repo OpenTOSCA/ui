@@ -21,27 +21,16 @@
             <br/>
             <a id="descriptionButton" routerLink="/applications/{{app?.id}}">Description</a>
             <a id="instancesButton" class="selected">Instances</a>
-            <!--<a id="statisticsButton" href="">Statistics</a>-->
             <a id="backToOverviewButton" routerLink="/applications"><b>«</b> Back to Overview</a>
         </td>
         <td>
             <div id="content">
-                <div *ngFor="let inst of instancesList">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a routerLink="/applications/{{app?.id}}/instances/1"><h3 class="panel-title">Instance-ID {{inst.title}} - created at 2016-12-16T11:45:13.826+01:00</h3></a>
-                        </div>
-                        <div class="panel-body">
-                            <table width="90%" border="0">
-                                <tr>
-                                    <td>API-Reference:</td>
-                                    <td>{{inst.href}}</td>
-                                    <td> Type:</td>
-                                    <td>{{inst.type}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+                <div class="applicationTilesContainer">
+                    <accordion *ngFor="let inst of instancesList">
+                        <accordion-group heading="{{inst.title}}">
+                            {{inst.href}}
+                        </accordion-group>
+                    </accordion>
                 </div>
             </div>
         </td>

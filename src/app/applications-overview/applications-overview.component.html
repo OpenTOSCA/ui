@@ -1,0 +1,72 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <button class="btn btn-default btn-success navbar-btn" [routerLink]="[{ outlets: { modal: ['upload'] } }]">
+                    <span class="glyphicon glyphicon glyphicon-upload"></span>
+                    Upload New Application
+                </button>
+            </li>
+        </ul>
+        <form class="navbar-form navbar-left">
+            <div class="form-group">
+                <input disabled type="text" class="form-control" placeholder="Search (soon to come)">
+            </div>
+        </form>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="applicationTilesContainer">
+        <div class="applicationTile"
+             *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn" @fadeInOut>
+            <div class="applicationTileImageContainer">
+                <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
+            </div>
+            <div id="applicationDisplayName">
+                <span>{{app.displayName}}</span>
+            </div>
+            <div class="applicationTileButtonContainer">
+                <button tooltip="Details" type="button" [routerLink]="['/applications', app.id]"
+                        class="btn btn-default btn-sm"><span class="glyphicon glyphicon-list-alt"
+                                                             aria-hidden="true"></span>
+                </button>
+                <div class="btn-group" dropdown>
+                    <button tooltip="Options" id="single-button" type="button" class="btn btn-default btn-sm"
+                            dropdownToggle>
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+                    </button>
+                    <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                        <li role="menuitem"><a class="dropdown-item" (click)="showDeleteConfirmationModal(app)"><span
+                                class="glyphicon glyphicon-remove"></span> Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="hideDeleteConfirmationModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Really delete App?</h4>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete the App "{{appToDelete?.displayName}}"?
+                <div class="loaderContainer" *ngIf="removingApp">
+                    <div id="loader"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Cancle</button>
+                <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled]="false"
+                        (click)="deleteFromContainer(appToDelete)">Delete
+                </button>
+                <button *ngIf="removingApp" type="button" class="btn btn-danger" [disabled]="true">Removing...</button>
+            </div>
+        </div>
+    </div>
+</div>

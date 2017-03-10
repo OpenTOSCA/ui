@@ -13,7 +13,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { NgRedux } from 'ng2-redux';
-import { IAppState } from '../redux/store';
+import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class AdministrationService {
     private defaultAcceptHeaders = new Headers({'Accept': 'application/json'});
 
     constructor(private http: Http,
-                private ngRedux: NgRedux<IAppState>) {
+                private ngRedux: NgRedux<AppState>) {
     }
 
     /**

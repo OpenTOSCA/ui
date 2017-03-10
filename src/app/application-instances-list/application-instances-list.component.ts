@@ -8,17 +8,18 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
+ *     Karoline Saatkamp - initial implementation
  */
-import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit, ViewChild, trigger, state, style, transition, animate, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
-import { ModalDirective } from 'ng2-bootstrap/ng2-bootstrap';
+import { ModalDirective } from 'ng2-bootstrap';
 import { ResourceReference } from '../shared/model/resource-reference.model';
 
 @Component({
-    selector: 'opentosca-application-instance-details',
-    templateUrl: 'application-instance-details.component.html',
+    selector: 'opentosca-application-instances-list',
+    templateUrl: 'application-instances-list.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -34,29 +35,20 @@ import { ResourceReference } from '../shared/model/resource-reference.model';
     ]
 })
 
-export class ApplicationInstanceDetailsComponent implements OnInit {
-    public app: Application;
+export class ApplicationInstancesListComponent implements OnInit {
     public instancesList: Array<ResourceReference>;
 
     @ViewChild('childModal') public childModal: ModalDirective;
+    @Input() public app: Application;
 
-    constructor(private route: ActivatedRoute,
-                private appService: ApplicationService) {
+    constructor(private appService: ApplicationService) {
     }
 
     /**
-     * Initialize component by loading service instances of the csarID given in route params
+     * Initialize component by loading service instances of the app
      */
     ngOnInit(): void {
-
-        this.route.params
-            .subscribe(params => {
-                this.appService.getAppDescription(params['id'])
-                    .then(app => this.app = app);
-                this.appService.getServiceTemplateInstancesByAppID(params['id'])
-                    .then(result => this.instancesList = result);
-            });
+        this.appService.getServiceTemplateInstancesByAppID(this.app.id)
+            .then(result => this.instancesList = result);
     }
-
-
 }

@@ -9,9 +9,21 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, OnInit, NgZone, trigger, state, style, transition, animate } from '@angular/core';
+import {
+    Component, OnInit, NgZone, trigger, state, style, transition, animate, Input, ViewChild,
+    AfterViewInit
+} from '@angular/core';
 import { AdministrationService } from '../administration/administration.service';
 import { NgUploaderOptions } from 'ngx-uploader';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { OpenTOSCAUiActions } from '../redux/actions';
+import { NgRedux } from 'ng2-redux';
+import { AppState } from '../redux/store';
+import { ApplicationService } from '../shared/application.service';
+import { Application } from '../shared/model/application.model';
+import { Logger } from '../shared/helper/logger';
+import { ModalDirective } from 'ng2-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -31,7 +43,7 @@ import { NgUploaderOptions } from 'ngx-uploader';
     ]
 })
 
-export class ApplicationUploadComponent implements OnInit {
+export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     public deploymentInProgress = false;
     public deploymentDone = false;
     public max = 100;
@@ -44,20 +56,39 @@ export class ApplicationUploadComponent implements OnInit {
     private uploadFile: any;
     private options: NgUploaderOptions;
 
+    @Input() success: () => void;
+    @ViewChild('uploadModal') public uploadModal: ModalDirective;
+
     ngOnInit(): void {
+
         this.zone = new NgZone({enableLongStackTrace: false});
         this.options = {
             url: this.adminService.getContainerAPIURL() + '/CSARs',
             customHeaders: {
                 'Accept': 'application/json'
             },
-            // filterExtensions: true,
+            // filterExtensions: true,r
             // allowedExtensions: ['csar'],
             calculateSpeed: true
         };
     }
 
-    constructor(private adminService: AdministrationService) {
+    ngAfterViewInit(): void {
+        this.uploadModal.show();
+    }
+
+    closeModal(): void {
+        this.uploadModal.hide();
+    }
+
+    adaptRoute(): void {
+        this.router.navigate(['../applications', { outlets: { modal: null }}]);
+    }
+
+    constructor(private adminService: AdministrationService,
+                private appService: ApplicationService,
+                private ngRedux: NgRedux<AppState>,
+                private router: Router) {
     }
 
     /**
@@ -76,12 +107,32 @@ export class ApplicationUploadComponent implements OnInit {
             }
             if (data.status === 201) {
                 this.deploymentDone = true;
+                this.updateApplicationsInStore();
+                this.resetUploadStats();
+                this.success();
             }
             if (data.status === 500) {
                 this.failureMessage = data.statusText;
             }
             this.updateCurrentSpeed(data.progress.speedHumanized);
+        });
+    }
 
+    updateApplicationsInStore(): void {
+        this.appService.getApps().then(references => {
+            let appPromises = [] as Array<Promise<Application>>;
+            for (let ref of references) {
+                if (ref.title !== 'Self') {
+                    appPromises.push(this.appService.getAppDescription(ref.title));
+                }
+            }
+            Promise.all(appPromises)
+                .then(apps => {
+                    this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
+                })
+                .catch(reason => {
+                    Logger.handleError('[application-upload.component][updateApplicationsInStore]', reason);
+                });
         });
     }
 

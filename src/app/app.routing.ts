@@ -21,6 +21,9 @@ import { ApplicationUploadComponent } from './application-upload/application-upl
 import { AdministrationComponent } from './administration/administration.component';
 import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
+import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
+import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
+import { BreadcrumbEntry } from './shared/model/breadcrumb.model';
 
 
 const appRoutes: Routes = [
@@ -34,23 +37,33 @@ const appRoutes: Routes = [
     },
     {
         path: 'applications',
-        component: ApplicationsComponent
-    },
-    {
-        path: 'applications/upload',
-        component: ApplicationUploadComponent
-    },
-    {
-        path: 'applications/:id',
-        component: ApplicationDetailsComponent
-    },
-    {
-        path: 'applications/:id/instances',
-        component: ApplicationInstancesComponent
-    },
-    {
-        path: 'applications/:id/instances/1',
-        component: ApplicationInstanceDetailsComponent
+        component: ApplicationsComponent,
+        children: [
+            {
+                path: '',
+                component: ApplicationsOverviewComponent
+            },
+            {
+                path: 'upload',
+                component: ApplicationUploadComponent,
+                outlet: 'modal'
+            },
+            {
+                path: ':id',
+                component: ApplicationDetailsComponent,
+                resolve: {
+                    applicationDetail: ApplicationDetailResolver
+                }
+            },
+            {
+                path: ':id/instances',
+                component: ApplicationInstancesComponent
+            },
+            {
+                path: ':id/instances/1',
+                component: ApplicationInstanceDetailsComponent
+            }
+        ]
     },
     {
         path: 'repository',

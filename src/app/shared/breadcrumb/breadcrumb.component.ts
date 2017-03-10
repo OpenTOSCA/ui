@@ -9,16 +9,14 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, trigger, state, style, transition, animate, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgRedux } from 'ng2-redux';
-import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
-import { OpenTOSCAUiActions } from '../redux/actions';
-import { AppState } from '../redux/store';
+import { Component, trigger, state, style, transition, animate } from '@angular/core';
+import { select } from 'ng2-redux';
+import { Observable } from 'rxjs';
+import { BreadcrumbEntry } from '../model/breadcrumb.model';
 
 @Component({
-    selector: 'opentosca-about',
-    templateUrl: 'about.component.html',
+    selector: 'opentosca-breadcrumb',
+    templateUrl: 'breadcrumb.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -34,14 +32,10 @@ import { AppState } from '../redux/store';
     ]
 })
 
-export class AboutComponent implements OnInit{
+export class BreadcrumbComponent {
 
-    ngOnInit(): void {
-        let breadCrumbs = [];
-        breadCrumbs.push(new BreadcrumbEntry('About', ''));
-        this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
-    }
+    @select(['breadcrumb']) breadcrumbEntries: Observable<Array<BreadcrumbEntry>>;
 
-    constructor(private ngRedux: NgRedux<AppState>) {
+    constructor() {
     }
 }

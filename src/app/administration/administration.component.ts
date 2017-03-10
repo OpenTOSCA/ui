@@ -11,6 +11,10 @@
  */
 import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 import { AdministrationService } from './administration.service';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { OpenTOSCAUiActions } from '../redux/actions';
+import { AppState } from '../redux/store';
+import { NgRedux } from 'ng2-redux';
 
 
 @Component({
@@ -40,10 +44,16 @@ export class AdministrationComponent implements OnInit {
     // TODO: Change repositoryAPIAvailable to @select using redux observable an async pipe in template
     public repositoryAPIAvailable: boolean;
 
-    constructor(private adminService: AdministrationService) {
+    constructor(private adminService: AdministrationService,
+                private ngRedux: NgRedux<AppState>) {
     }
 
     ngOnInit(): void {
+
+        let breadCrumbs = [];
+        breadCrumbs.push(new BreadcrumbEntry('Administration', ''));
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
+
         this.buildPlanPath = this.adminService.getBuildPlanPath();
         this.containerAPI = this.adminService.getContainerAPIURL();
         this.repositoryAPI = this.adminService.getWineryAPIURL();

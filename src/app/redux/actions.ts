@@ -13,6 +13,7 @@
 import { Application } from '../shared/model/application.model';
 import { Injectable } from '@angular/core';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 
 export interface OpenTOSCAUiAction {
     type: string;
@@ -32,6 +33,9 @@ export class OpenTOSCAUiActions {
     static UPDATE_REPOSITORY_URL = 'UPDATE_REPOSITORY_URL';
     static UPDATE_CONTAINER_URL = 'UPDATE_CONTAINER_URL';
     static UPDATE_BUILDPLANPATH = 'UPDATE_BUILDPLANPATH';
+
+    static UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB';
+    static APPEND_BREADCRUMB = 'APPEND_BREADCRUMB';
 
     static addContainerApplications(apps: Array<Application>): OpenTOSCAUiAction {
         return {
@@ -93,6 +97,20 @@ export class OpenTOSCAUiActions {
         return {
             type: OpenTOSCAUiActions.UPDATE_BUILDPLANPATH,
             payload: path
+        };
+    }
+
+    static updateBreadcrumb(breadcrumbs: Array<BreadcrumbEntry>): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.UPDATE_BREADCRUMB,
+            payload: breadcrumbs
+        };
+    }
+
+    static appendBreadcrumb(breadcrumb: BreadcrumbEntry): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.APPEND_BREADCRUMB,
+            payload: breadcrumb
         };
     }
 }

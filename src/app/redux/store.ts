@@ -11,9 +11,10 @@
  */
 
 import { Application } from '../shared/model/application.model';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 
-export interface IAppState {
+export interface AppState {
     container?: {
         applications?: Array<Application>
     };
@@ -25,9 +26,10 @@ export interface IAppState {
         repositoryAPI?: string,
         buildPlanPath?: string
     };
+    breadcrumb?: Array<BreadcrumbEntry>
 }
 
-export const INITIAL_STATE: IAppState = {
+export const INITIAL_STATE: AppState = {
     container: {
         applications: []
     },
@@ -38,5 +40,6 @@ export const INITIAL_STATE: IAppState = {
         containerAPI: 'http://opentosca-dev.iaas.uni-stuttgart.de:1337/containerapi',
         repositoryAPI: 'http://dev.winery.opentosca.org:8080/winery/servicetemplates/',
         buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan'
-    }
+    },
+    breadcrumb: []
 };

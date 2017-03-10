@@ -1,34 +1,14 @@
-<div class="breadcrumbContainer">
-    <ol class="breadcrumb">
-        <li>
-            <a id="appsBreadcrumb" routerLink="/applications">Applications</a>
-        </li>
-        <li class="active">
-            Upload new App
-        </li>
-    </ol>
-</div>
-<table class="layoutTable" border="0" @fadeInOut>
-    <tr>
-        <td class="menu" id="subMenu">
-            <div class="pageTopicIcon">
-                <img src="../../assets/img/Applications_Header_Icon.png"/>
+<div bsModal (onHidden)="adaptRoute()" #uploadModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Upload New Application</h4>
             </div>
-            <br/>
-            <a id="installedAppsButton" routerLink="/applications" routerLinkActive="selected"
-               [routerLinkActiveOptions]="{ exact: true }">Installed Apps</a>
-            <a id="instancesButton" routerLink="/applications/upload" routerLinkActive="selected">Upload new App</a>
-        </td>
-        <td>
-            <div id="content">
-
+            <div class="modal-body">
                 <div class="container-fluent">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h2>Upload new Application
-                            </h2>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-2">
                             <span class="btn btn-primary btn-file">
@@ -45,7 +25,7 @@
                             <div>
                                 <progressbar [max]="max" [value]="dynamic"
                                              [type]="deploymentInProgress ? 'success' : 'default'"><span
-                                    style="color:white; white-space:nowrap;">{{dynamic}}%</span>
+                                        style="color:white; white-space:nowrap;">{{dynamic}}%</span>
                                 </progressbar>
                                 <small><em>current upload speed: {{currentSpeed}}</em></small>
                             </div>
@@ -73,8 +53,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-        </td>
-    </tr>
-</table>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

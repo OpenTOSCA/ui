@@ -19,6 +19,11 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Logger } from '../shared/helper';
 import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
 import { Path } from '../shared/helper';
+import { ApplicationDetail } from '../shared/model/application-detail.model';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { OpenTOSCAUiActions } from '../redux/actions';
+import { NgRedux } from 'ng2-redux';
+import { AppState } from '../redux/store';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -52,7 +57,8 @@ export class ApplicationDetailsComponent implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private ngRedux: NgRedux<AppState>) {
     }
 
     /**
@@ -75,14 +81,14 @@ export class ApplicationDetailsComponent implements OnInit {
      * then load app description and build plan parameters
      */
     ngOnInit(): void {
-        this.route.params
-            .subscribe(params => {
-                this.appService.getAppDescription(params['id'])
-                    .then(app => this.app = app);
-                this.appService.getBuildPlanParameters(params['id'])
-                    .then(planParameters => {
-                        this.buildPlanOperationMetaData = planParameters;
-                    });
+        let breadCrumbs = [];
+        breadCrumbs.push(new BreadcrumbEntry('Applications', '/applications'));
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
+        this.route.data
+            .subscribe((data: {applicationDetail: ApplicationDetail}) => {
+                this.app = data.applicationDetail.app;
+                this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
+                this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(this.app.displayName, '')));
             });
     }
 
@@ -164,30 +170,6 @@ export class ApplicationDetailsComponent implements OnInit {
         } else {
             return '';
         }
-    }
-
-    /**
-     * Can be used to set dummy plan output parameters for testing purposes
-     */
-    setDummyOutput(): void {
-        this.planOutputParameters = [
-            {
-                OutputParameter: {
-                    'Name': 'MQTTTopicName',
-                    'Type': 'String',
-                    'Value': 'falkisTopic',
-                    'Required': 'yes'
-                }
-            },
-            {
-                OutputParameter: {
-                    'Name': 'MQTTBrokerEndpoint',
-                    'Type': 'String',
-                    'Value': '129.69.214.245',
-                    'Required': 'yes'
-                }
-            }
-        ];
     }
 
     /**

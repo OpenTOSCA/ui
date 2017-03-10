@@ -109,9 +109,12 @@ export class ApplicationService {
         const url = new Path(this.adminService.getContainerAPIURL())
             .append('CSARs')
             .append(ApplicationService.fixAppID(appID))
-            .append('ServiceTemplates').toString();
+            .append('ServiceTemplates')
+            .toString();
 
-        return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+
+        return this.http.get(url, reqOpts)
             .toPromise()
             .then(response => {
                 let resRefs = response.json().References as Array<ResourceReference>;
@@ -209,18 +212,37 @@ export class ApplicationService {
     }
 
     /**
-     * Returns a list of instances for the given appID
+     * Returns a list of service template instances of the given appID.
+     * We fetch the first service template found for the given appID.
      * @param appID
      * @returns {Promise<Array<ResourceReference>>}
      */
-    getServiceTemplateInstancesByCsarName(appID: string): Promise<Array<ResourceReference>> {
+    getServiceTemplateInstancesByAppID(appID: string): Promise<Array<ResourceReference>> {
         appID = ApplicationService.fixAppID(appID);
-        const instanceAPIUrl = this.adminService.getContainerAPIURL() + '/instancedata/serviceInstances';
+
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(instanceAPIUrl, reqOpts)
-            .toPromise()
-            .then(result => result.json().References as Array<ResourceReference>)
-            .catch(err => Logger.handleError('[application.service][getServiceTemplateInstancesByCsarName]', err));
+
+        return this.getServiceTemplatePath(appID)
+            .then(url => {
+                    const serviceTemplateInstancesURL = new Path(url)
+                        .append('Instances')
+                        .toString();
+
+                    return this.http.get(serviceTemplateInstancesURL, reqOpts)
+                        .toPromise()
+                        .then(result => {
+                            let refs = result.json().References as Array<ResourceReference>;
+                            for (let ref in refs) {
+                                if(refs[ref].title.toLowerCase() === 'self') {
+                                    refs.splice(+ref, 1);
+                                    console.log(JSON.stringify(refs));
+                                }
+                            }
+                            return refs;
+                        })
+                        .catch(reason => Logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
+                }
+            ).catch(reason => Logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
     }
 
     /**

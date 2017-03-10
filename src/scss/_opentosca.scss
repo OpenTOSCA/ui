@@ -57,6 +57,10 @@ div.breadcrumbContainer {
     margin-right: 25px;
 }
 
+.breadcrumb {
+    margin-bottom: 0 !important;
+}
+
 table.layoutTable {
     padding: 0px;
     width: 100%;
@@ -99,7 +103,7 @@ table.layoutTable {
 }
 
 .applicationTile div > span {
-    display: block;
+    display: inline-block;
     text-overflow: ellipsis;
     overflow: hidden;
     width: 130px;
@@ -108,6 +112,7 @@ table.layoutTable {
     white-space: nowrap;
     font-style: italic;
     text-shadow: #c7c7c7 1px 1px 1px;
+    height: 18px;
 }
 
 .applicationTileImageContainer {
@@ -313,7 +318,7 @@ a.editInWineryButton:before {
     margin: 10px 0px 0px 10px;
 }
 
-#loaderContainer {
+.loaderContainer {
     margin: 100px 0px 0px 0px;
 }
 
@@ -336,8 +341,8 @@ a.editInWineryButton:before {
 }
 
 #content div.applicationTilesContainer {
-    margin: 20px;
-    padding-top: 8px;
+    //margin: 20px;
+    //padding-top: 8px;
 }
 
 #content div.applicationTilesContainer div.applicationTile > span {
@@ -441,4 +446,10 @@ a.editInWineryButton:before {
     height: 24px;
     width: 34px;
     padding: 0px;
+}
+
+#functionBar {
+    margin-bottom: 24px;
+    border-bottom: 1px solid #adadad;
+    padding-bottom: 10px;
 }

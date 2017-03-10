@@ -49,12 +49,11 @@ export class ApplicationInstancesComponent implements OnInit {
      * Initialize component by loading service instances of the csarID given in route params
      */
     ngOnInit(): void {
-
         this.route.params
             .subscribe(params => {
                 this.appService.getAppDescription(params['id'])
                     .then(app => this.app = app);
-                this.appService.getServiceTemplateInstancesByCsarName(params['id'])
+                this.appService.getServiceTemplateInstancesByAppID(params['id'])
                     .then(result => this.instancesList = result);
             });
     }

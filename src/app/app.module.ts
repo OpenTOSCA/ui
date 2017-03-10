@@ -22,6 +22,9 @@ import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
 import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
+import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
+import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
+import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 
 import { AdministrationService } from './administration/administration.service';
@@ -38,9 +41,10 @@ import { NgSpinKitModule } from 'ng-spin-kit';
 
 import { NgReduxModule, NgRedux } from 'ng2-redux';
 import { OpenTOSCAUiActions } from './redux/actions';
-import { IAppState, INITIAL_STATE } from './redux/store';
+import { AppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
-import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
+import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
+import { ApplicationInstancesListComponent } from './application-instances-list/application-instances-list.component';
 
 @NgModule({
     imports: [
@@ -60,13 +64,17 @@ import { ApplicationInstanceDetailsComponent } from './application-instance-deta
         ApplicationsComponent,
         ApplicationDetailsComponent,
         ApplicationInstancesComponent,
+        ApplicationInstancesListComponent,
         ApplicationInstanceDetailsComponent,
+        ApplicationsOverviewComponent,
         ApplicationUploadComponent,
+        BreadcrumbComponent,
         MarketplaceComponent,
         SortPipe
     ],
     providers: [
         AdministrationService,
+        ApplicationDetailResolver,
         ApplicationService,
         MarketplaceService,
         OpenTOSCAUiActions
@@ -77,7 +85,7 @@ import { ApplicationInstanceDetailsComponent } from './application-instance-deta
 })
 
 export class AppModule {
-    constructor(ngRedux: NgRedux<IAppState>) {
+    constructor(ngRedux: NgRedux<AppState>) {
         ngRedux.configureStore(rootReducer, INITIAL_STATE, []);
     }
 }

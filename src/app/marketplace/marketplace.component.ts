@@ -18,10 +18,11 @@ import { AdministrationService } from '../administration/administration.service'
 import { ApplicationService } from '../shared/application.service';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 import { NgRedux, select } from 'ng2-redux';
-import { IAppState } from '../redux/store';
+import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';
 import { Logger } from '../shared/helper';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 
 @Component({
     selector: 'opentosca-marketplace',
@@ -49,10 +50,14 @@ export class MarketplaceComponent implements OnInit {
     constructor(private adminService: AdministrationService,
                 private appService: ApplicationService,
                 private marketService: MarketplaceService,
-                private ngRedux: NgRedux<IAppState>) {
+                private ngRedux: NgRedux<AppState>) {
     }
 
     ngOnInit(): void {
+        let breadCrumbs = [];
+        breadCrumbs.push(new BreadcrumbEntry('Repository', 'marketplace'));
+        breadCrumbs.push(new BreadcrumbEntry('OpenTOSCA Repository', ''));
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
         this.getApps();
     }
 
