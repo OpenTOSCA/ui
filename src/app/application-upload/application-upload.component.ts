@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { AdministrationService } from '../administration/administration.service';
 import { NgUploaderOptions } from 'ngx-uploader';
-import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { NgRedux } from 'ng2-redux';
 import { AppState } from '../redux/store';
