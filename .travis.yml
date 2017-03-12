@@ -1,14 +1,14 @@
 language: node_js
 
 node_js:
-  - "6"
+  - "node"
 
 sudo: required
 dist: trusty
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install openjdk-8-jdk maven
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq openjdk-8-jdk maven
 
 script:
-  - mvn clean package --fail-at-end
+  - mvn package
