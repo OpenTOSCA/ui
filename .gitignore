@@ -16,5 +16,5 @@ target/
 npm-debug.log
 
 ### Custom ###
-src/main/resources/static/**/*
-!src/main/resources/static/.gitignore
+build/src/main/resources/static/**/*
+!build/src/main/resources/static/.gitkeep
