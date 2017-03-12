@@ -10,6 +10,8 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, trigger, state, style, transition, animate, ViewContainerRef } from '@angular/core';
+import { GrowlMessageBusService } from './shared/growl-message-bus.service';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
     selector: 'opentosca-ui',
@@ -30,11 +32,17 @@ import { Component, trigger, state, style, transition, animate, ViewContainerRef
 })
 
 export class AppComponent {
+
     // hack for ng2-bootstrap MODALS
     private viewContainerRef: ViewContainerRef;
+    private messages: Array<Message> = [];
 
-    public constructor(viewContainerRef: ViewContainerRef) {
+    public constructor(viewContainerRef: ViewContainerRef,
+                       private messageBus: GrowlMessageBusService) {
         // You need this small hack in order to catch application root view container ref
         this.viewContainerRef = viewContainerRef;
+        // We need this to pass messages to global growl component
+        this.messageBus.messages.subscribe(m => this.messages.push(m));
     }
+
 }

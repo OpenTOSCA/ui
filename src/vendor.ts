@@ -15,3 +15,4 @@ import 'rxjs';
 import 'jquery';
 import 'lodash';
 import 'moment';
+import 'primeng/primeng';

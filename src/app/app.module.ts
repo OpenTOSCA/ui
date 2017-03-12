@@ -38,6 +38,7 @@ import { routing } from './app.routing';
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
+import {GrowlModule} from 'primeng/primeng';
 
 import { NgReduxModule, NgRedux } from 'ng2-redux';
 import { OpenTOSCAUiActions } from './redux/actions';
@@ -45,11 +46,13 @@ import { AppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
 import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
 import { ApplicationInstancesListComponent } from './application-instances-list/application-instances-list.component';
+import { GrowlMessageBusService } from './shared/growl-message-bus.service';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
+        GrowlModule,
         HttpModule,
         NgReduxModule,
         Ng2BootstrapModule.forRoot(),
@@ -76,6 +79,7 @@ import { ApplicationInstancesListComponent } from './application-instances-list/
         AdministrationService,
         ApplicationDetailResolver,
         ApplicationService,
+        GrowlMessageBusService,
         MarketplaceService,
         OpenTOSCAUiActions
     ],
