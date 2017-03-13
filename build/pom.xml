@@ -26,6 +26,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.parent.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -53,27 +54,27 @@
                         <configuration>
                             <target>
                                 <exec osfamily="windows"
-                                      dir="${project.basedir}" executable="cmd"
+                                      dir="${project.basedir}/.." executable="cmd"
                                       failonerror="true">
                                     <arg line="/c npm install"/>
                                 </exec>
                                 <exec osfamily="unix"
-                                      dir="${project.basedir}" executable="npm"
+                                      dir="${project.basedir}/.." executable="npm"
                                       failonerror="true">
                                     <arg line="install"/>
                                 </exec>
                                 <exec osfamily="windows"
-                                      dir="${project.basedir}" executable="cmd"
+                                      dir="${project.basedir}/.." executable="cmd"
                                       failonerror="true">
                                     <arg line="/c npm run build"/>
                                 </exec>
                                 <exec osfamily="unix"
-                                      dir="${project.basedir}" executable="npm"
+                                      dir="${project.basedir}/.." executable="npm"
                                       failonerror="true">
                                     <arg line="run build"/>
                                 </exec>
                                 <copy todir="${project.basedir}/src/main/resources/static">
-                                    <fileset dir="${project.basedir}/dist"/>
+                                    <fileset dir="${project.basedir}/../dist"/>
                                 </copy>
                             </target>
                         </configuration>
