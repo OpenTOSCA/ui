@@ -235,7 +235,6 @@ export class ApplicationService {
                             for (let ref in refs) {
                                 if(refs[ref].title.toLowerCase() === 'self') {
                                     refs.splice(+ref, 1);
-                                    console.log(JSON.stringify(refs));
                                 }
                             }
                             return refs;
