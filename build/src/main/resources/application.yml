@@ -1,0 +1,3 @@
+server:
+  contextPath: /OpenTOSCAUi
+  port: 8080

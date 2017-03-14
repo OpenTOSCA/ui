@@ -1,17 +1,14 @@
 {
-  "name": "OpenTOSCA2",
+  "name": "OpenTOSCA",
   "version": "0.0.1",
-  "description": "OpenTOSCAUi",
+  "description": "OpenTOSCA User Interface",
   "private": true,
   "scripts": {
     "clean": "rimraf node_modules typings dist && npm cache clean",
     "lint": "tslint \"src/**/*.ts\"",
     "build": "rimraf dist war && npm run lint && webpack --config config/webpack.prod.js --progress --profile --bail",
     "build:serve": "lite-server --config config/lite-server.json",
-    "start": "webpack-dev-server --inline --hot --progress",
-    "postinstall": "typings install",
-    "typings": "typings",
-    "war": "./war_build_assets/build_war.sh"
+    "start": "webpack-dev-server --inline --hot --progress"
   },
   "keywords": [],
   "author": "",
