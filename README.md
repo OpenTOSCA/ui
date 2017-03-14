@@ -1,5 +1,9 @@
 # OpenTOSCA UI
 
+[![Build Status](https://travis-ci.org/OpenTOSCA/ui.svg?branch=master)](https://travis-ci.org/OpenTOSCA/ui)
+
+Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
+
 ## Prerequisites
 
 1. Install [Git](https://git-scm.com)
