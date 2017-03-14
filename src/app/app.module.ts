@@ -38,7 +38,7 @@ import { routing } from './app.routing';
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
-import {GrowlModule} from 'primeng/primeng';
+import { AccordionModule, FieldsetModule, GrowlModule } from 'primeng/primeng';
 
 import { NgReduxModule, NgRedux } from 'ng2-redux';
 import { OpenTOSCAUiActions } from './redux/actions';
@@ -50,7 +50,9 @@ import { GrowlMessageBusService } from './shared/growl-message-bus.service';
 
 @NgModule({
     imports: [
+        AccordionModule,
         BrowserModule,
+        FieldsetModule,
         FormsModule,
         GrowlModule,
         HttpModule,

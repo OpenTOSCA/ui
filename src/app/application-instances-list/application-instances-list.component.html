@@ -1,5 +1,11 @@
-<accordion *ngFor="let inst of instancesList">
-    <accordion-group heading="{{inst.title}}">
-        {{inst.href}}
-    </accordion-group>
-</accordion>
+<div *ngIf="instancesList?.length > 0">
+    <h2>Instances List <span class="badge">{{instancesList?.length}}</span></h2>
+    <p-accordion *ngFor="let inst of instancesList" [multiple]="true">
+        <p-accordionTab header="{{inst.title}}">
+            Application ID is {{inst.title}}
+        </p-accordionTab>
+    </p-accordion>
+</div>
+<div *ngIf="instancesList?.length === 0">
+    No Instances provisioned.
+</div>

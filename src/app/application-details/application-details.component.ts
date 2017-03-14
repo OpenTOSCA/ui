@@ -24,6 +24,8 @@ import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { NgRedux } from 'ng2-redux';
 import { AppState } from '../redux/store';
+import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
+import { Error } from 'tslint/lib/error';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -58,7 +60,8 @@ export class ApplicationDetailsComponent implements OnInit {
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationService,
                 private sanitizer: DomSanitizer,
-                private ngRedux: NgRedux<AppState>) {
+                private ngRedux: NgRedux<AppState>,
+                private messageBus: GrowlMessageBusService) {
     }
 
     /**
@@ -146,22 +149,55 @@ export class ApplicationDetailsComponent implements OnInit {
                                         for (let para of planOutput.OutputParameters) {
                                             if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
                                                 this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(para.OutputParameter.Value);
+                                                this.messageBus.emit(
+                                                    {
+                                                        severity:'success',
+                                                        summary:'New Instance Provisioned',
+                                                        detail:'A new instance of ' + this.app.id + ' was provisioned. Launch via: ' + para.OutputParameter.Value}
+                                                        );
                                             }
                                         }
                                         if (this.selfserviceApplicationUrl === '') {
                                             this.planOutputParameters = planOutput.OutputParameters;
+                                            this.messageBus.emit(
+                                                {
+                                                    severity:'success',
+                                                    summary:'New Instance Provisioned',
+                                                    detail:'A new instance of ' + this.app.id + ' was provisioned. Result is: ' + JSON.stringify(planOutput.OutputParameters)}
+                                            );
                                             Logger.log('[application-details.component][startProvisioning]', 'Did not receive a selfserviceApplicationUrl');
                                         }
                                     })
-                                    .catch(err => Logger.handleError('[application-details.component][startProvisioning]', err));
+                                    .catch(err => {
+                                        this.emitProvisioningErrorMessage(err);
+                                        Logger.handleError('[application-details.component][startProvisioning]', err);
+                                    });
                                 this.provisioningDone = true;
                                 this.provisioningInProgress = false;
                             })
-                            .catch(err => Logger.handleError('[application-details.component][startProvisioning][pollForResults]', err));
+                            .catch(err => {
+                                this.emitProvisioningErrorMessage(err);
+                                Logger.handleError('[application-details.component][startProvisioning][pollForResults]', err)
+                            });
                     })
-                    .catch(err => Logger.handleError('[application-details.component][startProvisioning]', err));
+                    .catch(err => {
+                        this.emitProvisioningErrorMessage(err);
+                        Logger.handleError('[application-details.component][startProvisioning]', err)
+                    });
             })
-            .catch(err => Logger.handleError('[application-details.component][startProvisioning]', err));
+            .catch(err => {
+                this.emitProvisioningErrorMessage(err);
+                Logger.handleError('[application-details.component][startProvisioning]', err)
+            });
+    }
+
+    emitProvisioningErrorMessage(err: Error): void {
+        this.messageBus.emit(
+            {
+                severity:'error',
+                summary:'Failure at Provisioning',
+                detail:'The provisioning of a new instance of ' + this.app.id + ' was not successfull. Error is: ' + JSON.stringify(err)}
+        );
     }
 
     extractCorrelationID(queryString: string): string {

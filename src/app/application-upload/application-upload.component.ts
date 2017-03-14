@@ -23,6 +23,7 @@ import { Application } from '../shared/model/application.model';
 import { Logger } from '../shared/helper/logger';
 import { ModalDirective } from 'ng2-bootstrap';
 import { Router } from '@angular/router';
+import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -55,7 +56,6 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     private uploadFile: any;
     private options: NgUploaderOptions;
 
-    @Input() success: () => void;
     @ViewChild('uploadModal') public uploadModal: ModalDirective;
 
     ngOnInit(): void {
@@ -86,6 +86,7 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
 
     constructor(private adminService: AdministrationService,
                 private appService: ApplicationService,
+                private messageBus: GrowlMessageBusService,
                 private ngRedux: NgRedux<AppState>,
                 private router: Router) {
     }
@@ -106,12 +107,15 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             }
             if (data.status === 201) {
                 this.deploymentDone = true;
+                this.messageBus.emit({severity:'success', summary:'Upload Succeeded', detail:'New Application was successfully uploaded and deployed to container'});
                 this.updateApplicationsInStore();
                 this.resetUploadStats();
-                this.success();
+                this.closeModal();
             }
             if (data.status === 500) {
                 this.failureMessage = data.statusText;
+                this.messageBus.emit({severity:'error', summary:'Error', detail:'Application was not successfully uploaded and deployed. Server responded: ' + data.statusText});
+                this.closeModal();
             }
             this.updateCurrentSpeed(data.progress.speedHumanized);
         });

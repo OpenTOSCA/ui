@@ -20,6 +20,7 @@ import { Logger } from '../shared/helper';
 import { Observable } from 'rxjs';
 import { ModalDirective } from 'ng2-bootstrap';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class ApplicationsOverviewComponent implements OnInit {
     public appToDelete: Application;
 
     constructor(private appService: ApplicationService,
-                private ngRedux: NgRedux<AppState>) {
+                private ngRedux: NgRedux<AppState>,
+                private messageBus: GrowlMessageBusService) {
     }
 
     ngOnInit(): void {
@@ -67,6 +69,7 @@ export class ApplicationsOverviewComponent implements OnInit {
         Logger.log('[applications.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
+                this.messageBus.emit({severity:'success', summary:'Deletion Successfull', detail:'Application ' + app.id + ' was successfully deleted.'})
                 Logger.log('[applications.component][deleteFromContainer]', 'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
                 this.removingApp = false;
@@ -75,6 +78,7 @@ export class ApplicationsOverviewComponent implements OnInit {
             .catch(err => {
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
+                this.messageBus.emit({severity:'error', summary:'Error', detail:'Application ' + app.id + ' was not successfully deleted. Server responded: ' + JSON.stringify(err)});
                 Logger.handleError('[applications.component][deleteFromContainer]', err);
             });
     }

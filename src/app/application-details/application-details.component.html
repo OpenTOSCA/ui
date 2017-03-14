@@ -9,90 +9,102 @@
                 <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary navbar-btn"
                         (click)="showChildModal()">Provision New Instance
                 </button>
-                <button class="btn btn-default btn-default"><span><sk-three-bounce
-                        class="spinner-small"></sk-three-bounce></span> loading
-                </button>
             </li>
         </ul>
     </div>
 </nav>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-6">
-            <h2>Description</h2>
-            <p>
-                {{app?.description}}
-                <br/>
-            </p>
-
-            <!-- Buttons -->
-            <div style="margin-bottom: 10px;">
-                <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
-                   [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
-                <div id="loaderContainer">
-                    <div id="loader" *ngIf="provisioningInProgress"></div>
-                </div>
-                <button *ngIf="!provisioningDone && !provisioningInProgress" class="btn btn-primary"
-                        (click)="showChildModal()">Provision New Instance
-                </button>
-            </div>
-
-            <div class="panel panel-success" *ngIf="planOutputParameters">
-                <div class="panel-heading">Provisioning Successful</div>
-                <div class="panel-body">
-                    <p>The provisioning of the instance was successful. The output parameters are listed
-                        bellow:</p>
+    <p-fieldset legend="Application Information" [toggleable]="true">
+        <div class="row">
+            <div class="col-lg-6">
+                <div *ngIf="app?.description && app.description !== ''">
+                    <h2>Description</h2>
+                    <p>
+                        {{app?.description}}
+                        <br/>
+                    </p>
                 </div>
 
-                <!-- Table -->
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Parameter</th>
-                        <th>Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let param of planOutputParameters; let i = index">
-                        <td *ngIf="showOutputParameter(param)">{{i + 1}}</td>
-                        <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Name}}</td>
-                        <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Value}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <!-- Buttons -->
+                <div style="margin-bottom: 10px;">
+                    <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
+                       [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
+
+                    <div id="loaderContainer">
+                        <div id="loader" *ngIf="provisioningInProgress"></div>
+                    </div>
+                </div>
+
+                <div class="panel panel-success" *ngIf="planOutputParameters">
+                    <div class="panel-heading">Provisioning Successful</div>
+                    <div class="panel-body">
+                        <p>The provisioning of the instance was successful. The output parameters are listed
+                            bellow:</p>
+                    </div>
+
+                    <!-- Table -->
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let param of planOutputParameters; let i = index">
+                            <td *ngIf="showOutputParameter(param)">{{i + 1}}</td>
+                            <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Name}}</td>
+                            <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Value}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="app?.screenshotUrls?.length > 0">
+                    <h2>Screenshots</h2>
+                    <p>
+                        <a *ngFor="let screenshotUrl of app?.screenshotUrls" target="_blank" [href]="screenshotUrl">
+                            <img [src]="screenshotUrl"
+                                 class="screenshotThumb">
+                        </a>
+                    </p>
+                </div>
+                <div *ngIf="app?.version && app?.version !==''">
+                    <h2>Version</h2>
+                    <p>
+                        {{app?.version}}
+                    </p>
+                </div>
+                <div *ngIf="app?.authors?.length > 0">
+                    <h2>Authors</h2>
+                    <ul>
+                        <li *ngFor="let author of app?.authors">
+                            {{author}}
+                        </li>
+                    </ul>
+                </div>
             </div>
+            <div class="col-lg-6">
+                <h2>Topology Template</h2>
+                <div *ngIf="app?.imageUrl && app?.imageUrl !== ''">
+                    <a *ngIf="app" [href]="app?.imageUrl" target="_blank">
+                        <img id="topology-image" *ngIf="app" [src]="app?.imageUrl"/>
+                    </a>
+                </div>
+                <div *ngIf="!(app?.imageUrl && app?.imageUrl !== '')">
+                    No Template Image provided.
+                </div>
 
-            <h2>Screenshots</h2>
-            <p>
-                <a *ngFor="let screenshotUrl of app?.screenshotUrls" target="_blank" [href]="screenshotUrl">
-                    <img [src]="screenshotUrl"
-                         class="screenshotThumb">
-                </a>
-            </p>
-
-            <h2>Version</h2>
-            <p>
-                {{app?.version}}
-            </p>
-
-            <h2>Authors</h2>
-            <ul>
-                <li *ngFor="let author of app?.authors">
-                    {{author}}
-                </li>
-            </ul>
-
-            <h2>Instances</h2>
-            <opentosca-application-instances-list [app]="app"></opentosca-application-instances-list>
+            </div>
         </div>
-        <div class="col-lg-6">
-            <h2>Topology Template</h2>
-            <a *ngIf="app" [href]="app?.imageUrl" target="_blank">
-                <img *ngIf="app" [src]="app?.imageUrl"/>
-            </a>
+    </p-fieldset>
+    <p-fieldset legend="Application Instances" [toggleable]="true">
+        <div class="row">
+            <div class="col-lg-12">
+                <opentosca-application-instances-list [app]="app"></opentosca-application-instances-list>
+            </div>
         </div>
-    </div>
+    </p-fieldset>
 </div>
 
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
