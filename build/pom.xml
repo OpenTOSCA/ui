@@ -18,11 +18,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -35,7 +30,7 @@
                         <id>clean</id>
                         <phase>clean</phase>
                         <configuration>
-                            <target>
+                            <target name="Clean-up npm build artifacts">
                                 <delete includeemptydirs="true">
                                     <fileset dir="${project.basedir}/src/main/resources/static">
                                         <exclude name=".gitkeep"/>
@@ -52,7 +47,7 @@
                         <id>build</id>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <target>
+                            <target name="Build npm artifacts">
                                 <exec osfamily="windows"
                                       dir="${project.basedir}/.." executable="cmd"
                                       failonerror="true">
