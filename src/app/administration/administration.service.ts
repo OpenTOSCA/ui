@@ -12,7 +12,7 @@
 
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { NgRedux } from 'ng2-redux';
+import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 

@@ -13,7 +13,7 @@ import { Component, OnInit, trigger, state, style, transition, animate, ViewChil
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
-import { NgRedux, select } from 'ng2-redux';
+import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Logger } from '../shared/helper';

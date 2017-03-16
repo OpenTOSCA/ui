@@ -36,7 +36,7 @@ import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 
-import { NgReduxModule, NgRedux } from 'ng2-redux';
+import {NgRedux, NgReduxModule} from '@angular-redux/store';
 import { OpenTOSCAUiActions } from './redux/actions';
 import { IAppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
