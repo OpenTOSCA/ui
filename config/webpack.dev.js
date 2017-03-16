@@ -44,11 +44,11 @@ module.exports = webpackMerge(common, {
     devServer: {
         port: 3000,
         historyApiFallback: {
-            index: '/OpenTOSCAUi/'
+            index: '/opentosca/'
         },
         watchOptions: {aggregateTimeout: 300, poll: 1000},
         contentBase: helpers.root('dist'),
-        publicPath: '/OpenTOSCAUi/'
+        publicPath: '/opentosca/'
     },
 
 });

@@ -14,4 +14,4 @@ We use Spring Boot and Spring Boot's Maven plugin to build a self-contained WAR 
     java -jar target\opentosca-ui-${version}.war
     ```
 
-    Afterwards, open a browser and navigate to [http://localhost:8080/OpenTOSCAUi](http://localhost:8080/OpenTOSCAUi).
+    Afterwards, open a browser and navigate to [http://localhost:8080/opentosca](http://localhost:8080/opentosca).
