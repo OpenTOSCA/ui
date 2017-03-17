@@ -23,8 +23,6 @@ import { ApplicationInstancesComponent } from './application-instances/applicati
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
 import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
-import { BreadcrumbEntry } from './shared/model/breadcrumb.model';
-
 
 const appRoutes: Routes = [
     {
