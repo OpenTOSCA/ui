@@ -17,13 +17,13 @@ import { Message } from 'primeng/components/common/api';
 @Injectable()
 export class GrowlMessageBusService {
 
-    private _bus: Subject<Message> = new Subject();
-    public messages: Observable<Message> = this._bus.asObservable();
+    private bus: Subject<Message> = new Subject();
+    public messages: Observable<Message> = this.bus.asObservable();
 
     constructor() {
     }
 
     public emit(m: Message): void {
-        this._bus.next(m);
+        this.bus.next(m);
     }
 }

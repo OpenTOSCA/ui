@@ -138,7 +138,7 @@ export class ApplicationDetailsComponent implements OnInit {
                             .toString();
 
                         Logger.log('[application-details.component][startProvisioning]',
-                                   'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
+                            'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
 
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
@@ -152,19 +152,25 @@ export class ApplicationDetailsComponent implements OnInit {
                                                 this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(para.OutputParameter.Value);
                                                 this.messageBus.emit(
                                                     {
-                                                        severity:'success',
-                                                        summary:'New Instance Provisioned',
-                                                        detail:'A new instance of ' + this.app.id + ' was provisioned. Launch via: ' + para.OutputParameter.Value}
-                                                        );
+                                                        severity: 'success',
+                                                        summary: 'New Instance Provisioned',
+                                                        detail: 'A new instance of ' + this.app.id +
+                                                        ' was provisioned. Launch via: ' +
+                                                        para.OutputParameter.Value
+                                                    }
+                                                );
                                             }
                                         }
                                         if (this.selfserviceApplicationUrl === '') {
                                             this.planOutputParameters = planOutput.OutputParameters;
                                             this.messageBus.emit(
                                                 {
-                                                    severity:'success',
-                                                    summary:'New Instance Provisioned',
-                                                    detail:'A new instance of ' + this.app.id + ' was provisioned. Result is: ' + JSON.stringify(planOutput.OutputParameters)}
+                                                    severity: 'success',
+                                                    summary: 'New Instance Provisioned',
+                                                    detail: 'A new instance of ' + this.app.id +
+                                                    ' was provisioned. Result is: ' +
+                                                    JSON.stringify(planOutput.OutputParameters)
+                                                }
                                             );
                                             Logger.log('[application-details.component][startProvisioning]', 'Did not receive a selfserviceApplicationUrl');
                                         }
@@ -178,26 +184,27 @@ export class ApplicationDetailsComponent implements OnInit {
                             })
                             .catch(err => {
                                 this.emitProvisioningErrorMessage(err);
-                                Logger.handleError('[application-details.component][startProvisioning][pollForResults]', err)
+                                Logger.handleError('[application-details.component][startProvisioning][pollForResults]', err);
                             });
                     })
                     .catch(err => {
                         this.emitProvisioningErrorMessage(err);
-                        Logger.handleError('[application-details.component][startProvisioning]', err)
+                        Logger.handleError('[application-details.component][startProvisioning]', err);
                     });
             })
             .catch(err => {
                 this.emitProvisioningErrorMessage(err);
-                Logger.handleError('[application-details.component][startProvisioning]', err)
+                Logger.handleError('[application-details.component][startProvisioning]', err);
             });
     }
 
     emitProvisioningErrorMessage(err: Error): void {
         this.messageBus.emit(
             {
-                severity:'error',
-                summary:'Failure at Provisioning',
-                detail:'The provisioning of a new instance of ' + this.app.id + ' was not successfull. Error is: ' + JSON.stringify(err)}
+                severity: 'error',
+                summary: 'Failure at Provisioning',
+                detail: 'The provisioning of a new instance of ' + this.app.id + ' was not successfull. Error is: ' + JSON.stringify(err)
+            }
         );
     }
 

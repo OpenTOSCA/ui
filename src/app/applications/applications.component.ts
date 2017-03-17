@@ -28,5 +28,5 @@ import { Component, trigger, state, style, transition, animate } from '@angular/
         ])
     ]
 })
-export class ApplicationsComponent{
+export class ApplicationsComponent {
 }

@@ -161,11 +161,11 @@ export class ApplicationService {
                 Logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Poll returned: ' + JSON.stringify(references));
                 if (references.length === 2) {
                     Logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
-                               'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');
+                        'Found 2 entries in references list now searching for reference to new ServiceTemplateInstance');
                     for (let ref of references) {
                         if (!ReferenceHelper.isSelfReference(ref)) {
                             Logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
-                                       'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));
+                                'Found new ServiceTemplateInstance: ' + JSON.stringify(ref));
                             return ref.href;
                         }
                     }
@@ -174,7 +174,7 @@ export class ApplicationService {
                 } else {
                     // ServiceTemplateInstance not created yet, query again
                     Logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
-                               'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');
+                        'ServiceTemplateInstance not created yet, polling again in ' + waitTime + ' ms');
                     return new Promise((resolve) => setTimeout(() => resolve(this.pollForServiceTemplateInstanceCreation(pollURL)), waitTime));
                 }
             })
@@ -236,15 +236,30 @@ export class ApplicationService {
                         .then(result => {
                             let refs = result.json().References as Array<ResourceReference>;
                             for (let ref in refs) {
-                                if(refs[ref].title.toLowerCase() === 'self') {
+                                if (refs[ref].title.toLowerCase() === 'self') {
                                     refs.splice(+ref, 1);
                                 }
                             }
+
                             return refs;
                         })
                         .catch(reason => Logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
                 }
             ).catch(reason => Logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
+    }
+
+    getProvisioningStateOfServiceTemplateInstances(refs: Array<ResourceReference>): Promise<Array<any>> {
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        let promises = <any>[];
+
+        for (let ref of refs) {
+            const statusURL = new Path(ref.href)
+                .append('State')
+                .toString();
+            promises.push(this.http.get(statusURL, reqOpts).toPromise().then(result => result.json()));
+        }
+
+        return Promise.all(promises);
     }
 
     /**

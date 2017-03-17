@@ -26,7 +26,7 @@ export interface AppState {
         repositoryAPI?: string,
         buildPlanPath?: string
     };
-    breadcrumb?: Array<BreadcrumbEntry>
+    breadcrumb?: Array<BreadcrumbEntry>;
 }
 
 export const INITIAL_STATE: AppState = {

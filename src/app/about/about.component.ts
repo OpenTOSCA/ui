@@ -33,7 +33,7 @@ import { AppState } from '../redux/store';
     ]
 })
 
-export class AboutComponent implements OnInit{
+export class AboutComponent implements OnInit {
 
     ngOnInit(): void {
         let breadCrumbs = [];

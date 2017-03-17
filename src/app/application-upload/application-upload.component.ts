@@ -81,7 +81,7 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     }
 
     adaptRoute(): void {
-        this.router.navigate(['../applications', { outlets: { modal: null }}]);
+        this.router.navigate(['../applications', {outlets: {modal: null}}]);
     }
 
     constructor(private adminService: AdministrationService,
@@ -107,14 +107,26 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             }
             if (data.status === 201) {
                 this.deploymentDone = true;
-                this.messageBus.emit({severity:'success', summary:'Upload Succeeded', detail:'New Application was successfully uploaded and deployed to container'});
+                this.messageBus.emit(
+                    {
+                        severity: 'success',
+                        summary: 'Upload Succeeded',
+                        detail: 'New Application was successfully uploaded and deployed to container'
+                    }
+                );
                 this.updateApplicationsInStore();
                 this.resetUploadStats();
                 this.closeModal();
             }
             if (data.status === 500) {
                 this.failureMessage = data.statusText;
-                this.messageBus.emit({severity:'error', summary:'Error', detail:'Application was not successfully uploaded and deployed. Server responded: ' + data.statusText});
+                this.messageBus.emit(
+                    {
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Application was not successfully uploaded and deployed. Server responded: ' + data.statusText
+                    }
+                );
                 this.closeModal();
             }
             this.updateCurrentSpeed(data.progress.speedHumanized);
