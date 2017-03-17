@@ -10,16 +10,6 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, trigger, state, style, transition, animate } from '@angular/core';
-// import { ApplicationService } from '../shared/application.service';
-// import { Application } from '../shared/model/application.model';
-//
-// import { NgRedux, select } from 'ng2-redux';
-// import { AppState } from '../redux/store';
-// import { OpenTOSCAUiActions } from '../redux/actions';
-// import { Logger } from '../shared/helper';
-// import { Observable } from 'rxjs';
-// import { ModalDirective } from 'ng2-bootstrap';
-
 
 @Component({
     selector: 'opentosca-applications',

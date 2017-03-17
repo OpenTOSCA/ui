@@ -13,8 +13,6 @@
 import { INITIAL_STATE, AppState } from './store';
 import { OpenTOSCAUiAction, OpenTOSCAUiActions } from './actions';
 import * as _ from 'lodash';
-import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
-import { Application } from '../shared/model/application.model';
 
 export function rootReducer(state: AppState = INITIAL_STATE, action: OpenTOSCAUiAction): AppState {
     let newState = _.cloneDeep(state);
