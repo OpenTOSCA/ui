@@ -13,7 +13,7 @@ import { Component, OnInit, trigger, state, style, transition, animate, ViewChil
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
-import { NgRedux, select } from 'ng2-redux';
+import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Logger } from '../shared/helper';
@@ -21,7 +21,6 @@ import { Observable } from 'rxjs';
 import { ModalDirective } from 'ng2-bootstrap';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
-
 
 @Component({
     selector: 'opentosca-applications-overview',
@@ -69,7 +68,7 @@ export class ApplicationsOverviewComponent implements OnInit {
         Logger.log('[applications.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
-                this.messageBus.emit({severity:'success', summary:'Deletion Successfull', detail:'Application ' + app.id + ' was successfully deleted.'})
+                this.messageBus.emit({severity:'success', summary:'Deletion Successfull', detail:'Application ' + app.id + ' was successfully deleted.'});
                 Logger.log('[applications.component][deleteFromContainer]', 'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
                 this.removingApp = false;

@@ -22,7 +22,7 @@ import { Path } from '../shared/helper';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';
-import { NgRedux } from 'ng2-redux';
+import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { Error } from 'tslint/lib/error';

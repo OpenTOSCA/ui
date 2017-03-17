@@ -10,7 +10,7 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, trigger, state, style, transition, animate } from '@angular/core';
-import { select } from 'ng2-redux';
+import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 import { BreadcrumbEntry } from '../model/breadcrumb.model';
 

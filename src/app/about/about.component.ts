@@ -10,8 +10,7 @@
  *     Michael Falkenthal - initial implementation
  */
 import { Component, trigger, state, style, transition, animate, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgRedux } from 'ng2-redux';
+import { NgRedux } from '@angular-redux/store';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { AppState } from '../redux/store';
