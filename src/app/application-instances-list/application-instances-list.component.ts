@@ -13,8 +13,10 @@
 import { Component, OnInit, ViewChild, trigger, state, style, transition, animate, Input } from '@angular/core';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
+import { Logger } from '../shared/helper';
 import { ModalDirective } from 'ng2-bootstrap';
-import { ResourceReference } from '../shared/model/resource-reference.model';
+
+import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-application-instances-list',
@@ -35,7 +37,7 @@ import { ResourceReference } from '../shared/model/resource-reference.model';
 })
 
 export class ApplicationInstancesListComponent implements OnInit {
-    public instancesList: Array<ResourceReference>;
+    public instancesList: Array<any>;
 
     @ViewChild('childModal') public childModal: ModalDirective;
     @Input() public app: Application;
@@ -48,6 +50,32 @@ export class ApplicationInstancesListComponent implements OnInit {
      */
     ngOnInit(): void {
         this.appService.getServiceTemplateInstancesByAppID(this.app.id)
-            .then(result => this.instancesList = result);
+            .then(result => {
+                this.appService.getProvisioningStateOfServiceTemplateInstances(result)
+                    .then(results => {
+                        let preparedResults = [];
+                        for (let res of results) {
+                            let selfServiceUrl = this.getObjectsByPropertyDeep(res, 'selfserviceApplicationUrl');
+                            if (selfServiceUrl.length > 0) {
+                                _.assign(res, selfServiceUrl[0]);
+                            }
+                            preparedResults.push(res);
+                        }
+                        this.instancesList = preparedResults;
+                    })
+                    .catch(reason => Logger.handleError(
+                        '[application-instances-list.component][ngOnInit][getProvisioningStateofServiceTemplateInstance]',
+                        reason));
+            });
+    }
+
+    getObjectsByPropertyDeep(obj: any, property: string): Array<Object> {
+        if (_.has(obj, property)) {
+            return [obj];
+        } else {
+            return _.flatten(_.map(obj, (v) => {
+                return typeof v == 'object' ? this.getObjectsByPropertyDeep(v, property) : [];
+            }), true);
+        }
     }
 }

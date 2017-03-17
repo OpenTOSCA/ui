@@ -1,8 +1,13 @@
 <div *ngIf="instancesList?.length > 0">
     <h2>Instances List <span class="badge">{{instancesList?.length}}</span></h2>
-    <p-accordion *ngFor="let inst of instancesList" [multiple]="true">
-        <p-accordionTab header="{{inst.title}}">
-            Application ID is {{inst.title}}
+    <p-accordion *ngFor="let inst of instancesList; let i = index" [multiple]="true">
+        <p-accordionTab header="{{i}}">
+            <div *ngIf="inst.selfserviceApplicationUrl">
+                <a [href]="inst.selfserviceApplicationUrl.TextContent" class="btn btn-primary">Start</a>
+            </div>
+            <div *ngIf="!inst.selfserviceApplicationUrl">
+                {{inst.payload | json}}
+            </div>
         </p-accordionTab>
     </p-accordion>
 </div>
