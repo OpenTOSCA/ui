@@ -17,7 +17,7 @@ import { AdministrationService } from '../administration/administration.service'
 
 import { ApplicationService } from '../shared/application.service';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
-import { NgRedux, select } from 'ng2-redux';
+import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';

@@ -16,7 +16,7 @@
                          *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn" @fadeInOut>
 
                         <div class="applicationTileImageContainer">
-                            <img [src]="app.iconUrl" onerror="this.src='/OpenTOSCAUi/Default_Application_Icon.png'"/>
+                            <img [src]="app.iconUrl" onerror="this.src='Default_Application_Icon.png'"/>
                         </div>
                         <div id="applicationDisplayName">
                             <span>{{app.displayName}}</span>

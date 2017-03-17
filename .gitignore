@@ -1,7 +1,20 @@
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
 .idea
+*.iws
+*.iml
+*.ipr
+
+### node.js / webpack ###
 /node_modules
-/typings
 /dist
 /src/**/*.js
 /src/**/*.js.map
 npm-debug.log
+
+### Custom ###
+build/src/main/resources/static/**/*
+!build/src/main/resources/static/.gitkeep
