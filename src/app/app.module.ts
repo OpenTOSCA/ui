@@ -40,7 +40,7 @@ import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { AccordionModule, FieldsetModule, GrowlModule } from 'primeng/primeng';
 
-import {NgRedux, NgReduxModule} from '@angular-redux/store';
+import { NgRedux, NgReduxModule } from '@angular-redux/store';
 import { OpenTOSCAUiActions } from './redux/actions';
 import { AppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
