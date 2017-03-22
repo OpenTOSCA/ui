@@ -13,6 +13,7 @@
 
 import { ResourceReference } from './resource-reference.model';
 
+//Todo Consolidate application model with OpenTOSCA ServiceTemplateInstance model
 export class ApplicationInstance {
     createdAt: string;
     csarID: string;
@@ -20,4 +21,5 @@ export class ApplicationInstance {
     serviceTemplateID: string;
     serviceTemplateName: string;
     nodeInstances: Array<ResourceReference>;
+    properties: Array<any>;
 }

@@ -12,6 +12,7 @@ import { BuildPlanOperationMetaData } from './buildPlanOperationMetaData.model';
  *     Michael Falkenthal - initial implementation
  */
 
+//Todo Add application instances Array
 export class ApplicationDetail {
     app: Application;
     buildPlanParameters: BuildPlanOperationMetaData;

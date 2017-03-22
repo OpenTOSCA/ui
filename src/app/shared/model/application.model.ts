@@ -1,3 +1,4 @@
+import { ApplicationInstance } from './application-instance.model';
 /**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
@@ -9,6 +10,7 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
+//Todo Consolidate application model with OpenTOSCA ServiceTemplate model
 export class Application {
     name: string;
     logoPath: string;
@@ -26,5 +28,6 @@ export class Application {
     imageUrl: string;
     screenshotUrls: string[];
     options: Object[];
+    instances: Array<ApplicationInstance>;
 
 }
