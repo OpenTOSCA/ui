@@ -16,3 +16,4 @@ import 'jquery';
 import 'lodash';
 import 'moment';
 import 'primeng/primeng';
+import 'prismjs';

@@ -37,7 +37,7 @@ import { routing } from './app.routing';
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
-import { AccordionModule, FieldsetModule, GrowlModule } from 'primeng/primeng';
+import { AccordionModule, FieldsetModule, GrowlModule, CodeHighlighterModule } from 'primeng/primeng';
 
 import { NgRedux, NgReduxModule } from '@angular-redux/store';
 import { OpenTOSCAUiActions } from './redux/actions';
@@ -53,6 +53,7 @@ import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace
     imports: [
         AccordionModule,
         BrowserModule,
+        CodeHighlighterModule,
         FieldsetModule,
         FormsModule,
         GrowlModule,

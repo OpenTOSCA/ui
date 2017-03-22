@@ -6,11 +6,15 @@
                 <a [href]="inst.selfserviceApplicationUrl.TextContent" class="btn btn-primary">Start</a>
             </div>
             <div *ngIf="!inst.selfserviceApplicationUrl">
-                {{inst.payload | json}}
+                <pre>
+                    <code class="language-json" pCode>
+                        {{inst.payload | json}}
+                    </code>
+                </pre>
             </div>
         </p-accordionTab>
     </p-accordion>
 </div>
-<div *ngIf="instancesList?.length === 0">
+<div *ngIf="instances?.length === 0">
     No Instances provisioned.
 </div>
