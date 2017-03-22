@@ -196,7 +196,7 @@ export class ApplicationService {
     pollForPlanFinish(pollUrl: string): Promise<PlanInstance> {
         const reqOpts = new RequestOptions({headers: this.adminService.getDefaultAcceptJSONHeaders()});
         Logger.log('[application.service][pollForPlanFinish]', 'Polling for plan result');
-        const waitTime = 1000;
+        const waitTime = 10000;
         return this.http.get(pollUrl, reqOpts)
             .toPromise()
             .then(response => {
