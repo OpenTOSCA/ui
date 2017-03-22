@@ -12,3 +12,4 @@
 export * from './logger';
 export * from './Path';
 export * from './ReferenceHelper';
+export * from './ObjectHelper';
