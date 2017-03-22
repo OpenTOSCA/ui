@@ -66,7 +66,7 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             customHeaders: {
                 'Accept': 'application/json'
             },
-            // filterExtensions: true,r
+            // filterExtensions: true,
             // allowedExtensions: ['csar'],
             calculateSpeed: true
         };
