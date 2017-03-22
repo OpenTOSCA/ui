@@ -146,6 +146,7 @@ a.editInWineryButton:before {
 }
 
 #mainMenu > a {
+    cursor: pointer;
     margin-top: 50px;
     display: inline-block;
     padding: 0px 20px 0px 32px;
@@ -220,6 +221,7 @@ a.editInWineryButton:before {
 }
 
 #subMenu > a {
+    cursor: pointer;
     margin-top: 10px;
     display: inline-block;
     padding: 0px 30px;
