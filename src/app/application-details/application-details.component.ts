@@ -116,7 +116,6 @@ export class ApplicationDetailsComponent implements OnInit {
                             }
                             preparedResults.push(res);
                         }
-                        console.log(JSON.stringify(preparedResults));
                         this.appInstances = preparedResults;
                     })
                     .catch(reason => Logger.handleError(

@@ -18,6 +18,7 @@ import { AppState } from '../redux/store';
 import { NgRedux, select } from '@angular-redux/store';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Logger } from '../shared/helper/logger';
 
 @Component({
     selector: 'opentosca-administration',
@@ -95,7 +96,7 @@ export class AdministrationComponent implements OnInit {
      */
     updateBuildPlanPath(newValue: string): void {
         this.adminService.setBuildPlanPath(newValue);
-        console.log('[administration.component][updateRepositoryURL] Updated build plan path to: ', this.adminService.getBuildPlanPath());
+        Logger.log('[administration.component][updateRepositoryURL] Updated build plan path to: ', this.adminService.getBuildPlanPath());
     }
 
     /**
@@ -104,7 +105,7 @@ export class AdministrationComponent implements OnInit {
      */
     updateContainerURL(newValue: string): void {
         this.adminService.setContainerAPIURL(newValue);
-        console.log('[administration.component][updateRepositoryURL] Updated container URL to: ', this.adminService.getContainerAPIURL());
+        Logger.log('[administration.component][updateRepositoryURL] Updated container URL to: ', this.adminService.getContainerAPIURL());
     }
 
     /**
@@ -113,6 +114,6 @@ export class AdministrationComponent implements OnInit {
      */
     updateRepositoryURL(newValue: string): void {
         this.adminService.setWineryAPIURL(newValue);
-        console.log('[administration.component][updateRepositoryURL] Updated repository URL to: ', this.adminService.getWineryAPIURL());
+        Logger.log('[administration.component][updateRepositoryURL] Updated repository URL to: ', this.adminService.getWineryAPIURL());
     }
 }
