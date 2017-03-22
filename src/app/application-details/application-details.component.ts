@@ -26,6 +26,9 @@ import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { Error } from 'tslint/lib/error';
+import { ObjectHelper } from '../shared/helper/ObjectHelper';
+
+import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -48,6 +51,7 @@ import { Error } from 'tslint/lib/error';
 export class ApplicationDetailsComponent implements OnInit {
 
     public app: Application;
+    public appInstances: Array<any> = [];
     public buildPlanOperationMetaData: BuildPlanOperationMetaData;
     public selfserviceApplicationUrl: SafeUrl;
     public planOutputParameters: {OutputParameter: PlanParameter}[];
@@ -91,7 +95,30 @@ export class ApplicationDetailsComponent implements OnInit {
             .subscribe((data: {applicationDetail: ApplicationDetail}) => {
                 this.app = data.applicationDetail.app;
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
+                this.loadInstancesList();
                 this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(this.app.displayName, '')));
+            });
+    }
+
+    loadInstancesList(): void {
+        this.appService.getServiceTemplateInstancesByAppID(this.app.id)
+            .then(result => {
+                this.appService.getProvisioningStateOfServiceTemplateInstances(result)
+                    .then(results => {
+                        let preparedResults = [];
+                        for (let res of results) {
+                            let selfServiceUrl = ObjectHelper.getObjectsByPropertyDeep(res, 'selfserviceApplicationUrl');
+                            if (selfServiceUrl.length > 0) {
+                                _.assign(res, selfServiceUrl[0]);
+                            }
+                            preparedResults.push(res);
+                        }
+                        console.log(JSON.stringify(preparedResults));
+                        this.appInstances = preparedResults;
+                    })
+                    .catch(reason => Logger.handleError(
+                        '[application-details.component][loadInstancesList][getProvisioningStateofServiceTemplateInstance]',
+                        reason));
             });
     }
 
@@ -142,6 +169,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
+                                this.loadInstancesList();
                                 // we received the plan result
                                 // go find and present selfServiceApplicationUrl to user
                                 Logger.log('[application-details.component][startProvisioning]', 'Received plan result: ' + JSON.stringify(result));

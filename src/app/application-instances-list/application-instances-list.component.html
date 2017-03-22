@@ -1,6 +1,6 @@
-<div *ngIf="instancesList?.length > 0">
-    <h2>Instances List <span class="badge">{{instancesList?.length}}</span></h2>
-    <p-accordion *ngFor="let inst of instancesList; let i = index" [multiple]="true">
+<div *ngIf="instances?.length > 0">
+    <h2>Instances List <span class="badge">{{instances?.length}}</span></h2>
+    <p-accordion *ngFor="let inst of instances; let i = index" [multiple]="true">
         <p-accordionTab header="{{i}}">
             <div *ngIf="inst.selfserviceApplicationUrl">
                 <a [href]="inst.selfserviceApplicationUrl.TextContent" class="btn btn-primary">Start</a>

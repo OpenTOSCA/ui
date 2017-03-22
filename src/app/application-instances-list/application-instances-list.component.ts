@@ -10,13 +10,8 @@
  *     Michael Falkenthal - initial implementation
  *     Karoline Saatkamp - initial implementation
  */
-import { Component, OnInit, ViewChild, trigger, state, style, transition, animate, Input } from '@angular/core';
-import { ApplicationService } from '../shared/application.service';
-import { Application } from '../shared/model/application.model';
-import { Logger } from '../shared/helper';
-import { ModalDirective } from 'ng2-bootstrap';
+import { Component, trigger, state, style, transition, animate, Input } from '@angular/core';
 
-import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-application-instances-list',
@@ -36,46 +31,12 @@ import * as _ from 'lodash';
     ]
 })
 
-export class ApplicationInstancesListComponent implements OnInit {
-    public instancesList: Array<any>;
+export class ApplicationInstancesListComponent {
 
-    @ViewChild('childModal') public childModal: ModalDirective;
-    @Input() public app: Application;
+    @Input() public instances: Array<any>;
 
-    constructor(private appService: ApplicationService) {
+    constructor() {
     }
 
-    /**
-     * Initialize component by loading service instances of the app
-     */
-    ngOnInit(): void {
-        this.appService.getServiceTemplateInstancesByAppID(this.app.id)
-            .then(result => {
-                this.appService.getProvisioningStateOfServiceTemplateInstances(result)
-                    .then(results => {
-                        let preparedResults = [];
-                        for (let res of results) {
-                            let selfServiceUrl = this.getObjectsByPropertyDeep(res, 'selfserviceApplicationUrl');
-                            if (selfServiceUrl.length > 0) {
-                                _.assign(res, selfServiceUrl[0]);
-                            }
-                            preparedResults.push(res);
-                        }
-                        this.instancesList = preparedResults;
-                    })
-                    .catch(reason => Logger.handleError(
-                        '[application-instances-list.component][ngOnInit][getProvisioningStateofServiceTemplateInstance]',
-                        reason));
-            });
-    }
 
-    getObjectsByPropertyDeep(obj: any, property: string): Array<Object> {
-        if (_.has(obj, property)) {
-            return [obj];
-        } else {
-            return _.flatten(_.map(obj, (v) => {
-                return typeof v == 'object' ? this.getObjectsByPropertyDeep(v, property) : [];
-            }), true);
-        }
-    }
 }
