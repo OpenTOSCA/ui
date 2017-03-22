@@ -10,4 +10,4 @@
  *     Michael Falkenthal
  */
 
-export * from './marketplace.component';
+export * from './marketplaces.component';

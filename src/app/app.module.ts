@@ -25,7 +25,6 @@ import { ApplicationUploadComponent } from './application-upload/application-upl
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
 import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
-import { MarketplaceComponent } from './marketplace/marketplace.component';
 
 import { AdministrationService } from './administration/administration.service';
 import { ApplicationService } from './shared/application.service';
@@ -47,6 +46,8 @@ import { rootReducer } from './redux/rootReducer.reducer';
 import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
 import { ApplicationInstancesListComponent } from './application-instances-list/application-instances-list.component';
 import { GrowlMessageBusService } from './shared/growl-message-bus.service';
+import { MarketplacesComponent } from './marketplace/marketplaces.component';
+import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
 
 @NgModule({
     imports: [
@@ -75,7 +76,8 @@ import { GrowlMessageBusService } from './shared/growl-message-bus.service';
         ApplicationsOverviewComponent,
         ApplicationUploadComponent,
         BreadcrumbComponent,
-        MarketplaceComponent,
+        MarketplacesComponent,
+        MarketplaceOverviewComponent,
         SortPipe
     ],
     providers: [

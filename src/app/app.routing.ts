@@ -15,7 +15,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AboutComponent } from './about/about.component';
 import { ApplicationsComponent } from './applications/applications.component';
-import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { AdministrationComponent } from './administration/administration.component';
@@ -23,6 +22,8 @@ import { ApplicationInstancesComponent } from './application-instances/applicati
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
 import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
+import { MarketplacesComponent } from './marketplace/marketplaces.component';
+import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
 
 const appRoutes: Routes = [
     {
@@ -64,13 +65,19 @@ const appRoutes: Routes = [
         ]
     },
     {
-        path: 'repository',
-        component: MarketplaceComponent
+        path: 'repositories',
+        component: MarketplacesComponent,
+        children: [
+            {
+                path: '',
+                component: MarketplaceOverviewComponent
+            }
+        ]
     },
-    {
-        path: 'repository/applications/:id',
-        component: ApplicationDetailsComponent
-    },
+    // {
+    //     path: 'repository/applications/:id',
+    //     component: ApplicationDetailsComponent
+    // },
     {
         path: '',
         redirectTo: '/applications',

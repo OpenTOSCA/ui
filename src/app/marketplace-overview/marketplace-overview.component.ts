@@ -26,7 +26,7 @@ import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 
 @Component({
     selector: 'opentosca-marketplace',
-    templateUrl: 'marketplace.component.html',
+    templateUrl: 'marketplace-overview.component.html',
     animations: [
         trigger('fadeInOut', [
             state('in', style({'opacity': 1})),
@@ -42,10 +42,12 @@ import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
     ]
 })
 
-export class MarketplaceComponent implements OnInit {
+export class MarketplaceOverviewComponent implements OnInit {
     @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
+    @select(['administration', 'repositoryAPI']) repositoryURL: Observable<string>;
 
     public showLoader = false;
+    public repoURL: string;
 
     constructor(private adminService: AdministrationService,
                 private appService: ApplicationService,
@@ -59,6 +61,14 @@ export class MarketplaceComponent implements OnInit {
         breadCrumbs.push(new BreadcrumbEntry('OpenTOSCA Repository', ''));
         this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
         this.getApps();
+        this.repositoryURL.subscribe(url => this.repoURL = url);
+    }
+
+    navigateToRepo(): void {
+        window.open(
+            this.repoURL,
+            '_blank'
+        );
     }
 
     /**
