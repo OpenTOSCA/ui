@@ -14,15 +14,15 @@
                     <div class="panel-body">
                         <div class="form-group has-feedback" [ngClass]="{'has-success': containerAPIAvailable, 'has-error': !containerAPIAvailable}">
                             <label class="control-label" for="containerAPI">Container API</label>
-                            <input type="text" class="form-control" id="containerAPI" [ngModel]="containerAPI"
-                                   (ngModelChange)="updateContainerURL($event)" placeholder="Enter Container API URL here">
+                            <input type="text" class="form-control" id="containerAPI" [formControl]="containerAPIControl" [ngModel]="containerAPI | async"
+                                   placeholder="Enter Container API URL here">
                             <span class="glyphicon glyphicon-ok form-control-feedback" [ngClass]="{'glyphicon-ok': containerAPIAvailable, 'glyphicon-remove': !containerAPIAvailable}" aria-hidden="true"></span>
                         </div>
 
                         <div class="form-group has-feedback" [ngClass]="{'has-success': repositoryAPIAvailable, 'has-error': !repositoryAPIAvailable}">
                             <label class="control-label" for="repositoryAPI">Repository API</label>
-                            <input type="text" class="form-control" id="repositoryAPI" [ngModel]="repositoryAPI"
-                                   (ngModelChange)="updateRepositoryURL($event)" placeholder="Enter Repository API URL here">
+                            <input type="text" class="form-control" id="repositoryAPI" [formControl]="repositoryAPIControl" [ngModel]="repositoryAPI | async"
+                                   placeholder="Enter Repository API URL here">
                             <span class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': repositoryAPIAvailable, 'glyphicon-remove': !repositoryAPIAvailable}" aria-hidden="true"></span>
                         </div>
                     </div>
@@ -35,8 +35,8 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <label class="control-label" for="containerAPI">Build Plan Path</label>
-                            <input type="text" class="form-control" id="buildPlanPath" [ngModel]="buildPlanPath"
-                                   (ngModelChange)="updateBuildPlanPath($event)" placeholder="Enter Build Plan Path here">
+                            <input type="text" class="form-control" id="buildPlanPath" [formControl]="buildPlanPathControl" [ngModel]="buildPlanPath | async"
+                                   placeholder="Enter Build Plan Path here">
                         </div>
                     </div>
                 </div>

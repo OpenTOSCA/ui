@@ -11,7 +11,7 @@
  *     Karoline Saatkamp - initial implementation
  */
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 
@@ -60,7 +60,8 @@ import { GrowlMessageBusService } from './shared/growl-message-bus.service';
         Ng2BootstrapModule.forRoot(),
         routing,
         NgSpinKitModule,
-        NgUploaderModule
+        NgUploaderModule,
+        ReactiveFormsModule
     ],
     declarations: [
         AboutComponent,
