@@ -55,13 +55,15 @@
                 <h4 class="modal-title">Really delete App?</h4>
             </div>
             <div class="modal-body">
-                Do you really want to delete the App "{{appToDelete?.displayName}}"?
-                <div class="loaderContainer" *ngIf="removingApp">
-                    <div id="loader"></div>
+                <div class="opentosca-modal-content">
+                    Do you really want to delete the App "{{appToDelete?.displayName}}"?
+                    <div class="loaderContainer" *ngIf="removingApp">
+                        <div id="loader"></div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Cancle</button>
+                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Cancel</button>
                 <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled]="false"
                         (click)="deleteFromContainer(appToDelete)">Delete
                 </button>
