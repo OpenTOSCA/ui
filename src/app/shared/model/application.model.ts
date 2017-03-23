@@ -10,7 +10,7 @@ import { ApplicationInstance } from './application-instance.model';
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-//Todo Consolidate application model with OpenTOSCA ServiceTemplate model
+// Todo Consolidate application model with OpenTOSCA ServiceTemplate model
 export class Application {
     name: string;
     logoPath: string;
