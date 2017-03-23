@@ -13,457 +13,459 @@
  *******************************************************************************/
 
 body {
-    margin: 0px;
-    padding: 0px;
-    font-family: Calibri, Arial;
-    background: rgb(255, 255, 255);
-    color: #5D5D5D;
+  margin: 0;
+  padding: 0;
+  font-family: Calibri, Arial;
+  background: rgb(255, 255, 255);
+  color: #5D5D5D;
 }
 
 a, p, div {
-    font-size: 11pt;
+  font-size: 11pt;
 }
 
 .dropdown-menu > li > a {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 a {
-    text-decoration: none;
-    color: #377ebf;
+  text-decoration: none;
+  color: #377ebf;
 }
 
 table {
-    border-spacing: 0px;
+  border-spacing: 0;
 }
 
 td {
-    padding: 0px;
-    vertical-align: top;
+  padding: 0;
+  vertical-align: top;
 }
 
 div.openTOSCALogoContainer {
-    float: left;
-    width: 210px;
-    height: 80px;
-    background: url('../assets/img/OpenTOSCA_Head_Icon.png');
-    background-size: 194px;
-    background-position: 12px 3px;
+  float: left;
+  width: 210px;
+  height: 80px;
+  background: url('../assets/img/OpenTOSCA_Head_Icon.png');
+  background-size: 194px;
+  background-position: 12px 3px;
 }
 
 div.breadcrumbContainer {
-    margin-left: 22px;
-    margin-top: 26px;
-    margin-right: 25px;
+  margin-left: 22px;
+  margin-top: 26px;
+  margin-right: 25px;
 }
 
 .breadcrumb {
-    margin-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 table.layoutTable {
-    padding: 0px;
-    width: 100%;
-    border-spacing: 0px;
+  padding: 0;
+  width: 100%;
+  border-spacing: 0;
 }
 
 .menu a {
-    background: #adadad;
-    color: #ffffff;
+  background: #adadad;
+  color: #ffffff;
 }
 
 .menu a.selected {
-    background: #ffffff;
-    color: #5D5D5D;
+  background: #ffffff;
+  color: #5D5D5D;
 }
 
 .menu a:hover {
-    background-color: #8da8c1;
-    color: #ffffff;
+  background-color: #8da8c1;
+  color: #ffffff;
 }
 
 .menu div.pageTopicIcon {
-    text-align: center;
-    margin-top: 25px;
-    margin-left: 20px;
+  text-align: center;
+  margin-top: 25px;
+  margin-left: 20px;
 }
 
 .menu div.pageTopicIcon > img {
-    width: 100px;
+  width: 100px;
 }
 
 .menu div.pageTopicIcon > span {
-    display: block;
-    padding: 0px 15px;
-    text-align: center;
-    font-style: italic;
-    text-overflow: ellipsis;
-    width: 190px;
-    overflow: hidden;
+  display: block;
+  padding: 0 15px;
+  text-align: center;
+  font-style: italic;
+  text-overflow: ellipsis;
+  width: 190px;
+  overflow: hidden;
 }
 
 .applicationTile div > span {
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 130px;
-    margin-left: 10px;
-    text-align: center;
-    white-space: nowrap;
-    font-style: italic;
-    text-shadow: #c7c7c7 1px 1px 1px;
-    height: 18px;
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 130px;
+  margin-left: 10px;
+  text-align: center;
+  white-space: nowrap;
+  font-style: italic;
+  text-shadow: #c7c7c7 1px 1px 1px;
+  height: 18px;
 }
 
 .applicationTileImageContainer {
-    height: 120px;
-    vertical-align: middle;
-    display: table-cell;
+  height: 120px;
+  vertical-align: middle;
+  display: table-cell;
 }
 
 a.iconTextButton {
-    padding: 6px 9px;
-    border: 1px solid #adadad;
-    border-radius: 4px;
-    box-shadow: 0px 0px 6px #D2D2D2;
+  padding: 6px 9px;
+  border: 1px solid #adadad;
+  border-radius: 4px;
+  box-shadow: 0 0 6px #D2D2D2;
 }
 
 a.iconTextButton:hover {
-    background-color: #8da8c1;
-    color: white;
+  background-color: #8da8c1;
+  color: white;
 }
 
 a.editInWineryButton:before {
-    content: "";
+  content: "";
 }
 
 #mainMenu {
-    background: #EFEFEF;
-    height: 80px;
-    width: 100%;
-    border-bottom: 1px solid #adadad;
-    background-image: url('../assets/img/background.jpg');
+  background: #EFEFEF;
+  height: 80px;
+  width: 100%;
+  border-bottom: 1px solid #adadad;
+  background-image: url('../assets/img/background.jpg');
 }
 
 #mainMenu > a {
-    cursor: pointer;
-    margin-top: 50px;
-    display: inline-block;
-    padding: 0px 20px 0px 32px;
-    border-radius: 8px 8px 0px 0px;
-    height: 30px;
-    line-height: 30px;
-    margin-right: 6px;
-    border-left: 1px solid #adadad;
-    border-top: 1px solid #adadad;
-    border-right: 1px solid #adadad;
-    position: relative;
+  cursor: pointer;
+  margin-top: 50px;
+  display: inline-block;
+  padding: 0 20px 0 32px;
+  border-radius: 8px 8px 0 0;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 6px;
+  border-left: 1px solid #adadad;
+  border-top: 1px solid #adadad;
+  border-right: 1px solid #adadad;
+  position: relative;
 }
 
 #mainMenu > a:hover {
-    border-left: 1px solid #8da8c1;
-    border-top: 1px solid #8da8c1;
-    border-right: 1px solid #8da8c1;
+  border-left: 1px solid #8da8c1;
+  border-top: 1px solid #8da8c1;
+  border-right: 1px solid #8da8c1;
 }
 
 #mainMenu > a:before {
-    position: absolute;
-    content: '';
-    top: 5px;
-    height: 20px;
-    width: 15px;
-    display: block;
-    left: 9px;
+  position: absolute;
+  content: '';
+  top: 5px;
+  height: 20px;
+  width: 15px;
+  display: block;
+  left: 9px;
 }
 
 #mainMenu > a#applicationsButton:before {
-    background: url('../assets/img/Applications_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Applications_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a.selected#applicationsButton:before {
-    background: url('../assets/img/Applications_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Applications_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a#marketplaceButton:before {
-    background: url('../assets/img/Marketplace_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Marketplace_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a.selected#marketplaceButton:before {
-    background: url('../assets/img/Marketplace_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Marketplace_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a#administrationButton:before {
-    background: url('../assets/img/Administration_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Administration_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a.selected#administrationButton:before {
-    background: url('../assets/img/Administration_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Administration_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a#aboutButton:before {
-    background: url('../assets/img/About_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/About_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #mainMenu > a.selected#aboutButton:before {
-    background: url('../assets/img/About_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/About_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu {
-    width: 210px;
+  width: 210px;
 }
 
 #subMenu > a {
-    cursor: pointer;
-    margin-top: 10px;
-    display: inline-block;
-    padding: 0px 30px;
-    border-radius: 8px 0px 0px 8px;
-    height: 30px;
-    width: 191px;
-    line-height: 30px;
-    position: relative;
-    left: 20px;
-    top: 0px;
-    border-left: 1px solid #adadad;
-    border-top: 1px solid #adadad;
-    border-bottom: 1px solid #adadad;
-    box-sizing: border-box;
+  cursor: pointer;
+  margin-top: 10px;
+  display: inline-block;
+  padding: 0 30px;
+  border-radius: 8px 0 0 8px;
+  height: 30px;
+  width: 191px;
+  line-height: 30px;
+  position: relative;
+  left: 20px;
+  top: 0;
+  border-left: 1px solid #adadad;
+  border-top: 1px solid #adadad;
+  border-bottom: 1px solid #adadad;
+  box-sizing: border-box;
 }
 
 #subMenu > a:before {
-    position: absolute;
-    content: '';
-    top: 5px;
-    height: 20px;
-    width: 15px;
-    display: block;
-    left: 9px;
+  position: absolute;
+  content: '';
+  top: 5px;
+  height: 20px;
+  width: 15px;
+  display: block;
+  left: 9px;
 }
 
 #subMenu > a.selected#descriptionButton:before {
-    background: url('../assets/img/Description_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Description_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu > a#descriptionButton:before {
-    background: url('../assets/img/Description_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Description_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu > a#statisticsButton:before {
-    background: url('../assets/img/Statistics_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Statistics_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu > a.selected#statisticsButton:before {
-    background: url('../assets/img/Statistics_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Statistics_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu > a#instancesButton:before {
-    background: url('../assets/img/Instances_Button_Icon.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Instances_Button_Icon.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu > a.selected#instancesButton:before {
-    background: url('../assets/img/Instances_Button_Icon_Hover.png');
-    background-repeat: no-repeat;
+  background: url('../assets/img/Instances_Button_Icon_Hover.png');
+  background-repeat: no-repeat;
 }
 
 #subMenu > a:hover {
-    border-left: 1px solid #8da8c1;
-    border-top: 1px solid #8da8c1;
-    border-bottom: 1px solid #8da8c1;
+  border-left: 1px solid #8da8c1;
+  border-top: 1px solid #8da8c1;
+  border-bottom: 1px solid #8da8c1;
 }
 
 #content {
-    border-radius: 8px;
-    border: 1px solid #adadad;
-    margin-top: 30px;
-    margin-right: 25px;
-    padding: 24px 24px;
-    margin-bottom: 15px;
-    min-height: 400px;
+  border-radius: 8px;
+  border: 1px solid #adadad;
+  margin-top: 30px;
+  margin-right: 25px;
+  padding: 24px 24px;
+  margin-bottom: 15px;
+  min-height: 400px;
 }
 
 #description-block {
-    margin-right: 2%;
-    width: 48%;
-    display: inline-block;
-    vertical-align: top;
+  margin-right: 2%;
+  width: 48%;
+  display: inline-block;
+  vertical-align: top;
 }
 
 #topology-block {
-    width: 48%;
-    display: inline-block;
+  width: 48%;
+  display: inline-block;
 }
 
 #topology-block > a > img {
-    width: 100%;
+  width: 100%;
 }
 
 #applicationDisplayName {
-    margin-top: 5px;
-    margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .screenshotThumb {
-    width: 135px;
-    margin: 10px 0px 0px 10px;
+  width: 135px;
+  margin: 10px 0 0 10px;
 }
 
 .loaderContainer {
-    margin: 100px 0px 0px 0px;
+  margin: 100px 0 0 0;
 }
 
 .uploadMarginRow {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 #content h2 {
-    border-bottom: 1px solid #adadad;
-    height: 26px;
-    font-weight: normal;
-    font-size: 15px;
-    margin-top: 0px;
+  border-bottom: 1px solid #adadad;
+  height: 26px;
+  font-weight: normal;
+  font-size: 15px;
+  margin-top: 0;
 }
 
 #content p {
-    margin-top: 7px;
-    text-align: justify;
-    padding: 0px 10px;
+  margin-top: 7px;
+  text-align: justify;
+  padding: 0 10px;
 }
 
 #content div.applicationTilesContainer {
-    //margin: 20px;
-    //padding-top: 8px;
+  //margin: 20px;
+  //padding-top: 8px;
 }
 
 #content div.applicationTilesContainer div.applicationTile > span {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 130px;
-    float: left;
-    margin-left: 10px;
-    font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 130px;
+  float: left;
+  margin-left: 10px;
+  font-size: 14px;
 }
 
 .applicationTileButtonContainer {
-    margin-top: 18px;
+  margin-top: 18px;
 }
+
 #content div.applicationTilesContainer div.applicationTile {
-    width: 150px;
-    height: 205px;
-    margin-right: 25px;
-    border-radius: 8px;
-    border: 1px solid #adadad;
-    box-shadow: 3px 3px 5px #dadada;
-    text-align: center;
-    background: rgb(255, 255, 255);
-    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
-    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2', GradientType=0);
-    transition: all 0.2s ease;
-    margin-bottom: 25px;
-    display: inline-block;
+  width: 150px;
+  height: 205px;
+  margin-right: 25px;
+  border-radius: 8px;
+  border: 1px solid #adadad;
+  box-shadow: 3px 3px 5px #dadada;
+  text-align: center;
+  background: rgb(255, 255, 255);
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 60%, rgba(242, 242, 242, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2', GradientType=0);
+  transition: all 0.2s ease;
+  margin-bottom: 25px;
+  display: inline-block;
 }
 
 #content div.applicationTilesContainer div.applicationTile:hover {
-    border-color: #3792d5;
-    box-shadow: 3px 3px 5px #bde3ff;
+  border-color: #3792d5;
+  box-shadow: 3px 3px 5px #bde3ff;
 }
 
 #content div.applicationTilesContainer div.applicationTile img {
-    display: block;
-    max-height: 100px;
-    max-width: 100px;
-    margin-left: 25px;
-    margin-top: 20px;
-    border-radius: 5px 5px;
+  display: block;
+  max-height: 100px;
+  max-width: 100px;
+  margin-left: 25px;
+  margin-top: 20px;
+  border-radius: 5px 5px;
 }
 
 #content div.applicationTilesContainer div.applicationTile h1 {
-    margin: 8px 5px 5px;
-    font-weight: normal;
-    font-size: 12pt;
-    text-align: center;
-    height: 40px;
-    line-height: 40px;
+  margin: 8px 5px 5px;
+  font-weight: normal;
+  font-size: 12pt;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
 }
 
 #content div.searchBox {
-    margin-bottom: 25px;
+  margin-bottom: 25px;
 }
 
 #content div.techLogos img {
-    max-width: 250px;
-    margin-left: 40px;
+  max-width: 250px;
+  margin-left: 40px;
 }
 
 .btn-file {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
 }
-.spinner-small {
-    .three-bounce-spinner {
-        width: 6px !important;
-        height: 6px !important;
-        margin: 0 4px !important;
-        border-radius: 100% !important;
-    }
 
-    .bounce1, .bounce2, .bounce3 {
-        width: 6px !important;
-        height: 6px !important;
-        margin: 1px;
-    }
+.spinner-small {
+  .three-bounce-spinner {
+    width: 6px !important;
+    height: 6px !important;
+    margin: 0 4px !important;
+    border-radius: 100% !important;
+  }
+
+  .bounce1, .bounce2, .bounce3 {
+    width: 6px !important;
+    height: 6px !important;
+    margin: 1px;
+  }
 }
 
 .loading-indicator {
-    height: 24px;
-    width: 34px;
-    padding: 0px;
+  height: 24px;
+  width: 34px;
+  padding: 0;
 }
 
 #functionBar {
-    margin-bottom: 24px;
-    border-bottom: 1px solid #adadad;
-    padding-bottom: 10px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #adadad;
+  padding-bottom: 10px;
 }
 
 #topology-image {
-    width: 100%;
+  width: 100%;
 }
 
 .ui-fieldset {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .opentosca-modal-content {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
