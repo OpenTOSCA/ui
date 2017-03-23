@@ -440,5 +440,9 @@ a.editInWineryButton:before {
 .loading-indicator {
     height: 24px;
     width: 34px;
-    padding: 0px;
+    padding: 0;
+}
+
+.opentosca-modal-content {
+    word-wrap: break-word;
 }
