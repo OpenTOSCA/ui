@@ -84,7 +84,7 @@ export class MarketplaceOverviewComponent implements OnInit {
                     .then(result => app.inContainer = result)
                     .catch(reason => {
                         app.inContainer = false;
-                        Logger.handleError('[marketplace.component][installInContainer]', reason);
+                        Logger.handleError('[marketplace-overview.component][installInContainer]', reason);
                     });
             })
             .catch(err => {
@@ -93,7 +93,7 @@ export class MarketplaceOverviewComponent implements OnInit {
                     .then(result => app.inContainer = result)
                     .catch(reason => {
                         app.isInstalling = false;
-                        Logger.handleError('[marketplace.component][installInContainer]', reason);
+                        Logger.handleError('[marketplace-overview.component][installInContainer]', reason);
                     });
             });
     }
@@ -115,12 +115,12 @@ export class MarketplaceOverviewComponent implements OnInit {
                                 .then(result => app.inContainer = result)
                                 .catch(reason => {
                                     app.inContainer = false;
-                                    Logger.handleError('[marketplace.component][getApps][isAppDeployedInContainer]', reason);
+                                    Logger.handleError('[marketplace-overview.component][getApps][isAppDeployedInContainer]', reason);
                                 });
                         }
                         this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications(apps));
                     })
-                    .catch(reason => Logger.handleError('[marketplace.component][getApps]', reason));
+                    .catch(reason => Logger.handleError('[marketplace-overview.component][getApps]', reason));
             });
     }
 

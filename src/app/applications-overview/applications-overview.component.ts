@@ -40,7 +40,6 @@ import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
     ]
 })
 export class ApplicationsOverviewComponent implements OnInit {
-
     @select(['container', 'applications']) apps: Observable<Array<Application>>;
     @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -65,7 +64,7 @@ export class ApplicationsOverviewComponent implements OnInit {
      */
     deleteFromContainer(app: Application): void {
         this.removingApp = true;
-        Logger.log('[applications.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
+        Logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
                 this.messageBus.emit({
@@ -73,7 +72,7 @@ export class ApplicationsOverviewComponent implements OnInit {
                     summary: 'Deletion Successfull',
                     detail: 'Application ' + app.id + ' was successfully deleted.'
                 });
-                Logger.log('[applications.component][deleteFromContainer]', 'Application successfully deleted, received response: ' + JSON.stringify(response));
+                Logger.log('[applications-overview.component][deleteFromContainer]', 'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
@@ -89,7 +88,7 @@ export class ApplicationsOverviewComponent implements OnInit {
                         ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
                     }
                 );
-                Logger.handleError('[applications.component][deleteFromContainer]', err);
+                Logger.handleError('[applications-overview.component][deleteFromContainer]', err);
             });
     }
 
@@ -120,7 +119,7 @@ export class ApplicationsOverviewComponent implements OnInit {
                     this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
                 })
                 .catch(reason => {
-                    Logger.handleError('[applications.component][getAppReferences]', reason);
+                    Logger.handleError('[applications-overview.component][getAppReferences]', reason);
                 });
         });
     }
