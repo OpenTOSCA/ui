@@ -15,12 +15,14 @@ body {
     .ui-accordion {
         .ui-accordion-header {
             color: $brand-primary;
+            border-color: $panel-default-border;
         }
 
         .ui-accordion-header.ui-state-active {
             background-color: $brand-primary;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
+            border-bottom: none;
         }
 
         .ui-accordion-content {
@@ -29,30 +31,19 @@ body {
 
     }
 
+    .ui-widget-content {
+        border-color: $panel-default-border;
+    }
+
     .ui-fieldset {
         .ui-fieldset-legend {
             border-radius: 4px;
+            border-color: $panel-default-border;
         }
     }
 }
 
 .ui-growl {
-    //.ui-growl-message-success {
-    //    color: $brand-success;
-    //}
-    //
-    //.ui-growl-message-info {
-    //    color: $brand-info;
-    //}
-    //
-    //.ui-growl-message-warn {
-    //    color: $brand-warning;
-    //}
-    //
-    //.ui-growl-message-error {
-    //    color: $brand-danger;
-    //}
-
     .ui-growl-message {
         word-wrap: break-word;
     }
