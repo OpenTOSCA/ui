@@ -37,8 +37,8 @@ export const INITIAL_STATE: AppState = {
         applications: []
     },
     administration: {
-        containerAPI: 'http://opentosca-dev.iaas.uni-stuttgart.de:1337/containerapi',
-        repositoryAPI: 'http://dev.winery.opentosca.org:8080/winery/servicetemplates/',
+        containerAPI: 'http://localhost:1337/containerapi',
+        repositoryAPI: 'http://localhost:8080/winery/servicetemplates/',
         buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan'
     },
     breadcrumb: []

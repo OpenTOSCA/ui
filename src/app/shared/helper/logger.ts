@@ -11,6 +11,7 @@
  */
 
 export class Logger {
+
     /**
      * Print errors to console
      * @param location string that indicates where the error occurred
@@ -22,6 +23,11 @@ export class Logger {
         return Promise.reject(error.message || error);
     }
 
+    /**
+     * Print log messages to console
+     * @param location
+     * @param message
+     */
     public static log(location: string, message: string): void {
         console.log('[', new Date(), ']', location, ': ', message);
     }
