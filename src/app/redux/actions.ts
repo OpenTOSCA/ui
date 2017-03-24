@@ -30,9 +30,15 @@ export class OpenTOSCAUiActions {
     static REMOVE_REPOSITORY_APPLICATION = 'REMOVE_REPOSITORY_APPLICATION';
     static CLEAR_REPOSITORY_APPLICATIONS = 'CLEAR_REPOSITORY_APPLICATIONS';
 
+    static UPDATE_CURRENT_APPLICATION = 'UPDATE_CURRENT_APPLICATION';
+    static CLEAR_CURRENT_APPLICATION = 'CLEAR_CURRENT_APPLICATION';
+    static ADD_APPLICATION_INSTANCES = 'ADD_APPLICATION_INSTANCES';
+    static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
+
     static UPDATE_REPOSITORY_URL = 'UPDATE_REPOSITORY_URL';
     static UPDATE_CONTAINER_URL = 'UPDATE_CONTAINER_URL';
     static UPDATE_BUILDPLANPATH = 'UPDATE_BUILDPLANPATH';
+    static UPDATE_TERMINATIONPLANPATH = 'UPDATE_TERMINATIONPLANPATH';
 
     static UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB';
     static APPEND_BREADCRUMB = 'APPEND_BREADCRUMB';
@@ -79,6 +85,34 @@ export class OpenTOSCAUiActions {
         };
     }
 
+    static updateCurrentApplication(app: Application): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.UPDATE_CURRENT_APPLICATION,
+            payload: app
+        }
+    }
+
+    static clearCurrentApplication(): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.CLEAR_CURRENT_APPLICATION,
+            payload: null
+        }
+    }
+
+    static addApplicationInstances(instances: Array<any>): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.ADD_APPLICATION_INSTANCES,
+            payload: instances
+        }
+    }
+
+    static clearApplicationInstances(): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.CLEAR_APPLICATION_INSTANCES,
+            payload: null
+        }
+    }
+
     static updateRepositoryURL(url: string): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.UPDATE_REPOSITORY_URL,
@@ -96,6 +130,13 @@ export class OpenTOSCAUiActions {
     static updateBuildPlanPath(path: string): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.UPDATE_BUILDPLANPATH,
+            payload: path
+        };
+    }
+
+    static updateTerminationPlanPath(path: string): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.UPDATE_TERMINATIONPLANPATH,
             payload: path
         };
     }

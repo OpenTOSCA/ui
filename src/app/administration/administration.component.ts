@@ -41,6 +41,8 @@ export class AdministrationComponent implements OnInit {
 
     @select(['administration', 'buildPlanPath']) buildPlanPath: Observable<string>;
     public buildPlanPathControl: FormControl = new FormControl();
+    @select(['administration', 'terminationPlanPath']) terminationPlanPath: Observable<string>;
+    public terminationPlanPathControl: FormControl = new FormControl();
     @select(['administration', 'containerAPI']) containerAPI: Observable<string>;
     public containerAPIControl: FormControl = new FormControl();
     public containerAPIAvailable: boolean;
@@ -70,6 +72,9 @@ export class AdministrationComponent implements OnInit {
         this.buildPlanPathControl.valueChanges
             .debounceTime(500)
             .subscribe(newValue => this.updateBuildPlanPath(newValue));
+        this.terminationPlanPathControl.valueChanges
+            .debounceTime(500)
+            .subscribe(newValue => this.updateTerminationPlanPath(newValue));
     }
 
     /**
@@ -91,12 +96,21 @@ export class AdministrationComponent implements OnInit {
     }
 
     /**
-     * Delegates update of buildplan path to AdministrationService
+     * Delegates update of build plan path to AdministrationService
      * @param newValue
      */
     updateBuildPlanPath(newValue: string): void {
         this.adminService.setBuildPlanPath(newValue);
-        Logger.log('[administration.component][updateRepositoryURL] Updated build plan path to: ', this.adminService.getBuildPlanPath());
+        Logger.log('[administration.component][updateBuildPlanPath] Updated build plan path to: ', this.adminService.getBuildPlanPath());
+    }
+
+    /**
+     * Delegates update of termination plan path to AdministrationService
+     * @param newValue
+     */
+    updateTerminationPlanPath(newValue: string): void {
+        this.adminService.setTerminationPlanPath(newValue);
+        Logger.log('[administration.component][updateTerminationPlanPath] Updated termination plan path to: ', this.adminService.getTerminationPlanPath());
     }
 
     /**

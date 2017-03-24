@@ -16,7 +16,9 @@ import { MarketplaceApplication } from '../shared/model/marketplace-application.
 
 export interface AppState {
     container?: {
-        applications?: Array<Application>
+        applications?: Array<Application>,
+        currentApp?: Application,
+        currentAppInstances?: any
     };
     repository?: {
         applications?: Array<MarketplaceApplication>
@@ -24,14 +26,17 @@ export interface AppState {
     administration?: {
         containerAPI?: string,
         repositoryAPI?: string,
-        buildPlanPath?: string
+        buildPlanPath?: string,
+        terminationPlanPath?: string,
     };
     breadcrumb?: Array<BreadcrumbEntry>;
 }
 
 export const INITIAL_STATE: AppState = {
     container: {
-        applications: []
+        applications: [],
+        currentApp: null,
+        currentAppInstances: []
     },
     repository: {
         applications: []
@@ -39,7 +44,8 @@ export const INITIAL_STATE: AppState = {
     administration: {
         containerAPI: 'http://localhost:1337/containerapi',
         repositoryAPI: 'http://localhost:8080/winery/servicetemplates/',
-        buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan'
+        buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
+        terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan'
     },
     breadcrumb: []
 };

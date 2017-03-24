@@ -69,11 +69,27 @@ export class AdministrationService {
     }
 
     /**
+     * Returns buildPlanPath
+     * @returns {string}
+     */
+    getTerminationPlanPath(): string {
+        return this.ngRedux.getState().administration.terminationPlanPath;
+    }
+
+    /**
      * Sets buildPlanPath to new value
      * @param path
      */
     setBuildPlanPath(path: string) {
         this.ngRedux.dispatch(OpenTOSCAUiActions.updateBuildPlanPath(path));
+    }
+
+    /**
+     * Sets terminationPlanPath to new value
+     * @param path
+     */
+    setTerminationPlanPath(path: string) {
+        this.ngRedux.dispatch(OpenTOSCAUiActions.updateTerminationPlanPath(path));
     }
 
     /**

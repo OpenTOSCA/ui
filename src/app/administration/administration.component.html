@@ -34,9 +34,14 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="control-label" for="containerAPI">Build Plan Path</label>
+                            <label class="control-label" for="buildPlanPath">Path to Build Plan</label>
                             <input type="text" class="form-control" id="buildPlanPath" [formControl]="buildPlanPathControl" [ngModel]="buildPlanPath | async"
-                                   placeholder="Enter Build Plan Path here">
+                                   placeholder="Enter URI to Build Plan here">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="terminationPlanPath">Path to Termination Plan</label>
+                            <input type="text" class="form-control" id="terminationPlanPath" [formControl]="terminationPlanPathControl" [ngModel]="terminationPlanPath | async"
+                                   placeholder="Enter URI to Termination Plan here">
                         </div>
                     </div>
                 </div>
