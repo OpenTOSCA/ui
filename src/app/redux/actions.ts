@@ -89,28 +89,28 @@ export class OpenTOSCAUiActions {
         return {
             type: OpenTOSCAUiActions.UPDATE_CURRENT_APPLICATION,
             payload: app
-        }
+        };
     }
 
     static clearCurrentApplication(): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.CLEAR_CURRENT_APPLICATION,
             payload: null
-        }
+        };
     }
 
     static addApplicationInstances(instances: Array<any>): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.ADD_APPLICATION_INSTANCES,
             payload: instances
-        }
+        };
     }
 
     static clearApplicationInstances(): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.CLEAR_APPLICATION_INSTANCES,
             payload: null
-        }
+        };
     }
 
     static updateRepositoryURL(url: string): OpenTOSCAUiAction {

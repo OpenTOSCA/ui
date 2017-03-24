@@ -49,11 +49,13 @@ import { GrowlMessageBusService } from './shared/growl-message-bus.service';
 import { MarketplacesComponent } from './marketplace/marketplaces.component';
 import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
 import { SharedModule } from 'primeng/primeng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
         AccordionModule,
         BrowserModule,
+        BrowserAnimationsModule,
         CodeHighlighterModule,
         FieldsetModule,
         FormsModule,

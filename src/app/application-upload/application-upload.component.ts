@@ -9,10 +9,8 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import {
-    Component, OnInit, NgZone, trigger, state, style, transition, animate, Input, ViewChild,
-    AfterViewInit
-} from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, AfterViewInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AdministrationService } from '../administration/administration.service';
 import { NgUploaderOptions } from 'ngx-uploader';
 import { OpenTOSCAUiActions } from '../redux/actions';

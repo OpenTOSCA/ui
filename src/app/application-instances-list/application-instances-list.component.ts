@@ -10,8 +10,8 @@
  *     Michael Falkenthal - initial implementation
  *     Karoline Saatkamp - initial implementation
  */
-import { Component, trigger, state, style, transition, animate, Input } from '@angular/core';
-
+import { Component, Input } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
     selector: 'opentosca-application-instances-list',

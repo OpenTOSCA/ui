@@ -9,7 +9,8 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
@@ -95,6 +96,7 @@ export class ApplicationDetailsComponent implements OnInit {
         this.route.data
             .subscribe((data: {applicationDetail: ApplicationDetail}) => {
                 this.ngRedux.dispatch(OpenTOSCAUiActions.updateCurrentApplication(data.applicationDetail.app));
+                this.app = this.ngRedux.getState().container.currentApp;
                 this.app = data.applicationDetail.app;
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
                 this.loadInstancesList();

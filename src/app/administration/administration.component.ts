@@ -10,7 +10,8 @@
  *     Michael Falkenthal - initial implementation
  */
 
-import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AdministrationService } from './administration.service';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';

@@ -9,7 +9,8 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, trigger, state, style, transition, animate, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { NgRedux } from '@angular-redux/store';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';

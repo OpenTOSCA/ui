@@ -9,7 +9,8 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, OnInit, trigger, state, style, transition, animate, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 
@@ -72,7 +73,8 @@ export class ApplicationsOverviewComponent implements OnInit {
                     summary: 'Deletion Successfull',
                     detail: 'Application ' + app.id + ' was successfully deleted.'
                 });
-                Logger.log('[applications-overview.component][deleteFromContainer]', 'Application successfully deleted, received response: ' + JSON.stringify(response));
+                Logger.log('[applications-overview.component][deleteFromContainer]',
+                    'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();

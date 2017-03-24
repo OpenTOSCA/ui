@@ -10,7 +10,8 @@
  *     Michael Falkenthal - initial implementation
  *     Karoline Saatkamp - initial implementation
  */
-import { Component, OnInit, ViewChild, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';

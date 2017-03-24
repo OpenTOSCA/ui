@@ -11,7 +11,8 @@
  *     Jasmin Guth - initial implementation
  */
 
-import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MarketplaceService } from '../shared/marketplace.service';
 import { AdministrationService } from '../administration/administration.service';
 
