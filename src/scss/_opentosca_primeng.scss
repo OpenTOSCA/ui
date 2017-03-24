@@ -12,39 +12,42 @@
 @import "bootstrap";
 
 body {
-    .ui-accordion {
-        .ui-accordion-header {
-            color: $brand-primary;
-            border-color: $panel-default-border;
-        }
-
-        .ui-accordion-header.ui-state-active {
-            background-color: $brand-primary;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom: none;
-        }
-
-        .ui-accordion-content {
-            border-radius: 0 0 4px 4px;
-        }
-
+  .ui-accordion {
+    .ui-accordion-header {
+      color: $brand-primary;
+      border-color: $panel-default-border;
+      a {
+        padding: 0.4em 0.4em 0.4em 2em;
+      }
     }
 
-    .ui-widget-content {
-        border-color: $panel-default-border;
+    .ui-accordion-header.ui-state-active {
+      background-color: $brand-primary;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: none;
     }
 
-    .ui-fieldset {
-        .ui-fieldset-legend {
-            border-radius: 4px;
-            border-color: $panel-default-border;
-        }
+    .ui-accordion-content {
+      border-radius: 0 0 4px 4px;
     }
+
+  }
+
+  .ui-widget-content {
+    border-color: $panel-default-border;
+  }
+
+  .ui-fieldset {
+    .ui-fieldset-legend {
+      border-radius: 4px;
+      border-color: $panel-default-border;
+    }
+  }
 }
 
 .ui-growl {
-    .ui-growl-message {
-        word-wrap: break-word;
-    }
+  .ui-growl-message {
+    word-wrap: break-word;
+  }
 }
