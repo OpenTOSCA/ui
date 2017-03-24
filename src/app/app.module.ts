@@ -48,6 +48,7 @@ import { ApplicationInstancesListComponent } from './application-instances-list/
 import { GrowlMessageBusService } from './shared/growl-message-bus.service';
 import { MarketplacesComponent } from './marketplace/marketplaces.component';
 import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
+import {SharedModule} from 'primeng/primeng';
 
 @NgModule({
     imports: [
@@ -63,7 +64,8 @@ import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace
         routing,
         NgSpinKitModule,
         NgUploaderModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule
     ],
     declarations: [
         AboutComponent,

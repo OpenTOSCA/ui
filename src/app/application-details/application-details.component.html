@@ -101,7 +101,7 @@
     <p-fieldset legend="Application Instances" [toggleable]="true">
         <div class="row">
             <div class="col-lg-12">
-                <opentosca-application-instances-list [instances]="appInstances"></opentosca-application-instances-list>
+                <opentosca-application-instances-list [instances]="currentAppInstances | async"></opentosca-application-instances-list>
             </div>
         </div>
     </p-fieldset>

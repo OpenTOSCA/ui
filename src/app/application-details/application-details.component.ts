@@ -29,6 +29,7 @@ import { Error } from 'tslint/lib/error';
 import { ObjectHelper } from '../shared/helper/ObjectHelper';
 
 import * as _ from 'lodash';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -51,7 +52,7 @@ import * as _ from 'lodash';
 export class ApplicationDetailsComponent implements OnInit {
 
     public app: Application;
-    public appInstances: Array<any> = [];
+    @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<any>>;
     public buildPlanOperationMetaData: BuildPlanOperationMetaData;
     public selfserviceApplicationUrl: SafeUrl;
     public planOutputParameters: {OutputParameter: PlanParameter}[];
@@ -93,11 +94,13 @@ export class ApplicationDetailsComponent implements OnInit {
         this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
         this.route.data
             .subscribe((data: {applicationDetail: ApplicationDetail}) => {
+                this.ngRedux.dispatch(OpenTOSCAUiActions.updateCurrentApplication(data.applicationDetail.app));
                 this.app = data.applicationDetail.app;
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
                 this.loadInstancesList();
-                this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(this.app.displayName, '')));
+                this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.displayName, '')));
             });
+
     }
 
     /**
@@ -116,7 +119,7 @@ export class ApplicationDetailsComponent implements OnInit {
                             }
                             preparedResults.push(res);
                         }
-                        this.appInstances = preparedResults;
+                        this.ngRedux.dispatch(OpenTOSCAUiActions.addApplicationInstances(preparedResults));
                     })
                     .catch(reason => Logger.handleError(
                         '[application-details.component][loadInstancesList][getProvisioningStateofServiceTemplateInstance]',

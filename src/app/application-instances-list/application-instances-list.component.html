@@ -1,7 +1,11 @@
 <div *ngIf="instances?.length > 0">
     <h2>Instances List <span class="badge">{{instances?.length}}</span></h2>
     <p-accordion *ngFor="let inst of instances; let i = index" [multiple]="true">
-        <p-accordionTab header="{{i}}">
+        <p-accordionTab>
+            <p-header>
+                <button class="btn btn-danger pull-right">Terminate</button>
+                <p>{{i}}</p>
+            </p-header>
             <div *ngIf="inst.selfserviceApplicationUrl">
                 <a [href]="inst.selfserviceApplicationUrl.TextContent" class="btn btn-primary">Start</a>
             </div>
