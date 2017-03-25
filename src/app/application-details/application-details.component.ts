@@ -27,10 +27,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { Error } from 'tslint/lib/error';
-import { ObjectHelper } from '../shared/helper/ObjectHelper';
-
-import * as _ from 'lodash';
 import { Observable } from 'rxjs';
+import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -96,30 +94,26 @@ export class ApplicationDetailsComponent implements OnInit {
         this.route.data
             .subscribe((data: {applicationDetail: ApplicationDetail}) => {
                 this.ngRedux.dispatch(OpenTOSCAUiActions.updateCurrentApplication(data.applicationDetail.app));
-                this.app = this.ngRedux.getState().container.currentApp;
                 this.app = data.applicationDetail.app;
+                this.ngRedux.dispatch(OpenTOSCAUiActions.updateBuildPlanOperationMetaData(data.applicationDetail.buildPlanParameters));
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
-                this.loadInstancesList();
+                this.loadInstancesList(data.applicationDetail.app);
                 this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.displayName, '')));
             });
-
     }
 
     /**
      * Loads instances of the current app and populates appInstances array
      */
-    loadInstancesList(): void {
-        this.appService.getServiceTemplateInstancesByAppID(this.app.id)
-            .then(result => {
-                this.appService.getProvisioningStateOfServiceTemplateInstances(result)
-                    .then(results => {
-                        let preparedResults = [];
-                        for (let res of results) {
-                            let selfServiceUrl = ObjectHelper.getObjectsByPropertyDeep(res, 'selfserviceApplicationUrl');
-                            if (selfServiceUrl.length > 0) {
-                                _.assign(res, selfServiceUrl[0]);
-                            }
-                            preparedResults.push(res);
+    loadInstancesList(app: Application): void {
+        this.appService.getServiceTemplateInstancesByAppID(app.id)
+            .then(instancesReferences => {
+                this.appService.getPropertiesOfServiceTemplateInstances(instancesReferences)
+                    .then(instancesPropertiesList => {
+                        let preparedResults: Array<ApplicationInstance> = [];
+                        for (let instanceProperties of instancesPropertiesList) {
+                            let appInstance = new ApplicationInstance(app, instanceProperties.instanceReference, instanceProperties);
+                            preparedResults.push(appInstance);
                         }
                         this.ngRedux.dispatch(OpenTOSCAUiActions.addApplicationInstances(preparedResults));
                     })
@@ -176,7 +170,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
-                                this.loadInstancesList();
+                                this.loadInstancesList(this.app);
                                 // we received the plan result
                                 // go find and present selfServiceApplicationUrl to user
                                 Logger.log('[application-details.component][startProvisioning]', 'Received plan result: ' + JSON.stringify(result));

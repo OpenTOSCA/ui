@@ -12,14 +12,26 @@
  */
 
 import { ResourceReference } from './resource-reference.model';
+import { Application } from './application.model';
+import { ApplicationInstanceProperties } from './application-instance-properties.model';
 
 // Todo Consolidate application model with OpenTOSCA ServiceTemplateInstance model
 export class ApplicationInstance {
-    createdAt: string;
-    csarID: string;
-    serviceInstanceID: string;
-    serviceTemplateID: string;
-    serviceTemplateName: string;
-    nodeInstances: Array<ResourceReference>;
-    properties: Array<any>;
+    serviceTemplateInstanceID: string;
+    shortServiceTemplateInstanceID: string;
+    app: Application;
+    instanceReference: ResourceReference;
+    properties: ApplicationInstanceProperties;
+    selfserviceApplicationUrl?: string;
+
+    constructor(app: Application, reference: ResourceReference, properties: ApplicationInstanceProperties) {
+        this.app = app;
+        this.instanceReference = reference;
+        this.properties = properties;
+        if(properties.selfServiceApplicationURL) {
+            this.selfserviceApplicationUrl = properties.selfServiceApplicationURL;
+        }
+        this.serviceTemplateInstanceID = reference.href;
+        this.shortServiceTemplateInstanceID = reference.href.split('/').pop();
+    }
 }

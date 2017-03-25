@@ -3,7 +3,7 @@
     <p-accordion *ngFor="let inst of instances; let i = index" [multiple]="true">
         <p-accordionTab>
             <p-header>
-                <button class="btn btn-danger pull-right">Terminate</button>
+                <button (click)="terminateInstance(inst.shortServiceTemplateInstanceID)" class="btn btn-danger pull-right">Terminate</button>
                 <p>{{i}}</p>
             </p-header>
             <div *ngIf="inst.selfserviceApplicationUrl">
@@ -12,7 +12,7 @@
             <div *ngIf="!inst.selfserviceApplicationUrl">
                 <pre>
                     <code class="language-json" pCode>
-                        {{inst.payload | json}}
+                        {{inst.properties | json}}
                     </code>
                 </pre>
             </div>

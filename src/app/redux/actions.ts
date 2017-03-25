@@ -14,6 +14,8 @@ import { Application } from '../shared/model/application.model';
 import { Injectable } from '@angular/core';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
+import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 export interface OpenTOSCAUiAction {
     type: string;
@@ -34,6 +36,8 @@ export class OpenTOSCAUiActions {
     static CLEAR_CURRENT_APPLICATION = 'CLEAR_CURRENT_APPLICATION';
     static ADD_APPLICATION_INSTANCES = 'ADD_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
+
+    static UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA = 'UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA';
 
     static UPDATE_REPOSITORY_URL = 'UPDATE_REPOSITORY_URL';
     static UPDATE_CONTAINER_URL = 'UPDATE_CONTAINER_URL';
@@ -99,10 +103,17 @@ export class OpenTOSCAUiActions {
         };
     }
 
-    static addApplicationInstances(instances: Array<any>): OpenTOSCAUiAction {
+    static addApplicationInstances(instances: Array<ApplicationInstance>): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.ADD_APPLICATION_INSTANCES,
             payload: instances
+        };
+    }
+
+    static updateBuildPlanOperationMetaData(metaData: BuildPlanOperationMetaData): OpenTOSCAUiAction {
+        return {
+            type: OpenTOSCAUiActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA,
+            payload: metaData
         };
     }
 

@@ -27,6 +27,8 @@ import { BuildPlanOperationMetaData } from './model/buildPlanOperationMetaData.m
 import { PlanInstance } from './model/plan-instance.model';
 
 import * as _ from 'lodash';
+import { ApplicationInstanceProperties } from './model/application-instance-properties.model';
+import { ObjectHelper } from './helper/ObjectHelper';
 
 @Injectable()
 export class ApplicationService {
@@ -260,6 +262,29 @@ export class ApplicationService {
         }
 
         return Promise.all(promises);
+    }
+
+    getPropertiesOfServiceTemplateInstances(refs: Array<ResourceReference>): Promise<Array<ApplicationInstanceProperties>> {
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        let promises = <any>[];
+
+        for (let ref of refs) {
+            const url = new Path(ref.href)
+                .append('Properties')
+                .toString();
+            promises.push(this.http.get(url, reqOpts).toPromise()
+                .then(result => {
+                    let properties = result.json();
+                    let selfServiceUrl = ObjectHelper.getObjectsByPropertyDeep(properties, 'selfserviceApplicationUrl');
+                    let instanceProperties = new ApplicationInstanceProperties(ref, result.json());
+                    if (selfServiceUrl.length > 0) {
+                        instanceProperties.selfServiceApplicationURL = selfServiceUrl[0]['selfserviceApplicationUrl'];
+                    }
+                    return instanceProperties;
+                }));
+        }
+
+        return Promise.all<ApplicationInstanceProperties>(promises);
     }
 
     /**

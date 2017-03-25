@@ -51,6 +51,9 @@ export function rootReducer(state: AppState = INITIAL_STATE, action: OpenTOSCAUi
         case OpenTOSCAUiActions.CLEAR_APPLICATION_INSTANCES:
             newState.container.currentAppInstances = [];
             return newState;
+        case OpenTOSCAUiActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA:
+            newState.container.currentBuildPlanOperationMetaData = action.payload;
+            return newState;
         case OpenTOSCAUiActions.UPDATE_REPOSITORY_URL:
             newState.administration.repositoryAPI = action.payload;
             return newState;

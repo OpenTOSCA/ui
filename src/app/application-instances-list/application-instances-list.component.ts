@@ -10,8 +10,10 @@
  *     Michael Falkenthal - initial implementation
  *     Karoline Saatkamp - initial implementation
  */
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { TriggerTerminationPlanEvent } from '../shared/model/trigger-termination-plan-event.model';
+import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 @Component({
     selector: 'opentosca-application-instances-list',
@@ -33,10 +35,14 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 
 export class ApplicationInstancesListComponent {
 
-    @Input() public instances: Array<any>;
+    @Input() public instances: Array<ApplicationInstance>;
+    @Output() public onTerminateInstance: EventEmitter<TriggerTerminationPlanEvent> = new EventEmitter();
 
     constructor() {
     }
 
+    terminateInstance(instanceID: string): void {
+        this.onTerminateInstance.emit(new TriggerTerminationPlanEvent(instanceID));
+    }
 
 }
