@@ -50,7 +50,7 @@ import { MarketplacesComponent } from './marketplace/marketplaces.component';
 import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
 import { SharedModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { OpenToscaLogger } from "./shared/helper/OpenToscaLogger";
+import { OpenToscaLogger } from './shared/helper/OpenToscaLogger';
 import { DatePipe } from '@angular/common';
 
 @NgModule({

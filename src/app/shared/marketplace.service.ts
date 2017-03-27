@@ -25,7 +25,7 @@ import { OpenToscaLogger } from './helper';
 @Injectable()
 export class MarketplaceService {
 
-    constructor(private http: Http, 
+    constructor(private http: Http,
                 private adminService: AdministrationService,
                 private logger: OpenToscaLogger) {
     }

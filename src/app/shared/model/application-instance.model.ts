@@ -28,7 +28,7 @@ export class ApplicationInstance {
         this.app = app;
         this.instanceReference = reference;
         this.properties = properties;
-        if(properties.selfServiceApplicationURL) {
+        if (properties.selfServiceApplicationURL) {
             this.selfserviceApplicationUrl = properties.selfServiceApplicationURL;
         }
         this.serviceTemplateInstanceID = reference.href;

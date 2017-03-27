@@ -153,7 +153,9 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.logger.log('[application-details.component][startProvisioning]', 'Now starting to poll for service template instance creation');
                 this.appService.pollForServiceTemplateInstanceCreation(response.PlanURL)
                     .then(urlToServiceTemplateInstance => {
-                        this.logger.log('[application-details.component][startProvisioning]', 'ServiceTemplateInstance created: ' + urlToServiceTemplateInstance);
+                        this.logger.log(
+                            '[application-details.component][startProvisioning]',
+                            'ServiceTemplateInstance created: ' + urlToServiceTemplateInstance);
                         let urlToPlanInstanceOutput = new Path(urlToServiceTemplateInstance)
                             .append('PlanInstances')
                             .append(this.extractCorrelationID(response.PlanURL))
@@ -202,7 +204,9 @@ export class ApplicationDetailsComponent implements OnInit {
                                                     JSON.stringify(planOutput.OutputParameters)
                                                 }
                                             );
-                                            this.logger.log('[application-details.component][startProvisioning]', 'Did not receive a selfserviceApplicationUrl');
+                                            this.logger.log(
+                                                '[application-details.component][startProvisioning]',
+                                                'Did not receive a selfserviceApplicationUrl');
                                         }
                                     })
                                     .catch(err => {
