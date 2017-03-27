@@ -18,7 +18,7 @@ import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
-import { Logger } from '../shared/helper/logger';
+import { OpenToscaLogger } from '../shared/helper';
 import { ModalDirective } from 'ng2-bootstrap';
 import { Router } from '@angular/router';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
@@ -86,7 +86,8 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                 private appService: ApplicationService,
                 private messageBus: GrowlMessageBusService,
                 private ngRedux: NgRedux<AppState>,
-                private router: Router) {
+                private router: Router,
+                private logger: OpenToscaLogger) {
     }
 
     /**
@@ -144,7 +145,7 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                     this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
                 })
                 .catch(reason => {
-                    Logger.handleError('[application-upload.component][updateApplicationsInStore]', reason);
+                    this.logger.handleError('[application-upload.component][updateApplicationsInStore]', reason);
                 });
         });
     }

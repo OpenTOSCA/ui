@@ -17,7 +17,7 @@ import { Application } from '../shared/model/application.model';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
-import { Logger } from '../shared/helper';
+import { OpenToscaLogger } from '../shared/helper';
 import { Observable } from 'rxjs';
 import { ModalDirective } from 'ng2-bootstrap';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
@@ -49,7 +49,8 @@ export class ApplicationsOverviewComponent implements OnInit {
 
     constructor(private appService: ApplicationService,
                 private ngRedux: NgRedux<AppState>,
-                private messageBus: GrowlMessageBusService) {
+                private messageBus: GrowlMessageBusService,
+                private logger: OpenToscaLogger) {
     }
 
     ngOnInit(): void {
@@ -65,7 +66,7 @@ export class ApplicationsOverviewComponent implements OnInit {
      */
     deleteFromContainer(app: Application): void {
         this.removingApp = true;
-        Logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
+        this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
                 this.messageBus.emit({
@@ -73,7 +74,7 @@ export class ApplicationsOverviewComponent implements OnInit {
                     summary: 'Deletion Successfull',
                     detail: 'Application ' + app.id + ' was successfully deleted.'
                 });
-                Logger.log('[applications-overview.component][deleteFromContainer]',
+                this.logger.log('[applications-overview.component][deleteFromContainer]',
                     'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.removeContainerApplication(app));
                 this.removingApp = false;
@@ -90,7 +91,7 @@ export class ApplicationsOverviewComponent implements OnInit {
                         ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
                     }
                 );
-                Logger.handleError('[applications-overview.component][deleteFromContainer]', err);
+                this.logger.handleError('[applications-overview.component][deleteFromContainer]', err);
             });
     }
 
@@ -121,7 +122,7 @@ export class ApplicationsOverviewComponent implements OnInit {
                     this.ngRedux.dispatch(OpenTOSCAUiActions.addContainerApplications(apps));
                 })
                 .catch(reason => {
-                    Logger.handleError('[applications-overview.component][getAppReferences]', reason);
+                    this.logger.handleError('[applications-overview.component][getAppReferences]', reason);
                 });
         });
     }

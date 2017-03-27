@@ -19,7 +19,7 @@ import { AppState } from '../redux/store';
 import { NgRedux, select } from '@angular-redux/store';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Logger } from '../shared/helper/logger';
+import { OpenToscaLogger } from '../shared/helper';
 
 @Component({
     selector: 'opentosca-administration',
@@ -52,7 +52,8 @@ export class AdministrationComponent implements OnInit {
     public repositoryAPIAvailable: boolean;
 
     constructor(private adminService: AdministrationService,
-                private ngRedux: NgRedux<AppState>) {
+                private ngRedux: NgRedux<AppState>,
+                private logger: OpenToscaLogger) {
     }
 
     ngOnInit(): void {
@@ -102,7 +103,7 @@ export class AdministrationComponent implements OnInit {
      */
     updateBuildPlanPath(newValue: string): void {
         this.adminService.setBuildPlanPath(newValue);
-        Logger.log('[administration.component][updateBuildPlanPath] Updated build plan path to: ', this.adminService.getBuildPlanPath());
+        this.logger.log('[administration.component][updateBuildPlanPath] Updated build plan path to: ', this.adminService.getBuildPlanPath());
     }
 
     /**
@@ -111,7 +112,7 @@ export class AdministrationComponent implements OnInit {
      */
     updateTerminationPlanPath(newValue: string): void {
         this.adminService.setTerminationPlanPath(newValue);
-        Logger.log('[administration.component][updateTerminationPlanPath] Updated termination plan path to: ', this.adminService.getTerminationPlanPath());
+        this.logger.log('[administration.component][updateTerminationPlanPath] Updated termination plan path to: ', this.adminService.getTerminationPlanPath());
     }
 
     /**
@@ -120,7 +121,7 @@ export class AdministrationComponent implements OnInit {
      */
     updateContainerURL(newValue: string): void {
         this.adminService.setContainerAPIURL(newValue);
-        Logger.log('[administration.component][updateRepositoryURL] Updated container URL to: ', this.adminService.getContainerAPIURL());
+        this.logger.log('[administration.component][updateRepositoryURL] Updated container URL to: ', this.adminService.getContainerAPIURL());
     }
 
     /**
@@ -129,6 +130,6 @@ export class AdministrationComponent implements OnInit {
      */
     updateRepositoryURL(newValue: string): void {
         this.adminService.setWineryAPIURL(newValue);
-        Logger.log('[administration.component][updateRepositoryURL] Updated repository URL to: ', this.adminService.getWineryAPIURL());
+        this.logger.log('[administration.component][updateRepositoryURL] Updated repository URL to: ', this.adminService.getWineryAPIURL());
     }
 }

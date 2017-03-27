@@ -10,7 +10,14 @@
  *     Michael Falkenthal
  */
 
-export class Logger {
+import { DatePipe } from '@angular/common';
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class OpenToscaLogger {
+
+    constructor(private datePipe: DatePipe) {
+    }
 
     /**
      * Print errors to console
@@ -18,7 +25,7 @@ export class Logger {
      * @param error
      * @returns {Promise<void>|Promise<T>}
      */
-    public static handleError(location: string, error: any): Promise<any> {
+    public handleError(location: string, error: any): Promise<any> {
         console.error('[', new Date(), ']', location, ': ', error);
         return Promise.reject(error.message || error);
     }
@@ -28,7 +35,7 @@ export class Logger {
      * @param location
      * @param message
      */
-    public static log(location: string, message: string): void {
-        console.log('[', new Date(), ']', location, ': ', message);
+    public log(location: string, message: string): void {
+        console.log('[',  this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'), ']', location, ': ', message);
     }
 }

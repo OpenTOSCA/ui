@@ -20,12 +20,14 @@ import { Application } from './model/application.model';
 import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
 import { MarketplaceApplication } from './model/marketplace-application.model';
 
-import { Logger } from './helper';
+import { OpenToscaLogger } from './helper';
 
 @Injectable()
 export class MarketplaceService {
 
-    constructor(private http: Http, private adminService: AdministrationService) {
+    constructor(private http: Http, 
+                private adminService: AdministrationService,
+                private logger: OpenToscaLogger) {
     }
 
     /**
@@ -34,7 +36,7 @@ export class MarketplaceService {
      */
     getAppsFromMarketPlace(): Promise<Array<MarketplaceApplicationReference>> {
         const url = this.adminService.getWineryAPIURL();
-        Logger.log('[marketplace.service][getAppsFromMarketPlace] Loading Apps from repo: ', url);
+        this.logger.log('[marketplace.service][getAppsFromMarketPlace] Loading Apps from repo: ', url);
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(url, {headers: headers})
             .toPromise()
@@ -42,7 +44,7 @@ export class MarketplaceService {
                 // TODO: Check, if Apps are already installed in container
                 return response.json() as MarketplaceApplicationReference[];
             })
-            .catch(err => Logger.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
+            .catch(err => this.logger.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
     }
 
     /**
@@ -70,7 +72,7 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(err => Logger.handleError('[marketplace.service][getAppFromMarketPlace]', err));
+            .catch(err => this.logger.handleError('[marketplace.service][getAppFromMarketPlace]', err));
     }
 
     /**
@@ -119,6 +121,6 @@ export class MarketplaceService {
                 }
                 return app;
             })
-            .catch(err => Logger.handleError('[marketplace.service][getAppDescription]', err));
+            .catch(err => this.logger.handleError('[marketplace.service][getAppDescription]', err));
     }
 }

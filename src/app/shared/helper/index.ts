@@ -9,7 +9,7 @@
  * Contributors:
  *     Michael Falkenthal
  */
-export * from './logger';
+export * from './OpenToscaLogger';
 export * from './Path';
 export * from './ReferenceHelper';
 export * from './ObjectHelper';

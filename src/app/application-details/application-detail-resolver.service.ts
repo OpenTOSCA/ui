@@ -15,7 +15,7 @@ import { ApplicationService } from '../shared/application.service';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { Application } from '../shared/model/application.model';
 import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
-import { Logger } from '../shared/helper/logger';
+import { OpenToscaLogger } from '../shared/helper/OpenToscaLogger';
 
 @Injectable()
 export class ApplicationDetailResolver implements Resolve<ApplicationDetail> {
@@ -26,9 +26,9 @@ export class ApplicationDetailResolver implements Resolve<ApplicationDetail> {
             this.appService.getBuildPlanParameters(route.params['id'])
         ])
             .then(result => new ApplicationDetail(result[0] as Application, result[1] as BuildPlanOperationMetaData))
-            .catch(reason => Logger.handleError('[application-details-resolver.service][resolve]', reason));
+            .catch(reason => this.logger.handleError('[application-details-resolver.service][resolve]', reason));
     }
 
-    constructor(private appService: ApplicationService) {
+    constructor(private appService: ApplicationService, private logger: OpenToscaLogger) {
     }
 }
