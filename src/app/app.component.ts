@@ -14,7 +14,7 @@ import { GrowlMessageBusService } from './shared/growl-message-bus.service';
 import { Message } from 'primeng/components/common/api';
 
 @Component({
-    selector: 'opentosca-ui',
+    selector: 'opentosca-app',
     templateUrl: 'app.component.html',
     animations: [
         trigger('fadeInOut', [
