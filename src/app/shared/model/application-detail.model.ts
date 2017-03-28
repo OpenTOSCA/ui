@@ -1,5 +1,3 @@
-import { Application } from './application.model';
-import { BuildPlanOperationMetaData } from './buildPlanOperationMetaData.model';
 /**
  * Copyright (c) 2016 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
@@ -12,13 +10,14 @@ import { BuildPlanOperationMetaData } from './buildPlanOperationMetaData.model';
  *     Michael Falkenthal - initial implementation
  */
 
+import { Application } from './application.model';
+import { PlanOperationMetaData } from './planOperationMetaData.model';
+
 // Todo Add application instances Array
 export class ApplicationDetail {
-    app: Application;
-    buildPlanParameters: BuildPlanOperationMetaData;
 
-    constructor(app: Application, buildPlanParameters: BuildPlanOperationMetaData) {
-        this.app = app;
-        this.buildPlanParameters = buildPlanParameters;
+    constructor(public app: Application,
+                public buildPlanParameters: PlanOperationMetaData,
+                public terminationPlanResource: PlanOperationMetaData) {
     }
 }

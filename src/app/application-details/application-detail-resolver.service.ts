@@ -14,7 +14,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { ApplicationService } from '../shared/application.service';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { Application } from '../shared/model/application.model';
-import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
+import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
 import { OpenToscaLogger } from '../shared/helper/OpenToscaLogger';
 
 @Injectable()
@@ -23,9 +23,10 @@ export class ApplicationDetailResolver implements Resolve<ApplicationDetail> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<ApplicationDetail> {
         return Promise.all([
             this.appService.getAppDescription(route.params['id']),
-            this.appService.getBuildPlanParameters(route.params['id'])
+            this.appService.getBuildPlanParameters(route.params['id']),
+            this.appService.getTerminationPlan(route.params['id'])
         ])
-            .then(result => new ApplicationDetail(result[0] as Application, result[1] as BuildPlanOperationMetaData))
+            .then(result => new ApplicationDetail(result[0] as Application, result[1] as PlanOperationMetaData, result[2] as PlanOperationMetaData))
             .catch(reason => this.logger.handleError('[application-details-resolver.service][resolve]', reason));
     }
 
