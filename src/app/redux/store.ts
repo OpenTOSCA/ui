@@ -13,7 +13,7 @@
 import { Application } from '../shared/model/application.model';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
-import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
+import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
 import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 export interface AppState {
@@ -21,7 +21,7 @@ export interface AppState {
         applications?: Array<Application>,
         currentApp?: Application,
         currentAppInstances?: Array<ApplicationInstance>,
-        currentBuildPlanOperationMetaData?: BuildPlanOperationMetaData
+        currentBuildPlanOperationMetaData?: PlanOperationMetaData
     };
     repository?: {
         applications?: Array<MarketplaceApplication>

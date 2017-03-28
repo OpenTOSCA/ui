@@ -14,7 +14,7 @@ import { Application } from '../shared/model/application.model';
 import { Injectable } from '@angular/core';
 import { MarketplaceApplication } from '../shared/model/marketplace-application.model';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
-import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
+import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
 import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 export interface OpenTOSCAUiAction {
@@ -110,7 +110,7 @@ export class OpenTOSCAUiActions {
         };
     }
 
-    static updateBuildPlanOperationMetaData(metaData: BuildPlanOperationMetaData): OpenTOSCAUiAction {
+    static updateBuildPlanOperationMetaData(metaData: PlanOperationMetaData): OpenTOSCAUiAction {
         return {
             type: OpenTOSCAUiActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA,
             payload: metaData

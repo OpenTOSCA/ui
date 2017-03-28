@@ -60,8 +60,8 @@ export function rootReducer(state: AppState = INITIAL_STATE, action: OpenTOSCAUi
         case OpenTOSCAUiActions.UPDATE_CONTAINER_URL:
             newState.administration.containerAPI = action.payload;
             return newState;
-        case OpenTOSCAUiActions.UPDATE_BUILDPLANPATH:
-            newState.administration.buildPlanPath = action.payload;
+        case OpenTOSCAUiActions.UPDATE_TERMINATIONPLANPATH:
+            newState.administration.terminationPlanPath = action.payload;
             return newState;
         case OpenTOSCAUiActions.UPDATE_BREADCRUMB:
             newState.breadcrumb = action.payload;

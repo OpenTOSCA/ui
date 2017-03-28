@@ -1,9 +1,12 @@
-<div *ngIf="instances?.length > 0">
+<div *ngIf="instances?.length > 0;then instances_available;else no_instances_available"></div>
+<ng-template #instances_available>
     <h2>Instances List <span class="badge">{{instances?.length}}</span></h2>
     <p-accordion *ngFor="let inst of instances; let i = index" [multiple]="true">
         <p-accordionTab>
             <p-header>
-                <button (click)="terminateInstance(inst.shortServiceTemplateInstanceID)" class="btn btn-danger pull-right">Terminate</button>
+                <button (click)="terminateInstance(inst.shortServiceTemplateInstanceID)"
+                        class="btn btn-danger pull-right">Terminate
+                </button>
                 <p>{{i}}</p>
             </p-header>
             <div *ngIf="inst.selfserviceApplicationUrl">
@@ -12,13 +15,13 @@
             <div *ngIf="!inst.selfserviceApplicationUrl">
                 <pre>
                     <code class="language-json" pCode>
-                        {{inst.properties | json}}
+                        {{inst.properties.properties.payload[0] | json}}
                     </code>
                 </pre>
             </div>
         </p-accordionTab>
     </p-accordion>
-</div>
-<div *ngIf="instances?.length === 0">
+</ng-template>
+<ng-template #no_instances_available>
     No Instances provisioned.
-</div>
+</ng-template>

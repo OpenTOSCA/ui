@@ -18,7 +18,7 @@ import { ModalDirective } from 'ng2-bootstrap';
 import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { OpenToscaLogger } from '../shared/helper';
-import { BuildPlanOperationMetaData } from '../shared/model/buildPlanOperationMetaData.model';
+import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
 import { Path } from '../shared/helper';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
@@ -29,6 +29,9 @@ import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { Error } from 'tslint/lib/error';
 import { Observable } from 'rxjs';
 import { ApplicationInstance } from '../shared/model/application-instance.model';
+import { TriggerTerminationPlanEvent } from '../shared/model/trigger-termination-plan-event.model';
+
+import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -52,12 +55,13 @@ export class ApplicationDetailsComponent implements OnInit {
 
     public app: Application;
     @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<any>>;
-    public buildPlanOperationMetaData: BuildPlanOperationMetaData;
+    public buildPlanOperationMetaData: PlanOperationMetaData;
     public selfserviceApplicationUrl: SafeUrl;
     public planOutputParameters: {OutputParameter: PlanParameter}[];
     public provisioningInProgress = false;
     public provisioningDone = false;
     public allInputsFilled = true;
+    private serviceTemplateInstancesURL: string;
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -98,8 +102,39 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.app = data.applicationDetail.app;
                 this.ngRedux.dispatch(OpenTOSCAUiActions.updateBuildPlanOperationMetaData(data.applicationDetail.buildPlanParameters));
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
+                this.serviceTemplateInstancesURL = _.trimEnd(data.applicationDetail.terminationPlanResource.Reference.href, '%7BinstanceId%7D');
+                this.ngRedux.dispatch(OpenTOSCAUiActions.updateTerminationPlanPath(this.serviceTemplateInstancesURL));
                 this.loadInstancesList(data.applicationDetail.app);
                 this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.displayName, '')));
+            });
+    }
+
+    emitTerminationPlan(terminationEvent: TriggerTerminationPlanEvent): void {
+        let url = new Path(this.serviceTemplateInstancesURL)
+            .append(terminationEvent.instanceID).toString();
+
+        this.appService.deleteApplicationInstance(url)
+            .then(result => {
+                this.loadInstancesList(this.app);
+                this.messageBus.emit(
+                    {
+                        severity: 'success',
+                        summary: 'Instance Successfully Terminated',
+                        detail: 'The instance ' + url + ' was sucessfully terminated.'
+                    }
+                );
+                this.logger.log('[application.details.component][emitTerminationPlan]', result);
+            })
+            .catch(err => {
+                this.messageBus.emit(
+                    {
+                        severity: 'error',
+                        summary: 'Failure at Instance Termination',
+                        detail: 'The instance ' + url + ' was not terminated successfully. Container returned: '
+                            + JSON.stringify(err)
+                    }
+                );
+                this.logger.handleError('[application.details.component][emitTerminationPlan]', err);
             });
     }
 

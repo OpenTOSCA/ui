@@ -10,9 +10,7 @@
  *     Michael Falkenthal - initial implementation
  */
 export class TriggerTerminationPlanEvent {
-    public instanceID: string;
 
-    constructor(private id: string) {
-        this.instanceID = id;
+    constructor(public instanceID: string) {
     }
 }

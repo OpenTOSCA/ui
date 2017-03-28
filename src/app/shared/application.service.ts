@@ -23,7 +23,7 @@ import { Path } from './helper';
 import { PlanParameters } from './model/plan-parameters.model';
 import { ReferenceHelper } from './helper';
 import { ResourceReference } from './model/resource-reference.model';
-import { BuildPlanOperationMetaData } from './model/buildPlanOperationMetaData.model';
+import { PlanOperationMetaData } from './model/planOperationMetaData.model';
 import { PlanInstance } from './model/plan-instance.model';
 
 import * as _ from 'lodash';
@@ -63,6 +63,12 @@ export class ApplicationService {
             .toPromise();
     }
 
+    deleteApplicationInstance(appInstanceURL: string): Promise<any> {
+        this.logger.log('[application.service][deleteApplicationInstance]', 'Trying to delete: ' + appInstanceURL);
+        return this.http.delete(appInstanceURL)
+            .toPromise();
+    }
+
     /**
      * Retrieve a list of references to deployed applications
      * @returns {Promise<ResourceReference[]>}
@@ -92,16 +98,30 @@ export class ApplicationService {
      * @param appID
      * @returns {Promise<PlanParameters>}
      */
-    getBuildPlanParameters(appID: string): Promise<BuildPlanOperationMetaData> {
+    getBuildPlanParameters(appID: string): Promise<PlanOperationMetaData> {
         return this.getServiceTemplatePath(appID)
             .then(serviceTemplatePath => {
-                const url = new Path(serviceTemplatePath).append(this.adminService.getBuildPlanPath()).toString();
+                const url = new Path(serviceTemplatePath)
+                    .append(this.adminService.getBuildPlanPath()).toString();
                 return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
                     .toPromise()
-                    .then(response => response.json() as BuildPlanOperationMetaData)
+                    .then(response => response.json() as PlanOperationMetaData)
                     .catch(err => this.logger.handleError('[application.service][getBuildPlanParameters]', err));
             })
             .catch(err => this.logger.handleError('[application.service][getBuildPlanParameters]', err));
+    }
+
+    getTerminationPlan(appID: string): Promise<any> {
+        return this.getServiceTemplatePath(appID)
+            .then(serviceTemplatePath => {
+                const url = new Path(serviceTemplatePath)
+                    .append(this.adminService.getTerminationPlanPath()).toString();
+                return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
+                    .toPromise()
+                    .then(response => response.json() as PlanOperationMetaData)
+                    .catch(err => this.logger.handleError('[application.service][getTerminationPlan]', err));
+            })
+            .catch(err => this.logger.handleError('[application.service][getTerminationPlan]', err));
     }
 
     /**
@@ -138,7 +158,7 @@ export class ApplicationService {
      * @param planMetaData PlanParameters object that containes required input parameters for the buildplan
      * @returns {Promise<BuildplanPollResource>}
      */
-    startProvisioning(appID: string, planMetaData: BuildPlanOperationMetaData): Promise<BuildplanPollResource> {
+    startProvisioning(appID: string, planMetaData: PlanOperationMetaData): Promise<BuildplanPollResource> {
         this.logger.log('[application.service][startProvisioning]', 'Starting Provisioning');
         this.logger.log('[application.service][startProvisioning]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(planMetaData));
         this.logger.log('[application.service][startProvisioning]', 'Posting to: ' + planMetaData.Reference.href);
@@ -155,7 +175,7 @@ export class ApplicationService {
     }
 
     pollForServiceTemplateInstanceCreation(pollURL: string): Promise<string> {
-        const waitTime = 1000;
+        const waitTime = 10000;
 
         this.logger.log('[application.service][pollForServiceTemplateInstanceCreation]', 'Polling for service template instance creation: ' + pollURL);
         return this.http.get(pollURL, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
