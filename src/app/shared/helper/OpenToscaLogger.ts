@@ -12,6 +12,7 @@
 
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class OpenToscaLogger {
@@ -28,6 +29,11 @@ export class OpenToscaLogger {
     public handleError(location: string, error: any): Promise<any> {
         console.error('[', new Date(), ']', location, ': ', error);
         return Promise.reject(error.message || error);
+    }
+
+    public handleObservableError(location: string, error: any): Observable<any> {
+        console.error('[', new Date(), ']', location, ': ', error);
+        return Observable.throw(error.json().error || error);
     }
 
     /**

@@ -29,6 +29,7 @@ import { PlanInstance } from './model/plan-instance.model';
 import * as _ from 'lodash';
 import { ApplicationInstanceProperties } from './model/application-instance-properties.model';
 import { ObjectHelper } from './helper/ObjectHelper';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ApplicationService {
@@ -96,32 +97,30 @@ export class ApplicationService {
     /**
      * Lookup the parameters required by the buildplan of a CSAR
      * @param appID
-     * @returns {Promise<PlanParameters>}
+     * @returns {Observable<PlanParameters>}
      */
-    getBuildPlanParameters(appID: string): Promise<PlanOperationMetaData> {
+    getBuildPlanParameters(appID: string): Observable<PlanOperationMetaData> {
         return this.getServiceTemplatePath(appID)
-            .then(serviceTemplatePath => {
+            .flatMap(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath)
                     .append(this.adminService.getBuildPlanPath()).toString();
                 return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
-                    .toPromise()
-                    .then(response => response.json() as PlanOperationMetaData)
-                    .catch(err => this.logger.handleError('[application.service][getBuildPlanParameters]', err));
+                    .map(response => response.json() as PlanOperationMetaData)
+                    .catch(err => this.logger.handleObservableError('[application.service][getBuildPlanParameters]', err));
             })
-            .catch(err => this.logger.handleError('[application.service][getBuildPlanParameters]', err));
+            .catch(err => this.logger.handleObservableError('[application.service][getBuildPlanParameters]', err));
     }
 
-    getTerminationPlan(appID: string): Promise<any> {
+    getTerminationPlan(appID: string): Observable<any> {
         return this.getServiceTemplatePath(appID)
-            .then(serviceTemplatePath => {
+            .flatMap(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath)
                     .append(this.adminService.getTerminationPlanPath()).toString();
                 return this.http.get(url, {headers: this.adminService.getDefaultAcceptJSONHeaders()})
-                    .toPromise()
-                    .then(response => response.json() as PlanOperationMetaData)
-                    .catch(err => this.logger.handleError('[application.service][getTerminationPlan]', err));
+                    .map(response => response.json() as PlanOperationMetaData)
+                    .catch(err => this.logger.handleObservableError('[application.service][getTerminationPlan]', err));
             })
-            .catch(err => this.logger.handleError('[application.service][getTerminationPlan]', err));
+            .catch(err => this.logger.handleObservableError('[application.service][getTerminationPlan]', err));
     }
 
     /**
@@ -129,7 +128,7 @@ export class ApplicationService {
      * @param appID
      * @returns {Promise<string>}
      */
-    getServiceTemplatePath(appID: string): Promise<string> {
+    getServiceTemplatePath(appID: string): Observable<string> {
         const url = new Path(this.adminService.getContainerAPIURL())
             .append('CSARs')
             .append(ApplicationService.fixAppID(appID))
@@ -139,17 +138,16 @@ export class ApplicationService {
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
 
         return this.http.get(url, reqOpts)
-            .toPromise()
-            .then(response => {
+            .map(response => {
                 let resRefs = response.json().References as Array<ResourceReference>;
                 for (let ref of resRefs) {
                     if (!ReferenceHelper.isSelfReference(ref)) {
                         return ref.href;
                     }
                 }
-                Promise.reject(new Error(JSON.stringify(resRefs)));
+                this.logger.handleObservableError('[application.service][getServiceTemplatePath]', new Error(JSON.stringify(resRefs)));
             })
-            .catch(err => this.logger.handleError('[application.service][getServiceTemplatePath]', err));
+            .catch(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err));
     }
 
     /**
@@ -249,7 +247,7 @@ export class ApplicationService {
 
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
 
-        return this.getServiceTemplatePath(appID)
+        return this.getServiceTemplatePath(appID).toPromise()
             .then(url => {
                     const serviceTemplateInstancesURL = new Path(url)
                         .append('Instances')
@@ -340,18 +338,17 @@ export class ApplicationService {
     /**
      * Retrieve app description from data.json
      * @param appID CSAR id/name (e.g. XYZ.csar)
-     * @returns {Promise<Application>}
+     * @returns {Observable<Application>}
      */
-    getAppDescription(appID: string): Promise<Application> {
+    getAppDescription(appID: string): Observable<Application> {
         appID = ApplicationService.fixAppID(appID);
         const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});
 
         return this.http.get(dataJSONUrl, {headers: headers})
-            .toPromise()
-            .then(response => {
-                let app = response.json() as Application;
+            .map((response: any) => {
+                let app: Application = new Object(response.json()) as Application;
                 // we only use appIDs without .csar for navigation in new ui, since angular2 router did not route to paths containing '.'
                 app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
                 app.iconUrl = metaDataUrl + '/' + app.iconUrl;
@@ -363,7 +360,7 @@ export class ApplicationService {
                 }
                 return app;
             })
-            .catch(err => {
+            .catch((err: any) => {
                 if (err.status === 404) {
                     // we found a CSAR that does not contain a data.json, so use default values
                     let app = new Application();
@@ -373,9 +370,9 @@ export class ApplicationService {
                     app.categories = ['others'];
                     app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
                     app.imageUrl = '';
-                    return app;
+                    return Observable.of(app);
                 } else {
-                    this.logger.handleError('[application.service][getAppDescription]', err);
+                    this.logger.handleObservableError('[application.service][getAppDescription]', err);
                 }
             });
     }

@@ -114,7 +114,7 @@ export class ApplicationsOverviewComponent implements OnInit {
             let appPromises = [] as Array<Promise<Application>>;
             for (let ref of references) {
                 if (ref.title !== 'Self') {
-                    appPromises.push(this.appService.getAppDescription(ref.title));
+                    appPromises.push(this.appService.getAppDescription(ref.title).toPromise());
                 }
             }
             Promise.all(appPromises)

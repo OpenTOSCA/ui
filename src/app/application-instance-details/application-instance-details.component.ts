@@ -52,7 +52,7 @@ export class ApplicationInstanceDetailsComponent implements OnInit {
 
         this.route.params
             .subscribe(params => {
-                this.appService.getAppDescription(params['id'])
+                this.appService.getAppDescription(params['id']).toPromise()
                     .then(app => this.app = app);
                 this.appService.getServiceTemplateInstancesByAppID(params['id'])
                     .then(result => this.instancesList = result);

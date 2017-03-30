@@ -11,7 +11,7 @@
  */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
 import { ModalDirective } from 'ng2-bootstrap';
@@ -70,7 +70,8 @@ export class ApplicationDetailsComponent implements OnInit {
                 private sanitizer: DomSanitizer,
                 private ngRedux: NgRedux<AppState>,
                 private messageBus: GrowlMessageBusService,
-                private logger: OpenToscaLogger) {
+                private logger: OpenToscaLogger,
+                private router: Router) {
     }
 
     /**
@@ -103,9 +104,18 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.ngRedux.dispatch(OpenTOSCAUiActions.updateBuildPlanOperationMetaData(data.applicationDetail.buildPlanParameters));
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
                 this.serviceTemplateInstancesURL = _.trimEnd(data.applicationDetail.terminationPlanResource.Reference.href, '%7BinstanceId%7D');
-                this.ngRedux.dispatch(OpenTOSCAUiActions.updateTerminationPlanPath(this.serviceTemplateInstancesURL));
                 this.loadInstancesList(data.applicationDetail.app);
                 this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.displayName, '')));
+            },
+            reason => {
+                this.messageBus.emit(
+                    {
+                        severity: 'warn',
+                        summary: 'Loading of Data failed',
+                        detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' + JSON.stringify(reason)
+                    }
+                );
+                this.router.navigate(['/applications']);
             });
     }
 
