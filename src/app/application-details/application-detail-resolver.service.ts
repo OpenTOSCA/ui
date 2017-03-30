@@ -29,7 +29,7 @@ export class ApplicationDetailResolver implements Resolve<ApplicationDetail> {
         )
         .map(result => new ApplicationDetail(result[0], result[1], result[2]))
         .catch(reason => {
-            return this.logger.handleError('[application-details-resolver.service][resolve]', reason)
+            return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
         });
     }
 
