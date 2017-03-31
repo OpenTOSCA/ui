@@ -292,7 +292,7 @@ export class ApplicationService {
             const url = new Path(ref.href)
                 .append('Properties')
                 .toString();
-            promises.push(this.http.get(url, reqOpts).toPromise()
+            promises.push(this.http.get(url, reqOpts).retry(3).toPromise()
                 .then(result => {
                     let properties = result.json();
                     let selfServiceUrl = ObjectHelper.getObjectsByPropertyDeep(properties, 'selfserviceApplicationUrl');
