@@ -8,7 +8,7 @@
     "lint": "tslint \"src/**/*.ts\"",
     "build": "rimraf dist war && npm run lint && webpack --config config/webpack.prod.js --progress --profile --bail",
     "build:serve": "lite-server --config config/lite-server.json",
-    "start": "webpack-dev-server --inline --progress"
+    "start": "webpack-dev-server --inline --progress --hot"
   },
   "keywords": [],
   "author": "",
