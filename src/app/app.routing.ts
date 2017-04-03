@@ -21,7 +21,7 @@ import { AdministrationComponent } from './administration/administration.compone
 import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
-import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
+import { ApplicationDetailsResolver } from './application-details/application-details-resolver.service';
 import { MarketplacesComponent } from './marketplace/marketplaces.component';
 import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
 
@@ -51,7 +51,7 @@ const appRoutes: Routes = [
                 path: ':id',
                 component: ApplicationDetailsComponent,
                 resolve: {
-                    applicationDetail: ApplicationDetailResolver
+                    applicationDetail: ApplicationDetailsResolver
                 }
             },
             {

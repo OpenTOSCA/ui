@@ -43,7 +43,7 @@ import { NgRedux, NgReduxModule } from '@angular-redux/store';
 import { OpenTOSCAUiActions } from './redux/actions';
 import { AppState, INITIAL_STATE } from './redux/store';
 import { rootReducer } from './redux/rootReducer.reducer';
-import { ApplicationDetailResolver } from './application-details/application-detail-resolver.service';
+import { ApplicationDetailsResolver } from './application-details/application-details-resolver.service';
 import { ApplicationInstancesListComponent } from './application-instances-list/application-instances-list.component';
 import { GrowlMessageBusService } from './shared/growl-message-bus.service';
 import { MarketplacesComponent } from './marketplace/marketplaces.component';
@@ -89,7 +89,7 @@ import { DatePipe } from '@angular/common';
     ],
     providers: [
         AdministrationService,
-        ApplicationDetailResolver,
+        ApplicationDetailsResolver,
         ApplicationService,
         DatePipe,
         GrowlMessageBusService,

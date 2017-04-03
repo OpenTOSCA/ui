@@ -17,7 +17,7 @@ import { OpenToscaLogger } from '../shared/helper/OpenToscaLogger';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class ApplicationDetailResolver implements Resolve<ApplicationDetail> {
+export class ApplicationDetailsResolver implements Resolve<ApplicationDetail> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ApplicationDetail> {
         return Observable.forkJoin(
