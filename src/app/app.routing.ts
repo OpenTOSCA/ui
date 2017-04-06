@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -18,12 +18,12 @@ import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { AdministrationComponent } from './administration/administration.component';
-import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
 import { ApplicationDetailsResolver } from './application-details/application-details-resolver.service';
 import { MarketplacesComponent } from './marketplace/marketplaces.component';
 import { MarketplaceOverviewComponent } from './marketplace-overview/marketplace-overview.component';
+import { ApplicationInstanceDetailsResolver } from './application-instance-details/application-instance-details-resolver.service';
 
 const appRoutes: Routes = [
     {
@@ -40,12 +40,8 @@ const appRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: ApplicationsOverviewComponent
-            },
-            {
-                path: 'upload',
-                component: ApplicationUploadComponent,
-                outlet: 'modal'
+                component: ApplicationsOverviewComponent,
+                pathMatch: 'full'
             },
             {
                 path: ':id',
@@ -55,12 +51,16 @@ const appRoutes: Routes = [
                 }
             },
             {
-                path: ':id/instances',
-                component: ApplicationInstancesComponent
+                path: ':id/instances/:instID',
+                component: ApplicationInstanceDetailsComponent,
+                resolve: {
+                    applicationInstanceDetails: ApplicationInstanceDetailsResolver
+                }
             },
             {
-                path: ':id/instances/1',
-                component: ApplicationInstanceDetailsComponent
+                path: 'upload',
+                component: ApplicationUploadComponent,
+                outlet: 'modal'
             }
         ]
     },
@@ -74,10 +74,6 @@ const appRoutes: Routes = [
             }
         ]
     },
-    // {
-    //     path: 'repository/applications/:id',
-    //     component: ApplicationDetailsComponent
-    // },
     {
         path: '',
         redirectTo: '/applications',
