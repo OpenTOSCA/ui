@@ -13,6 +13,11 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
+import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { OpenTOSCAUiActions } from '../redux/actions';
+import { NgRedux } from '@angular-redux/store';
+import { AppState } from '../redux/store';
+import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 @Component({
     selector: 'opentosca-application-instance-details',
@@ -34,19 +39,31 @@ import { ActivatedRoute } from '@angular/router';
 
 export class ApplicationInstanceDetailsComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute) {
+    public instance: ApplicationInstance;
+
+    constructor(private route: ActivatedRoute,
+                private ngRedux: NgRedux<AppState>) {
     }
 
     /**
      * Initialize component
      */
     ngOnInit(): void {
-        this.route.data
-            .subscribe((data: {applicationInstanceDetails: any}) => {
-                console.log(data.applicationInstanceDetails);
-            },
-            reason => console.log('WRONG'));
-    }
 
+        this.route.data
+            .subscribe((data: { applicationInstanceDetails: ApplicationInstance }) => {
+                    this.instance = data.applicationInstanceDetails;
+                    console.log(data.applicationInstanceDetails);
+
+                    let breadCrumbs = [];
+                    breadCrumbs.push(new BreadcrumbEntry('Applications', '/applications'));
+                    breadCrumbs.push(new BreadcrumbEntry(data.applicationInstanceDetails.appID, ['/applications', data.applicationInstanceDetails.appID]));
+                    breadCrumbs.push(new BreadcrumbEntry('Instance: ' + data.applicationInstanceDetails.shortServiceTemplateInstanceID, ['./']));
+                    this.ngRedux.dispatch(OpenTOSCAUiActions.updateBreadcrumb(breadCrumbs));
+                },
+                reason => console.log('WRONG'));
+
+
+    }
 
 }

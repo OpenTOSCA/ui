@@ -11,23 +11,23 @@
  */
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { ApplicationService } from '../shared/application.service';
-import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
 import { Observable } from 'rxjs';
+import { ApplicationInstanceService } from '../shared/application-instance.service';
+import { ApplicationInstance } from '../shared/model/application-instance.model';
 
 @Injectable()
-export class ApplicationInstanceDetailsResolver implements Resolve<ApplicationDetail> {
+export class ApplicationInstanceDetailsResolver implements Resolve<ApplicationInstance> {
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        // Load instances
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ApplicationInstance> {
 
-        return this.appService.getAppDescription(route.params['id']).retry(3)
-        .catch(reason => {
-            return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);
-        });
+
+        return this.appInstService.loadApplicationInstance(route.params['id'], route.params['instID'])
+            .catch(reason => {
+                return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);
+            });
     }
 
-    constructor(private appService: ApplicationService, private logger: OpenToscaLogger) {
+    constructor(private appInstService: ApplicationInstanceService, private logger: OpenToscaLogger) {
     }
 }

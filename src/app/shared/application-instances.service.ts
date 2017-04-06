@@ -15,6 +15,7 @@ import 'rxjs/add/operator/toPromise';
 import { OpenToscaLogger } from './util';
 import { ApplicationService } from './application.service';
 import { ApplicationInstance } from './model/application-instance.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ApplicationInstancesService {
@@ -26,11 +27,11 @@ export class ApplicationInstancesService {
     /**
      * Loads instances of the current app and push it to redux store
      */
-    loadInstancesList(appID: string): Promise<Array<ApplicationInstance>> {
+    loadInstancesList(appID: string): Observable<Array<ApplicationInstance>> {
         return this.appService.getServiceTemplateInstancesByAppID(appID)
-            .then(instancesReferences => {
+            .flatMap(instancesReferences => {
                 return this.appService.getPropertiesOfServiceTemplateInstances(instancesReferences)
-                    .then(instancesPropertiesList => {
+                    .map(instancesPropertiesList => {
                         let preparedResults: Array<ApplicationInstance> = [];
                         for (let instanceProperties of instancesPropertiesList) {
                             let appInstance = new ApplicationInstance(appID, instanceProperties.instanceReference, instanceProperties);

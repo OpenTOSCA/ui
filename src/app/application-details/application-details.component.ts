@@ -9,7 +9,7 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
@@ -50,7 +50,7 @@ import { Path } from '../shared/util/Path';
     ]
 })
 
-export class ApplicationDetailsComponent implements OnInit {
+export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     public app: Application;
     @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<any>>;
@@ -105,8 +105,8 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
                 this.serviceTemplateInstancesURL = _.trimEnd(data.applicationDetail.terminationPlanResource.Reference.href, '%7BinstanceId%7D');
                 this.appInstancesService.loadInstancesList(data.applicationDetail.app.id)
-                    .then(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
-                this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.displayName, '')));
+                    .subscribe(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
+                this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.id, '')));
             },
             reason => {
                 this.messageBus.emit(
@@ -120,6 +120,11 @@ export class ApplicationDetailsComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+        this.ngRedux.dispatch(OpenTOSCAUiActions.clearApplicationInstances());
+        this.ngRedux.dispatch(OpenTOSCAUiActions.clearCurrentApplication());
+    }
+
     emitTerminationPlan(terminationEvent: TriggerTerminationPlanEvent): void {
         let url = new Path(this.serviceTemplateInstancesURL)
             .append(terminationEvent.instanceID).toString();
@@ -127,7 +132,7 @@ export class ApplicationDetailsComponent implements OnInit {
         this.appService.deleteApplicationInstance(url)
             .then(result => {
                 this.appInstancesService.loadInstancesList(this.app.id)
-                    .then(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
+                    .subscribe(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
                 this.messageBus.emit(
                     {
                         severity: 'success',
@@ -200,7 +205,7 @@ export class ApplicationDetailsComponent implements OnInit {
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
                                 this.appInstancesService.loadInstancesList(this.app.id)
-                                    .then(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
+                                    .subscribe(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
                                 // we received the plan result
                                 // go find and present selfServiceApplicationUrl to user
                                 this.logger.log('[application-details.component][startProvisioning]', 'Received plan result: ' + JSON.stringify(result));

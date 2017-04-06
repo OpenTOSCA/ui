@@ -242,32 +242,30 @@ export class ApplicationService {
      * @param appID
      * @returns {Promise<Array<ResourceReference>>}
      */
-    getServiceTemplateInstancesByAppID(appID: string): Promise<Array<ResourceReference>> {
+    getServiceTemplateInstancesByAppID(appID: string): Observable<Array<ResourceReference>> {
         appID = this.fixAppID(appID);
 
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
 
-        return this.getServiceTemplatePath(appID).toPromise()
-            .then(url => {
+        return this.getServiceTemplatePath(appID).first()
+            .flatMap((url) => {
                     const serviceTemplateInstancesURL = new Path(url)
                         .append('Instances')
                         .toString();
 
                     return this.http.get(serviceTemplateInstancesURL, reqOpts)
-                        .toPromise()
-                        .then(result => {
-                            let refs = result.json().References as Array<ResourceReference>;
-                            for (let ref in refs) {
-                                if (refs[ref].title.toLowerCase() === 'self') {
-                                    refs.splice(+ref, 1);
+                        .map(result => {
+                                let refs = result.json().References as Array<ResourceReference>;
+                                for (let ref in refs) {
+                                    if (refs[ref].title.toLowerCase() === 'self') {
+                                        refs.splice(+ref, 1);
+                                    }
                                 }
-                            }
-
-                            return refs;
-                        })
-                        .catch(reason => this.logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
-                }
-            ).catch(reason => this.logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
+                                return refs;
+                            })
+                        .catch(reason => this.logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason))
+                })
+            .catch((reason: any) => this.logger.handleObservableError('[application.service][getServiceTemplateInstancesByAppID]', reason));
     }
 
     getProvisioningStateOfServiceTemplateInstances(refs: Array<ResourceReference>): Promise<Array<any>> {
@@ -284,16 +282,16 @@ export class ApplicationService {
         return Promise.all(promises);
     }
 
-    getPropertiesOfServiceTemplateInstances(refs: Array<ResourceReference>): Promise<Array<ApplicationInstanceProperties>> {
+    getPropertiesOfServiceTemplateInstances(refs: Array<ResourceReference>): Observable<Array<ApplicationInstanceProperties>> {
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        let promises = <any>[];
+        let observables = <any>[];
 
         for (let ref of refs) {
             const url = new Path(ref.href)
                 .append('Properties')
                 .toString();
-            promises.push(this.http.get(url, reqOpts).retry(3).toPromise()
-                .then(result => {
+            observables.push(this.http.get(url, reqOpts).retry(3)
+                .map(result => {
                     let properties = result.json();
                     let selfServiceUrl = ObjectHelper.getObjectsByPropertyDeep(properties, 'selfserviceApplicationUrl');
                     let instanceProperties = new ApplicationInstanceProperties(ref, result.json());
@@ -304,7 +302,7 @@ export class ApplicationService {
                 }));
         }
 
-        return Promise.all<ApplicationInstanceProperties>(promises);
+        return Observable.forkJoin<ApplicationInstanceProperties>(observables);
     }
 
     /**
