@@ -12,19 +12,15 @@
 
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
-import { OpenToscaLogger } from './helper';
+import { OpenToscaLogger } from './util';
 import { ApplicationService } from './application.service';
 import { ApplicationInstance } from './model/application-instance.model';
-import { OpenTOSCAUiActions } from '../redux/actions';
-import { NgRedux } from '@angular-redux/store';
-import { AppState } from '../redux/store';
 
 @Injectable()
 export class ApplicationInstancesService {
 
     constructor(private logger: OpenToscaLogger,
-                private appService: ApplicationService,
-                private ngRedux: NgRedux<AppState>) {
+                private appService: ApplicationService) {
     }
 
     /**

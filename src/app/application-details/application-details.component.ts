@@ -17,9 +17,7 @@ import { Application } from '../shared/model/application.model';
 import { ModalDirective } from 'ng2-bootstrap';
 import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { OpenToscaLogger } from '../shared/helper';
 import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
-import { Path } from '../shared/helper';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { OpenTOSCAUiActions } from '../redux/actions';
@@ -28,11 +26,11 @@ import { AppState } from '../redux/store';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { Error } from 'tslint/lib/error';
 import { Observable } from 'rxjs';
-import { ApplicationInstance } from '../shared/model/application-instance.model';
 import { TriggerTerminationPlanEvent } from '../shared/model/trigger-termination-plan-event.model';
-
 import * as _ from 'lodash';
 import { ApplicationInstancesService } from '../shared/application-instances.service';
+import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
+import { Path } from '../shared/util/Path';
 
 @Component({
     selector: 'opentosca-application-details',

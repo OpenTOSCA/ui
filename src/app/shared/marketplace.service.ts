@@ -20,7 +20,7 @@ import { Application } from './model/application.model';
 import { MarketplaceApplicationReference } from './model/marketplace-application-reference.model';
 import { MarketplaceApplication } from './model/marketplace-application.model';
 
-import { OpenToscaLogger } from './helper';
+import { OpenToscaLogger } from './util';
 
 @Injectable()
 export class MarketplaceService {

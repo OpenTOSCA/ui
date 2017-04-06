@@ -18,10 +18,10 @@ import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
-import { OpenToscaLogger } from '../shared/helper';
 import { ModalDirective } from 'ng2-bootstrap';
 import { Router } from '@angular/router';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
+import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
 
 @Component({
     selector: 'opentosca-application-upload',

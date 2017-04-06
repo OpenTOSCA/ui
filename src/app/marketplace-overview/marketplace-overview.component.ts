@@ -22,8 +22,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';
-import { OpenToscaLogger } from '../shared/helper';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
+import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
 
 @Component({
     selector: 'opentosca-marketplace',

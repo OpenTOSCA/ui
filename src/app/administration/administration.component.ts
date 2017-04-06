@@ -19,7 +19,7 @@ import { AppState } from '../redux/store';
 import { NgRedux, select } from '@angular-redux/store';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { OpenToscaLogger } from '../shared/helper';
+import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
 
 @Component({
     selector: 'opentosca-administration',

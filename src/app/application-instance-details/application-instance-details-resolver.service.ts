@@ -13,7 +13,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
-import { OpenToscaLogger } from '../shared/helper/OpenToscaLogger';
+import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
 import { Observable } from 'rxjs';
 
 @Injectable()

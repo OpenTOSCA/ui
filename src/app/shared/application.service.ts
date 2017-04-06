@@ -18,17 +18,17 @@ import 'rxjs/add/operator/toPromise';
 import { AdministrationService } from '../administration/administration.service';
 import { Application } from './model/application.model';
 import { BuildplanPollResource } from './model/buildplan-poll-resource.model';
-import { OpenToscaLogger } from './helper';
-import { Path } from './helper';
+import { OpenToscaLogger } from './util';
+import { Path } from './util';
 import { PlanParameters } from './model/plan-parameters.model';
-import { ReferenceHelper } from './helper';
+import { ReferenceHelper } from './util';
 import { ResourceReference } from './model/resource-reference.model';
 import { PlanOperationMetaData } from './model/planOperationMetaData.model';
 import { PlanInstance } from './model/plan-instance.model';
 
 import * as _ from 'lodash';
 import { ApplicationInstanceProperties } from './model/application-instance-properties.model';
-import { ObjectHelper } from './helper/ObjectHelper';
+import { ObjectHelper } from './util/ObjectHelper';
 import { Observable } from 'rxjs';
 
 @Injectable()

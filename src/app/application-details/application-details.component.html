@@ -10,6 +10,13 @@
     </div>
 </nav>
 <div class="container-fluid">
+    <p-fieldset legend="Application Instances" [toggleable]="true">
+        <div class="row">
+            <div class="col-lg-12">
+                <opentosca-application-instances-list [instances]="currentAppInstances | async" (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-application-instances-list>
+            </div>
+        </div>
+    </p-fieldset>
     <p-fieldset legend="Application Information" [toggleable]="true">
         <div class="row" *ngIf="(app?.description && app.description !== '') || provisioningDone
             || provisioningInProgress || app?.screenshotUrls?.length > 0
@@ -100,13 +107,6 @@
                 No Application Information provided.
             </div>
         </ng-template>
-    </p-fieldset>
-    <p-fieldset legend="Application Instances" [toggleable]="true">
-        <div class="row">
-            <div class="col-lg-12">
-                <opentosca-application-instances-list [instances]="currentAppInstances | async" (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-application-instances-list>
-            </div>
-        </div>
     </p-fieldset>
 </div>
 

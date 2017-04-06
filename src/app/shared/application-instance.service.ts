@@ -16,20 +16,11 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { AdministrationService } from '../administration/administration.service';
-import { OpenToscaLogger } from './helper';
+import { OpenToscaLogger } from './util';
 import { ApplicationService } from './application.service';
 
 @Injectable()
 export class ApplicationInstanceService {
-
-    /**
-     * Helper that ensures that appID always ends with .csar
-     * @param appID
-     * @returns {string}
-     */
-    public fixAppID(appID: string): string {
-        return this.appService.fixAppID(appID);
-    }
 
     constructor(private http: Http,
                 private adminService: AdministrationService,
