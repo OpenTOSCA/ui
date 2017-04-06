@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -20,7 +20,6 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AppComponent }  from './app.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
-import { ApplicationInstancesComponent } from './application-instances/application-instances.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { ApplicationInstanceDetailsComponent } from './application-instance-details/application-instance-details.component';
 import { ApplicationsOverviewComponent } from './applications-overview/applications-overview.component';
@@ -52,6 +51,9 @@ import { SharedModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OpenToscaLogger } from './shared/helper/OpenToscaLogger';
 import { DatePipe } from '@angular/common';
+import { ApplicationInstanceDetailsResolver } from './application-instance-details/application-instance-details-resolver.service';
+import { ApplicationInstanceService } from './shared/application-instance.service';
+import { ApplicationInstancesService } from './shared/application-instances.service';
 
 @NgModule({
     imports: [
@@ -77,7 +79,6 @@ import { DatePipe } from '@angular/common';
         AppComponent,
         ApplicationsComponent,
         ApplicationDetailsComponent,
-        ApplicationInstancesComponent,
         ApplicationInstancesListComponent,
         ApplicationInstanceDetailsComponent,
         ApplicationsOverviewComponent,
@@ -90,7 +91,10 @@ import { DatePipe } from '@angular/common';
     providers: [
         AdministrationService,
         ApplicationDetailsResolver,
+        ApplicationInstanceDetailsResolver,
         ApplicationService,
+        ApplicationInstanceService,
+        ApplicationInstancesService,
         DatePipe,
         GrowlMessageBusService,
         MarketplaceService,
