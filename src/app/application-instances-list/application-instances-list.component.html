@@ -9,6 +9,9 @@
                 </button>
                 <p>{{i}}</p>
             </p-header>
+            <button class="btn btn-default" [routerLink]="['./instances', inst.shortServiceTemplateInstanceID]">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </button>
             <div *ngIf="inst.selfserviceApplicationUrl">
                 <a [href]="inst.selfserviceApplicationUrl.TextContent" class="btn btn-primary">Start</a>
             </div>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -17,15 +17,15 @@ import { ApplicationInstanceProperties } from './application-instance-properties
 
 // Todo Consolidate application model with OpenTOSCA ServiceTemplateInstance model
 export class ApplicationInstance {
-    serviceTemplateInstanceID: string;
-    shortServiceTemplateInstanceID: string;
-    app: Application;
-    instanceReference: ResourceReference;
-    properties: ApplicationInstanceProperties;
-    selfserviceApplicationUrl?: string;
+    public serviceTemplateInstanceID: string;
+    public shortServiceTemplateInstanceID: string;
+    public appID: string;
+    public instanceReference: ResourceReference;
+    public properties: ApplicationInstanceProperties;
+    public selfserviceApplicationUrl?: string;
 
-    constructor(app: Application, reference: ResourceReference, properties: ApplicationInstanceProperties) {
-        this.app = app;
+    constructor(appID: string, reference: ResourceReference, properties: ApplicationInstanceProperties) {
+        this.appID = appID;
         this.instanceReference = reference;
         this.properties = properties;
         if (properties.selfServiceApplicationURL) {

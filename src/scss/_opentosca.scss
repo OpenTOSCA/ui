@@ -220,7 +220,7 @@ a.editInWineryButton:before {
   width: 210px;
 }
 
-#subMenu > a {
+#subMenu a {
   cursor: pointer;
   margin-top: 10px;
   display: inline-block;
@@ -238,7 +238,7 @@ a.editInWineryButton:before {
   box-sizing: border-box;
 }
 
-#subMenu > a:before {
+#subMenu a:before {
   position: absolute;
   content: '';
   top: 5px;
@@ -248,37 +248,37 @@ a.editInWineryButton:before {
   left: 9px;
 }
 
-#subMenu > a.selected#descriptionButton:before {
+#subMenu a.selected#descriptionButton:before {
   background: url('../assets/img/Description_Button_Icon_Hover.png');
   background-repeat: no-repeat;
 }
 
-#subMenu > a#descriptionButton:before {
+#subMenu a#descriptionButton:before {
   background: url('../assets/img/Description_Button_Icon.png');
   background-repeat: no-repeat;
 }
 
-#subMenu > a#statisticsButton:before {
+#subMenu a#statisticsButton:before {
   background: url('../assets/img/Statistics_Button_Icon.png');
   background-repeat: no-repeat;
 }
 
-#subMenu > a.selected#statisticsButton:before {
+#subMenu a.selected#statisticsButton:before {
   background: url('../assets/img/Statistics_Button_Icon_Hover.png');
   background-repeat: no-repeat;
 }
 
-#subMenu > a#instancesButton:before {
+#subMenu a#instancesButton:before {
   background: url('../assets/img/Instances_Button_Icon.png');
   background-repeat: no-repeat;
 }
 
-#subMenu > a.selected#instancesButton:before {
+#subMenu a.selected#instancesButton:before {
   background: url('../assets/img/Instances_Button_Icon_Hover.png');
   background-repeat: no-repeat;
 }
 
-#subMenu > a:hover {
+#subMenu a:hover {
   border-left: 1px solid #8da8c1;
   border-top: 1px solid #8da8c1;
   border-bottom: 1px solid #8da8c1;

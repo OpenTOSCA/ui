@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -39,7 +39,7 @@ export class ApplicationService {
      * @param appID
      * @returns {string}
      */
-    static fixAppID(appID: string): string {
+    public fixAppID(appID: string): string {
         return _.endsWith(appID.toLowerCase(), '.csar') ? appID : appID + '.csar';
     }
 
@@ -56,7 +56,7 @@ export class ApplicationService {
     deleteAppFromContainer(appID: string): Promise<any> {
         const url = new Path(this.adminService.getContainerAPIURL())
             .append('CSARs')
-            .append(ApplicationService.fixAppID(appID))
+            .append(this.fixAppID(appID))
             .toString();
         let headers = new Headers({'Accept': 'text/plain'});
         this.logger.log('[application.service][deleteAppFromContainer]', 'Sending delete to ' + url);
@@ -131,7 +131,7 @@ export class ApplicationService {
     getServiceTemplatePath(appID: string): Observable<string> {
         const url = new Path(this.adminService.getContainerAPIURL())
             .append('CSARs')
-            .append(ApplicationService.fixAppID(appID))
+            .append(this.fixAppID(appID))
             .append('ServiceTemplates')
             .toString();
 
@@ -243,7 +243,7 @@ export class ApplicationService {
      * @returns {Promise<Array<ResourceReference>>}
      */
     getServiceTemplateInstancesByAppID(appID: string): Promise<Array<ResourceReference>> {
-        appID = ApplicationService.fixAppID(appID);
+        appID = this.fixAppID(appID);
 
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
 
@@ -326,7 +326,7 @@ export class ApplicationService {
      * @returns {Promise<boolean>}
      */
     isAppDeployedInContainer(appID: string): Promise<boolean> {
-        appID = ApplicationService.fixAppID(appID);
+        appID = this.fixAppID(appID);
         const csarUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID;
         let headers = new Headers({'Accept': 'application/json'});
         return this.http.get(csarUrl, {headers: headers})
@@ -341,7 +341,7 @@ export class ApplicationService {
      * @returns {Observable<Application>}
      */
     getAppDescription(appID: string): Observable<Application> {
-        appID = ApplicationService.fixAppID(appID);
+        appID = this.fixAppID(appID);
         const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
         const dataJSONUrl = metaDataUrl + '/data.json';
         let headers = new Headers({'Accept': 'application/json'});

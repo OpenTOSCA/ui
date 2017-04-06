@@ -1,6 +1,5 @@
-import { ApplicationInstance } from './application-instance.model';
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -10,6 +9,9 @@ import { ApplicationInstance } from './application-instance.model';
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
+
+import { ApplicationInstance } from './application-instance.model';
+
 // Todo Consolidate application model with OpenTOSCA ServiceTemplate model
 export class Application {
     name: string;

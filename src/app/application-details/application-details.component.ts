@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -32,6 +32,7 @@ import { ApplicationInstance } from '../shared/model/application-instance.model'
 import { TriggerTerminationPlanEvent } from '../shared/model/trigger-termination-plan-event.model';
 
 import * as _ from 'lodash';
+import { ApplicationInstancesService } from '../shared/application-instances.service';
 
 @Component({
     selector: 'opentosca-application-details',
@@ -71,7 +72,8 @@ export class ApplicationDetailsComponent implements OnInit {
                 private ngRedux: NgRedux<AppState>,
                 private messageBus: GrowlMessageBusService,
                 private logger: OpenToscaLogger,
-                private router: Router) {
+                private router: Router,
+                private appInstancesService: ApplicationInstancesService) {
     }
 
     /**
@@ -104,7 +106,8 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.ngRedux.dispatch(OpenTOSCAUiActions.updateBuildPlanOperationMetaData(data.applicationDetail.buildPlanParameters));
                 this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
                 this.serviceTemplateInstancesURL = _.trimEnd(data.applicationDetail.terminationPlanResource.Reference.href, '%7BinstanceId%7D');
-                this.loadInstancesList(data.applicationDetail.app);
+                this.appInstancesService.loadInstancesList(data.applicationDetail.app.id)
+                    .then(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
                 this.ngRedux.dispatch(OpenTOSCAUiActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.displayName, '')));
             },
             reason => {
@@ -125,7 +128,8 @@ export class ApplicationDetailsComponent implements OnInit {
 
         this.appService.deleteApplicationInstance(url)
             .then(result => {
-                this.loadInstancesList(this.app);
+                this.appInstancesService.loadInstancesList(this.app.id)
+                    .then(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
                 this.messageBus.emit(
                     {
                         severity: 'success',
@@ -145,27 +149,6 @@ export class ApplicationDetailsComponent implements OnInit {
                     }
                 );
                 this.logger.handleError('[application.details.component][emitTerminationPlan]', err);
-            });
-    }
-
-    /**
-     * Loads instances of the current app and populates appInstances array
-     */
-    loadInstancesList(app: Application): void {
-        this.appService.getServiceTemplateInstancesByAppID(app.id)
-            .then(instancesReferences => {
-                this.appService.getPropertiesOfServiceTemplateInstances(instancesReferences)
-                    .then(instancesPropertiesList => {
-                        let preparedResults: Array<ApplicationInstance> = [];
-                        for (let instanceProperties of instancesPropertiesList) {
-                            let appInstance = new ApplicationInstance(app, instanceProperties.instanceReference, instanceProperties);
-                            preparedResults.push(appInstance);
-                        }
-                        this.ngRedux.dispatch(OpenTOSCAUiActions.addApplicationInstances(preparedResults));
-                    })
-                    .catch(reason => this.logger.handleError(
-                        '[application-details.component][loadInstancesList][getProvisioningStateofServiceTemplateInstance]',
-                        reason));
             });
     }
 
@@ -218,7 +201,8 @@ export class ApplicationDetailsComponent implements OnInit {
 
                         this.appService.pollForPlanFinish(urlToPlanInstanceState)
                             .then(result => {
-                                this.loadInstancesList(this.app);
+                                this.appInstancesService.loadInstancesList(this.app.id)
+                                    .then(result => this.ngRedux.dispatch(OpenTOSCAUiActions.updateApplicationInstances(result)));
                                 // we received the plan result
                                 // go find and present selfServiceApplicationUrl to user
                                 this.logger.log('[application-details.component][startProvisioning]', 'Received plan result: ' + JSON.stringify(result));
