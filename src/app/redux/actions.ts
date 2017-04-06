@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -34,7 +34,7 @@ export class OpenTOSCAUiActions {
 
     static UPDATE_CURRENT_APPLICATION = 'UPDATE_CURRENT_APPLICATION';
     static CLEAR_CURRENT_APPLICATION = 'CLEAR_CURRENT_APPLICATION';
-    static ADD_APPLICATION_INSTANCES = 'ADD_APPLICATION_INSTANCES';
+    static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
 
     static UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA = 'UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA';
@@ -103,9 +103,9 @@ export class OpenTOSCAUiActions {
         };
     }
 
-    static addApplicationInstances(instances: Array<ApplicationInstance>): OpenTOSCAUiAction {
+    static updateApplicationInstances(instances: Array<ApplicationInstance>): OpenTOSCAUiAction {
         return {
-            type: OpenTOSCAUiActions.ADD_APPLICATION_INSTANCES,
+            type: OpenTOSCAUiActions.UPDATE_APPLICATION_INSTANCES,
             payload: instances
         };
     }

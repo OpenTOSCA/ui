@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -45,7 +45,7 @@ export function rootReducer(state: AppState = INITIAL_STATE, action: OpenTOSCAUi
         case OpenTOSCAUiActions.CLEAR_CURRENT_APPLICATION:
             newState.container.currentApp = null;
             return newState;
-        case OpenTOSCAUiActions.ADD_APPLICATION_INSTANCES:
+        case OpenTOSCAUiActions.UPDATE_APPLICATION_INSTANCES:
             newState.container.currentAppInstances = action.payload;
             return newState;
         case OpenTOSCAUiActions.CLEAR_APPLICATION_INSTANCES:
