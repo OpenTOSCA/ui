@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 University of Stuttgart.
+ * Copyright (c) 2017 University of Stuttgart.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and the Apache License 2.0 which both accompany this distribution,
@@ -9,13 +9,10 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  */
-import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
-import { ApplicationService } from '../shared/application.service';
-import { Application } from '../shared/model/application.model';
-import { ModalDirective } from 'ng2-bootstrap';
-import { ResourceReference } from '../shared/model/resource-reference.model';
 
 @Component({
     selector: 'opentosca-application-instance-details',
@@ -36,27 +33,19 @@ import { ResourceReference } from '../shared/model/resource-reference.model';
 })
 
 export class ApplicationInstanceDetailsComponent implements OnInit {
-    public app: Application;
-    public instancesList: Array<ResourceReference>;
 
-    @ViewChild('childModal') public childModal: ModalDirective;
-
-    constructor(private route: ActivatedRoute,
-                private appService: ApplicationService) {
+    constructor(private route: ActivatedRoute) {
     }
 
     /**
-     * Initialize component by loading service instances of the csarID given in route params
+     * Initialize component
      */
     ngOnInit(): void {
-
-        this.route.params
-            .subscribe(params => {
-                this.appService.getAppDescription(params['id']).toPromise()
-                    .then(app => this.app = app);
-                this.appService.getServiceTemplateInstancesByAppID(params['id'])
-                    .then(result => this.instancesList = result);
-            });
+        this.route.data
+            .subscribe((data: {applicationInstanceDetails: any}) => {
+                console.log(data.applicationInstanceDetails);
+            },
+            reason => console.log('WRONG'));
     }
 
 

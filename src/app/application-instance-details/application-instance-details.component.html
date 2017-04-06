@@ -1,36 +1,7 @@
-<div class="breadcrumbContainer">
-    <ol class="breadcrumb">
-        <li>
-            <a routerLink="/applications">Applications</a>
-        </li>
-        <li>
-            <a routerLink="/applications/{{app?.id}}">{{app?.displayName}}</a>
-        </li>
-        <li>
-            <a routerLink="/applications/{{app?.id}}/instances">Instances</a>
-        </li>
-        <li class="active">
-            Instance-ID 1
-        </li>
-    </ol>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            ApplicationInstanceDetailsComponent
+        </div>
+    </div>
 </div>
-<table class="layoutTable" border="0" @fadeInOut>
-    <tr>
-        <td class="menu" id="subMenu">
-            <div class="pageTopicIcon">
-                <img [src]="app?.iconUrl" onerror="this.src='Default_Application_Icon.png'" @fadeInOut/>
-                <span>{{app?.displayName}}</span>
-            </div>
-            <br/>
-            <a id="descriptionButton" routerLink="/applications/{{app?.id}}">Description</a>
-            <a id="instancesButton" class="selected">Instances</a>
-            <!--<a id="statisticsButton" href="">Statistics</a>-->
-            <a id="backToOverviewButton" routerLink="/applications"><b>«</b> Back to Overview</a>
-        </td>
-        <td>
-            <div id="content">
-               <!-- TODO Instance Details-->
-            </div>
-        </td>
-    </tr>
-</table>
