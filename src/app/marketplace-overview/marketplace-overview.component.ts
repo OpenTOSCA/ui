@@ -83,20 +83,12 @@ export class MarketplaceOverviewComponent implements OnInit {
             .then(response => {
                 app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)
-                    .then(result => app.inContainer = result)
-                    .catch(reason => {
-                        app.inContainer = false;
-                        this.logger.handleError('[marketplace-overview.component][installInContainer]', reason);
-                    });
+                    .then(result => app.inContainer = result);
             })
             .catch(err => {
                 app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)
-                    .then(result => app.inContainer = result)
-                    .catch(reason => {
-                        app.isInstalling = false;
-                        this.logger.handleError('[marketplace-overview.component][installInContainer]', reason);
-                    });
+                    .then(result => app.inContainer = result);
             });
     }
 
@@ -114,11 +106,7 @@ export class MarketplaceOverviewComponent implements OnInit {
                     .then(apps => {
                         for (let app of apps) {
                             this.appService.isAppDeployedInContainer(app.id)
-                                .then(result => app.inContainer = result)
-                                .catch(reason => {
-                                    app.inContainer = false;
-                                    this.logger.handleError('[marketplace-overview.component][getApps][isAppDeployedInContainer]', reason);
-                                });
+                                .then(result => app.inContainer = result);
                         }
                         this.ngRedux.dispatch(OpenTOSCAUiActions.addRepositoryApplications(apps));
                     })
