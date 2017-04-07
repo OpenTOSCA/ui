@@ -319,7 +319,8 @@ export class ApplicationService {
     }
 
     /**
-     * Checks if an App with given appID is already deployed in container
+     * Checks if an App with given appID is already deployed in container.
+     * Returns true if already deployed and false if not, so be sure to handle this in <then callback>
      * @param appID
      * @returns {Promise<boolean>}
      */
