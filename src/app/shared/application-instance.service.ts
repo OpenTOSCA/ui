@@ -35,7 +35,8 @@ export class ApplicationInstanceService {
                         return instance;
                     }
                 }
-                this.logger.handleObservableError('[application-instance.service][loadApplicationInstance]', new Error('Given instance id not found in application instances'));
+                this.logger.handleObservableError('[application-instance.service][loadApplicationInstance]',
+                    new Error('Given instance id not found in application instances'));
             })
             .catch(reason => this.logger.handleObservableError('[application-instance.service][loadApplicationInstance]', reason));
 

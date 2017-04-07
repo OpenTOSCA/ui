@@ -263,7 +263,7 @@ export class ApplicationService {
                                 }
                                 return refs;
                             })
-                        .catch(reason => this.logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason))
+                        .catch(reason => this.logger.handleError('[application.service][getServiceTemplateInstancesByAppID]', reason));
                 })
             .catch((reason: any) => this.logger.handleObservableError('[application.service][getServiceTemplateInstancesByAppID]', reason));
     }
