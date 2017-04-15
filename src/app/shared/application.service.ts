@@ -11,7 +11,7 @@
  *     Jasmin Guth - initial implementation
  */
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -111,7 +111,7 @@ export class ApplicationService {
             .catch(err => this.logger.handleObservableError('[application.service][getBuildPlanParameters]', err));
     }
 
-    getTerminationPlan(appID: string): Observable<any> {
+    getTerminationPlan(appID: string): Observable<PlanOperationMetaData> {
         return this.getServiceTemplatePath(appID)
             .flatMap(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath)
@@ -346,9 +346,10 @@ export class ApplicationService {
         let headers = new Headers({'Accept': 'application/json'});
 
         return this.http.get(dataJSONUrl, {headers: headers})
-            .map((response: any) => {
+            .map((response: Response) => {
                 let app: Application = new Object(response.json()) as Application;
-                // we only use appIDs without .csar for navigation in new ui, since angular2 router did not route to paths containing '.'
+                // we only use appIDs without .csar for navigation in new ui,
+                // since angular2 router did not route to paths containing '.'
                 app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
                 app.iconUrl = metaDataUrl + '/' + app.iconUrl;
                 app.imageUrl = metaDataUrl + '/' + app.imageUrl;
