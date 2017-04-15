@@ -18,7 +18,7 @@ import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
-import { ModalDirective } from 'ng2-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
@@ -40,7 +40,7 @@ import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
         ])
     ]
 })
-
+// Fixme: If modal is opened, closed, opened and closed again then an error is thrown since router navigates to applications/(modal:upload)
 export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     public deploymentInProgress = false;
     public deploymentDone = false;
