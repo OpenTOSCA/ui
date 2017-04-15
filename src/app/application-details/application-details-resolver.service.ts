@@ -15,6 +15,8 @@ import { ApplicationService } from '../shared/application.service';
 import { ApplicationDetail } from '../shared/model/application-detail.model';
 import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
 import { Observable } from 'rxjs';
+import { Application } from '../shared/model/application.model';
+import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
 
 @Injectable()
 export class ApplicationDetailsResolver implements Resolve<ApplicationDetail> {
@@ -27,7 +29,7 @@ export class ApplicationDetailsResolver implements Resolve<ApplicationDetail> {
                 this.appService.getTerminationPlan(route.params['id']).retry(3)
             ]
         )
-        .map(result => new ApplicationDetail(result[0], result[1], result[2]))
+        .map((result: Array<any>) => new ApplicationDetail(<Application>result[0], <PlanOperationMetaData>result[1], <PlanOperationMetaData>result[2]))
         .catch(reason => {
             return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
         });
