@@ -33,7 +33,7 @@ import { SortPipe } from './shared/sort/sort.pipe';
 
 import { routing } from './app.routing';
 
-import { Ng2BootstrapModule } from 'ng2-bootstrap';
+import { Ng2BootstrapModule } from 'ngx-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { AccordionModule, FieldsetModule, GrowlModule, CodeHighlighterModule } from 'primeng/primeng';

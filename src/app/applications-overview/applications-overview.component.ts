@@ -18,7 +18,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
 import { Observable } from 'rxjs';
-import { ModalDirective } from 'ng2-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap';
 import { BreadcrumbEntry } from '../shared/model/breadcrumb.model';
 import { GrowlMessageBusService } from '../shared/growl-message-bus.service';
 import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';

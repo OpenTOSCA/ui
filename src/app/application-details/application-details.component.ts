@@ -14,7 +14,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../shared/application.service';
 import { Application } from '../shared/model/application.model';
-import { ModalDirective } from 'ng2-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap';
 import { PlanParameter } from '../shared/model/plan-parameter.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PlanOperationMetaData } from '../shared/model/planOperationMetaData.model';
