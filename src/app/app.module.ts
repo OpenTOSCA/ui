@@ -33,7 +33,10 @@ import { SortPipe } from './shared/sort/sort.pipe';
 
 import { routing } from './app.routing';
 
-import { Ng2BootstrapModule } from 'ngx-bootstrap';
+import { ProgressbarModule } from 'ngx-bootstrap';
+import { AccordionModule as ngxAccordionModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule } from 'ngx-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { AccordionModule, FieldsetModule, GrowlModule, CodeHighlighterModule } from 'primeng/primeng';
@@ -66,7 +69,10 @@ import { ApplicationInstancesService } from './shared/application-instances.serv
         GrowlModule,
         HttpModule,
         NgReduxModule,
-        Ng2BootstrapModule.forRoot(),
+        ProgressbarModule.forRoot(),
+        ngxAccordionModule.forRoot(),
+        ModalModule.forRoot(),
+        BsDropdownModule.forRoot(),
         routing,
         NgSpinKitModule,
         NgUploaderModule,

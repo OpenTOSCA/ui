@@ -34,14 +34,9 @@ import { Message } from 'primeng/components/common/api';
 
 export class AppComponent {
 
-    // hack for ng2-bootstrap MODALS
-    private viewContainerRef: ViewContainerRef;
     private messages: Array<Message> = [];
 
-    public constructor(viewContainerRef: ViewContainerRef,
-                       private messageBus: GrowlMessageBusService) {
-        // You need this small hack in order to catch application root view container ref
-        this.viewContainerRef = viewContainerRef;
+    public constructor(private messageBus: GrowlMessageBusService) {
         // We need this to pass messages to global growl component
         this.messageBus.messages.subscribe(m => this.messages.push(m));
     }

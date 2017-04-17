@@ -31,13 +31,13 @@
                                                              aria-hidden="true"></span>
                 </button>
                 <div class="btn-group" dropdown>
-                    <button tooltip="Options" id="single-button" type="button" class="btn btn-default btn-sm"
+                    <button tooltip="Options" id="single-button" type="button" class="btn btn-default btn-sm dropdown-toggle"
                             dropdownToggle>
                         <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
                     </button>
-                    <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                    <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="single-button">
                         <li role="menuitem"><a class="dropdown-item" (click)="showDeleteConfirmationModal(app)"><span
-                                class="glyphicon glyphicon-remove"></span> Delete</a></li>
+                                class="glyphicon glyphicon-remove text-danger"></span> Delete</a></li>
                     </ul>
                 </div>
             </div>
