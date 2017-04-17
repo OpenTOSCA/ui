@@ -11,7 +11,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, Response } from '@angular/http';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../redux/store';
 import { OpenTOSCAUiActions } from '../redux/actions';
@@ -94,18 +94,18 @@ export class AdministrationService {
 
     /**
      * Checks if container API responds
-     * @returns {Promise<any>}
+     * @returns {Promise<Response>}
      */
-    isContainerAvailable(): Promise<any> {
+    isContainerAvailable(): Promise<Response> {
         return this.http.get(this.ngRedux.getState().administration.containerAPI, this.defaultAcceptHeaders)
             .toPromise();
     }
 
     /**
      * Checks if repository API responds
-     * @returns {Promise<any>}
+     * @returns {Promise<Response>}
      */
-    isRepositoryAvailable(): Promise<any> {
+    isRepositoryAvailable(): Promise<Response> {
         return this.http.get(this.ngRedux.getState().administration.repositoryAPI, this.defaultAcceptHeaders)
             .toPromise();
     }
