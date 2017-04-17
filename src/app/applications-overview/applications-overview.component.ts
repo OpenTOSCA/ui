@@ -41,7 +41,7 @@ import { OpenToscaLogger } from '../shared/util/OpenToscaLogger';
     ]
 })
 export class ApplicationsOverviewComponent implements OnInit {
-    @select(['container', 'applications']) apps: Observable<Array<Application>>;
+    @select(['container', 'applications']) public readonly apps: Observable<Array<Application>>;
     @ViewChild('childModal') public childModal: ModalDirective;
 
     public removingApp = false;
