@@ -1,0 +1,20 @@
+<table class="layoutTable" border="0">
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img src="../../assets/img/Marketplace_Header_Icon.png"/>
+            </div>
+            <br/>
+            <a id="descriptionButton" [routerLink]="['./']"
+               [routerLinkActiveOptions]="{exact: true}"
+               routerLinkActive="selected">OpenTOSCA Repo</a>
+        </td>
+        <td>
+            <div id="content">
+                <div class="applicationTilesContainer">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

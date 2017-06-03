@@ -1,10 +1,10 @@
-<nav class="menu" id="mainMenu" @fadeInOut>
+<nav class="menu" id="mainMenu">
     <div class="openTOSCALogoContainer"></div>
     <a id="applicationsButton" routerLink="/applications" routerLinkActive="selected">Applications</a>
     <a id="marketplaceButton" routerLink="/repositories" routerLinkActive="selected">Repository</a>
     <a id="administrationButton" routerLink="/administration" routerLinkActive="selected">Administration</a>
     <a id="aboutButton" routerLink="/about" routerLinkActive="selected">About</a>
 </nav>
-<opentosca-breadcrumb></opentosca-breadcrumb>
+<opentosca-ui-breadcrumb></opentosca-ui-breadcrumb>
 <p-growl [value]="messages" sticky="sticky"></p-growl>
 <router-outlet></router-outlet>

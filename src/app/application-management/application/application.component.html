@@ -1,0 +1,21 @@
+<table class="layoutTable" border="0">
+    <tr>
+        <td class="menu" id="subMenu">
+            <div class="pageTopicIcon">
+                <img src="../../assets/img/Applications_Header_Icon.png"/>
+            </div>
+            <!--
+            <br/>
+            <a id="descriptionButton" [routerLink]="['./']"
+               [routerLinkActiveOptions]="{exact: false}"
+               routerLinkActive="selected">Installed Apps</a>
+               -->
+        </td>
+        <td>
+            <div id="content">
+                <router-outlet></router-outlet>
+            </div>
+        </td>
+    </tr>
+</table>
+<router-outlet name="modal"></router-outlet>

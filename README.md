@@ -1,39 +1,28 @@
-# OpenTOSCA UI
+# OpentoscaUi
 
-[![Build Status](https://travis-ci.org/OpenTOSCA/ui.svg?branch=master)](https://travis-ci.org/OpenTOSCA/ui)
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.1.
 
-Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
+## Development server
 
-## Prerequisites
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-1. Install [Git](https://git-scm.com)
-2. Install and setup [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com) for [Angular2](https://angular.io/docs/ts/latest/quickstart.html)
-3. For Windows: `npm install --global --production windows-build-tools` (required by [node-gyp](https://github.com/nodejs/node-gyp))
+## Code scaffolding
 
-## Local Development Setup
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
 
-1. `git clone https://github.com/OpenTOSCA/ui.git opentosca-ui && cd opentosca-ui`
-2. `npm install`
-3. `npm start` 
+## Build
 
-> **Note:** Be sure that no other process is listening on port 3000.
-> You can change the port in `config/webpack.dev.js`.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-## Production Build
+## Running unit tests
 
-After step 3 at setting up your local development environment:
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-1. `npm run build`
-2. Serve the production build: `npm run build:serve`
+## Running end-to-end tests
 
-## Lint the TypeScript project
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Before running the tests make sure you are serving the app via `ng serve`.
 
-```shell
-npm run lint
-```
+## Further help
 
-## Build the WAR archive
-
-1. `mvnw clean package`
-
-Copy the WAR archive from Maven's build output directory (`build\target`) to your Apache Tomcat server instance.
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

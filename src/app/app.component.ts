@@ -8,37 +8,22 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
+ *     Michael Wurster - initial implementation
  */
-import { Component, ViewContainerRef } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-import { GrowlMessageBusService } from './shared/growl-message-bus.service';
-import { Message } from 'primeng/components/common/api';
+import { Component } from '@angular/core';
+import { Message } from 'primeng/primeng';
+import { GrowlMessageBusService } from './core/service/growl-message-bus.service';
 
 @Component({
-    selector: 'opentosca-ui',
-    templateUrl: 'app.component.html',
-    animations: [
-        trigger('fadeInOut', [
-            state('in', style({'opacity': 1})),
-            transition('void => *', [
-                style({'opacity': 0}),
-                animate('500ms ease-out')
-            ]),
-            transition('* => void', [
-                style({'opacity': 1}),
-                animate('500ms ease-in')
-            ])
-        ])
-    ]
+  selector: 'opentosca-ui-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-
 export class AppComponent {
-
     private messages: Array<Message> = [];
 
     public constructor(private messageBus: GrowlMessageBusService) {
         // We need this to pass messages to global growl component
         this.messageBus.messages.subscribe(m => this.messages.push(m));
     }
-
 }

@@ -1,0 +1,46 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <button class="btn btn-default btn-success navbar-btn" (click)="navigateToRepo()">
+                    <span class="glyphicon glyphicon-new-window"></span>
+                    Open Repository Management Console
+                </button>
+            </li>
+        </ul>
+        <form class="navbar-form navbar-left">
+            <div class="form-group">
+                <input disabled type="text" class="form-control" placeholder="Search (soon to come)">
+            </div>
+        </form>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="applicationTilesContainer">
+        <div class="applicationTile"
+             *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn">
+
+            <div class="applicationTileImageContainer">
+                <img [src]="app.iconUrl" onerror="this.src='Default_Application_Icon.png'"/>
+            </div>
+            <div id="applicationDisplayName">
+                <span>{{app.displayName}}</span>
+            </div>
+            <div class="applicationTileButtonContainer">
+                <a tooltip="Details" type="button" [href]="app.repositoryURL" class="btn btn-default btn-sm"
+                   target="_blank"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                <button tooltip="Install in Container" *ngIf="!app.inContainer && !app.isInstalling" type="button"
+                        class="btn btn-default btn-sm" (click)="installInContainer(app)"><span
+                        class="glyphicon glyphicon-plus-sign"></span></button>
+                <button *ngIf="app.isInstalling"
+                        class="btn btn-default btn-sm loading-indicator">
+                    <sk-three-bounce class="spinner-small"></sk-three-bounce>
+                </button>
+                <a tooltip="Already installed in Container" *ngIf="!app.isInstalling && app.inContainer"
+                   class="btn btn-success btn-sm"><span class="glyphicon glyphicon-check"></span></a>
+                <a tooltip="Download" class="btn btn-default btn-sm" [href]="app.csarURL"><span
+                        class="glyphicon glyphicon-download-alt"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
