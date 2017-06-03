@@ -26,6 +26,7 @@ export class ObjectHelper {
             return [obj];
         } else {
             return _.flatten(_.map(obj, (type) => {
+                // tslint:disable-next-line:triple-equals
                 return typeof type == 'object' ? ObjectHelper.getObjectsByPropertyDeep(type, property) : [];
             }), true);
         }
