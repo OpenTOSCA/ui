@@ -66,12 +66,12 @@
                                 <exec osfamily="windows"
                                       dir="${project.basedir}/.." executable="cmd"
                                       failonerror="true">
-                                    <arg line="/c npm run build"/>
+                                    <arg line="/c npm run build:prod"/>
                                 </exec>
                                 <exec osfamily="unix"
                                       dir="${project.basedir}/.." executable="npm"
                                       failonerror="true">
-                                    <arg line="run build"/>
+                                    <arg line="run build:prod"/>
                                 </exec>
                                 <copy todir="${project.basedir}/src/main/resources/static">
                                     <fileset dir="${project.basedir}/../dist"/>

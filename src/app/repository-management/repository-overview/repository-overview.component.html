@@ -21,7 +21,7 @@
              *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn">
 
             <div class="applicationTileImageContainer">
-                <img [src]="app.iconUrl" onerror="this.src='Default_Application_Icon.png'"/>
+                <img [src]="app.iconUrl" onerror="this.src='/assets/Default_Application_Icon.png'"/>
             </div>
             <div id="applicationDisplayName">
                 <span>{{app.displayName}}</span>

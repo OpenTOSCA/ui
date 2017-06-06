@@ -20,7 +20,7 @@ import { GrowlMessageBusService } from './core/service/growl-message-bus.service
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    private messages: Array<Message> = [];
+    public messages: Array<Message> = [];
 
     public constructor(private messageBus: GrowlMessageBusService) {
         // We need this to pass messages to global growl component

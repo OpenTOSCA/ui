@@ -14,7 +14,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 
 import { BreadcrumbComponent } from './component/breadcrumb/breadcrumb.component';
-import { SortPipe } from './util/sort.pipe';
+import { SortPipe } from './pipe/sort.pipe';
 import { OpenToscaLoggerService } from './service/open-tosca-logger.service';
 import { ApplicationManagementService } from './service/application-management.service';
 import { GrowlMessageBusService } from './service/growl-message-bus.service';

@@ -36,11 +36,11 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     public dynamic = 0;
     public currentSpeed: string;
     public failureMessage: string;
+    public uploadFile: any;
+    public options: NgUploaderOptions;
 
     private zone: NgZone;
     private lastUpdate: number;
-    private uploadFile: any;
-    private options: NgUploaderOptions;
 
     @ViewChild('uploadModal') public uploadModal: ModalDirective;
 

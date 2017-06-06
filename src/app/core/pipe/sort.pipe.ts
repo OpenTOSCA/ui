@@ -8,6 +8,7 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
+ *     Michael Wurster - initial implementation
  */
 import { Pipe, PipeTransform } from '@angular/core';
 
