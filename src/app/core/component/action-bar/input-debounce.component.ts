@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Rx';
 export class InputDebounceComponent {
 
     @Input()
-    delay: number = 300;
+    delay = 300;
 
     @Input()
     placeholder: string;
