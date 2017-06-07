@@ -1,24 +1,13 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li>
-                <button class="btn btn-default btn-success navbar-btn" (click)="navigateToRepo()">
-                    <span class="glyphicon glyphicon-new-window"></span>
-                    Open Repository Management Console
-                </button>
-            </li>
-        </ul>
-        <form class="navbar-form navbar-left">
-            <div class="form-group">
-                <input disabled type="text" class="form-control" placeholder="Search (soon to come)">
-            </div>
-        </form>
-    </div>
-</nav>
+<opentosca-ui-action-bar>
+    <opentosca-ui-action-item (click)="navigateToRepo()" styles="btn-primary pull-right">
+        <i class="glyphicon glyphicon-new-window"></i> Repository Management
+    </opentosca-ui-action-item>
+    <opentosca-ui-search [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+</opentosca-ui-action-bar>
 <div class="container-fluid">
     <div class="applicationTilesContainer">
         <div class="applicationTile"
-             *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn">
+             *ngFor="let app of apps | async | fuzzySearch:searchTerm | sort:['displayName']:['asc']; trackBy: trackAppsFn">
 
             <div class="applicationTileImageContainer">
                 <img [src]="app.iconUrl" onerror="this.src='/assets/Default_Application_Icon.png'"/>
@@ -31,7 +20,7 @@
                    target="_blank"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
                 <button tooltip="Install in Container" *ngIf="!app.inContainer && !app.isInstalling" type="button"
                         class="btn btn-default btn-sm" (click)="installInContainer(app)"><span
-                        class="glyphicon glyphicon-plus-sign"></span></button>
+                    class="glyphicon glyphicon-plus-sign"></span></button>
                 <button *ngIf="app.isInstalling"
                         class="btn btn-default btn-sm loading-indicator">
                     <sk-three-bounce class="spinner-small"></sk-three-bounce>
@@ -39,7 +28,7 @@
                 <a tooltip="Already installed in Container" *ngIf="!app.isInstalling && app.inContainer"
                    class="btn btn-success btn-sm"><span class="glyphicon glyphicon-check"></span></a>
                 <a tooltip="Download" class="btn btn-default btn-sm" [href]="app.csarURL"><span
-                        class="glyphicon glyphicon-download-alt"></span></a>
+                    class="glyphicon glyphicon-download-alt"></span></a>
             </div>
         </div>
     </div>

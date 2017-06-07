@@ -35,6 +35,8 @@ export class RepositoryOverviewComponent implements OnInit {
     public showLoader = false;
     public repoURL: string;
 
+    public searchTerm: string;
+
     constructor(private adminService: ConfigurationService,
                 private appService: ApplicationManagementService,
                 private marketService: RepositoryManagementService,
@@ -107,5 +109,9 @@ export class RepositoryOverviewComponent implements OnInit {
      */
     trackAppsFn(index: number, app: MarketplaceApplication) {
         return app.id;
+    }
+
+    searchTermChanged(searchTerm: string) {
+        this.searchTerm = searchTerm;
     }
 }
