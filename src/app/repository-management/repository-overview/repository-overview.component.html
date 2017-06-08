@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="applicationTilesContainer">
         <div class="applicationTile"
-             *ngFor="let app of apps | async | fuzzySearch:searchTerm | sort:['displayName']:['asc']; trackBy: trackAppsFn">
+             *ngFor="let app of apps | async | sort:['displayName']:['asc'] | fuzzySearch:searchTerm:['displayName','description','csarName']; trackBy: trackAppsFn">
 
             <div class="applicationTileImageContainer">
                 <img [src]="app.iconUrl" onerror="this.src='/assets/Default_Application_Icon.png'"/>
