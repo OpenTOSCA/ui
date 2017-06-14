@@ -31,6 +31,7 @@ import { AccordionModule as ngxAccordionModule } from 'ngx-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {DeploymentCompletionService} from '../core/service/deployment-completion.service';
 
 @NgModule({
     imports: [
@@ -62,7 +63,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     providers: [
         ConfigurationService,
         ApplicationInstanceDetailResolverService,
-        ApplicationDetailResolverService
+        ApplicationDetailResolverService,
+        DeploymentCompletionService
     ]
 })
 export class ApplicationManagementModule {

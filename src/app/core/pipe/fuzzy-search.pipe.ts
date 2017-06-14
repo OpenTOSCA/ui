@@ -13,7 +13,7 @@ export class FuzzySearchPipe implements PipeTransform {
         console.log('[fuzzy-search.pipe] Search term:', searchTerm);
         console.log('[fuzzy-search.pipe] Items:', items);
 
-        let options = {
+        const options = {
             // See http://fusejs.io
             shouldSort: true,
             threshold: 0.4,
@@ -24,10 +24,10 @@ export class FuzzySearchPipe implements PipeTransform {
             keys: searchFields
         };
 
-        let fuse: Fuse = new Fuse(items, options);
-        let filteredItems: T[] = fuse.search<T>(searchTerm);
+        const fuse: Fuse = new Fuse(items, options);
+        const filteredItems: T[] = fuse.search<T>(searchTerm);
 
         console.log('[fuzzy-search.pipe] Filtered Items:', filteredItems);
-        return filteredItems
+        return filteredItems;
     }
 }

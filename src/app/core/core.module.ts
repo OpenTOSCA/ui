@@ -12,7 +12,7 @@
  */
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BreadcrumbComponent } from './component/breadcrumb/breadcrumb.component';
 import { SortPipe } from './pipe/sort.pipe';
 import { OpenToscaLoggerService } from './service/open-tosca-logger.service';
@@ -28,13 +28,17 @@ import { ActionItemComponent } from './component/action-bar/action-item.componen
 import { FuzzySearchPipe } from './pipe/fuzzy-search.pipe';
 import { InputDebounceComponent } from './component/action-bar/input-debounce.component';
 import { SearchComponent } from './component/action-bar/search.component';
+import {DeploymentCompletionComponent} from './component/deployment-completion/deployment-completion.component';
+import {DeploymentCompletionService} from './service/deployment-completion.service';
+import {Ng2BootstrapModule} from 'ngx-bootstrap';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         RouterModule,
-        ConfigurationModule
+        ConfigurationModule,
+        Ng2BootstrapModule.forRoot(),
     ],
     declarations: [
         ActionBarComponent,
@@ -43,6 +47,7 @@ import { SearchComponent } from './component/action-bar/search.component';
         FuzzySearchPipe,
         InputDebounceComponent,
         SearchComponent,
+        DeploymentCompletionComponent,
         SortPipe
     ],
     exports: [
@@ -52,7 +57,8 @@ import { SearchComponent } from './component/action-bar/search.component';
         FuzzySearchPipe,
         InputDebounceComponent,
         SearchComponent,
-        SortPipe,
+        DeploymentCompletionComponent,
+        SortPipe
     ],
     providers: [
         ApplicationInstanceManagementService,
@@ -62,6 +68,7 @@ import { SearchComponent } from './component/action-bar/search.component';
         DatePipe,
         ApplicationInstancesManagementService,
         RepositoryManagementService,
+        DeploymentCompletionService
     ]
 })
 export class CoreModule {

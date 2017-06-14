@@ -9,8 +9,9 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
+ *     Karoline Saatkamp - add deployment completion functionality
  */
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
@@ -22,6 +23,7 @@ import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { RepositoryManagementActions } from '../repository-management-actions';
+import {ModalDirective} from 'ngx-bootstrap';
 
 @Component({
   selector: 'opentosca-ui-repository-overview',
@@ -31,9 +33,13 @@ import { RepositoryManagementActions } from '../repository-management-actions';
 export class RepositoryOverviewComponent implements OnInit {
     @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
     @select(['administration', 'repositoryAPI']) repositoryURL: Observable<string>;
+    @ViewChild('childModal') public childModal: ModalDirective;
 
     public showLoader = false;
     public repoURL: string;
+    public startCompletionProcess = false;
+    public appToComplete: MarketplaceApplication;
+    public linkToWineryResource: string;
 
     public searchTerm: string;
 
@@ -74,8 +80,18 @@ export class RepositoryOverviewComponent implements OnInit {
             })
             .catch(err => {
                 app.isInstalling = false;
-                this.appService.isAppDeployedInContainer(app.id)
-                    .then(result => app.inContainer = result);
+                // Injector
+                if (err.status === 406) {
+                    this.appToComplete = app;
+                    this.linkToWineryResource = err.json()['Location'] as string;
+                    this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
+                    this.startCompletionProcess = true;
+                } else {
+                    this.appService.isAppDeployedInContainer(app.id)
+                        .then(result => {
+                            app.inContainer = result;
+                        });
+                }
             });
     }
 
