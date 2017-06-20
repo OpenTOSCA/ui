@@ -85,8 +85,8 @@
             <div class="col-lg-6">
                 <h2>Topology Template</h2>
                 <div *ngIf="app?.imageUrl && app?.imageUrl !== ''">
-                    <a *ngIf="app" [href]="app?.imageUrl" target="_blank">
-                        <img id="topology-image" *ngIf="app" [src]="app?.imageUrl"/>
+                    <a [href]="app?.imageUrl" target="_blank">
+                        <img class="img-responsive" [src]="app?.imageUrl"/>
                     </a>
                 </div>
                 <div *ngIf="!(app?.imageUrl && app?.imageUrl !== '')">
