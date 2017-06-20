@@ -119,6 +119,7 @@ table.layoutTable {
   height: 120px;
   vertical-align: middle;
   display: table-cell;
+  width: inherit;
 }
 
 a.iconTextButton {
@@ -387,7 +388,8 @@ a.editInWineryButton:before {
   display: block;
   max-height: 100px;
   max-width: 100px;
-  margin-left: 25px;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 20px;
   border-radius: 5px 5px;
 }
@@ -433,10 +435,9 @@ a.editInWineryButton:before {
 
 .spinner-small {
   .three-bounce-spinner {
-    width: 6px !important;
-    height: 6px !important;
-    margin: 0 4px !important;
-    border-radius: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
   }
 
   .bounce1, .bounce2, .bounce3 {
@@ -447,7 +448,7 @@ a.editInWineryButton:before {
 }
 
 .loading-indicator {
-  height: 24px;
+  height: 30px;
   width: 34px;
   padding: 0 !important;
 }
