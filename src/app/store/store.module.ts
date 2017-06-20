@@ -10,7 +10,7 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store';
@@ -22,6 +22,7 @@ import { AppState } from './app-state.model';
 import { rootReducer } from './store.reducer';
 import { INITIAL_STATE as ApplicationManagementInitialState } from '../application-management/application-management.reducer';
 import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/configuration.reducer';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @NgModule({
     imports: [
@@ -34,15 +35,19 @@ import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/con
 export class StoreModule {
     constructor(public store: NgRedux<AppState>,
                 devTools: DevToolsExtension,
-                ngReduxRouter: NgReduxRouter) {
+                ngReduxRouter: NgReduxRouter,
+                @Inject(DOCUMENT) private document: any
+    ) {
         // Tell Redux about our reducers. If the Redux DevTools
         // chrome extension is available in the browser, tell Redux about
         // it too.
+        const configState = ConfigurationInitialState;
+        configState.containerAPI = `http://${this.document.location.hostname}:1337/containerapi`;
         store.configureStore(
             rootReducer,
             {
                 container: ApplicationManagementInitialState,
-                administration: ConfigurationInitialState
+                administration: configState
             },
             [ createLogger() ],
             devTools.isEnabled() ? [ devTools.enhancer() ] : []);
