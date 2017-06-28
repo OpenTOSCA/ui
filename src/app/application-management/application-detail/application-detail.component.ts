@@ -33,9 +33,9 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 import { ApplicationManagementActions } from '../application-management-actions';
 
 @Component({
-  selector: 'opentosca-ui-application-detail',
-  templateUrl: './application-detail.component.html',
-  styleUrls: ['./application-detail.component.scss']
+    selector: 'opentosca-ui-application-detail',
+    templateUrl: './application-detail.component.html',
+    styleUrls: ['./application-detail.component.scss']
 })
 export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
@@ -43,11 +43,12 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<any>>;
     public buildPlanOperationMetaData: PlanOperationMetaData;
     public selfserviceApplicationUrl: SafeUrl;
-    public planOutputParameters: {OutputParameter: PlanParameter}[];
+    public planOutputParameters: { OutputParameter: PlanParameter }[];
     public provisioningInProgress = false;
     public provisioningDone = false;
     public allInputsFilled = true;
     private serviceTemplateInstancesURL: string;
+    public terminationPlan: PlanOperationMetaData;
 
     @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -85,7 +86,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         breadCrumbs.push(new BreadcrumbEntry('Applications', '/applications'));
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.route.data
-            .subscribe((data: {applicationDetail: ApplicationDetail}) => {
+            .subscribe((data: { applicationDetail: ApplicationDetail }) => {
                     this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.applicationDetail.app));
                     this.app = data.applicationDetail.app;
                     this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlanOperationMetaData(
@@ -95,6 +96,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                         data.applicationDetail.terminationPlanResource.Reference.href,
                         '%7BinstanceId%7D'
                     );
+                    this.terminationPlan = data.applicationDetail.terminationPlanResource;
                     this.appInstancesService.loadInstancesList(data.applicationDetail.app.id)
                         .subscribe(result => this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result)));
                     this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.id, '')));
@@ -118,34 +120,57 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     emitTerminationPlan(terminationEvent: TriggerTerminationPlanEvent): void {
-        const url = new Path(this.serviceTemplateInstancesURL)
-            .append(terminationEvent.instanceID).toString();
-
-        this.appService.deleteApplicationInstance(url)
-            .then(result => {
-                this.appInstancesService.loadInstancesList(this.app.id)
-                    .subscribe(instancesList => this.ngRedux.dispatch(
-                        ApplicationManagementActions.updateApplicationInstances(instancesList)));
-                this.messageBus.emit(
-                    {
-                        severity: 'success',
-                        summary: 'Instance Successfully Terminated',
-                        detail: 'The instance ' + url + ' was sucessfully terminated.'
-                    }
-                );
-                this.logger.log('[application.details.component][emitTerminationPlan]', result);
-            })
-            .catch(err => {
-                this.messageBus.emit(
-                    {
-                        severity: 'error',
-                        summary: 'Failure at Instance Termination',
-                        detail: 'The instance ' + url + ' was not terminated successfully. Container returned: '
-                        + JSON.stringify(err)
-                    }
-                );
-                this.logger.handleError('[application.details.component][emitTerminationPlan]', err);
+        this.appService.getServiceTemplatePathNG(this.app.id).subscribe(serviceTemplatePath => {
+            const instanceId = terminationEvent.instanceID;
+            const plan = this.terminationPlan.Plan.ID;
+            const url = new Path(serviceTemplatePath)
+                .append('instances')
+                .append(instanceId)
+                .append('managementplans')
+                .append(plan)
+                .append('instances')
+                .toString();
+            this.appService.getServiceTemplatePath(this.app.id).subscribe(path => {
+                const oldApiUrl = new Path(path).append('Instances').append(instanceId).toString();
+                const parameters = [{
+                    "name": "OpenTOSCAContainerAPIServiceInstanceID",
+                    "type": "String",
+                    "required": "YES",
+                    "value": oldApiUrl
+                }];
+                this.appService.triggerPlan(url, parameters);
+                this.messageBus.emit({
+                    severity: 'success',
+                    summary: 'Termination successfully started',
+                    detail: 'The termination process has been started.'
+                });
             });
+        });
+        // this.appService.deleteApplicationInstance(url)
+        //     .then(result => {
+        //         this.appInstancesService.loadInstancesList(this.app.id)
+        //             .subscribe(instancesList => this.ngRedux.dispatch(
+        //                 ApplicationManagementActions.updateApplicationInstances(instancesList)));
+        //         this.messageBus.emit(
+        //             {
+        //                 severity: 'success',
+        //                 summary: 'Instance Successfully Terminated',
+        //                 detail: 'The instance ' + url + ' was sucessfully terminated.'
+        //             }
+        //         );
+        //         this.logger.log('[application.details.component][emitTerminationPlan]', result);
+        //     })
+        //     .catch(err => {
+        //         this.messageBus.emit(
+        //             {
+        //                 severity: 'error',
+        //                 summary: 'Failure at Instance Termination',
+        //                 detail: 'The instance ' + url + ' was not terminated successfully. Container returned: '
+        //                 + JSON.stringify(err)
+        //             }
+        //         );
+        //         this.logger.handleError('[application.details.component][emitTerminationPlan]', err);
+        //     });
     }
 
     /**
@@ -282,7 +307,8 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     extractCorrelationID(queryString: string): string {
         if (queryString.lastIndexOf('=') >= 0) {
             return queryString.substring(queryString.lastIndexOf('=') + 1);
-        } else {
+        }
+        else {
             return '';
         }
     }
@@ -292,7 +318,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
      * @param param
      * @returns {boolean}
      */
-    showOutputParameter(param: {OutputParameter: PlanParameter}): boolean {
+    showOutputParameter(param: { OutputParameter: PlanParameter }): boolean {
         return (!(param.OutputParameter.Name === 'instanceId' ||
         param.OutputParameter.Name === 'CorrelationID'));
     }

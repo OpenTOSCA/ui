@@ -2,7 +2,8 @@
     <opentosca-ui-action-item (click)="navigateToRepo()" styles="btn-primary pull-right">
         <i class="glyphicon glyphicon-new-window"></i> Repository Management
     </opentosca-ui-action-item>
-    <opentosca-ui-search [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+    <opentosca-ui-search [placeholder]="'Filter applications...'"
+                         (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
 </opentosca-ui-action-bar>
 <div class="container-fluid">
     <div class="applicationTilesContainer">
@@ -33,4 +34,6 @@
         </div>
     </div>
 </div>
-<opentosca-ui-deployment-completion *ngIf="startCompletionProcess"[appToComplete]="appToComplete"[linkToWineryResource]="linkToWineryResource" (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>
+<opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
+                                    [linkToWineryResource]="linkToWineryResource"
+                                    (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>
