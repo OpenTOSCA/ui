@@ -16,6 +16,7 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
+import { Path } from '../util/path';
 
 @Injectable()
 export class RepositoryManagementService {
@@ -73,17 +74,15 @@ export class RepositoryManagementService {
     /**
      * Deploy CSAR in container via URL to CSAR
      * @param csarURL URL to CSAR
-     * @param containerURL Container endpoint URL (e.g., http://localhost:1337/containerapi)
+     * @param containerURL Container endpoint URL (e.g., http://localhost:1337)
      * @returns {Promise<TResult>}
      */
     installAppInContainer(csarURL: string, containerURL: string): Promise<any> {
-        const postURL = containerURL + '/CSARs';
         const body = {
             'URL': csarURL
         };
         const headers = new Headers({'Accept': 'application/json'});
-        // TODO: Check if App is already installed in container, if true then don't post
-        return this.http.post(postURL, body, {headers: headers})
+        return this.http.post(containerURL, body, {headers: headers})
             .toPromise();
     }
 
@@ -98,8 +97,17 @@ export class RepositoryManagementService {
             appID = appID.split('.')[0];
         }
 
-        const metaDataUrl = this.adminService.getContainerAPIURL() + '/CSARs/' + appID + '.csar' + '/Content/SELFSERVICE-Metadata';
-        const dataJSONUrl = metaDataUrl + '/data.json';
+        const metaDataUrl = new Path(this.adminService.getContainerAPIURL())
+            .append('containerapi')
+            .append('CSARs')
+            .append(appID)
+            .append('.csar')
+            .append('Content')
+            .append('SELFSERVICE-Metadata')
+            .toString();
+        const dataJSONUrl = new Path(metaDataUrl)
+            .append('data.json')
+            .toString();
         const headers = new Headers({'Accept': 'application/json'});
 
         return this.http.get(dataJSONUrl, {headers: headers})

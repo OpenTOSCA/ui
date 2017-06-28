@@ -24,6 +24,7 @@ import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { RepositoryManagementActions } from '../repository-management-actions';
 import { ModalDirective } from 'ngx-bootstrap';
+import { Path } from '../../core/util/path';
 
 @Component({
   selector: 'opentosca-ui-repository-overview',
@@ -76,7 +77,11 @@ export class RepositoryOverviewComponent implements OnInit {
      */
     installInContainer(app: MarketplaceApplication): void {
         app.isInstalling = true;
-        this.marketService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
+        const postURL = new Path(this.adminService.getContainerAPIURL())
+            .append('containerapi')
+            .append('CSARs')
+            .toString();
+        this.marketService.installAppInContainer(app.csarURL, postURL)
             .then(response => {
                 app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)

@@ -70,7 +70,10 @@ export class ApplicationManagementService {
      * @returns {Promise<ResourceReference[]>}
      */
     getApps(): Promise<ResourceReference[]> {
-        const url = this.configService.getContainerAPIURL() + '/CSARs';
+        const url = new Path(this.configService.getContainerAPIURL())
+            .append('containerapi')
+            .append('CSARs')
+            .toString();
         return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
             .toPromise()
             .then(response => response.json().References as ResourceReference[])
@@ -125,6 +128,7 @@ export class ApplicationManagementService {
      */
     getServiceTemplatePath(appID: string): Observable<string> {
         const url = new Path(this.configService.getContainerAPIURL())
+            .append('containerapi')
             .append('CSARs')
             .append(this.fixAppID(appID))
             .append('ServiceTemplates')
@@ -309,7 +313,11 @@ export class ApplicationManagementService {
      * @returns {Promise<Array<ResourceReference>>}
      */
     getAllInstances(): Promise<Array<ResourceReference>> {
-        const instanceAPIUrl = this.configService.getContainerAPIURL() + '/instancedata/serviceInstances';
+        const instanceAPIUrl = new Path(this.configService.getContainerAPIURL())
+            .append('containerapi')
+            .append('instancedata')
+            .append('serviceInstances')
+            .toString();
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
         return this.http.get(instanceAPIUrl, reqOpts)
             .toPromise()
@@ -325,7 +333,12 @@ export class ApplicationManagementService {
      */
     isAppDeployedInContainer(appID: string): Promise<boolean> {
         appID = this.fixAppID(appID);
-        const csarUrl = this.configService.getContainerAPIURL() + '/CSARs/' + appID;
+
+        const csarUrl = new Path(this.configService.getContainerAPIURL())
+            .append('containerapi')
+            .append('CSARs')
+            .append(appID)
+            .toString();
         const headers = new Headers({'Accept': 'application/json'});
         return this.http.get(csarUrl, {headers: headers})
             .toPromise()
@@ -340,8 +353,16 @@ export class ApplicationManagementService {
      */
     getAppDescription(appID: string): Observable<Application> {
         appID = this.fixAppID(appID);
-        const metaDataUrl = this.configService.getContainerAPIURL() + '/CSARs/' + appID + '/Content/SELFSERVICE-Metadata';
-        const dataJSONUrl = metaDataUrl + '/data.json';
+        const metaDataUrl = new Path(this.configService.getContainerAPIURL())
+            .append('containerapi')
+            .append('CSARs')
+            .append(appID)
+            .append('Content')
+            .append('SELFSERVICE-Metadata')
+            .toString();
+        const dataJSONUrl = new Path(metaDataUrl)
+            .append('data.json')
+            .toString();
         const headers = new Headers({'Accept': 'application/json'});
 
         return this.http.get(dataJSONUrl, {headers: headers})

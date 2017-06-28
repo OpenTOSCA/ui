@@ -42,7 +42,7 @@ export class StoreModule {
         // chrome extension is available in the browser, tell Redux about
         // it too.
         const configState = ConfigurationInitialState;
-        configState.containerAPI = `http://${this.document.location.hostname}:1337/containerapi`;
+        configState.containerAPI = `http://${this.document.location.hostname}:1337`;
         store.configureStore(
             rootReducer,
             {

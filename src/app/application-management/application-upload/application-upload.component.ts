@@ -26,6 +26,7 @@ import { ApplicationManagementActions } from '../application-management-actions'
 import {MarketplaceApplication} from '../../core/model/marketplace-application.model';
 import {DeploymentCompletionService} from '../../core/service/deployment-completion.service';
 import {RepositoryManagementService} from '../../core/service/repository-management.service';
+import { Path } from '../../core/util/path';
 
 @Component({
   selector: 'opentosca-ui-application-upload',
@@ -55,8 +56,13 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
 
         this.zone = new NgZone({enableLongStackTrace: false});
+        const postURL = new Path(this.adminService.getContainerAPIURL())
+            .append('containerapi')
+            .append('CSARs')
+            .toString();
+
         this.options = {
-            url: this.adminService.getContainerAPIURL() + '/CSARs',
+            url: postURL,
             customHeaders: {
                 'Accept': 'application/json'
             },
@@ -205,7 +211,11 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
         this.deploymentInProgress = true;
         this.appService.isAppDeployedInContainer(app.id).then(result => {
             if (!result) {
-                this.repositoryManagementService.installAppInContainer(app.csarURL, this.adminService.getContainerAPIURL())
+                const postURL = new Path(this.adminService.getContainerAPIURL())
+                    .append('containerapi')
+                    .append('CSARs')
+                    .toString();
+                this.repositoryManagementService.installAppInContainer(app.csarURL, postURL)
                     .then(response => {
                         this.appService.isAppDeployedInContainer(app.id)
                             .then(output => {
