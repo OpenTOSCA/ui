@@ -11,9 +11,12 @@
 </nav>
 <div class="container-fluid">
     <p-fieldset legend="Application Information" [toggleable]="true">
-        <div class="row" *ngIf="(app?.description && app.description !== '') || provisioningDone
-            || provisioningInProgress || app?.screenshotUrls?.length > 0
-            || (app?.version && app?.version !=='') || app?.authors?.length > 0; else noAppInfos">
+        <div class="row" *ngIf="(app?.description && app.description !== '')
+            || provisioningDone
+            || provisioningInProgress
+            || app?.screenshotUrls?.length > 0
+            || (app?.version && app?.version !=='')
+            || app?.authors?.length > 0; else noAppInfos">
             <div class="col-lg-6">
                 <div *ngIf="app?.description && app.description !== ''">
                     <h2>Description</h2>
