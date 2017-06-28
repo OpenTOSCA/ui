@@ -1,24 +1,16 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li>
-                <button class="btn btn-default btn-success navbar-btn" [routerLink]="[{ outlets: { modal: ['upload'] } }]">
-                    <span class="glyphicon glyphicon glyphicon-upload"></span>
-                    Upload New Application
-                </button>
-            </li>
-        </ul>
-        <form class="navbar-form navbar-left">
-            <div class="form-group">
-                <input disabled type="text" class="form-control" placeholder="Search (soon to come)">
-            </div>
-        </form>
-    </div>
-</nav>
+<opentosca-ui-action-bar>
+    <opentosca-ui-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary pull-right">
+        <i class="glyphicon glyphicon-upload"></i> Upload New Application
+    </opentosca-ui-action-item>
+    <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
+        <i class="glyphicon glyphicon-refresh"></i>
+    </opentosca-ui-action-item>
+    <opentosca-ui-search [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+</opentosca-ui-action-bar>
 <div class="container-fluid">
     <div class="applicationTilesContainer">
         <div class="applicationTile"
-             *ngFor="let app of apps | async | sort:['displayName']:['asc']; trackBy: trackAppsFn">
+             *ngFor="let app of apps | async | sort:['displayName']:['asc'] | fuzzySearch:searchTerm:['displayName','description','csarName']; trackBy: trackAppsFn">
             <div class="applicationTileImageContainer">
                 <img [src]="app.iconUrl" onerror="this.src='/assets/Default_Application_Icon.png'"/>
             </div>

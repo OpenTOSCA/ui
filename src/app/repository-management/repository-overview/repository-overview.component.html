@@ -2,6 +2,9 @@
     <opentosca-ui-action-item (click)="navigateToRepo()" styles="btn-primary pull-right">
         <i class="glyphicon glyphicon-new-window"></i> Repository Management
     </opentosca-ui-action-item>
+    <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
+        <i class="glyphicon glyphicon-refresh"></i>
+    </opentosca-ui-action-item>
     <opentosca-ui-search [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
 </opentosca-ui-action-bar>
 <div class="container-fluid">

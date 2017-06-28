@@ -11,7 +11,7 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
@@ -23,7 +23,7 @@ import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { RepositoryManagementActions } from '../repository-management-actions';
-import {ModalDirective} from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
   selector: 'opentosca-ui-repository-overview',
@@ -57,6 +57,10 @@ export class RepositoryOverviewComponent implements OnInit {
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.getApps();
         this.repositoryURL.subscribe(url => this.repoURL = url);
+    }
+
+    reloadApplications(): void {
+        this.getApps();
     }
 
     navigateToRepo(): void {

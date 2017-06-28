@@ -7,5 +7,7 @@ import { Component, Input } from '@angular/core';
 export class ActionItemComponent {
 
     @Input()
+    public routerLink: Array<any>;
+    @Input()
     public styles: string;
 }

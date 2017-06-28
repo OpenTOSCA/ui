@@ -34,6 +34,7 @@ export class ApplicationOverviewComponent implements OnInit {
 
     public removingApp = false;
     public appToDelete: Application;
+    public searchTerm: string;
 
     constructor(private appService: ApplicationManagementService,
                 private ngRedux: NgRedux<AppState>,
@@ -83,6 +84,10 @@ export class ApplicationOverviewComponent implements OnInit {
             });
     }
 
+    reloadApplications(): void {
+        this.getAppReferences();
+    }
+
     hideDeleteConfirmationModal(): void {
         this.childModal.hide();
         this.appToDelete = null;
@@ -123,5 +128,9 @@ export class ApplicationOverviewComponent implements OnInit {
      */
     trackAppsFn(index: number, app: Application) {
         return app.id;
+    }
+
+    searchTermChanged(searchTerm: string) {
+        this.searchTerm = searchTerm;
     }
 }
