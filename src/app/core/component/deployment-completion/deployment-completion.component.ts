@@ -89,10 +89,16 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     getInjectionOptions(linkToWineryResource: string): void {
         this.completionService.getInjectionOptions(linkToWineryResource)
             .then(injectionOptions => {
-                this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
-                this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
-                console.log('Das sind die Host Completion Options');
-                console.log(this.hostCompletionOptions);
+
+                if (injectionOptions == null) {
+                    this.completionSuccessful.emit(this.appToComplete);
+                    this.completeSelectionModal.hide();
+                } else {
+                    this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
+                    this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
+                    console.log('Das sind die Host Completion Options');
+                    console.log(this.hostCompletionOptions);
+                }
             });
     }
 
