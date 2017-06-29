@@ -131,14 +131,14 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                 .append('instances')
                 .toString();
             this.appService.getServiceTemplatePath(this.app.id).subscribe(path => {
-                const oldApiUrl = new Path(path).append('Instances').append(instanceId).toString();
-                const parameters = [{
-                    "name": "OpenTOSCAContainerAPIServiceInstanceID",
-                    "type": "String",
-                    "required": "YES",
-                    "value": oldApiUrl
-                }];
-                this.appService.triggerPlan(url, parameters);
+                // const oldApiUrl = new Path(path).append('Instances').append(instanceId).toString();
+                // const parameters = [{
+                //     "name": "OpenTOSCAContainerAPIServiceInstanceID",
+                //     "type": "String",
+                //     "required": "YES",
+                //     "value": oldApiUrl
+                // }];
+                this.appService.triggerPlan(url, []);
                 this.messageBus.emit({
                     severity: 'success',
                     summary: 'Termination successfully started',
