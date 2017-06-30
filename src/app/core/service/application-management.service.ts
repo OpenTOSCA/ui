@@ -10,7 +10,7 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
@@ -26,6 +26,7 @@ import { ApplicationInstanceProperties } from '../model/application-instance-pro
 import { ObjectHelper } from '../util/object-helper';
 import { Application } from '../model/application.model';
 import * as _ from 'lodash';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -40,7 +41,8 @@ export class ApplicationManagementService {
 
     constructor(private http: Http,
                 private configService: ConfigurationService,
-                private logger: OpenToscaLoggerService) {
+                private logger: OpenToscaLoggerService,
+                @Inject(DOCUMENT) private document: any) {
     }
 
     /**
@@ -150,7 +152,7 @@ export class ApplicationManagementService {
     // TODO
     getServiceTemplatePathNG(appID: string): Observable<string> {
 
-        const url = new Path('http://localhost:1337/csars')
+        const url = new Path(`http://${this.document.location.hostname}:1337/csars`)
         .append(this.fixAppID(appID))
         .append('servicetemplates')
         .toString();
