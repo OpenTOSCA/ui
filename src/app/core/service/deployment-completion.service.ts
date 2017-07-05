@@ -70,6 +70,16 @@ export class DeploymentCompletionService {
                 console.log('The stored objects:');
                 console.log(injectionOptions);
                 return injectionOptions;
+            })
+            .catch(err => {
+                if (err.status == 400) {
+
+                    return null;
+
+                } else {
+                    this.logger.handleError('[deployment-completion.service][getInjectionOptions]',
+                        err)
+                }
             });
     }
 

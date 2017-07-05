@@ -36,4 +36,6 @@
         </div>
     </div>
 </div>
-<opentosca-ui-deployment-completion *ngIf="startCompletionProcess"[appToComplete]="appToComplete"[linkToWineryResource]="linkToWineryResource" (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>
+<opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
+                                    [linkToWineryResource]="linkToWineryResource"
+                                    (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>

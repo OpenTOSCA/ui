@@ -10,10 +10,10 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { ConfigurationService } from '../../configuration/configuration.service';
-import { OpenToscaLoggerService } from '../service/open-tosca-logger.service';
+import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Path } from '../util/path';
 import { ResourceReference } from '../model/resource-reference.model';
 import { PlanParameters } from '../model/plan-parameters.model';
@@ -26,6 +26,7 @@ import { ApplicationInstanceProperties } from '../model/application-instance-pro
 import { ObjectHelper } from '../util/object-helper';
 import { Application } from '../model/application.model';
 import * as _ from 'lodash';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -40,7 +41,8 @@ export class ApplicationManagementService {
 
     constructor(private http: Http,
                 private configService: ConfigurationService,
-                private logger: OpenToscaLoggerService) {
+                private logger: OpenToscaLoggerService,
+                @Inject(DOCUMENT) private document: any) {
     }
 
     /**
@@ -64,6 +66,8 @@ export class ApplicationManagementService {
         return this.http.delete(appInstanceURL)
             .toPromise();
     }
+
+
 
     /**
      * Retrieve a list of references to deployed applications
@@ -147,6 +151,33 @@ export class ApplicationManagementService {
                 this.logger.handleObservableError('[application.service][getServiceTemplatePath]', new Error(JSON.stringify(resRefs)));
             })
             .catch(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err));
+    }
+
+    // TODO
+    getServiceTemplatePathNG(appID: string): Observable<string> {
+
+        const url = new Path(`http://${this.document.location.hostname}:1337/csars`)
+        .append(this.fixAppID(appID))
+        .append('servicetemplates')
+        .toString();
+
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+
+        return this.http.get(url, reqOpts)
+                   .map(response => {
+                       return response.json().service_templates[0]._links[0].self.href;
+                   })
+                   .catch(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err));
+    }
+
+    // TODO
+    triggerPlan(url: string, parameters: any): void {
+        this.http.post(url, parameters, {headers: new Headers({'Accept': 'application/json'})})
+                   .toPromise()
+                   .then(response => {
+                       this.logger.log('[application.service][triggerPlan]', 'Server responded to post: ' + response);
+                   })
+                   .catch(err => this.logger.handleError('[application.service][triggerPlan]', err));
     }
 
     /**
