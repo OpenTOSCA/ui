@@ -52,6 +52,7 @@ export class ApplicationManagementService {
      */
     deleteAppFromContainer(appID: string): Promise<any> {
         const url = new Path(this.configService.getContainerAPIURL())
+            .append('containerapi')
             .append('CSARs')
             .append(this.fixAppID(appID))
             .toString();
@@ -83,6 +84,30 @@ export class ApplicationManagementService {
             .then(response => response.json().References as ResourceReference[])
             .catch(err => this.logger.handleError('[application.service][getApps]', err));
     }
+
+    getResolvedApplications(): Observable<Array<Application>> {
+        const url = new Path(this.configService.getContainerAPIURL())
+            .append('csars')
+            .toString();
+        return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
+            .map((response: Response) => response.json()['csars'])
+            .map((response: Array<{ id: string, _links: Array<any> }>) => {
+                const csarReferences: Array<CsarReference> = [];
+                for (const csar of response) {
+                    csarReferences.push(new CsarReference(csar.id, csar._links[0]['self']['href']));
+                }
+                return csarReferences;
+            })
+            .map((response: Array<CsarReference>) => {
+                const observables: Array<Observable<Application>> = [];
+                for (const cr of response) {
+                    observables.push(this.getAppDescription(cr.id));
+                }
+                return Observable.forkJoin(observables)
+            })
+            .flatMap(result => result);
+    }
+
 
     /**
      * Fetches PlanParameters
@@ -366,8 +391,7 @@ export class ApplicationManagementService {
         appID = this.fixAppID(appID);
 
         const csarUrl = new Path(this.configService.getContainerAPIURL())
-            .append('containerapi')
-            .append('CSARs')
+            .append('csars')
             .append(appID)
             .toString();
         const headers = new Headers({'Accept': 'application/json'});
@@ -378,53 +402,42 @@ export class ApplicationManagementService {
     }
 
     /**
-     * Retrieve app description from data.json
+     * Retrieve app description
      * @param appID CSAR id/name (e.g. XYZ.csar)
      * @returns {Observable<Application>}
      */
     getAppDescription(appID: string): Observable<Application> {
         appID = this.fixAppID(appID);
         const metaDataUrl = new Path(this.configService.getContainerAPIURL())
-            .append('containerapi')
-            .append('CSARs')
+            .append('csars')
             .append(appID)
-            .append('Content')
-            .append('SELFSERVICE-Metadata')
             .toString();
-        const dataJSONUrl = new Path(metaDataUrl)
-            .append('data.json')
-            .toString();
+
         const headers = new Headers({'Accept': 'application/json'});
 
-        return this.http.get(dataJSONUrl, {headers: headers})
-            .map((response: Response) => {
-                const app: Application = new Object(response.json()) as Application;
-                // we only use appIDs without .csar for navigation in new ui,
-                // since angular2 router did not route to paths containing '.'
-                app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
-                app.iconUrl = metaDataUrl + '/' + app.iconUrl;
-                app.imageUrl = metaDataUrl + '/' + app.imageUrl;
-                for (const i in app.screenshotUrls) {
-                    if (app.screenshotUrls[i]) {
-                        app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
-                    }
-                }
+        return this.http.get(metaDataUrl, {headers: headers})
+            .map((response: Response) => response.json())
+            .map((response: Object) => {
+                const app: Application = new Application();
+                app.id = response['id'].indexOf('.csar') > -1 ?
+                    response['id'].split('.')[0] : response['id'];
+                app.description = response['description'];
+                app.name = response['name'];
+                app.displayName = response['display_name'];
+                app.version = response['version'];
+                app.authors = response['authors'];
+                app.iconUrl = response['icon_url'];
+                app.imageUrl = response['image_url'];
+                // Todo: Add screenshots to new api
+                app.screenshots = response['screenshot_urls'];
                 return app;
             })
-            .catch((err: any) => {
-                if (err.status === 404) {
-                    // we found a CSAR that does not contain a data.json, so use default values
-                    const app = new Application();
-                    app.id = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
-                    app.csarName = appID;
-                    app.displayName = appID.indexOf('.csar') > -1 ? appID.split('.')[0] : appID;
-                    app.categories = ['others'];
-                    app.iconUrl = '../../assets/img/Applications_Header_Icon.png';
-                    app.imageUrl = '';
-                    return Observable.of(app);
-                } else {
-                    this.logger.handleObservableError('[application.service][getAppDescription]', err);
-                }
-            });
+            .catch((err: any) => this.logger
+                .handleObservableError('[application.service][getAppDescription]', err));
+    }
+}
+
+class CsarReference {
+    constructor(public id: string, public link: string) {
     }
 }

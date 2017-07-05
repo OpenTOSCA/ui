@@ -24,9 +24,9 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 import { ApplicationManagementActions } from '../application-management-actions';
 
 @Component({
-  selector: 'opentosca-ui-application-overview',
-  templateUrl: './application-overview.component.html',
-  styleUrls: ['./application-overview.component.scss']
+    selector: 'opentosca-ui-application-overview',
+    templateUrl: './application-overview.component.html',
+    styleUrls: ['./application-overview.component.scss']
 })
 export class ApplicationOverviewComponent implements OnInit {
     @select(['container', 'applications']) public readonly apps: Observable<Array<Application>>;
@@ -46,7 +46,7 @@ export class ApplicationOverviewComponent implements OnInit {
         const breadCrumbs = [];
         breadCrumbs.push(new BreadcrumbEntry('Applications', ''));
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
-        this.getAppReferences();
+        this.getResolvedApplications();
     }
 
     /**
@@ -85,7 +85,7 @@ export class ApplicationOverviewComponent implements OnInit {
     }
 
     reloadApplications(): void {
-        this.getAppReferences();
+        this.getResolvedApplications();
     }
 
     hideDeleteConfirmationModal(): void {
@@ -99,25 +99,15 @@ export class ApplicationOverviewComponent implements OnInit {
     }
 
     /**
-     * Fetch application descriptions from container.
-     * Fetch application references from container and app description of each reference.
+     * Load applications from container containing all meta data
      */
-    getAppReferences(): void {
-        this.appService.getApps().then(references => {
-            const appPromises = [] as Array<Promise<Application>>;
-            for (const ref of references) {
-                if (ref.title !== 'Self') {
-                    appPromises.push(this.appService.getAppDescription(ref.title).toPromise());
-                }
-            }
-            Promise.all(appPromises)
-                .then(apps => {
-                    this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
-                })
-                .catch(reason => {
-                    this.logger.handleError('[applications-overview.component][getAppReferences]', reason);
-                });
-        });
+    getResolvedApplications(): void {
+        this.appService.getResolvedApplications()
+            .subscribe(apps => {
+                this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
+            }, reason => {
+                this.logger.handleError('[applications-overview.component][getResolvedApplications]', reason);
+            });
     }
 
     /**

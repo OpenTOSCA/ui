@@ -156,21 +156,12 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     }
 
     updateApplicationsInStore(): void {
-        this.appService.getApps().then(references => {
-            const appPromises = [] as Array<Promise<Application>>;
-            for (const ref of references) {
-                if (ref.title !== 'Self') {
-                    appPromises.push(this.appService.getAppDescription(ref.title).toPromise());
-                }
-            }
-            Promise.all(appPromises)
-                .then(apps => {
-                    this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
-                })
-                .catch(reason => {
-                    this.logger.handleError('[application-upload.component][updateApplicationsInStore]', reason);
-                });
-        });
+        this.appService.getResolvedApplications()
+            .subscribe(apps => {
+                this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
+            }, reason => {
+                this.logger.handleError('[application-upload.component][updateApplicationsInStore]', reason);
+            });
     }
 
     /**
