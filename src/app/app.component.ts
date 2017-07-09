@@ -24,6 +24,7 @@ export class AppComponent {
 
     public constructor(private messageBus: GrowlMessageBusService) {
         // We need this to pass messages to global growl component
+        // Todo Use redux store instead of own message bus
         this.messageBus.messages.subscribe(m => this.messages.push(m));
     }
 }
