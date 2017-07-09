@@ -1,33 +1,24 @@
-<div *ngIf="instances?.length > 0;then instances_available;else no_instances_available"></div>
-<ng-template #instances_available>
-    <h2>Instances List <span class="badge">{{instances?.length}}</span></h2>
-    <p-accordion *ngFor="let inst of instances; let i = index" [multiple]="true">
-        <p-accordionTab>
-            <p-header>
-                <button (click)="terminateInstance(inst.shortServiceTemplateInstanceID)"
-                        class="btn btn-danger pull-right">Terminate
-                </button>
-                <p>{{i}}</p>
-            </p-header>
-
-            <button style="margin-bottom: 10px" class="btn btn-default" [routerLink]="['./instances', inst.shortServiceTemplateInstanceID]">
-                <span class="glyphicon glyphicon-info-sign"></span> Instance Details
-            </button>
-
-            <div *ngIf="inst.selfserviceApplicationUrl">
-                <a [href]="inst.selfserviceApplicationUrl.TextContent" class="btn btn-primary">Open in Browser</a>
-            </div>
-
-            <div *ngIf="!inst.selfserviceApplicationUrl">
-                <pre>
-                    <code class="language-json" pCode>
-                        {{inst.properties.properties.payload[0] | json}}
-                    </code>
-                </pre>
-            </div>
-        </p-accordionTab>
-    </p-accordion>
-</ng-template>
+<div *ngIf="(currentAppInstances | async); let currentAppInstances; else no_instances_available">
+    <div *ngIf="currentAppInstances.length > 0; else no_instances_available">
+        <h2>Instances List <span class="badge">{{ currentAppInstances?.length }}</span></h2>
+        <p-accordion *ngFor="let inst of currentAppInstances; let i = index" [multiple]="true">
+            <p-accordionTab>
+                <p-header>
+                    <button (click)="terminateInstance(inst.id)"
+                            class="btn btn-danger pull-right">Terminate
+                    </button>
+                    <p>{{ inst.id }}</p>
+                </p-header>
+                <p>State: {{ inst.state }} ({{ inst.created_at | date:'medium' }})</p>
+                <p>
+                    <button style="margin-bottom: 10px" class="btn btn-default" [routerLink]="['./instances', inst.id]">
+                        <span class="glyphicon glyphicon-info-sign"></span> Instance Details
+                    </button>
+                </p>
+            </p-accordionTab>
+        </p-accordion>
+    </div>
+</div>
 <ng-template #no_instances_available>
     No Instances provisioned.
 </ng-template>

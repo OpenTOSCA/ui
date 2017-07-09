@@ -10,18 +10,20 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ApplicationInstance } from '../../core/model/application-instance.model';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TriggerTerminationPlanEvent } from '../../core/model/trigger-termination-plan-event.model';
+import { ServiceTemplateInstanceListEntry } from '../../core/model/new-api/service-template-instance-list-entry.model';
+import { Observable } from 'rxjs/Observable';
+import { select } from '@angular-redux/store';
 
 @Component({
   selector: 'opentosca-ui-application-instance-list',
   templateUrl: './application-instance-list.component.html',
   styleUrls: ['./application-instance-list.component.scss']
 })
-export class ApplicationInstanceListComponent {
+export class ApplicationInstanceListComponent{
 
-    @Input() public instances: Array<ApplicationInstance>;
+    @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<ServiceTemplateInstanceListEntry>>;
     @Output() public onTerminateInstance: EventEmitter<TriggerTerminationPlanEvent> = new EventEmitter();
 
     constructor() {
