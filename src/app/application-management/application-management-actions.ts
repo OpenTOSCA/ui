@@ -12,10 +12,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Application } from '../core/model/application.model';
-import { ApplicationInstance } from '../core/model/application-instance.model';
 import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model';
 import { Action } from '../store/store.action';
+import { Csar } from '../core/model/new-api/csar.model';
+import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
 
 @Injectable()
 export class ApplicationManagementActions {
@@ -30,14 +30,14 @@ export class ApplicationManagementActions {
 
     static UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA = 'UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA';
 
-    static addContainerApplications(apps: Array<Application>): Action {
+    static addContainerApplications(apps: Array<Csar>): Action {
         return {
             type: ApplicationManagementActions.ADD_CONTAINER_APPLICATIONS,
             payload: apps
         };
     }
 
-    static removeContainerApplication(app: Application): Action {
+    static removeContainerApplication(app: Csar): Action {
         return {
             type: ApplicationManagementActions.REMOVE_CONTAINER_APPLICATION,
             payload: app
@@ -51,7 +51,7 @@ export class ApplicationManagementActions {
         };
     }
 
-    static updateCurrentApplication(app: Application): Action {
+    static updateCurrentApplication(app: Csar): Action {
         return {
             type: ApplicationManagementActions.UPDATE_CURRENT_APPLICATION,
             payload: app
@@ -65,7 +65,7 @@ export class ApplicationManagementActions {
         };
     }
 
-    static updateApplicationInstances(instances: Array<ApplicationInstance>): Action {
+    static updateApplicationInstances(instances: Array<ServiceTemplateInstance>): Action {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES,
             payload: instances

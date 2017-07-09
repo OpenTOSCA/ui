@@ -12,16 +12,16 @@
  */
 
 import * as _ from 'lodash';
-import { Application } from '../core/model/application.model';
-import { ApplicationInstance } from '../core/model/application-instance.model';
 import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model';
 import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
+import { Csar } from '../core/model/new-api/csar.model';
+import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
 
 export interface ApplicationManagementState {
-    applications?: Array<Application>;
-    currentApp?: Application;
-    currentAppInstances?: Array<ApplicationInstance>;
+    applications?: Array<Csar>;
+    currentApp?: Csar;
+    currentAppInstances?: Array<ServiceTemplateInstance>;
     currentBuildPlanOperationMetaData?: PlanOperationMetaData;
 }
 
