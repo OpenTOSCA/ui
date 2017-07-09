@@ -22,6 +22,7 @@ import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
+import { Csar } from '../../core/model/new-api/csar.model';
 
 @Component({
     selector: 'opentosca-ui-application-overview',
@@ -29,7 +30,7 @@ import { ApplicationManagementActions } from '../application-management-actions'
     styleUrls: ['./application-overview.component.scss']
 })
 export class ApplicationOverviewComponent implements OnInit {
-    @select(['container', 'applications']) public readonly apps: Observable<Array<Application>>;
+    @select(['container', 'applications']) public readonly apps: Observable<Array<Csar>>;
     @ViewChild('childModal') public childModal: ModalDirective;
 
     public removingApp = false;
@@ -53,7 +54,7 @@ export class ApplicationOverviewComponent implements OnInit {
      * Delegate app deletion to the ApplicationService
      * @param app
      */
-    deleteFromContainer(app: Application): void {
+    deleteFromContainer(app: Csar): void {
         this.removingApp = true;
         this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
