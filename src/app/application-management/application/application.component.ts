@@ -11,6 +11,9 @@
  *     Michael Wurster - initial implementation
  */
 import { Component } from '@angular/core';
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+import { Csar } from '../../core/model/new-api/csar.model';
 
 @Component({
     selector: 'opentosca-ui-application',
@@ -18,8 +21,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./application.component.scss']
 })
 export class ApplicationComponent {
-
+    @select(['container', 'currentApp']) app: Observable<Csar>;
     constructor() {
     }
-
 }

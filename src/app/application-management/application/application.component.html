@@ -2,7 +2,10 @@
     <tr>
         <td class="menu" id="subMenu">
             <div class="pageTopicIcon">
-                <img src="/assets/img/Applications_Header_Icon.png"/>
+                <img *ngIf="(app | async); let app; else defaultIcon" [src]="app.icon_url" onerror="this.src='/assets/img/Applications_Header_Icon.png'"/>
+                <ng-template #defaultIcon>
+                    <img src="/assets/img/Applications_Header_Icon.png"/>
+                </ng-template>
             </div>
             <!--
             <br/>
