@@ -14,10 +14,10 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ApplicationDetail } from '../../core/model/application-detail.model';
-import { Application } from '../../core/model/application.model';
 import { PlanOperationMetaData } from '../../core/model/planOperationMetaData.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { Csar } from '../../core/model/new-api/csar.model';
 
 @Injectable()
 export class ApplicationDetailResolverService {
@@ -25,13 +25,13 @@ export class ApplicationDetailResolverService {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ApplicationDetail> {
         return Observable.forkJoin(
             [
-                this.appService.getAppDescription(route.params['id']).retry(3),
+                this.appService.getCsarDescriptionByCsarID(route.params['id']).retry(3),
                 this.appService.getBuildPlanParameters(route.params['id']).retry(3),
                 this.appService.getTerminationPlan(route.params['id']).retry(3)
             ]
         )
             .map((result: Array<any>) => new ApplicationDetail(
-                <Application>result[0],
+                <Csar>result[0],
                 <PlanOperationMetaData>result[1],
                 <PlanOperationMetaData>result[2]
                 )
