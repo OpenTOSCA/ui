@@ -11,13 +11,12 @@
  *     Michael Wurster - initial implementation
  */
 
-import { Application } from './application.model';
 import { PlanOperationMetaData } from './planOperationMetaData.model';
+import { Csar } from './new-api/csar.model';
 
-// Todo Add application instances Array
 export class ApplicationDetail {
 
-    constructor(public app: Application,
+    constructor(public app: Csar,
                 public buildPlanParameters: PlanOperationMetaData,
                 public terminationPlanResource: PlanOperationMetaData) {
     }
