@@ -11,7 +11,7 @@
  *     Michael Wurster - initial implementation
  */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { NgRedux } from '@angular-redux/store';
 import 'rxjs/add/operator/toPromise';
 import { AppState } from '../store/app-state.model';
@@ -21,9 +21,6 @@ import { ApplicationManagementActions } from '../application-management/applicat
 
 @Injectable()
 export class ConfigurationService {
-
-    // Default values
-    private defaultAcceptHeaders = new Headers({'Accept': 'application/json'});
 
     constructor(private http: Http,
                 private ngRedux: NgRedux<AppState>) {
@@ -100,7 +97,8 @@ export class ConfigurationService {
      * @returns {Promise<Response>}
      */
     isContainerAvailable(): Promise<Response> {
-        return this.http.get(this.ngRedux.getState().administration.containerAPI, this.defaultAcceptHeaders)
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(this.ngRedux.getState().administration.containerAPI, reqOpts)
             .toPromise();
     }
 
@@ -109,15 +107,9 @@ export class ConfigurationService {
      * @returns {Promise<Response>}
      */
     isRepositoryAvailable(): Promise<Response> {
-        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, this.defaultAcceptHeaders)
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, reqOpts)
             .toPromise();
     }
 
-    /**
-     * Returns default headers to accept application/json
-     * @returns {Headers}
-     */
-    getDefaultAcceptJSONHeaders(): Headers {
-        return this.defaultAcceptHeaders;
-    }
 }
