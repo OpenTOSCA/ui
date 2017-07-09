@@ -11,31 +11,33 @@
 </nav>
 <div class="container-fluid">
     <p-fieldset legend="Application Information" [toggleable]="true">
-        <div class="row" *ngIf="(app?.description && app.description !== '')
-            || provisioningDone
-            || provisioningInProgress
-            || app?.screenshotUrls?.length > 0
-            || (app?.version && app?.version !=='')
-            || app?.authors?.length > 0; else noAppInfos">
+        <div class="row" *ngIf="(app | async); let app; else loading">
             <div class="col-lg-6">
-                <div *ngIf="app?.description && app.description !== ''">
+                <div>
                     <h2>Description</h2>
-                    <p>
-                        {{app?.description}}
+                    <p *ngIf="app.description && app.description !== ''; else noDescription">
+                        {{app.description}}
                         <br/>
                     </p>
+                    <ng-template #noDescription>
+                        <p>
+                            No description provided.
+                        </p>
+                    </ng-template>
                 </div>
 
                 <!-- Buttons -->
+                <!-- Todo We should get rid of this button here and launch instance from instances list/view -->
                 <div style="margin-bottom: 10px;">
                     <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
-                       [href]="selfserviceApplicationUrl" role="button" target="_blank">Start Application</a>
+                       [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
 
                     <div id="loaderContainer">
                         <div id="loader" *ngIf="provisioningInProgress"></div>
                     </div>
                 </div>
 
+                <!-- Todo we should get rid of this here an put it to instance list/view -->
                 <div class="panel panel-success" *ngIf="planOutputParameters">
                     <div class="panel-heading">Results of the last provisioning task</div>
                     <div class="panel-body">
@@ -61,53 +63,57 @@
                         </tbody>
                     </table>
                 </div>
-                <div *ngIf="app?.screenshotUrls?.length > 0">
-                    <h2>Screenshots</h2>
-                    <p>
-                        <a *ngFor="let screenshotUrl of app?.screenshotUrls" target="_blank" [href]="screenshotUrl">
-                            <img [src]="screenshotUrl"
-                                 class="screenshotThumb">
-                        </a>
-                    </p>
-                </div>
-                <div *ngIf="app?.version && app?.version !==''">
+                <div>
                     <h2>Version</h2>
-                    <p>
-                        {{app?.version}}
+                    <p *ngIf="app?.version && app?.version !==''; else noVersion">
+                        {{app.version}}
                     </p>
+                    <ng-template #noVersion>
+                        <p>
+                            No version provided.
+                        </p>
+                    </ng-template>
                 </div>
-                <div *ngIf="app?.authors?.length > 0">
+                <div>
                     <h2>Authors</h2>
-                    <ul>
-                        <li *ngFor="let author of app?.authors">
+                    <ul *ngIf="app?.authors?.length > 0; else noAuthors">
+                        <li *ngFor="let author of app.authors">
                             {{author}}
                         </li>
                     </ul>
+                    <ng-template #noAuthors>
+                        <p>
+                            No authors provided.
+                        </p>
+                    </ng-template>
                 </div>
             </div>
             <div class="col-lg-6">
                 <h2>Topology Template</h2>
-                <div *ngIf="app?.imageUrl && app?.imageUrl !== ''">
-                    <a [href]="app?.imageUrl" target="_blank">
-                        <img class="img-responsive" [src]="app?.imageUrl"/>
+                <div>
+                    <a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage" [href]="app.image_url" target="_blank">
+                        <img class="img-responsive" [src]="app.image_url"/>
                     </a>
                 </div>
-                <div *ngIf="!(app?.imageUrl && app?.imageUrl !== '')">
-                    No Template Image provided.
-                </div>
-
+                <ng-template #noTemplateImage>
+                    <p>
+                        No Template Image provided.
+                    </p>
+                </ng-template>
             </div>
         </div>
-        <ng-template #noAppInfos>
-            <div class="col-lg-12">
-                No Application Information provided.
+        <ng-template #loading>
+            <div class="row">
+                <div class="col-lg-12">
+                    Loading App Infos...
+                </div>
             </div>
         </ng-template>
     </p-fieldset>
     <p-fieldset legend="Application Instances" [toggleable]="true">
         <div class="row">
             <div class="col-lg-12">
-                <opentosca-ui-application-instance-list [instances]="currentAppInstances | async" (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-ui-application-instance-list>
+                <opentosca-ui-application-instance-list (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-ui-application-instance-list>
             </div>
         </div>
     </p-fieldset>
