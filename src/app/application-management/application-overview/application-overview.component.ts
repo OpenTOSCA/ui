@@ -16,13 +16,13 @@ import { Observable } from 'rxjs/Observable';
 import { ModalDirective } from 'ngx-bootstrap';
 import { Application } from 'app/core/model/application.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { GrowlMessageBusService } from '../../core/service/growl-message-bus.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/new-api/csar.model';
+import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-ui-application-overview',
@@ -39,7 +39,6 @@ export class ApplicationOverviewComponent implements OnInit {
 
     constructor(private appService: ApplicationManagementService,
                 private ngRedux: NgRedux<AppState>,
-                private messageBus: GrowlMessageBusService,
                 private logger: OpenToscaLoggerService) {
     }
 
@@ -59,11 +58,13 @@ export class ApplicationOverviewComponent implements OnInit {
         this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
             .then(response => {
-                this.messageBus.emit({
-                    severity: 'success',
-                    summary: 'Deletion Successfull',
-                    detail: 'Application ' + app.id + ' was successfully deleted.'
-                });
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'success',
+                        summary: 'Deletion Successfull',
+                        detail: 'Application ' + app.id + ' was successfully deleted.'
+                    }
+                ));
                 this.logger.log('[applications-overview.component][deleteFromContainer]',
                     'Application successfully deleted, received response: ' + JSON.stringify(response));
                 this.ngRedux.dispatch(ApplicationManagementActions.removeContainerApplication(app));
@@ -73,14 +74,14 @@ export class ApplicationOverviewComponent implements OnInit {
             .catch(err => {
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
-                this.messageBus.emit(
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'error',
                         summary: 'Error',
                         detail: 'Application ' + app.id +
                         ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
                     }
-                );
+                ));
                 this.logger.handleError('[applications-overview.component][deleteFromContainer]', err);
             });
     }

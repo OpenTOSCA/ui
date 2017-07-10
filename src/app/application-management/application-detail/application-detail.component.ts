@@ -24,13 +24,13 @@ import * as _ from 'lodash';
 import { TriggerTerminationPlanEvent } from '../../core/model/trigger-termination-plan-event.model';
 import { Path } from '../../core/util/path';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { GrowlMessageBusService } from '../../core/service/growl-message-bus.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { ApplicationInstancesManagementService } from '../../core/service/application-instances-management.service';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/new-api/csar.model';
+import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-ui-application-detail',
@@ -55,7 +55,6 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                 private appService: ApplicationManagementService,
                 private sanitizer: DomSanitizer,
                 private ngRedux: NgRedux<AppState>,
-                private messageBus: GrowlMessageBusService,
                 private logger: OpenToscaLoggerService,
                 private router: Router,
                 private appInstancesService: ApplicationInstancesManagementService) {
@@ -87,7 +86,6 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.route.data
             .subscribe((data: { applicationDetail: ApplicationDetail }) => {
                     this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.applicationDetail.app));
-                    //this.app = data.applicationDetail.app;
                     this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlanOperationMetaData(
                         data.applicationDetail.buildPlanParameters));
                     this.buildPlanOperationMetaData = data.applicationDetail.buildPlanParameters;
@@ -102,14 +100,15 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.id, '')));
                 },
                 reason => {
-                    this.messageBus.emit(
+                    this.ngRedux.dispatch(GrowlActions.addGrowl(
                         {
                             severity: 'warn',
                             summary: 'Loading of Data failed',
                             detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' +
                             JSON.stringify(reason)
                         }
-                    );
+                    ));
+
                     this.router.navigate(['/applications']);
                 });
     }
@@ -133,11 +132,13 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     .toString();
                 this.appService.getServiceTemplatePath(app.id).subscribe(path => {
                     this.appService.triggerPlan(url, []);
-                    this.messageBus.emit({
-                        severity: 'info',
-                        summary: 'Termination started',
-                        detail: 'The termination process has been started.'
-                    });
+                    this.ngRedux.dispatch(GrowlActions.addGrowl(
+                        {
+                            severity: 'info',
+                            summary: 'Termination started',
+                            detail: 'The termination process has been started.'
+                        }
+                    ));
                 });
             });
         });
@@ -146,7 +147,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     updateAppInstancesList(app: Csar): void {
         this.appInstancesService.getServiceTemplateInstancesOfCsar(app)
             .subscribe(result => {
-                this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result))
+                this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result));
             });
     }
 
@@ -220,7 +221,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                                                     this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(
                                                         para.OutputParameter.Value
                                                     );
-                                                    this.messageBus.emit(
+                                                    this.ngRedux.dispatch(GrowlActions.addGrowl(
                                                         {
                                                             severity: 'success',
                                                             summary: 'New Instance Provisioned',
@@ -228,12 +229,12 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                                                             ' was provisioned. Launch via: ' +
                                                             para.OutputParameter.Value
                                                         }
-                                                    );
+                                                    ));
                                                 }
                                             }
                                             if (this.selfserviceApplicationUrl === '') {
                                                 this.planOutputParameters = planOutput.OutputParameters;
-                                                this.messageBus.emit(
+                                                this.ngRedux.dispatch(GrowlActions.addGrowl(
                                                     {
                                                         severity: 'success',
                                                         summary: 'New Instance Provisioned',
@@ -241,7 +242,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                                                         ' was provisioned. Result is: ' +
                                                         JSON.stringify(planOutput.OutputParameters)
                                                     }
-                                                );
+                                                ));
                                                 this.logger.log(
                                                     '[application-details.component][startProvisioning]',
                                                     'Did not receive a selfserviceApplicationUrl');
@@ -273,21 +274,20 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
     emitProvisioningErrorMessage(err: Error): void {
         this.app.subscribe(app => {
-            this.messageBus.emit(
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
                 {
                     severity: 'error',
                     summary: 'Failure at Provisioning',
                     detail: 'The provisioning of a new instance of ' + app.id + ' was not successfull. Error is: ' + JSON.stringify(err)
                 }
-            );
+            ));
         });
     }
 
     extractCorrelationID(queryString: string): string {
         if (queryString.lastIndexOf('=') >= 0) {
             return queryString.substring(queryString.lastIndexOf('=') + 1);
-        }
-        else {
+        } else {
             return '';
         }
     }
@@ -315,14 +315,5 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
             }
             return this.allInputsFilled = false;
         }
-    }
-
-    /**
-     * Reset all state variables
-     */
-    private resetProvisioningState(): void {
-        this.provisioningDone = true;
-        this.provisioningInProgress = false;
-        this.selfserviceApplicationUrl = '';
     }
 }
