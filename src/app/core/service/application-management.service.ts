@@ -24,9 +24,10 @@ import { BuildplanPollResource } from '../model/buildplan-poll-resource.model';
 import { PlanInstance } from '../model/plan-instance.model';
 import { ApplicationInstanceProperties } from '../model/application-instance-properties.model';
 import { ObjectHelper } from '../util/object-helper';
-import { Application } from '../model/application.model';
 import * as _ from 'lodash';
 import { DOCUMENT } from '@angular/platform-browser';
+import { CsarList } from '../model/new-api/csar-list.model';
+import { Csar } from "app/core/model/new-api/csar.model";
 
 @Injectable()
 export class ApplicationManagementService {
@@ -62,63 +63,27 @@ export class ApplicationManagementService {
             .toPromise();
     }
 
-    deleteApplicationInstance(appInstanceURL: string): Promise<any> {
-        this.logger.log('[application.service][deleteApplicationInstance]', 'Trying to delete: ' + appInstanceURL);
-        return this.http.delete(appInstanceURL)
-            .toPromise();
-    }
-
-
-
     /**
-     * Retrieve a list of references to deployed applications
-     * @returns {Promise<ResourceReference[]>}
+     * Load meta data of all CSARs from container
+     * @returns {Observable<Array<Csar>>}
      */
-    getApps(): Promise<ResourceReference[]> {
-        const url = new Path(this.configService.getContainerAPIURL())
-            .append('containerapi')
-            .append('CSARs')
-            .toString();
-        return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
-            .toPromise()
-            .then(response => response.json().References as ResourceReference[])
-            .catch(err => this.logger.handleError('[application.service][getApps]', err));
-    }
-
-    getResolvedApplications(): Observable<Array<Application>> {
+    getResolvedApplications(): Observable<Array<Csar>> {
         const url = new Path(this.configService.getContainerAPIURL())
             .append('csars')
             .toString();
-        return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
-            .map((response: Response) => response.json()['csars'])
-            .map((response: Array<{ id: string, _links: Array<any> }>) => {
-                const csarReferences: Array<CsarReference> = [];
-                for (const csar of response) {
-                    csarReferences.push(new CsarReference(csar.id, csar._links[0]['self']['href']));
-                }
-                return csarReferences;
-            })
-            .map((response: Array<CsarReference>) => {
-                const observables: Array<Observable<Application>> = [];
-                for (const cr of response) {
-                    observables.push(this.getAppDescription(cr.id));
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(url, reqOpts)
+            .map((response: Response) => response.json())
+            .map((response: CsarList) => {
+                const observables: Array<Observable<Csar>> = [];
+                for (const entry of response.csars) {
+                    observables.push(this.http.get(entry._links['self'].href, reqOpts)
+                        .map((response: Response) => response.json())
+                    );
                 }
                 return Observable.forkJoin(observables)
             })
             .flatMap(result => result);
-    }
-
-
-    /**
-     * Fetches PlanParameters
-     * @param url
-     * @returns {Promise<PlanParameters>}
-     */
-    getPlanOutputParameter(url: string): Promise<PlanParameters> {
-        return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
-            .toPromise()
-            .then(result => result.json() as PlanParameters)
-            .catch(err => this.logger.handleError('[application.service][getPlanOutputParameter]', err));
     }
 
     /**
@@ -131,7 +96,8 @@ export class ApplicationManagementService {
             .flatMap(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath)
                     .append(this.configService.getBuildPlanPath()).toString();
-                return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
+                const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+                return this.http.get(url, reqOpts)
                     .map(response => response.json() as PlanOperationMetaData)
                     .catch(err => this.logger.handleObservableError('[application.service][getBuildPlanParameters]', err));
             })
@@ -143,7 +109,8 @@ export class ApplicationManagementService {
             .flatMap(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath)
                     .append(this.configService.getTerminationPlanPath()).toString();
-                return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
+                const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+                return this.http.get(url, reqOpts)
                     .map(response => response.json() as PlanOperationMetaData)
                     .catch(err => this.logger.handleObservableError('[application.service][getTerminationPlan]', err));
             })
@@ -182,27 +149,27 @@ export class ApplicationManagementService {
     getServiceTemplatePathNG(appID: string): Observable<string> {
 
         const url = new Path(`http://${this.document.location.hostname}:1337/csars`)
-        .append(this.fixAppID(appID))
-        .append('servicetemplates')
-        .toString();
+            .append(this.fixAppID(appID))
+            .append('servicetemplates')
+            .toString();
 
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
 
         return this.http.get(url, reqOpts)
-                   .map(response => {
-                       return response.json().service_templates[0]._links[0].self.href;
-                   })
-                   .catch(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err));
+            .map(response => {
+                return response.json().service_templates[0].links[0].self.href;
+            })
+            .catch(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err));
     }
 
     // TODO
     triggerPlan(url: string, parameters: any): void {
         this.http.post(url, parameters, {headers: new Headers({'Accept': 'application/json'})})
-                   .toPromise()
-                   .then(response => {
-                       this.logger.log('[application.service][triggerPlan]', 'Server responded to post: ' + response);
-                   })
-                   .catch(err => this.logger.handleError('[application.service][triggerPlan]', err));
+            .toPromise()
+            .then(response => {
+                this.logger.log('[application.service][triggerPlan]', 'Server responded to post: ' + response);
+            })
+            .catch(err => this.logger.handleError('[application.service][triggerPlan]', err));
     }
 
     /**
@@ -215,10 +182,10 @@ export class ApplicationManagementService {
         this.logger.log('[application.service][startProvisioning]', 'Starting Provisioning');
         this.logger.log('[application.service][startProvisioning]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(planMetaData));
         this.logger.log('[application.service][startProvisioning]', 'Posting to: ' + planMetaData.Reference.href);
-        const headers = new Headers(this.configService.getDefaultAcceptJSONHeaders());
-        headers.append('Content-Type', 'text/plain');
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        reqOpts.headers.append('Content-Type', 'text/plain')
 
-        return this.http.post(planMetaData.Reference.href, planMetaData.Plan, {headers: headers})
+        return this.http.post(planMetaData.Reference.href, planMetaData.Plan, reqOpts)
             .toPromise()
             .then(response => {
                 this.logger.log('[application.service][startProvisioning]', 'Server responded to post: ' + response);
@@ -232,7 +199,8 @@ export class ApplicationManagementService {
 
         this.logger.log('[application.service][pollForServiceTemplateInstanceCreation]',
             'Polling for service template instance creation: ' + pollURL);
-        return this.http.get(pollURL, {headers: this.configService.getDefaultAcceptJSONHeaders()})
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(pollURL, reqOpts)
             .toPromise()
             .then(result => {
                 const references = result.json().References as Array<ResourceReference>;
@@ -263,7 +231,8 @@ export class ApplicationManagementService {
     }
 
     getPlanOutput(url: string): Promise<PlanParameters> {
-        return this.http.get(url, {headers: this.configService.getDefaultAcceptJSONHeaders()})
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(url, reqOpts)
             .toPromise()
             .then(response => response.json())
             .catch(err => this.logger.handleError('[application.service][getPlanoutput]', err));
@@ -275,7 +244,7 @@ export class ApplicationManagementService {
      * @returns {Promise<PlanParameters>}
      */
     pollForPlanFinish(pollUrl: string): Promise<PlanInstance> {
-        const reqOpts = new RequestOptions({headers: this.configService.getDefaultAcceptJSONHeaders()});
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
         this.logger.log('[application.service][pollForPlanFinish]', 'Polling for plan result');
         const waitTime = 10000;
         return this.http.get(pollUrl, reqOpts)
@@ -327,20 +296,6 @@ export class ApplicationManagementService {
             .catch((reason: any) => this.logger.handleObservableError('[application.service][getServiceTemplateInstancesByAppID]', reason));
     }
 
-    getProvisioningStateOfServiceTemplateInstances(refs: Array<ResourceReference>): Promise<Array<any>> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        const promises = <any>[];
-
-        for (const ref of refs) {
-            const statusURL = new Path(ref.href)
-                .append('State')
-                .toString();
-            promises.push(this.http.get(statusURL, reqOpts).toPromise().then(result => result.json()));
-        }
-
-        return Promise.all(promises);
-    }
-
     getPropertiesOfServiceTemplateInstances(refs: Array<ResourceReference>): Observable<Array<ApplicationInstanceProperties>> {
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
         const observables = <any>[];
@@ -365,23 +320,6 @@ export class ApplicationManagementService {
     }
 
     /**
-     * Returns a list of all service instances
-     * @returns {Promise<Array<ResourceReference>>}
-     */
-    getAllInstances(): Promise<Array<ResourceReference>> {
-        const instanceAPIUrl = new Path(this.configService.getContainerAPIURL())
-            .append('containerapi')
-            .append('instancedata')
-            .append('serviceInstances')
-            .toString();
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(instanceAPIUrl, reqOpts)
-            .toPromise()
-            .then(result => result.json().References as Array<ResourceReference>)
-            .catch(err => this.logger.handleError('[application.service][getAllInstances]', err));
-    }
-
-    /**
      * Checks if an App with given appID is already deployed in container.
      * Returns true if already deployed and false if not, so be sure to handle this in <then callback>
      * @param appID
@@ -402,42 +340,20 @@ export class ApplicationManagementService {
     }
 
     /**
-     * Retrieve app description
-     * @param appID CSAR id/name (e.g. XYZ.csar)
-     * @returns {Observable<Application>}
+     * Retrieve csar description of given CSAR ID
+     * @param csarID CSAR ID (e.g. XYZ.csar)
+     * @returns {Observable<Csar>}
      */
-    getAppDescription(appID: string): Observable<Application> {
-        appID = this.fixAppID(appID);
-        const metaDataUrl = new Path(this.configService.getContainerAPIURL())
+    getCsarDescriptionByCsarID(csarID: string): Observable<Csar> {
+        csarID = this.fixAppID(csarID);
+        const url = new Path(this.configService.getContainerAPIURL())
             .append('csars')
-            .append(appID)
+            .append(csarID)
             .toString();
-
-        const headers = new Headers({'Accept': 'application/json'});
-
-        return this.http.get(metaDataUrl, {headers: headers})
-            .map((response: Response) => response.json())
-            .map((response: Object) => {
-                const app: Application = new Application();
-                app.id = response['id'].indexOf('.csar') > -1 ?
-                    response['id'].split('.')[0] : response['id'];
-                app.description = response['description'];
-                app.name = response['name'];
-                app.displayName = response['display_name'];
-                app.version = response['version'];
-                app.authors = response['authors'];
-                app.iconUrl = response['icon_url'];
-                app.imageUrl = response['image_url'];
-                // Todo: Add screenshots to new api
-                app.screenshots = response['screenshot_urls'];
-                return app;
-            })
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(url, reqOpts)
+            .map((response: Response) => response.json() as Csar)
             .catch((err: any) => this.logger
-                .handleObservableError('[application.service][getAppDescription]', err));
-    }
-}
-
-class CsarReference {
-    constructor(public id: string, public link: string) {
+                .handleObservableError('[application.service][getCsarDescriptionByCsarID]', err));
     }
 }

@@ -15,16 +15,61 @@ import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { ApplicationManagementService } from './application-management.service';
 import { Observable } from 'rxjs/Observable';
 import { ApplicationInstance } from '../model/application-instance.model';
+import { Csar } from '../model/new-api/csar.model';
+import { ServiceTemplateInstanceListEntry } from '../model/new-api/service-template-instance-list-entry.model';
+import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { ServiceTemplateList } from '../model/new-api/service-template-list.model';
+import { ServiceTemplate } from '../model/new-api/service-template.model';
+import { ServiceTemplateInstanceList } from '../model/new-api/service-template-instance-list.model';
+import { ServiceTemplateInstance } from '../model/new-api/service-template-instance.model';
 
 @Injectable()
 export class ApplicationInstancesManagementService {
 
     constructor(private logger: OpenToscaLoggerService,
-                private appService: ApplicationManagementService) {
+                private appService: ApplicationManagementService,
+                private http: Http) {
+    }
+
+    getServiceTemplateInstancesOfCsar(app: Csar): Observable<Array<ServiceTemplateInstance>> {
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.get(app._links['servicetemplates'].href)
+            .map((response: Response) => response.json())
+            .flatMap((response: ServiceTemplateList) => {
+                return this.http.get(response.service_templates[0]._links['self'].href, reqOpts)
+                    .map((response: Response) => response.json())
+                    .flatMap((response: ServiceTemplate) => {
+                        return this.http.get(response._links['instances'].href, reqOpts)
+                            .map((response: Response) => response.json())
+                            .flatMap((response: ServiceTemplateInstanceList) => {
+                                const obs: Array<Observable<Response>> = [];
+                                for(const entry of response.service_template_instances) {
+                                    obs.push(this.http.get(entry._links['self'].href, reqOpts));
+                                }
+                                return Observable.forkJoin(obs)
+                                    .flatMap((responses: Array<Response>) => {
+                                        const resultAry: Array<ServiceTemplateInstance> = [];
+                                        for (const r of responses) {
+                                            resultAry.push(r.json());
+                                        }
+                                        return Observable.of(resultAry);
+                                    });
+                            })
+                            .catch(reason => this.logger.handleError(
+                                '[application-instances.service][getServiceTemplateInstances][fetching instances]',
+                                reason));
+                    })
+                    .catch(reason => this.logger.handleError(
+                        '[application-instances.service][getServiceTemplateInstances][fetching service template]',
+                        reason));
+            })
+            .catch(reason => this.logger.handleError(
+                '[application-instances.service][getServiceTemplateInstances][fetching service template list]',
+                reason));
     }
 
     /**
-     * Loads instances of the current app and push it to redux store
+     * Loads instances of the current app
      */
     loadInstancesList(appID: string): Observable<Array<ApplicationInstance>> {
         return this.appService.getServiceTemplateInstancesByAppID(appID)
