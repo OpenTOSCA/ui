@@ -11,7 +11,7 @@
  */
 import { ResourceSupport } from './resource-support.model';
 
-export class ServiceTemplateListEntry extends ResourceSupport{
+export class ServiceTemplateListEntry extends ResourceSupport {
     id: string;
     name: string;
 }

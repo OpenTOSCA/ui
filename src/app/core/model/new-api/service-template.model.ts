@@ -11,5 +11,5 @@
  */
 import { ResourceSupport } from './resource-support.model';
 
-export class ServiceTemplate extends ResourceSupport{
+export class ServiceTemplate extends ResourceSupport {
 }

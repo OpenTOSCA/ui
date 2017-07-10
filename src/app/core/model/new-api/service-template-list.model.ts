@@ -12,6 +12,6 @@
 import { ServiceTemplateListEntry } from './service-template-list-entry.model';
 import { ResourceSupport } from './resource-support.model';
 
-export class ServiceTemplateList extends ResourceSupport{
+export class ServiceTemplateList extends ResourceSupport {
     service_templates: Array<ServiceTemplateListEntry>;
 }

@@ -11,6 +11,6 @@
  */
 import { ResourceSupport } from './resource-support.model';
 
-export class CsarListEntry extends ResourceSupport{
+export class CsarListEntry extends ResourceSupport {
     id: string;
 }

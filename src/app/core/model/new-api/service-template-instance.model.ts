@@ -11,7 +11,7 @@
  */
 import { ResourceSupport } from './resource-support.model';
 
-export class ServiceTemplateInstance extends ResourceSupport{
+export class ServiceTemplateInstance extends ResourceSupport {
     id: number;
     created_at: string;
     csar_id: string;

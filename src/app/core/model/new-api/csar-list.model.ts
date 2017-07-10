@@ -12,6 +12,6 @@
 import { CsarListEntry } from './csar-list-entry.model';
 import { ResourceSupport } from './resource-support.model';
 
-export class CsarList extends ResourceSupport{
+export class CsarList extends ResourceSupport {
     csars: Array<CsarListEntry>;
 }

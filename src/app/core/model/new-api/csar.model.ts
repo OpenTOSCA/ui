@@ -11,7 +11,7 @@
  */
 import { ResourceSupport } from './resource-support.model';
 
-export class Csar extends ResourceSupport{
+export class Csar extends ResourceSupport {
     authors: Array<string>;
     description: string;
     display_name: string;
