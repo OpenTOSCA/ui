@@ -16,17 +16,16 @@ import { NgUploaderOptions } from 'ngx-uploader';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { GrowlMessageBusService } from '../../core/service/growl-message-bus.service';
 import { NgRedux } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import { Application } from '../../core/model/application.model';
 import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementActions } from '../application-management-actions';
 import {MarketplaceApplication} from '../../core/model/marketplace-application.model';
 import {DeploymentCompletionService} from '../../core/service/deployment-completion.service';
 import {RepositoryManagementService} from '../../core/service/repository-management.service';
 import { Path } from '../../core/util/path';
+import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
   selector: 'opentosca-ui-application-upload',
@@ -86,7 +85,6 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
 
     constructor(private adminService: ConfigurationService,
                 private appService: ApplicationManagementService,
-                private messageBus: GrowlMessageBusService,
                 private deploymentService: DeploymentCompletionService,
                 private repositoryManagementService: RepositoryManagementService,
                 private ngRedux: NgRedux<AppState>,
@@ -110,13 +108,13 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             }
             if (data.status === 201) {
                 this.deploymentDone = true;
-                this.messageBus.emit(
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'success',
                         summary: 'Upload Succeeded',
                         detail: 'New Application was successfully uploaded and deployed to container'
                     }
-                );
+                ));
                 this.updateApplicationsInStore();
                 this.resetUploadStats();
                 this.closeModal();
@@ -142,13 +140,13 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             }
             if (data.status === 500) {
                 this.failureMessage = data.statusText;
-                this.messageBus.emit(
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'error',
                         summary: 'Error',
                         detail: 'Application was not successfully uploaded and deployed. Server responded: ' + data.statusText
                     }
-                );
+                ));
                 this.closeModal();
             }
             this.updateCurrentSpeed(data.progress.speedHumanized);
@@ -211,13 +209,13 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                         this.appService.isAppDeployedInContainer(app.id)
                             .then(output => {
                                 if (output) {
-                                    this.messageBus.emit(
+                                    this.ngRedux.dispatch(GrowlActions.addGrowl(
                                         {
                                             severity: 'success',
                                             summary: 'Upload Succeeded',
                                             detail: 'Application was successfully completed and deployed to container'
                                         }
-                                    );
+                                    ));
                                     this.deploymentDone = true;
                                     this.updateApplicationsInStore();
                                     this.resetUploadStats();
@@ -227,14 +225,13 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                                 } else {
                                     this.logger.log('[deployment-completion.component][installed&notdeployedinContainer]',
                                         this.appToComplete.displayName);
-                                    this.messageBus.emit(
+                                    this.ngRedux.dispatch(GrowlActions.addGrowl(
                                         {
                                             severity: 'error',
                                             summary: 'Error',
                                             detail: 'Application was not successfully uploaded and deployed.'
                                         }
-                                    );
-
+                                    ));
                                 }
                             });
                     })
@@ -256,13 +253,13 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                     });
 
             } else {
-                this.messageBus.emit(
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'error',
                         summary: 'Error',
                         detail: 'Application is already deployed'
                     }
-                );
+                ));
                 this.updateApplicationsInStore();
                 this.closeModal();
                 this.resetUploadStats();

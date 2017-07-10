@@ -18,7 +18,6 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 import {RepositoryManagementService} from '../../service/repository-management.service';
 import {ApplicationManagementService} from '../../service/application-management.service';
 import {OpenToscaLoggerService} from '../../service/open-tosca-logger.service';
-import {GrowlMessageBusService} from '../../service/growl-message-bus.service';
 import {AppState} from '../../../store/app-state.model';
 import {InjectionOption} from '../../model/injection-option.model';
 import {DeploymentCompletionService} from '../../service/deployment-completion.service';
@@ -46,7 +45,6 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 private repositoryManagementService: RepositoryManagementService,
                 private applicationManagementService: ApplicationManagementService,
                 private completionService: DeploymentCompletionService,
-                private messageBus: GrowlMessageBusService,
                 private ngRedux: NgRedux<AppState>,
                 private router: Router,
                 private logger: OpenToscaLoggerService) {

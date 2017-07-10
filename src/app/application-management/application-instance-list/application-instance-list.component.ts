@@ -17,11 +17,11 @@ import { Observable } from 'rxjs/Observable';
 import { select } from '@angular-redux/store';
 
 @Component({
-  selector: 'opentosca-ui-application-instance-list',
-  templateUrl: './application-instance-list.component.html',
-  styleUrls: ['./application-instance-list.component.scss']
+    selector: 'opentosca-ui-application-instance-list',
+    templateUrl: './application-instance-list.component.html',
+    styleUrls: ['./application-instance-list.component.scss']
 })
-export class ApplicationInstanceListComponent{
+export class ApplicationInstanceListComponent {
 
     @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<ServiceTemplateInstanceListEntry>>;
     @Output() public onTerminateInstance: EventEmitter<TriggerTerminationPlanEvent> = new EventEmitter();
