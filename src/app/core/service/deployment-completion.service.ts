@@ -72,13 +72,13 @@ export class DeploymentCompletionService {
                 return injectionOptions;
             })
             .catch(err => {
-                if (err.status == 400) {
+                if (err.status === 400) {
 
                     return null;
 
                 } else {
                     this.logger.handleError('[deployment-completion.service][getInjectionOptions]',
-                        err)
+                        err);
                 }
             });
     }

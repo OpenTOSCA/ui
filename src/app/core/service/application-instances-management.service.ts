@@ -37,19 +37,19 @@ export class ApplicationInstancesManagementService {
             .map((response: Response) => response.json())
             .flatMap((response: ServiceTemplateList) => {
                 return this.http.get(response.service_templates[0]._links['self'].href, reqOpts)
-                    .map((response: Response) => response.json())
-                    .flatMap((response: ServiceTemplate) => {
-                        return this.http.get(response._links['instances'].href, reqOpts)
-                            .map((response: Response) => response.json())
-                            .flatMap((response: ServiceTemplateInstanceList) => {
+                    .map((rawServiceTemplate: Response) => rawServiceTemplate.json())
+                    .flatMap((serviceTemplate: ServiceTemplate) => {
+                        return this.http.get(serviceTemplate._links['instances'].href, reqOpts)
+                            .map((rawInstanceList: Response) => rawInstanceList.json())
+                            .flatMap((instanceList: ServiceTemplateInstanceList) => {
                                 const obs: Array<Observable<Response>> = [];
-                                for(const entry of response.service_template_instances) {
+                                for (const entry of instanceList.service_template_instances) {
                                     obs.push(this.http.get(entry._links['self'].href, reqOpts));
                                 }
                                 return Observable.forkJoin(obs)
-                                    .flatMap((responses: Array<Response>) => {
+                                    .flatMap((rawFullInstances: Array<Response>) => {
                                         const resultAry: Array<ServiceTemplateInstance> = [];
-                                        for (const r of responses) {
+                                        for (const r of rawFullInstances) {
                                             resultAry.push(r.json());
                                         }
                                         return Observable.of(resultAry);

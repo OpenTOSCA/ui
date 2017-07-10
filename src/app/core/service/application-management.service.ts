@@ -27,7 +27,7 @@ import { ObjectHelper } from '../util/object-helper';
 import * as _ from 'lodash';
 import { DOCUMENT } from '@angular/platform-browser';
 import { CsarList } from '../model/new-api/csar-list.model';
-import { Csar } from "app/core/model/new-api/csar.model";
+import { Csar } from 'app/core/model/new-api/csar.model';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -78,10 +78,10 @@ export class ApplicationManagementService {
                 const observables: Array<Observable<Csar>> = [];
                 for (const entry of response.csars) {
                     observables.push(this.http.get(entry._links['self'].href, reqOpts)
-                        .map((response: Response) => response.json())
+                        .map((rawCsar: Response) => rawCsar.json())
                     );
                 }
-                return Observable.forkJoin(observables)
+                return Observable.forkJoin(observables);
             })
             .flatMap(result => result);
     }
@@ -183,7 +183,7 @@ export class ApplicationManagementService {
         this.logger.log('[application.service][startProvisioning]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(planMetaData));
         this.logger.log('[application.service][startProvisioning]', 'Posting to: ' + planMetaData.Reference.href);
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        reqOpts.headers.append('Content-Type', 'text/plain')
+        reqOpts.headers.append('Content-Type', 'text/plain');
 
         return this.http.post(planMetaData.Reference.href, planMetaData.Plan, reqOpts)
             .toPromise()
