@@ -78,10 +78,9 @@ export class RepositoryOverviewComponent implements OnInit {
     installInContainer(app: MarketplaceApplication): void {
         app.isInstalling = true;
         const postURL = new Path(this.adminService.getContainerAPIURL())
-            .append('containerapi')
-            .append('CSARs')
+            .append('csars')
             .toString();
-        this.marketService.installAppInContainer(app.csarURL, postURL)
+        this.marketService.installAppInContainer(app, postURL)
             .then(response => {
                 app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)

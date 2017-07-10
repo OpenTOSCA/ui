@@ -56,8 +56,7 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
 
         this.zone = new NgZone({enableLongStackTrace: false});
         const postURL = new Path(this.adminService.getContainerAPIURL())
-            .append('containerapi')
-            .append('CSARs')
+            .append('csars')
             .toString();
 
         this.options = {
@@ -201,10 +200,9 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
         this.appService.isAppDeployedInContainer(app.id).then(result => {
             if (!result) {
                 const postURL = new Path(this.adminService.getContainerAPIURL())
-                    .append('containerapi')
-                    .append('CSARs')
+                    .append('csars')
                     .toString();
-                this.repositoryManagementService.installAppInContainer(app.csarURL, postURL)
+                this.repositoryManagementService.installAppInContainer(app, postURL)
                     .then(response => {
                         this.appService.isAppDeployedInContainer(app.id)
                             .then(output => {

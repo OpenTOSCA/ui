@@ -11,12 +11,13 @@
  *     Oliver Kopp - fixing of URL encoding
  */
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { Path } from '../util/path';
+import { CsarUploadReference } from '../model/new-api/csar-upload-request.model';
 
 @Injectable()
 export class RepositoryManagementService {
@@ -50,7 +51,8 @@ export class RepositoryManagementService {
      * @returns {Promise<MarketplaceApplication>}
      */
     getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
-        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace)) + '/' + encodeURIComponent(encodeURIComponent(appReference.id));    // tslint:disable-line:max-line-length
+        const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace))
+            + '/' + encodeURIComponent(encodeURIComponent(appReference.id));    // tslint:disable-line:max-line-length
         const selfServiceURL = url + '/selfserviceportal';
         const headers = new Headers({'Accept': 'application/json'});
         return this.http.get(selfServiceURL, {headers: headers})
@@ -73,16 +75,13 @@ export class RepositoryManagementService {
 
     /**
      * Deploy CSAR in container via URL to CSAR
-     * @param csarURL URL to CSAR
+     * @param app MarketplaceApplication to deploy to container
      * @param containerURL Container endpoint URL (e.g., http://localhost:1337)
-     * @returns {Promise<TResult>}
+     * @returns {Promise<any>}
      */
-    installAppInContainer(csarURL: string, containerURL: string): Promise<any> {
-        const body = {
-            'URL': csarURL
-        };
-        const headers = new Headers({'Accept': 'application/json'});
-        return this.http.post(containerURL, body, {headers: headers})
+    installAppInContainer(app: MarketplaceApplication, containerURL: string): Promise<any> {
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+        return this.http.post(containerURL, new CsarUploadReference(app.csarURL, app.displayName), reqOpts)
             .toPromise();
     }
 
@@ -126,5 +125,4 @@ export class RepositoryManagementService {
             })
             .catch(err => this.logger.handleError('[marketplace.service][getAppDescription]', err));
     }
-
 }
