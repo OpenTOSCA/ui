@@ -18,6 +18,7 @@ import { applicationManagementReducer } from '../application-management/applicat
 import { configurationReducer } from '../configuration/configuration.reducer';
 import { repositoryManagementReducer } from '../repository-management/repository-management.reducer';
 import { breadcrumbReducer } from 'app/core/component/breadcrumb/breadcrumb.reducer';
+import { growlReducer } from '../core/growl/growl.reducer';
 
 export const rootReducer = composeReducers(
     defaultFormReducer(),
@@ -26,6 +27,7 @@ export const rootReducer = composeReducers(
         administration: configurationReducer,
         repository: repositoryManagementReducer,
         breadcrumb: breadcrumbReducer,
+        growl: growlReducer,
         router: routerReducer,
     })
 );

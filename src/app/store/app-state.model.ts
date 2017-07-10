@@ -14,10 +14,12 @@ import { ApplicationManagementState } from '../application-management/applicatio
 import { RepositoryManagementState } from '../repository-management/repository-management.reducer';
 import { ConfigurationState } from '../configuration/configuration.reducer';
 import { BreadcrumbState } from '../core/component/breadcrumb/breadcrumb.reducer';
+import { GrowlState } from '../core/growl/growl.reducer';
 
 export interface AppState {
     container?: ApplicationManagementState;
     repository?: RepositoryManagementState;
     administration?: ConfigurationState;
     breadcrumb?: BreadcrumbState;
+    growl?: GrowlState;
 }
