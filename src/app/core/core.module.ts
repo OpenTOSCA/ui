@@ -12,12 +12,11 @@
  */
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from './component/breadcrumb/breadcrumb.component';
 import { SortPipe } from './pipe/sort.pipe';
 import { OpenToscaLoggerService } from './service/open-tosca-logger.service';
 import { ApplicationManagementService } from './service/application-management.service';
-import { GrowlMessageBusService } from './service/growl-message-bus.service';
 import { ApplicationInstanceManagementService } from './service/application-instance-management.service';
 import { ConfigurationModule } from '../configuration/configuration.module';
 import { ApplicationInstancesManagementService } from './service/application-instances-management.service';
@@ -28,9 +27,9 @@ import { ActionItemComponent } from './component/action-bar/action-item.componen
 import { FuzzySearchPipe } from './pipe/fuzzy-search.pipe';
 import { InputDebounceComponent } from './component/action-bar/input-debounce.component';
 import { SearchComponent } from './component/action-bar/search.component';
-import {DeploymentCompletionComponent} from './component/deployment-completion/deployment-completion.component';
-import {DeploymentCompletionService} from './service/deployment-completion.service';
-import {Ng2BootstrapModule} from 'ngx-bootstrap';
+import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
+import { DeploymentCompletionService } from './service/deployment-completion.service';
+import { Ng2BootstrapModule } from 'ngx-bootstrap';
 
 @NgModule({
     imports: [
@@ -63,7 +62,6 @@ import {Ng2BootstrapModule} from 'ngx-bootstrap';
     providers: [
         ApplicationInstanceManagementService,
         ApplicationManagementService,
-        GrowlMessageBusService,
         OpenToscaLoggerService,
         DatePipe,
         ApplicationInstancesManagementService,
