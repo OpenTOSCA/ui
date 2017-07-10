@@ -6,5 +6,5 @@
     <a id="aboutButton" routerLink="/about" routerLinkActive="selected">About</a>
 </nav>
 <opentosca-ui-breadcrumb></opentosca-ui-breadcrumb>
-<p-growl [value]="messages" sticky="sticky"></p-growl>
+<p-growl [value]="messages" sticky="sticky" (valueChange)="growlsChange($event)"></p-growl>
 <router-outlet></router-outlet>

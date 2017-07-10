@@ -12,19 +12,30 @@
  */
 import { Component } from '@angular/core';
 import { Message } from 'primeng/primeng';
-import { GrowlMessageBusService } from './core/service/growl-message-bus.service';
+import { NgRedux, select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+import { AppState } from './store/app-state.model';
+import * as _ from 'lodash';
+import { GrowlActions } from './core/growl/growl-actions';
 
 @Component({
-  selector: 'opentosca-ui-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'opentosca-ui-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
     public messages: Array<Message> = [];
+    @select(['growl', 'messages']) growls: Observable<Array<Message>>;
 
-    public constructor(private messageBus: GrowlMessageBusService) {
+    public constructor(private ngRedux: NgRedux<AppState>) {
         // We need this to pass messages to global growl component
-        // Todo Use redux store instead of own message bus
-        this.messageBus.messages.subscribe(m => this.messages.push(m));
+        this.growls.subscribe(messages => {
+            console.log(this.messages, messages);
+            this.messages = messages;
+        });
+    }
+
+    growlsChange(messages: Array<Message>): void {
+        this.ngRedux.dispatch(GrowlActions.updateGrowls(messages));
     }
 }
