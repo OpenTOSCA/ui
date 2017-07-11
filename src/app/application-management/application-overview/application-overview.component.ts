@@ -34,7 +34,7 @@ export class ApplicationOverviewComponent implements OnInit {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     public removingApp = false;
-    public appToDelete: Application;
+    public appToDelete: Csar;
     public searchTerm: string;
 
     constructor(private appService: ApplicationManagementService,
@@ -57,7 +57,7 @@ export class ApplicationOverviewComponent implements OnInit {
         this.removingApp = true;
         this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
         this.appService.deleteAppFromContainer(app.id)
-            .then(response => {
+            .subscribe((response: Response) => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'success',
@@ -67,11 +67,13 @@ export class ApplicationOverviewComponent implements OnInit {
                 ));
                 this.logger.log('[applications-overview.component][deleteFromContainer]',
                     'Application successfully deleted, received response: ' + JSON.stringify(response));
-                this.ngRedux.dispatch(ApplicationManagementActions.removeContainerApplication(app));
+                this.appService.getResolvedApplications()
+                    .subscribe(result => {
+                        this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(result));
+                    });
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
-            })
-            .catch(err => {
+            }, err => {
                 this.removingApp = false;
                 this.hideDeleteConfirmationModal();
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -82,7 +84,12 @@ export class ApplicationOverviewComponent implements OnInit {
                         ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
                     }
                 ));
+                this.appService.getResolvedApplications()
+                    .subscribe(result => {
+                        this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(result));
+                    });
                 this.logger.handleError('[applications-overview.component][deleteFromContainer]', err);
+                this.hideDeleteConfirmationModal();
             });
     }
 
@@ -95,7 +102,7 @@ export class ApplicationOverviewComponent implements OnInit {
         this.appToDelete = null;
     }
 
-    showDeleteConfirmationModal(appToDelete: Application): void {
+    showDeleteConfirmationModal(appToDelete: Csar): void {
         this.appToDelete = appToDelete;
         this.childModal.show();
     }

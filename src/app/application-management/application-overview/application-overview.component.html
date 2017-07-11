@@ -15,7 +15,7 @@
                 <img [src]="app.icon_url" onerror="this.src='/assets/Default_Application_Icon.png'"/>
             </div>
             <div id="applicationDisplayName">
-                <span>{{app.display_name}}</span>
+                <span>{{ app.display_name }}</span>
             </div>
             <div class="applicationTileButtonContainer">
                 <button tooltip="Details" type="button" [routerLink]="['/applications', app.id]"
@@ -48,14 +48,14 @@
             </div>
             <div class="modal-body">
                 <div class="opentosca-modal-content">
-                    Do you really want to delete the App "{{appToDelete?.displayName}}"?
-                    <div class="loaderContainer" *ngIf="removingApp">
-                        <div id="loader"></div>
+                    Do you really want to delete the App "{{ appToDelete?.display_name }}"?
+                    <div *ngIf="removingApp">
+                        <sk-fading-circle></sk-fading-circle>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Cancel</button>
+                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Close</button>
                 <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled]="false"
                         (click)="deleteFromContainer(appToDelete)">Delete
                 </button>
