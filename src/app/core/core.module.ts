@@ -30,6 +30,7 @@ import { SearchComponent } from './component/action-bar/search.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
 import { Ng2BootstrapModule } from 'ngx-bootstrap';
+import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
 
 @NgModule({
     imports: [
@@ -47,7 +48,8 @@ import { Ng2BootstrapModule } from 'ngx-bootstrap';
         InputDebounceComponent,
         SearchComponent,
         DeploymentCompletionComponent,
-        SortPipe
+        SortPipe,
+        HumanizeBytesPipe
     ],
     exports: [
         ActionBarComponent,
@@ -57,7 +59,8 @@ import { Ng2BootstrapModule } from 'ngx-bootstrap';
         InputDebounceComponent,
         SearchComponent,
         DeploymentCompletionComponent,
-        SortPipe
+        SortPipe,
+        HumanizeBytesPipe
     ],
     providers: [
         ApplicationInstanceManagementService,
