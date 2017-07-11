@@ -49,18 +49,15 @@ export class ApplicationManagementService {
     /**
      * Deletes the app from the container
      * @param appID
-     * @returns {Promise<any>}
+     * @returns {Observable<any>}
      */
-    deleteAppFromContainer(appID: string): Promise<any> {
+    deleteAppFromContainer(appID: string): Observable<any> {
         const url = new Path(this.configService.getContainerAPIURL())
-            .append('containerapi')
-            .append('CSARs')
+            .append('csars')
             .append(this.fixAppID(appID))
             .toString();
-        const headers = new Headers({'Accept': 'text/plain'});
         this.logger.log('[application.service][deleteAppFromContainer]', 'Sending delete to ' + url);
-        return this.http.delete(url, {headers: headers})
-            .toPromise();
+        return this.http.delete(url);
     }
 
     /**
@@ -81,7 +78,7 @@ export class ApplicationManagementService {
                         .map((rawCsar: Response) => rawCsar.json())
                     );
                 }
-                return Observable.forkJoin(observables);
+                return observables.length > 0 ? Observable.forkJoin(observables) : Observable.of([]);
             })
             .flatMap(result => result);
     }
