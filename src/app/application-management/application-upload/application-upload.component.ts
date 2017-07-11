@@ -11,8 +11,8 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
-import { AfterViewInit, Component, NgZone, OnInit, ViewChild } from '@angular/core';
-import { NgUploaderOptions } from 'ngx-uploader';
+import { AfterViewInit, Component, NgZone, OnInit, ViewChild, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
@@ -21,39 +21,39 @@ import { Router } from '@angular/router';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementActions } from '../application-management-actions';
-import {MarketplaceApplication} from '../../core/model/marketplace-application.model';
-import {DeploymentCompletionService} from '../../core/service/deployment-completion.service';
-import {RepositoryManagementService} from '../../core/service/repository-management.service';
+import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
+import { DeploymentCompletionService } from '../../core/service/deployment-completion.service';
+import { RepositoryManagementService } from '../../core/service/repository-management.service';
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
-  selector: 'opentosca-ui-application-upload',
-  templateUrl: './application-upload.component.html',
-  styleUrls: ['./application-upload.component.scss']
+    selector: 'opentosca-ui-application-upload',
+    templateUrl: './application-upload.component.html',
+    styleUrls: ['./application-upload.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 // Fixme: If modal is opened, closed, opened and closed again then an error is thrown since router navigates to applications/(modal:upload)
 export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     public deploymentInProgress = false;
     public deploymentDone = false;
     public max = 100;
-    public dynamic = 0;
     public currentSpeed: string;
-    public failureMessage: string;
-    public uploadFile: any;
     public options: NgUploaderOptions;
+    public linkToWineryResourceForCompletion: string;
+    public appToComplete: MarketplaceApplication;
+    public startCompletionProcess: boolean;
+    public inputUploadEvents: EventEmitter<string>;
+    public uploadingFile: UploadedFile;
+    public selectedFile: any;
 
     private zone: NgZone;
     private lastUpdate: number;
 
-    public linkToWineryResourceForCompletion: string;
-    public appToComplete: MarketplaceApplication;
-    public startCompletionProcess: boolean;
 
     @ViewChild('uploadModal') public uploadModal: ModalDirective;
 
     ngOnInit(): void {
-
         this.zone = new NgZone({enableLongStackTrace: false});
         const postURL = new Path(this.adminService.getContainerAPIURL())
             .append('csars')
@@ -64,9 +64,11 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             customHeaders: {
                 'Accept': 'application/json'
             },
-            // filterExtensions: true,
-            // allowedExtensions: ['csar'],
-            calculateSpeed: true
+            filterExtensions: true,
+            allowedExtensions: ['csar'],
+            calculateSpeed: true,
+            previewUrl: true,
+            autoUpload: false,
         };
     }
 
@@ -89,23 +91,56 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                 private ngRedux: NgRedux<AppState>,
                 private router: Router,
                 private logger: OpenToscaLoggerService) {
+        this.inputUploadEvents = new EventEmitter<string>();
     }
 
     /**
-     * Callback for ng2-uploader to process progress and status of file upload
+     * Saves selected file to show it in template
+     * @param event
+     */
+    onChange(event): void {
+        const files = event.srcElement.files;
+        if (files && files.length > 0) {
+            this.selectedFile = files[0];
+        }
+    }
+
+    /**
+     * Starts upload of selected file to container
+     */
+    startUpload(): void {
+        this.inputUploadEvents.emit('startUpload');
+    }
+
+    /**
+     * Save uploadingFile for access in template
+     * @param uploadingFile
+     */
+    beforeUpload(uploadingFile: UploadedFile): void {
+        this.uploadingFile = uploadingFile;
+    }
+
+    /**
+     * Abort an upload in progress
+     */
+    abortUpload(): void {
+        this.uploadingFile.xhr.abort();
+        this.resetUploadStats();
+    }
+
+    /**
+     * Callback for ngx-uploader to process progress and status of file upload
      * @param data
      */
     handleUpload(data: any): void {
         this.zone.run(() => {
-            this.uploadFile = data;
-            this.dynamic = data.progress.percent;
-            if (this.dynamic < 100) {
+            if (this.uploadingFile.progress['percent'] < 100) {
                 this.deploymentInProgress = false;
                 this.deploymentDone = false;
             } else {
                 this.deploymentInProgress = true;
             }
-            if (data.status === 201) {
+            if (this.uploadingFile.status === 201) {
                 this.deploymentDone = true;
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
@@ -118,32 +153,24 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                 this.resetUploadStats();
                 this.closeModal();
             }
-            if (data.status === 406) {
-                this.failureMessage = data.statusText;
-                const location = JSON.parse(data.response);
+            if (this.uploadingFile.status === 406) {
+                const location = JSON.parse(this.uploadingFile.response);
                 this.linkToWineryResourceForCompletion = location ['Location']  as string;
-                console.log(data);
-                console.log(location);
-                console.log(this.linkToWineryResourceForCompletion);
                 this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion,
-                    data.originalName.substr(0, data.originalName.lastIndexOf('.csar')))
+                    data.originalName.substr(0, this.uploadingFile.originalName.lastIndexOf('.csar')))
                     .then(app => {
                         this.appToComplete = app;
                         this.startCompletionProcess = true;
                         this.resetUploadStats();
                     })
                     .catch(err => this.logger.handleError('[application-upload.component][getAppFromCompletionHandlerWinery]', err));
-
-                console.log(this.appToComplete);
-
             }
-            if (data.status === 500) {
-                this.failureMessage = data.statusText;
+            if (this.uploadingFile.status === 500) {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Application was not successfully uploaded and deployed. Server responded: ' + data.statusText
+                        detail: 'Application was not successfully uploaded and deployed. Server responded: ' + this.uploadingFile.statusText
                     }
                 ));
                 this.closeModal();
@@ -152,6 +179,9 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
         });
     }
 
+    /**
+     * Reload applications from Container and update redux store
+     */
     updateApplicationsInStore(): void {
         this.appService.getResolvedApplications()
             .subscribe(apps => {
@@ -166,7 +196,8 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
      */
     resetUploadStats(): void {
         this.deploymentInProgress = false;
-        this.dynamic = 0;
+        this.uploadingFile = null;
+        this.selectedFile = null;
     }
 
     /**
@@ -178,6 +209,7 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             this.lastUpdate = Date.now();
             this.setCurrentSpeed(speed);
         }
+        // we only update current speed every 0.5 seconds
         if ((Date.now() - this.lastUpdate) > 500) {
             this.setCurrentSpeed(speed);
             this.lastUpdate = Date.now();
@@ -193,7 +225,6 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
             this.currentSpeed = speed;
         }
     }
-
 
     installInContainer(app: MarketplaceApplication): void {
         this.deploymentInProgress = true;
@@ -245,11 +276,9 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                                 } else {
                                     this.logger.log('[deployment-completion.component][notinstalled&notdeployedinContainer]',
                                         this.appToComplete.displayName);
-
                                 }
                             });
                     });
-
             } else {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
@@ -262,8 +291,6 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
                 this.closeModal();
                 this.resetUploadStats();
             }
-
         });
     }
-
 }
