@@ -31,6 +31,7 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/new-api/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
+import { ServiceTemplateInstanceListEntry } from '../../core/model/new-api/service-template-instance-list-entry.model';
 
 @Component({
     selector: 'opentosca-ui-application-detail',
@@ -119,13 +120,17 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     emitTerminationPlan(terminationEvent: TriggerTerminationPlanEvent): void {
-        this.app.subscribe(app => {
-            this.appService.getServiceTemplatePathNG(app.id).subscribe(serviceTemplatePath => {
+        const app = this.ngRedux.getState().container.currentApp;
+        this.appService.getServiceTemplatePathNG(app.id)
+            .subscribe(serviceTemplatePath => {
+                console.log(serviceTemplatePath);
                 const instanceId = terminationEvent.instanceID;
+                console.log(instanceId);
                 const plan = this.terminationPlan.Plan.ID;
+                console.log(plan);
                 const url = new Path(serviceTemplatePath)
                     .append('instances')
-                    .append(instanceId)
+                    .append(instanceId + '')
                     .append('managementplans')
                     .append(plan)
                     .append('instances')
@@ -141,7 +146,6 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     ));
                 });
             });
-        });
     }
 
     updateAppInstancesList(app: Csar): void {
@@ -174,102 +178,101 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.selfserviceApplicationUrl = '';
         this.provisioningInProgress = true;
         this.provisioningDone = false;
-        this.app.subscribe(app => {
-            this.appService.startProvisioning(app.id, this.buildPlanOperationMetaData)
-                .then(response => {
-                    this.logger.log(
-                        '[application-details.component][startProvisioning]',
-                        'Received result after post ' + JSON.stringify(response)
-                    );
-                    this.logger.log(
-                        '[application-details.component][startProvisioning]',
-                        'Now starting to poll for service template instance creation'
-                    );
-                    this.appService.pollForServiceTemplateInstanceCreation(response.PlanURL)
-                        .then(urlToServiceTemplateInstance => {
-                            this.logger.log(
-                                '[application-details.component][startProvisioning]',
-                                'ServiceTemplateInstance created: ' + urlToServiceTemplateInstance);
-                            const urlToPlanInstanceOutput = new Path(urlToServiceTemplateInstance)
-                                .append('PlanInstances')
-                                .append(this.extractCorrelationID(response.PlanURL))
-                                .append('Output')
-                                .toString();
+        const app = this.ngRedux.getState().container.currentApp;
+        this.appService.startProvisioning(app.id, this.buildPlanOperationMetaData)
+            .then(response => {
+                this.logger.log(
+                    '[application-details.component][startProvisioning]',
+                    'Received result after post ' + JSON.stringify(response)
+                );
+                this.logger.log(
+                    '[application-details.component][startProvisioning]',
+                    'Now starting to poll for service template instance creation'
+                );
+                this.appService.pollForServiceTemplateInstanceCreation(response.PlanURL)
+                    .then(urlToServiceTemplateInstance => {
+                        this.logger.log(
+                            '[application-details.component][startProvisioning]',
+                            'ServiceTemplateInstance created: ' + urlToServiceTemplateInstance);
+                        const urlToPlanInstanceOutput = new Path(urlToServiceTemplateInstance)
+                            .append('PlanInstances')
+                            .append(this.extractCorrelationID(response.PlanURL))
+                            .append('Output')
+                            .toString();
 
-                            const urlToPlanInstanceState = new Path(urlToServiceTemplateInstance)
-                                .append('PlanInstances')
-                                .append(this.extractCorrelationID(response.PlanURL))
-                                .append('State')
-                                .toString();
+                        const urlToPlanInstanceState = new Path(urlToServiceTemplateInstance)
+                            .append('PlanInstances')
+                            .append(this.extractCorrelationID(response.PlanURL))
+                            .append('State')
+                            .toString();
 
-                            this.logger.log('[application-details.component][startProvisioning]',
-                                'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
+                        this.logger.log('[application-details.component][startProvisioning]',
+                            'Now staring to poll for build plan completion: ' + urlToPlanInstanceState);
 
-                            this.appService.pollForPlanFinish(urlToPlanInstanceState)
-                                .then(result => {
-                                    this.updateAppInstancesList(app);
-                                    // we received the plan result
-                                    // go find and present selfServiceApplicationUrl to user
-                                    this.logger.log(
-                                        '[application-details.component][startProvisioning]',
-                                        'Received plan result: ' + JSON.stringify(result)
-                                    );
-                                    this.appService.getPlanOutput(urlToPlanInstanceOutput)
-                                        .then(planOutput => {
-                                            for (const para of planOutput.OutputParameters) {
-                                                if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
-                                                    this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(
-                                                        para.OutputParameter.Value
-                                                    );
-                                                    this.ngRedux.dispatch(GrowlActions.addGrowl(
-                                                        {
-                                                            severity: 'success',
-                                                            summary: 'New Instance Provisioned',
-                                                            detail: 'A new instance of ' + app.id +
-                                                            ' was provisioned. Launch via: ' +
-                                                            para.OutputParameter.Value
-                                                        }
-                                                    ));
-                                                }
-                                            }
-                                            if (this.selfserviceApplicationUrl === '') {
-                                                this.planOutputParameters = planOutput.OutputParameters;
+                        this.appService.pollForPlanFinish(urlToPlanInstanceState)
+                            .then(result => {
+                                this.updateAppInstancesList(app);
+                                // we received the plan result
+                                // go find and present selfServiceApplicationUrl to user
+                                this.logger.log(
+                                    '[application-details.component][startProvisioning]',
+                                    'Received plan result: ' + JSON.stringify(result)
+                                );
+                                this.appService.getPlanOutput(urlToPlanInstanceOutput)
+                                    .then(planOutput => {
+                                        for (const para of planOutput.OutputParameters) {
+                                            if (para.OutputParameter.Name === 'selfserviceApplicationUrl') {
+                                                this.selfserviceApplicationUrl = this.sanitizer.bypassSecurityTrustUrl(
+                                                    para.OutputParameter.Value
+                                                );
                                                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                                                     {
                                                         severity: 'success',
                                                         summary: 'New Instance Provisioned',
                                                         detail: 'A new instance of ' + app.id +
-                                                        ' was provisioned. Result is: ' +
-                                                        JSON.stringify(planOutput.OutputParameters)
+                                                        ' was provisioned. Launch via: ' +
+                                                        para.OutputParameter.Value
                                                     }
                                                 ));
-                                                this.logger.log(
-                                                    '[application-details.component][startProvisioning]',
-                                                    'Did not receive a selfserviceApplicationUrl');
                                             }
-                                        })
-                                        .catch(err => {
-                                            this.emitProvisioningErrorMessage(err);
-                                            this.logger.handleError('[application-details.component][startProvisioning]', err);
-                                        });
-                                    this.provisioningDone = true;
-                                    this.provisioningInProgress = false;
-                                })
-                                .catch(err => {
-                                    this.emitProvisioningErrorMessage(err);
-                                    this.logger.handleError('[application-details.component][startProvisioning][pollForResults]', err);
-                                });
-                        })
-                        .catch(err => {
-                            this.emitProvisioningErrorMessage(err);
-                            this.logger.handleError('[application-details.component][startProvisioning]', err);
-                        });
-                })
-                .catch(err => {
-                    this.emitProvisioningErrorMessage(err);
-                    this.logger.handleError('[application-details.component][startProvisioning]', err);
-                });
-        });
+                                        }
+                                        if (this.selfserviceApplicationUrl === '') {
+                                            this.planOutputParameters = planOutput.OutputParameters;
+                                            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                                                {
+                                                    severity: 'success',
+                                                    summary: 'New Instance Provisioned',
+                                                    detail: 'A new instance of ' + app.id +
+                                                    ' was provisioned. Result is: ' +
+                                                    JSON.stringify(planOutput.OutputParameters)
+                                                }
+                                            ));
+                                            this.logger.log(
+                                                '[application-details.component][startProvisioning]',
+                                                'Did not receive a selfserviceApplicationUrl');
+                                        }
+                                    })
+                                    .catch(err => {
+                                        this.emitProvisioningErrorMessage(err);
+                                        this.logger.handleError('[application-details.component][startProvisioning]', err);
+                                    });
+                                this.provisioningDone = true;
+                                this.provisioningInProgress = false;
+                            })
+                            .catch(err => {
+                                this.emitProvisioningErrorMessage(err);
+                                this.logger.handleError('[application-details.component][startProvisioning][pollForResults]', err);
+                            });
+                    })
+                    .catch(err => {
+                        this.emitProvisioningErrorMessage(err);
+                        this.logger.handleError('[application-details.component][startProvisioning]', err);
+                    });
+            })
+            .catch(err => {
+                this.emitProvisioningErrorMessage(err);
+                this.logger.handleError('[application-details.component][startProvisioning]', err);
+            });
     }
 
     emitProvisioningErrorMessage(err: Error): void {
