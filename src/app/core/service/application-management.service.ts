@@ -145,7 +145,8 @@ export class ApplicationManagementService {
     // TODO
     getServiceTemplatePathNG(appID: string): Observable<string> {
 
-        const url = new Path(`http://${this.document.location.hostname}:1337/csars`)
+        const url = new Path(this.configService.getContainerAPIURL())
+            .append('csars')
             .append(this.fixAppID(appID))
             .append('servicetemplates')
             .toString();
@@ -154,7 +155,7 @@ export class ApplicationManagementService {
 
         return this.http.get(url, reqOpts)
             .map(response => {
-                return response.json().service_templates[0].links[0].self.href;
+                return response.json().service_templates[0]._links.self.href;
             })
             .catch(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err));
     }
