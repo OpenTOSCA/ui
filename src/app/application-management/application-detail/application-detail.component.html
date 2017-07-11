@@ -1,14 +1,8 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li>
-                <button class="btn btn-primary navbar-btn"
-                        (click)="showChildModal()">Provision New Instance
-                </button>
-            </li>
-        </ul>
-    </div>
-</nav>
+<opentosca-ui-action-bar>
+    <opentosca-ui-action-item (click)="showChildModal()" styles="btn-primary">
+        <i class="glyphicon glyphicon-plus"></i> Provision New Instance
+    </opentosca-ui-action-item>
+</opentosca-ui-action-bar>
 <div class="container-fluid">
     <p-fieldset legend="Application Information" [toggleable]="true">
         <div class="row" *ngIf="(app | async); let app; else loading">
