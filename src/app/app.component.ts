@@ -30,7 +30,6 @@ export class AppComponent {
     public constructor(private ngRedux: NgRedux<AppState>) {
         // We need this to pass messages to global growl component
         this.growls.subscribe(messages => {
-            console.log(this.messages, messages);
             this.messages = messages;
         });
     }
