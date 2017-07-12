@@ -21,9 +21,7 @@ import { ApplicationInstancesManagementService } from './application-instances-m
 @Injectable()
 export class ApplicationInstanceManagementService {
 
-    constructor(private http: Http,
-                private configurationService: ConfigurationService,
-                private logger: OpenToscaLoggerService,
+    constructor(private logger: OpenToscaLoggerService,
                 private appInstancesService: ApplicationInstancesManagementService) {
     }
 
@@ -41,13 +39,4 @@ export class ApplicationInstanceManagementService {
             .catch(reason => this.logger.handleObservableError('[application-instance.service][loadApplicationInstance]', reason));
 
     }
-
-    terminateApplicationInstance(appInstanceURL: string): Promise<any> {
-        // Todo Implement
-        throw new Error('Not implemented yet');
-        /*this.logger.log('[application-instance.service][terminateApplicationInstance]', 'Trying to delete: ' + appInstanceURL);
-         return this.http.delete(appInstanceURL)
-         .toPromise();*/
-    }
-
 }
