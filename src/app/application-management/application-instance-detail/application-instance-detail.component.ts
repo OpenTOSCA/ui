@@ -14,14 +14,13 @@ import { Component, OnInit } from '@angular/core';
 import { ApplicationInstance } from '../../core/model/application-instance.model';
 import { ActivatedRoute } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
-import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 
 @Component({
-  selector: 'opentosca-ui-application-instance-detail',
-  templateUrl: './application-instance-detail.component.html',
-  styleUrls: ['./application-instance-detail.component.scss']
+    selector: 'opentosca-ui-application-instance-detail',
+    templateUrl: './application-instance-detail.component.html',
+    styleUrls: ['./application-instance-detail.component.scss']
 })
 export class ApplicationInstanceDetailComponent implements OnInit {
 
@@ -42,18 +41,17 @@ export class ApplicationInstanceDetailComponent implements OnInit {
                     console.log(data.applicationInstanceDetails);
 
                     const breadCrumbs = [];
-                    breadCrumbs.push(new BreadcrumbEntry('Applications', '/applications'));
+                    breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
                     breadCrumbs.push(
-                        new BreadcrumbEntry(
-                            data.applicationInstanceDetails.appID,
-                            ['/applications', data.applicationInstanceDetails.appID]
-                        )
-                    );
+                        {
+                            label: data.applicationInstanceDetails.appID,
+                            routerLink: ['/applications', data.applicationInstanceDetails.appID]
+                        });
                     breadCrumbs.push(
-                        new BreadcrumbEntry(
-                            'Instance: ' + data.applicationInstanceDetails.shortServiceTemplateInstanceID,
-                            ['./']
-                        )
+                        {
+                            label: 'Instance: '
+                            + data.applicationInstanceDetails.shortServiceTemplateInstanceID
+                        }
                     );
                     this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
                 },

@@ -19,11 +19,9 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { RepositoryManagementService } from '../../core/service/repository-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { RepositoryManagementActions } from '../repository-management-actions';
-import { ModalDirective } from 'ngx-bootstrap';
 import { Path } from '../../core/util/path';
 
 @Component({
@@ -34,9 +32,7 @@ import { Path } from '../../core/util/path';
 export class RepositoryOverviewComponent implements OnInit {
     @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
     @select(['administration', 'repositoryAPI']) repositoryURL: Observable<string>;
-    @ViewChild('childModal') public childModal: ModalDirective;
 
-    public showLoader = false;
     public repoURL: string;
     public startCompletionProcess = false;
     public appToComplete: MarketplaceApplication;
@@ -53,8 +49,8 @@ export class RepositoryOverviewComponent implements OnInit {
 
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push(new BreadcrumbEntry('Repository', 'repositories'));
-        breadCrumbs.push(new BreadcrumbEntry('OpenTOSCA Repository', ''));
+        breadCrumbs.push({label: 'Repository', routerLink: 'repositories'});
+        breadCrumbs.push({label: 'OpenTOSCA Repository'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.getApps();
         this.repositoryURL.subscribe(url => this.repoURL = url);

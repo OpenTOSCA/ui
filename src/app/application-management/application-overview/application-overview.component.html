@@ -1,66 +1,54 @@
 <opentosca-ui-action-bar>
-    <opentosca-ui-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary pull-right">
-        <i class="glyphicon glyphicon-upload"></i> Upload New Application
-    </opentosca-ui-action-item>
-    <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
-        <i class="glyphicon glyphicon-refresh"></i>
-    </opentosca-ui-action-item>
-    <opentosca-ui-search [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+    <form class="form-inline">
+        <opentosca-ui-search [placeholder]="'Filter applications...'"
+                             (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+        <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
+            <i class="fa fa-refresh"></i>
+        </opentosca-ui-action-item>
+    </form>
+    <form class="form-inline">
+        <opentosca-ui-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary">
+            <i class="fa fa-upload"></i> Upload New Application
+        </opentosca-ui-action-item>
+    </form>
 </opentosca-ui-action-bar>
-<div class="container-fluid">
-    <div class="applicationTilesContainer">
-        <div class="applicationTile"
-             *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
-            <div class="applicationTileImageContainer">
-                <img [src]="app.icon_url" onerror="this.src='/assets/Default_Application_Icon.png'"/>
-            </div>
-            <div id="applicationDisplayName">
-                <span>{{ app.display_name }}</span>
-            </div>
-            <div class="applicationTileButtonContainer">
-                <button tooltip="Details" type="button" [routerLink]="['/applications', app.id]"
-                        class="btn btn-default btn-sm"><span class="glyphicon glyphicon-list-alt"
-                                                             aria-hidden="true"></span>
-                </button>
-                <div class="btn-group" dropdown>
-                    <button tooltip="Options" id="single-button" type="button" class="btn btn-default btn-sm dropdown-toggle"
-                            dropdownToggle>
-                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
-                    </button>
-                    <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                        <li role="menuitem"><a class="dropdown-item" (click)="showDeleteConfirmationModal(app)"><span
-                                class="glyphicon glyphicon-remove text-danger"></span> Delete</a></li>
-                    </ul>
-                </div>
-            </div>
+<div class="d-flex flex-row flex-wrap">
+    <div class="card m-2" style="width: 250px"
+         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
+        <div class="card-block text-center pb-0">
+            <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"
+                 onerror="this.src='/assets/Default_Application_Icon.png'">
+            <h6 class="card-title" pTooltip="{{ app.display_name }}" tooltipPosition="top" showDelay="2000">{{ app.display_name }}</h6>
+        </div>
+        <div class="card-block pt-0">
+            <div class="card-text">{{ app.description }}</div>
+        </div>
+        <div class="card-footer text-muted text-center">
+            <button type="button" [routerLink]="['/applications', app.id]"
+                    class="btn btn-secondary btn-sm">
+                <i class="fa fa-list"></i>
+            </button>
+            <button pTooltip="Delete App" type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="showDeleteConfirmationModal(app)">
+                <i class="fa fa-remove"></i>
+            </button>
         </div>
     </div>
 </div>
-
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="hideDeleteConfirmationModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Really delete App?</h4>
-            </div>
-            <div class="modal-body">
-                <div class="opentosca-modal-content">
-                    Do you really want to delete the App "{{ appToDelete?.display_name }}"?
-                    <div *ngIf="removingApp">
-                        <sk-fading-circle></sk-fading-circle>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="hideDeleteConfirmationModal()">Close</button>
-                <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled]="false"
-                        (click)="deleteFromContainer(appToDelete)">Delete
-                </button>
-                <button *ngIf="removingApp" type="button" class="btn btn-danger" [disabled]="true">Removing...</button>
-            </div>
-        </div>
+<p-dialog [(visible)]="showChildModal" [width]="300" modal="true">
+    <p-header>
+        Really delete App?
+    </p-header>
+    Do you really want to delete the App "{{ appToDelete?.display_name }}"?
+    <div *ngIf="removingApp">
+        <sk-fading-circle></sk-fading-circle>
     </div>
-</div>
+    <p-footer>
+        <button type="button" class="btn btn-secondary" (click)="hideDeleteConfirmationModal()">Close</button>
+        <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled]="false"
+                (click)="deleteFromContainer(appToDelete)">Delete
+        </button>
+        <button *ngIf="removingApp" type="button" class="btn btn-danger" [disabled]="true">Removing...</button>
+    </p-footer>
+</p-dialog>

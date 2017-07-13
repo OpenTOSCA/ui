@@ -16,7 +16,6 @@ import { Observable } from 'rxjs/Observable';
 import { FormControl } from '@angular/forms';
 import { ConfigurationService } from '../configuration.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import 'rxjs/add/operator/debounceTime';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
@@ -47,7 +46,7 @@ export class ConfigurationManagementComponent implements OnInit {
     ngOnInit(): void {
 
         const breadCrumbs = [];
-        breadCrumbs.push(new BreadcrumbEntry('Administration', ''));
+        breadCrumbs.push({label: 'Administration'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
 
         this.containerAPI.subscribe(value => this.checkAvailabilityOfContainer());

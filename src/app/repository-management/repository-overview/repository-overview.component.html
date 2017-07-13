@@ -1,38 +1,53 @@
 <opentosca-ui-action-bar>
-    <opentosca-ui-action-item (click)="navigateToRepo()" styles="btn-primary pull-right">
-        <i class="glyphicon glyphicon-new-window"></i> Repository Management
-    </opentosca-ui-action-item>
-    <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
-        <i class="glyphicon glyphicon-refresh"></i>
-    </opentosca-ui-action-item>
-    <opentosca-ui-search [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+    <form class="form-inline">
+        <opentosca-ui-search [placeholder]="'Filter applications...'"
+                             (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+        <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
+            <i class="fa fa-refresh"></i>
+        </opentosca-ui-action-item>
+    </form>
+    <form class="form-inline">
+        <opentosca-ui-action-item (click)="navigateToRepo()" styles="btn-primary">
+            <i class="fa fa-external-link"></i> Repository Management
+        </opentosca-ui-action-item>
+    </form>
 </opentosca-ui-action-bar>
-<div class="container-fluid">
-    <div class="applicationTilesContainer">
-        <div class="applicationTile"
-             *ngFor="let app of apps | async | sort:['displayName']:['asc'] | fuzzySearch:searchTerm:['displayName','description','csarName']; trackBy: trackAppsFn">
-
-            <div class="applicationTileImageContainer">
-                <img [src]="app.iconUrl" onerror="this.src='/assets/Default_Application_Icon.png'"/>
-            </div>
-            <div id="applicationDisplayName">
-                <span>{{app.displayName}}</span>
-            </div>
-            <div class="applicationTileButtonContainer">
-                <a tooltip="Details" type="button" [href]="app.repositoryURL" class="btn btn-default btn-sm"
-                   target="_blank"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                <button tooltip="Install in Container" *ngIf="!app.inContainer && !app.isInstalling" type="button"
-                        class="btn btn-default btn-sm" (click)="installInContainer(app)"><span
-                    class="glyphicon glyphicon-plus-sign"></span></button>
-                <button *ngIf="app.isInstalling"
-                        class="btn btn-default btn-sm loading-indicator">
-                    <sk-three-bounce class="spinner-small"></sk-three-bounce>
-                </button>
-                <a tooltip="Already installed in Container" *ngIf="!app.isInstalling && app.inContainer"
-                   class="btn btn-success btn-sm"><span class="glyphicon glyphicon-check"></span></a>
-                <a tooltip="Download" class="btn btn-default btn-sm" [href]="app.csarURL"><span
-                    class="glyphicon glyphicon-download-alt"></span></a>
-            </div>
+<div class="d-flex flex-row flex-wrap">
+    <div class="card m-2" style="width: 250px"
+         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','description','csarName']; trackBy: trackAppsFn">
+        <div class="card-block text-center pb-0">
+            <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.iconUrl"
+                 onerror="this.src='/assets/Default_Application_Icon.png'">
+            <h6 class="card-title" pTooltip="{{ app.displayName }}" tooltipPosition="top" showDelay="2000">
+                {{ app.displayName }}
+            </h6>
+        </div>
+        <div class="card-block pt-0">
+            <div class="card-text">{{ app.description }}</div>
+        </div>
+        <div class="card-footer text-muted text-center">
+            <a class="btn btn-secondary btn-sm" [href]="app.repositoryURL" target="_blank" pTooltip="Details"
+               showDelay="2000" tooltipPosition="top">
+                <i class="fa fa-list-alt"></i>
+            </a>
+            <button pTooltip="Install in Container" tooltipPosition="top" showDelay="2000"
+                    *ngIf="!app.inContainer && !app.isInstalling" type="button"
+                    class="btn btn-secondary btn-sm" (click)="installInContainer(app)">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+            <button *ngIf="app.isInstalling" pTooltip="Installing App in Container" tooltipPosition="top"
+                    class="btn btn-secondary btn-sm loading-indicator">
+                <sk-three-bounce class="spinner-small"></sk-three-bounce>
+            </button>
+            <a pTooltip="Already installed in Container" tooltipPosition="top" showDelay="2000"
+               *ngIf="!app.isInstalling && app.inContainer"
+               class="btn btn-success btn-sm">
+                <i class="fa fa-check fa-inverse"></i>
+            </a>
+            <a pTooltip="Download" tooltipPosition="top" showDelay="2000" class="btn btn-secondary btn-sm"
+               [href]="app.csarURL">
+                <i class="fa fa-download"></i>
+            </a>
         </div>
     </div>
 </div>

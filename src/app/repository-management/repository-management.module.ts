@@ -19,11 +19,13 @@ import { RepositoryOverviewComponent } from './repository-overview/repository-ov
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '../core/core.module';
 import { NgSpinKitModule } from 'ng-spin-kit';
+import { TooltipModule } from 'primeng/primeng';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
+        TooltipModule,
         NgSpinKitModule,
         RepositoryManagementRoutingModule,
         CoreModule

@@ -1,80 +1,69 @@
-<div bsModal (onHidden)="adaptRoute()" #uploadModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="closeModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Upload New Application</h4>
+<p-dialog (onHide)="adaptRoute()" [(visible)]="showModal" modal="true" draggable="false" resizable="false" width="800">
+    <p-header>
+        Upload new Application
+    </p-header>
+    <div class="row">
+        <div class="col-sm-3">
+            <span class="btn btn-primary btn-file">
+                Select Archive
+                <input
+                        type="file"
+                        class="btn btn-primary"
+                        name="myFile"
+                        ngFileSelect
+                        [options]="options"
+                        [events]="inputUploadEvents"
+                        (beforeUpload)="beforeUpload($event)"
+                        (onUpload)="handleUpload($event)"
+                        (onClick)="resetUploadStats()"
+                        (change)="onChange($event)">
+            </span>
+        </div>
+        <div class="col-sm-9">
+            <div *ngIf="selectedFile; else noFileSelected">
+                <h6 class="mt-2">Selected File</h6>
+                <p>Name: {{ selectedFile?.name }}</p>
+                <p>Size: {{ selectedFile?.size | humanizeBytes}}</p>
+                <p>Last Modified: {{ selectedFile?.lastModifiedDate}}</p>
             </div>
-            <div class="modal-body">
-                <div class="container-fluent">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <span class="btn btn-primary btn-file">
-                                Select Archive
-                                <input
-                                        type="file"
-                                        class="btn btn-primary"
-                                        name="myFile"
-                                        ngFileSelect
-                                        [options]="options"
-                                        [events]="inputUploadEvents"
-                                        (beforeUpload)="beforeUpload($event)"
-                                        (onUpload)="handleUpload($event)"
-                                        (onClick)="resetUploadStats()"
-                                        (change)="onChange($event)">
-                            </span>
-                        </div>
-                        <div class="col-md-10">
-                            <div *ngIf="selectedFile; else noFileSelected">
-                                <h4>Selected File</h4>
-                                <p>Name: {{ selectedFile?.name }}</p>
-                                <p>Size: {{ selectedFile?.size | humanizeBytes}}</p>
-                                <p>Last Modified: {{ selectedFile?.lastModifiedDate}}</p>
-                            </div>
-                            <ng-template #noFileSelected>
-                                <div style="height: 129px">
-                                    <h4>
-                                        No file selected
-                                    </h4>
-                                </div>
-                            </ng-template>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="uploadingFile?.progress?.percent > 0">
-                        <div class="col-md-4 col-md-offset-2">
-                            <h4>File Upload in Progress</h4>
-                        </div>
-                        <div class="col-md-6">
-                            <div style="margin-top: 10px">
-                                <progressbar [max]="max" [value]="uploadingFile?.progress?.percent"
-                                             [type]="deploymentInProgress ? 'success' : 'default'">
-                                    <span style="color:black; white-space:nowrap; margin-left: 10px">{{ uploadingFile?.progress?.percent }}%</span>
-                                </progressbar>
-                                <small><em>current upload speed: {{ currentSpeed }}</em></small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row uploadMarginRow" *ngIf="deploymentInProgress && !(uploadFile?.status === 500)">
-                        <div class="col-md-4 col-md-offset-2">
-                            <h4>Archive Deployment in Progress</h4>
-                        </div>
-                        <div class="col-md-6 spinner">
-                            <sk-fading-circle></sk-fading-circle>
-                        </div>
-                    </div>
+            <ng-template #noFileSelected>
+                <div style="height: 129px">
+                    <h6 class="mt-2">
+                        No file selected
+                    </h6>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button *ngIf="uploadingFile?.progress?.percent > 0 && uploadingFile?.progress?.percent < 100" type="button" class="btn btn-danger" (click)="abortUpload()">Abort Upload</button>
-                <button *ngIf="selectedFile" type="button" class="btn btn-success" (click)="startUpload()" [disabled]="uploadingFile?.progress?.percent > 0">Start Upload</button>
-                <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
-            </div>
+            </ng-template>
         </div>
     </div>
-</div>
+    <div class="row" *ngIf="uploadingFile?.progress?.percent > 0">
+        <div class="col-sm-4 offset-md-3">
+            <h6>File Upload in Progress</h6>
+        </div>
+        <div class="col-sm-5">
+            <p-progressBar [value]="uploadingFile?.progress?.percent"></p-progressBar>
+            <small><em>current upload speed: {{ currentSpeed }}</em></small>
+        </div>
+    </div>
+    <div class="row mt-1" *ngIf="deploymentInProgress && !(uploadFile?.status === 500)">
+        <div class="col-sm-4 offset-md-3">
+            <h6>Archive Deployment in Progress</h6>
+        </div>
+        <div class="col-sm-5 spinner">
+            <sk-fading-circle></sk-fading-circle>
+        </div>
+    </div>
+    <p-footer>
+        <div class="d-flex justify-content-end">
+            <button *ngIf="uploadingFile?.progress?.percent > 0 && uploadingFile?.progress?.percent < 100" type="button"
+                    class="btn btn-danger mr-2" (click)="abortUpload()">Abort Upload
+            </button>
+            <button *ngIf="selectedFile" type="button" class="btn btn-success mr-2" (click)="startUpload()"
+                    [disabled]="uploadingFile?.progress?.percent > 0">Start Upload
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+        </div>
+    </p-footer>
+</p-dialog>
 <opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
                                     [linkToWineryResource]="linkToWineryResourceForCompletion"
                                     (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>

@@ -1,82 +1,71 @@
-<div bsModal #completeConfirmationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="cancelCompleteConfirmationModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Apply completion?</h4>
-            </div>
-            <div class="opentosca-modal-content">
-                Do you want to process with the completion for "{{appToComplete.displayName}}"?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="cancelCompleteConfirmationModal()">Cancle
-                </button>
-                <button type="button" class="btn btn-primary" [disabled]="false" (click)="startCompletion()">Complete
-                </button>
-            </div>
-        </div>
+<p-dialog [(visible)]="showCompleteConfirmationModal" [width]="400" modal="true">
+    <p-header>
+        Apply completion?
+    </p-header>
+    <div class="opentosca-modal-content">
+        Do you want to process with the completion for "{{appToComplete?.displayName}}"?
     </div>
-</div>
+    <p-footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary mr-2" (click)="cancelCompleteConfirmationModal()">Cancel
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="false" (click)="startCompletion()">Complete
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
 
-<div bsModal #completeSelectionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" aria-label="Close" (click)="cancelCompleteSelectionModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Selection</h4>
-            </div>
-            <form #selectionForm="ngForm">
-                <div class="modal-body">
-                    <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
-                    <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Node template requiring host: {{hostCompletionOption.nodeID}}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label for="sel1">Select new host:</label>
-                                <select class="form-control" id="sel1" name="selectOption"
-                                        [(ngModel)]="completionSelection['hostInjections'][hostCompletionOption.nodeID]"
-                                        required>
-                                    <option *ngFor="let selection of hostCompletionOption.injectionOptionTopologyFragments"
-                                            [ngValue]="selection">{{selection.documentation[0].content[0]}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
-                    <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Open Requirement: {{connectionCompletionOption.nodeID}}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label for="sel1">Select connection completion option:</label>
-                                <select class="form-control" id="sel2" name="selectOption"
-                                        [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
-                                        required>
-                                    <option *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
-                                            [ngValue]="selection">{{selection.documentation[0].content[0]}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
+<p-dialog [(visible)]="showCompleteSelectionModal" [width]="400" modal="true">
+    <p-header>
+        Selection
+    </p-header>
+    <form #selectionForm="ngForm">
+        <div class="modal-body">
+            <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
+            <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="sel1">Select new host:</label>
+                        <select class="form-control" id="sel1" name="selectOption"
+                                [(ngModel)]="completionSelection['hostInjections'][hostCompletionOption.nodeID]"
+                                required>
+                            <option *ngFor="let selection of hostCompletionOption.injectionOptionTopologyFragments"
+                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                            </option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="cancelCompleteSelectionModal()">Cancel
-                    </button>
-                    <button type="button" class="btn btn-primary" [disabled]="!selectionForm.form.valid"
-                            (click)="injectNewHosts()">Submit
-                    </button>
+            </div>
+            <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
+            <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Open Requirement: {{connectionCompletionOption?.nodeID}}</h3>
                 </div>
-            </form>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="sel1">Select connection completion option:</label>
+                        <select class="form-control" id="sel2" name="selectOption"
+                                [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
+                                required>
+                            <option *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
+                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </form>
+    <p-footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary mr-2" (click)="cancelCompleteSelectionModal()">Cancel
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="!selectionForm.form.valid"
+                    (click)="injectNewHosts()">Submit
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

@@ -10,19 +10,20 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import { BreadcrumbEntry } from '../../model/breadcrumb.model';
+import { MenuItem } from 'primeng/primeng';
 
 @Component({
-  selector: 'opentosca-ui-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss']
+    selector: 'opentosca-ui-breadcrumb',
+    templateUrl: './breadcrumb.component.html',
+    styleUrls: ['./breadcrumb.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbComponent {
 
-    @select(['breadcrumb', 'entries']) breadcrumbEntries: Observable<Array<BreadcrumbEntry>>;
+    @select(['breadcrumb', 'entries']) breadcrumbEntries: Observable<Array<MenuItem>>;
 
     constructor() {
     }

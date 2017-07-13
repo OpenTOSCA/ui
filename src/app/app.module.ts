@@ -21,9 +21,8 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { ApplicationManagementModule } from './application-management/application-management.module';
 import { RepositoryManagementModule } from './repository-management/repository-management.module';
 import { ConfigurationModule } from './configuration/configuration.module';
-import { AccordionModule } from 'ngx-bootstrap';
 import { CoreModule } from './core/core.module';
-import { GrowlModule } from 'primeng/primeng';
+import { AccordionModule, GrowlModule } from 'primeng/primeng';
 
 import { NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouterModule } from '@angular-redux/router';
@@ -36,9 +35,9 @@ import { StoreModule } from './store/store.module';
         PageNotFoundComponent,
     ],
     imports: [
+        AccordionModule,
         BrowserModule,
         FormsModule,
-        AccordionModule,
         HttpModule,
         GrowlModule,
         NgReduxModule,

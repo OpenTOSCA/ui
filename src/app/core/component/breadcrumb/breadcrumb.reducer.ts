@@ -11,12 +11,12 @@
  *     Michael Wurster - initial implementation
  */
 
-import { BreadcrumbEntry } from '../../model/breadcrumb.model';
 import { BreadcrumbActions } from './breadcrumb-actions';
 import { Action } from '../../../store/store.action';
+import { MenuItem } from 'primeng/primeng';
 
 export interface BreadcrumbState {
-    entries?: Array<BreadcrumbEntry>;
+    entries?: Array<MenuItem>;
 }
 
 export const INITIAL_STATE: BreadcrumbState = {

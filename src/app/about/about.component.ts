@@ -10,23 +10,23 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Component, OnInit } from '@angular/core';
-import { BreadcrumbEntry } from '../core/model/breadcrumb.model';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
 import { AppState } from '../store/app-state.model';
 
 @Component({
-  selector: 'opentosca-ui-about',
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.scss']
+    selector: 'opentosca-ui-about',
+    templateUrl: './about.component.html',
+    styleUrls: ['./about.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class AboutComponent implements OnInit {
 
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push(new BreadcrumbEntry('About', ''));
+        breadCrumbs.push({label: 'About'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
     }
 

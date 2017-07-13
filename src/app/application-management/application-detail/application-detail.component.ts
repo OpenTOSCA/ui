@@ -16,9 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { PlanOperationMetaData } from '../../core/model/planOperationMetaData.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PlanParameter } from '../../core/model/plan-parameter.model';
-import { ModalDirective } from 'ngx-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { ApplicationDetail } from '../../core/model/application-detail.model';
 import * as _ from 'lodash';
 import { TriggerTerminationPlanEvent } from '../../core/model/trigger-termination-plan-event.model';
@@ -31,7 +29,6 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/new-api/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
-import { ServiceTemplateInstanceListEntry } from '../../core/model/new-api/service-template-instance-list-entry.model';
 
 @Component({
     selector: 'opentosca-ui-application-detail',
@@ -48,9 +45,8 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     public provisioningDone = false;
     public allInputsFilled = true;
     public terminationPlan: PlanOperationMetaData;
+    public showStartProvisioningModal = false;
     private serviceTemplateInstancesURL: string;
-
-    @ViewChild('childModal') public childModal: ModalDirective;
 
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationManagementService,
@@ -73,7 +69,8 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         param.Name === 'containerApiAddress' ||
         param.Name === 'instanceDataAPIUrl' ||
         param.Name === 'planCallbackAddress_invoker' ||
-        param.Name === 'csarEntrypoint'));
+        param.Name === 'csarEntrypoint' ||
+        param.Name === 'DockerEngineCertificate'));
     }
 
     /**
@@ -82,7 +79,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push(new BreadcrumbEntry('Applications', '/applications'));
+        breadCrumbs.push({label: 'Applications', routerLink: 'applications'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.route.data
             .subscribe((data: { applicationDetail: ApplicationDetail }) => {
@@ -98,7 +95,10 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     // Load also application instances for list
                     this.updateAppInstancesList(data.applicationDetail.app);
                     // Prepare breadcrumb
-                    this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(new BreadcrumbEntry(data.applicationDetail.app.id, '')));
+                    this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
+                        {
+                            label: data.applicationDetail.app.id
+                        }));
                 },
                 reason => {
                     this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -158,15 +158,15 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     /**
      * Shows modal to key in required buildplan parameters and start provisioning
      */
-    public showChildModal(): void {
-        this.childModal.show();
+    public showProvisioningModal(): void {
+        this.showStartProvisioningModal = true;
     }
 
     /**
      * Hides modal key in required buildplan parameters and start provisioning
      */
-    public hideChildModal(): void {
-        this.childModal.hide();
+    public hideProvisioningModal(): void {
+        this.showStartProvisioningModal = false;
     }
 
     /**
@@ -174,7 +174,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
      * and hides the modal
      */
     startProvisioning(): void {
-        this.hideChildModal();
+        this.hideProvisioningModal();
         this.selfserviceApplicationUrl = '';
         this.provisioningInProgress = true;
         this.provisioningDone = false;

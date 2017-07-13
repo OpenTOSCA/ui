@@ -10,14 +10,12 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import { ModalDirective } from 'ngx-bootstrap';
 import { Application } from 'app/core/model/application.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import { BreadcrumbEntry } from '../../core/model/breadcrumb.model';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
@@ -27,15 +25,16 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 @Component({
     selector: 'opentosca-ui-application-overview',
     templateUrl: './application-overview.component.html',
-    styleUrls: ['./application-overview.component.scss']
+    styleUrls: ['./application-overview.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ApplicationOverviewComponent implements OnInit {
     @select(['container', 'applications']) public readonly apps: Observable<Array<Csar>>;
-    @ViewChild('childModal') public childModal: ModalDirective;
 
     public removingApp = false;
     public appToDelete: Csar;
     public searchTerm: string;
+    public showChildModal = false;
 
     constructor(private appService: ApplicationManagementService,
                 private ngRedux: NgRedux<AppState>,
@@ -44,7 +43,7 @@ export class ApplicationOverviewComponent implements OnInit {
 
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push(new BreadcrumbEntry('Applications', ''));
+        breadCrumbs.push({label: 'Applications'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.getResolvedApplications();
     }
@@ -98,13 +97,13 @@ export class ApplicationOverviewComponent implements OnInit {
     }
 
     hideDeleteConfirmationModal(): void {
-        this.childModal.hide();
+        this.showChildModal = false;
         this.appToDelete = null;
     }
 
     showDeleteConfirmationModal(appToDelete: Csar): void {
         this.appToDelete = appToDelete;
-        this.childModal.show();
+        this.showChildModal = true;
     }
 
     /**

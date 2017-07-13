@@ -11,9 +11,8 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
-import { AfterViewInit, Component, NgZone, OnInit, ViewChild, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
-import { ModalDirective } from 'ngx-bootstrap';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
@@ -33,8 +32,8 @@ import { GrowlActions } from '../../core/growl/growl-actions';
     styleUrls: ['./application-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-// Fixme: If modal is opened, closed, opened and closed again then an error is thrown since router navigates to applications/(modal:upload)
-export class ApplicationUploadComponent implements OnInit, AfterViewInit {
+
+export class ApplicationUploadComponent implements OnInit {
     public deploymentInProgress = false;
     public deploymentDone = false;
     public max = 100;
@@ -46,12 +45,11 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
     public inputUploadEvents: EventEmitter<string>;
     public uploadingFile: UploadedFile;
     public selectedFile: any;
+    public showModal = true;
 
     private zone: NgZone;
     private lastUpdate: number;
 
-
-    @ViewChild('uploadModal') public uploadModal: ModalDirective;
 
     ngOnInit(): void {
         this.zone = new NgZone({enableLongStackTrace: false});
@@ -72,12 +70,8 @@ export class ApplicationUploadComponent implements OnInit, AfterViewInit {
         };
     }
 
-    ngAfterViewInit(): void {
-        this.uploadModal.show();
-    }
-
     closeModal(): void {
-        this.uploadModal.hide();
+        this.showModal = false;
     }
 
     adaptRoute(): void {

@@ -1,24 +1,23 @@
-<div *ngIf="(currentAppInstances | async); let currentAppInstances; else no_instances_available">
-    <div *ngIf="currentAppInstances.length > 0; else no_instances_available">
-        <h2>Instances List <span class="badge">{{ currentAppInstances?.length }}</span></h2>
-        <p-accordion *ngFor="let inst of currentAppInstances; let i = index" [multiple]="true">
-            <p-accordionTab>
-                <p-header>
-                    <button (click)="terminateInstance(inst.id)"
-                            class="btn btn-danger pull-right">Terminate
-                    </button>
-                    <p>{{ inst.id }}</p>
-                </p-header>
-                <p>State: {{ inst.state }} ({{ inst.created_at | date:'medium' }})</p>
-                <p>
-                    <button style="margin-bottom: 10px" class="btn btn-default" [routerLink]="['./instances', inst.id]">
-                        <span class="glyphicon glyphicon-info-sign"></span> Instance Details
+<p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
+    <p-column expander="true" [style]="{'width':'45px'}"></p-column>
+    <p-column field="id" header="InstanceID" [sortable]="true"></p-column>
+    <p-column field="state" header="State" [sortable]="true"></p-column>
+    <p-column field="created_at" header="Date Created" [sortable]="true">
+        <ng-template let-col let-inst="rowData" pTemplate="body">
+            {{ inst.created_at | date:'medium' }}
+        </ng-template>
+    </p-column>
+    <ng-template let-inst pTemplate="rowexpansion">
+        <div class="row">
+            <div class="col-sm-12">
+                <p>Initialized: {{ inst.created_at | date:'medium' }}</p>
+                <p>State: {{ inst.state }}</p>
+                <p *ngIf="inst.state !== 'DELETED'">
+                    <button class="btn btn-danger" (onclick)="emitTerminationPlan(inst)">
+                        <i class="fa fa-remove"></i> Delete Instance
                     </button>
                 </p>
-            </p-accordionTab>
-        </p-accordion>
-    </div>
-</div>
-<ng-template #no_instances_available>
-    No Instances provisioned.
-</ng-template>
+            </div>
+        </div>
+    </ng-template>
+</p-dataTable>

@@ -1,8 +1,1 @@
-<div class="breadcrumbContainer">
-    <ol class="breadcrumb">
-        <li *ngFor="let entry of breadcrumbEntries | async; let last = last" [ngClass]="{'active': last}">
-            <a *ngIf="!last" id="installedAppsBreadcrumb" [routerLink]="entry.link">{{entry.title}}</a>
-            <span *ngIf="last">{{entry.title}}</span>
-        </li>
-    </ol>
-</div>
+<p-breadcrumb [model]="breadcrumbEntries | async"></p-breadcrumb>

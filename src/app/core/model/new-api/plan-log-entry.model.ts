@@ -8,14 +8,9 @@
  *
  * Contributors:
  *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
  */
-export class BreadcrumbEntry {
-    title: string;
-    link: string | Array<string>;
 
-    constructor(title: string, link: string | Array<string>) {
-        this.title = title;
-        this.link = link;
-    }
+export class PlanLogEntry{
+    timestamp: string;
+    message: string;
 }

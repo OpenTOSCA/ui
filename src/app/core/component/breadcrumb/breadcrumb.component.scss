@@ -1,13 +1,6 @@
-div {
-  &.breadcrumbContainer {
-    margin-left: 22px;
-    margin-top: 26px;
-    margin-right: 25px;
-  }
-
-  ol {
-    &.breadcrumb {
-      margin-bottom: 0 !important;
-    }
+body a.ui-state-active, body a.ui-state-highlight {
+  //background-color: #ffffff;
+  span.ui-menuitem-text {
+    background-color: #ffffff;
   }
 }

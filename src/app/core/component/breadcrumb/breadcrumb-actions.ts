@@ -12,8 +12,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BreadcrumbEntry } from '../../model/breadcrumb.model';
 import { Action } from '../../../store/store.action';
+import { MenuItem } from 'primeng/primeng';
 
 @Injectable()
 export class BreadcrumbActions {
@@ -21,14 +21,14 @@ export class BreadcrumbActions {
     static APPEND_BREADCRUMB = 'APPEND_BREADCRUMB';
 
 
-    static updateBreadcrumb(breadcrumbs: Array<BreadcrumbEntry>): Action {
+    static updateBreadcrumb(breadcrumbs: Array<MenuItem>): Action {
         return {
             type: BreadcrumbActions.UPDATE_BREADCRUMB,
             payload: breadcrumbs
         };
     }
 
-    static appendBreadcrumb(breadcrumb: BreadcrumbEntry): Action {
+    static appendBreadcrumb(breadcrumb: MenuItem): Action {
         return {
             type: BreadcrumbActions.APPEND_BREADCRUMB,
             payload: breadcrumb

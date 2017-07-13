@@ -29,16 +29,17 @@ import { InputDebounceComponent } from './component/action-bar/input-debounce.co
 import { SearchComponent } from './component/action-bar/search.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
-import { Ng2BootstrapModule } from 'ngx-bootstrap';
 import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
+import { BreadcrumbModule, DialogModule } from "primeng/primeng";
 
 @NgModule({
     imports: [
+        BreadcrumbModule,
         CommonModule,
+        DialogModule,
         FormsModule,
         RouterModule,
         ConfigurationModule,
-        Ng2BootstrapModule.forRoot(),
     ],
     declarations: [
         ActionBarComponent,

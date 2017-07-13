@@ -24,14 +24,15 @@ import { ApplicationDetailResolverService } from './application-detail/applicati
 import { ApplicationComponent } from './application/application.component';
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
 import { RouterModule } from '@angular/router';
-import { AccordionModule, FieldsetModule, CodeHighlighterModule } from 'primeng/primeng';
-import { ModalModule, BsDropdownModule, ProgressbarModule } from 'ngx-bootstrap';
+import {
+    AccordionModule, FieldsetModule, CodeHighlighterModule, DialogModule, TooltipModule,
+    ProgressBarModule, DataTableModule, SharedModule
+} from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
-import { AccordionModule as ngxAccordionModule } from 'ngx-bootstrap';
 import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {DeploymentCompletionService} from '../core/service/deployment-completion.service';
+import { DeploymentCompletionService } from '../core/service/deployment-completion.service';
 
 @NgModule({
     imports: [
@@ -39,14 +40,14 @@ import {DeploymentCompletionService} from '../core/service/deployment-completion
         CommonModule,
         CodeHighlighterModule,
         FormsModule,
-        ProgressbarModule,
+        DialogModule,
+        DataTableModule,
+        SharedModule,
         NgUploaderModule,
+        TooltipModule,
+        ProgressBarModule,
         BrowserAnimationsModule,
         NgSpinKitModule,
-        ProgressbarModule.forRoot(),
-        ngxAccordionModule.forRoot(),
-        ModalModule.forRoot(),
-        BsDropdownModule.forRoot(),
         RouterModule,
         FieldsetModule,
         AccordionModule,

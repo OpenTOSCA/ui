@@ -1,5 +1,5 @@
 <opentosca-ui-action-bar>
-    <opentosca-ui-action-item (click)="showChildModal()" styles="btn-primary">
+    <opentosca-ui-action-item (click)="showProvisioningModal()" styles="btn-primary">
         <i class="glyphicon glyphicon-plus"></i> Provision New Instance
     </opentosca-ui-action-item>
 </opentosca-ui-action-bar>
@@ -85,7 +85,8 @@
             <div class="col-lg-6">
                 <h2>Topology Template</h2>
                 <div>
-                    <a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage" [href]="app.image_url" target="_blank">
+                    <a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage" [href]="app.image_url"
+                       target="_blank">
                         <img class="img-responsive" [src]="app.image_url"/>
                     </a>
                 </div>
@@ -107,51 +108,40 @@
     <p-fieldset legend="Application Instances" [toggleable]="true">
         <div class="row">
             <div class="col-lg-12">
-                <opentosca-ui-application-instance-list (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-ui-application-instance-list>
+                <opentosca-ui-application-instance-list
+                        (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-ui-application-instance-list>
             </div>
         </div>
     </p-fieldset>
 </div>
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="hideChildModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Please fill in following parameters</h4>
+<p-dialog [(visible)]="showStartProvisioningModal" [width]="400" modal="true">
+    <p-header>
+        Please fill in following parameters
+    </p-header>
+    <div *ngFor="let param of buildPlanOperationMetaData?.Plan.InputParameters">
+        <div class="card mb-2" *ngIf="showParam(param.InputParameter)">
+            <h6 class="card-header">{{ param.InputParameter.Name }}</h6>
+            <div class="card-block">
+                <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
+                          class="form-control" placeholder="{{param.InputParameter.Name}}"
+                          [(ngModel)]="param.InputParameter.Value"
+                          (ngModelChange)="checkAllInputsFilled()"></textarea>
+                <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
+                       class="form-control" placeholder="{{param.InputParameter.Name}}"
+                       [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
+                <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)"
+                       type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
+                       [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
             </div>
-            <div class="modal-body">
-
-                <div *ngFor="let param of buildPlanOperationMetaData?.Plan.InputParameters">
-                    <div class="panel panel-default" *ngIf="showParam(param.InputParameter)">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{param.InputParameter.Name}}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
-                                      class="form-control" placeholder="{{param.InputParameter.Name}}"
-                                      [(ngModel)]="param.InputParameter.Value"
-                                      (ngModelChange)="checkAllInputsFilled()"></textarea>
-                            <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
-                                   class="form-control" placeholder="{{param.InputParameter.Name}}"
-                                   [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
-                            <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)"
-                                   type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
-                                   [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="hideChildModal()">Close</button>
-                <button type="button" class="btn btn-primary" [disabled]="false" (click)="startProvisioning()">Start
-                    Provisioning
-                </button>
-            </div>
-
         </div>
     </div>
-</div>
+    <p-footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary mr-2" (click)="hideProvisioningModal()">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="false" (click)="startProvisioning()">Start
+                Provisioning
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

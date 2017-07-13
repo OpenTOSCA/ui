@@ -8,17 +8,12 @@
  *
  * Contributors:
  *     Karoline Saatkamp - initial implementation
+ *     Michael Falkenthal - adaptation to primeng
  */
-import {Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
 import {Router} from '@angular/router';
-import {NgRedux} from '@angular-redux/store';
-import {ModalDirective} from 'ngx-bootstrap';
 import {MarketplaceApplication} from '../../model/marketplace-application.model';
-import {ConfigurationService} from '../../../configuration/configuration.service';
-import {RepositoryManagementService} from '../../service/repository-management.service';
-import {ApplicationManagementService} from '../../service/application-management.service';
 import {OpenToscaLoggerService} from '../../service/open-tosca-logger.service';
-import {AppState} from '../../../store/app-state.model';
 import {InjectionOption} from '../../model/injection-option.model';
 import {DeploymentCompletionService} from '../../service/deployment-completion.service';
 
@@ -30,8 +25,9 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     @Input('appToComplete') appToComplete: MarketplaceApplication;
     @Input('linkToWineryResource') linkToWineryResource: string;
     @Output('completionSuccessful') completionSuccessful = new EventEmitter<MarketplaceApplication>();
-    @ViewChild('completeConfirmationModal') public completeConfirmationModal: ModalDirective;
-    @ViewChild('completeSelectionModal') public completeSelectionModal: ModalDirective;
+
+    public showCompleteConfirmationModal = true;
+    public showCompleteSelectionModal = false;
 
     public completeApp = false;
     public hostCompletionOptions: Array<InjectionOption> = null;
@@ -41,22 +37,16 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         'connectionInjections': {}
     };
 
-    constructor(private configurationService: ConfigurationService,
-                private repositoryManagementService: RepositoryManagementService,
-                private applicationManagementService: ApplicationManagementService,
-                private completionService: DeploymentCompletionService,
-                private ngRedux: NgRedux<AppState>,
+    constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
                 private logger: OpenToscaLoggerService) {
     }
 
     ngOnInit() {
-        // this.completeConfirmationModal.show();
     }
 
     ngAfterViewInit(): void {
-        this.completeConfirmationModal.show();
-        this.logger.log('[deployment-completion.service][onInit]', this.appToComplete.displayName);
+        this.showCompleteConfirmationModal = true;
         console.log(this.appToComplete);
     }
 
@@ -66,16 +56,16 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
 
     cancelCompleteConfirmationModal(): void {
-        this.completeConfirmationModal.hide();
+        this.showCompleteConfirmationModal = false;
     }
 
     showCompleteSelectionModel(): void {
-        this.completeConfirmationModal.hide();
-        this.completeSelectionModal.show();
+        this.showCompleteConfirmationModal = false;
+        this.showCompleteSelectionModal = true;
     }
 
     cancelCompleteSelectionModal(): void {
-        this.completeSelectionModal.hide();
+        this.showCompleteSelectionModal = false;
     }
 
     startCompletion(): void {
@@ -90,7 +80,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
                 if (injectionOptions == null) {
                     this.completionSuccessful.emit(this.appToComplete);
-                    this.completeSelectionModal.hide();
+                    this.showCompleteSelectionModal = false;
                 } else {
                     this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
                     this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
@@ -108,7 +98,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 this.logger.log('[deployment-completion.component][newCSARURLForInstallation]', this.appToComplete.csarURL);
                 this.sleep(6000);
                 this.completionSuccessful.emit(this.appToComplete);
-                this.completeSelectionModal.hide();
+                this.showCompleteSelectionModal = false;
             })
             .catch(err => {
                 this.logger.handleError('[deployment-completion.component][injectNewHosts]', err);
