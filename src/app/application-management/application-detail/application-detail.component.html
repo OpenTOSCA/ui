@@ -21,7 +21,7 @@
                 </div>
 
                 <!-- Buttons -->
-                <!-- Todo We should get rid of this button here and launch instance from instances list/view -->
+                <!-- Todo Move Open Application Button to ServiceInstanceListEntryView -->
                 <div style="margin-bottom: 10px;">
                     <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
                        [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <!-- Todo we should get rid of this here an put it to instance list/view -->
+                <!-- Todo Move PlanOutput to ServiceInstanceListEntryView -->
                 <div class="panel panel-success" *ngIf="planOutputParameters">
                     <div class="panel-heading">Results of the last provisioning task</div>
                     <div class="panel-body">
