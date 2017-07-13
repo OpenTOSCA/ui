@@ -30,7 +30,7 @@ import { SearchComponent } from './component/action-bar/search.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
 import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
-import { BreadcrumbModule, DialogModule } from "primeng/primeng";
+import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
 
 @NgModule({
     imports: [

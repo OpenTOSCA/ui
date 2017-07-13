@@ -10,7 +10,7 @@
  *     Michael Falkenthal - initial implementation
  */
 
-export class PlanLogEntry{
+export class PlanLogEntry {
     timestamp: string;
     message: string;
 }
