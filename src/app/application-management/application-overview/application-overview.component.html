@@ -13,7 +13,7 @@
     </form>
 </opentosca-ui-action-bar>
 <div class="d-flex flex-row flex-wrap">
-    <div class="card m-2" style="width: 250px"
+    <div class="card m-2 card-glowing" style="width: 250px"
          *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
         <div class="card-block text-center pb-0">
             <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"
@@ -24,11 +24,11 @@
             <div class="card-text">{{ app.description }}</div>
         </div>
         <div class="card-footer text-muted text-center">
-            <button type="button" [routerLink]="['/applications', app.id]"
+            <button pTooltip="Show Details" tooltipPosition="top" type="button" [routerLink]="['/applications', app.id]"
                     class="btn btn-secondary btn-sm">
                 <i class="fa fa-list"></i>
             </button>
-            <button pTooltip="Delete App" type="button"
+            <button pTooltip="Delete App" tooltipPosition="top" type="button"
                     class="btn btn-danger btn-sm"
                     (click)="showDeleteConfirmationModal(app)">
                 <i class="fa fa-remove"></i>

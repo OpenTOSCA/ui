@@ -361,6 +361,7 @@ a.editInWineryButton:before {
   margin-top: 18px;
 }
 
+
 #content div.applicationTilesContainer div.applicationTile {
   width: 150px;
   height: 205px;
@@ -465,4 +466,15 @@ a.editInWineryButton:before {
 
 .opentosca-modal-content {
   word-wrap: break-word;
+}
+
+.d-flex.flex-row.flex-wrap {
+  div.card.glowing-card {
+    box-shadow: 3px 3px 5px #dadada;
+
+  }
+  div.card.card-glowing:hover {
+    border-color: #3792d5;
+    box-shadow: 3px 3px 5px #bde3ff;
+  }
 }

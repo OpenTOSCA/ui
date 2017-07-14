@@ -13,7 +13,7 @@
     </form>
 </opentosca-ui-action-bar>
 <div class="d-flex flex-row flex-wrap">
-    <div class="card m-2" style="width: 250px"
+    <div class="card m-2 card-glowing" style="width: 250px"
          *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','description','csarName']; trackBy: trackAppsFn">
         <div class="card-block text-center pb-0">
             <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.iconUrl"
