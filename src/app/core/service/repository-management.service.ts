@@ -80,8 +80,8 @@ export class RepositoryManagementService {
      * @returns {Promise<any>}
      */
     installAppInContainer(app: MarketplaceApplication, containerURL: string): Promise<any> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.post(containerURL, new CsarUploadReference(app.csarURL, app.displayName), reqOpts)
+        const reqOpts = new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})});
+        return this.http.post(containerURL, new CsarUploadReference(app.csarURL, app.id), reqOpts)
             .toPromise();
     }
 
