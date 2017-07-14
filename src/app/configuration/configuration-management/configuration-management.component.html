@@ -7,45 +7,72 @@
         </td>
         <td>
             <div id="content">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Connections</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Connections</h5>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group has-feedback" [ngClass]="{'has-success': containerAPIAvailable, 'has-error': !containerAPIAvailable}">
-                            <label class="control-label" for="containerAPI">Container API</label>
-                            <input type="text" class="form-control" id="containerAPI" [formControl]="containerAPIControl" [ngModel]="containerAPI | async"
-                                   placeholder="Enter Container API URL here">
-                            <span class="glyphicon glyphicon-ok form-control-feedback" [ngClass]="{'glyphicon-ok': containerAPIAvailable, 'glyphicon-remove': !containerAPIAvailable}" aria-hidden="true"></span>
-                        </div>
+                    <div class="card-block">
+                        <form>
+                            <div class="form-group row has-feedback"
+                                 [ngClass]="{'has-success': containerAPIAvailable, 'has-danger': !containerAPIAvailable}">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label" for="containerAPI">Container API</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="containerAPI"
+                                           [formControl]="containerAPIControl" [ngModel]="containerAPI | async"
+                                           placeholder="Enter Container API URL here"
+                                           [ngClass]="{'form-control-success': containerAPIAvailable, 'form-control-danger': !containerAPIAvailable}">
+                                </div>
+                            </div>
 
-                        <div class="form-group has-feedback" [ngClass]="{'has-success': repositoryAPIAvailable, 'has-error': !repositoryAPIAvailable}">
-                            <label class="control-label" for="repositoryAPI">Repository API</label>
-                            <input type="text" class="form-control" id="repositoryAPI" [formControl]="repositoryAPIControl" [ngModel]="repositoryAPI | async"
-                                   placeholder="Enter Repository API URL here">
-                            <span class="glyphicon form-control-feedback" [ngClass]="{'glyphicon-ok': repositoryAPIAvailable, 'glyphicon-remove': !repositoryAPIAvailable}" aria-hidden="true"></span>
-                        </div>
+                            <div class="form-group row has-feedback"
+                                 [ngClass]="{'has-success': repositoryAPIAvailable, 'has-danger': !repositoryAPIAvailable}">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label" for="repositoryAPI">Repository API</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="repositoryAPI"
+                                           [formControl]="repositoryAPIControl" [ngModel]="repositoryAPI | async"
+                                           placeholder="Enter Repository API URL here"
+                                           [ngClass]="{'form-control-success': repositoryAPIAvailable, 'form-control-danger': !repositoryAPIAvailable}">
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Smart Service Archive Parameters</h3>
+                <div class="card mt-2">
+                    <div class="card-header">
+                        <h5 class="mb-0">Smart Service Archive Parameter</h5>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label" for="buildPlanPath">Path to Build Plan</label>
-                            <input type="text" class="form-control" id="buildPlanPath" [formControl]="buildPlanPathControl" [ngModel]="buildPlanPath | async"
-                                   placeholder="Enter URI to Build Plan here">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="terminationPlanPath">Path to Termination Plan</label>
-                            <input type="text" class="form-control" id="terminationPlanPath" [formControl]="terminationPlanPathControl" [ngModel]="terminationPlanPath | async"
-                                   placeholder="Enter URI to Termination Plan here">
-                        </div>
+                    <div class="card-block">
+                        <form>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label" for="buildPlanPath">Path to Build Plan</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="buildPlanPath"
+                                           [formControl]="buildPlanPathControl" [ngModel]="buildPlanPath | async"
+                                           placeholder="Enter URI to Build Plan here">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label" for="terminationPlanPath">
+                                        Path to Termination Plan
+                                    </label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="terminationPlanPath"
+                                           [formControl]="terminationPlanPathControl"
+                                           [ngModel]="terminationPlanPath | async"
+                                           placeholder="Enter URI to Termination Plan here">
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-
             </div>
         </td>
     </tr>
