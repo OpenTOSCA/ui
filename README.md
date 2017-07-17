@@ -49,3 +49,13 @@ Use angular-cli to generate new files!
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## License
+
+Copyright (c) 2012-2017 University of Stuttgart.
+
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the [Eclipse Public License v1.0]
+and the [Apache License v2.0] which both accompany this distribution,
+and are available at http://www.eclipse.org/legal/epl-v10.html
+and http://www.apache.org/licenses/LICENSE-2.0
