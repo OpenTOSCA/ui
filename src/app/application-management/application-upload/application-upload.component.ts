@@ -11,7 +11,7 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
-import { AfterViewInit, Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
@@ -36,7 +36,6 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 export class ApplicationUploadComponent implements OnInit {
     public deploymentInProgress = false;
     public deploymentDone = false;
-    public max = 100;
     public currentSpeed: string;
     public options: NgUploaderOptions;
     public linkToWineryResourceForCompletion: string;
