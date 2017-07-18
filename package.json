@@ -34,7 +34,7 @@
     "lodash": "^4.17.4",
     "ng-spin-kit": "^5.1.1",
     "ngx-uploader": "^2.2.8",
-    "primeng": "^4.1.0",
+    "primeng": "4.1.0",
     "prismjs": "^1.6.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
