@@ -11,6 +11,7 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
+
 import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
