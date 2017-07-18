@@ -96,7 +96,6 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
             .then(injectedServiceTemplateURL => {
                 this.appToComplete.csarURL = injectedServiceTemplateURL.substr(0, injectedServiceTemplateURL.lastIndexOf('/')) + '?csar';
                 this.logger.log('[deployment-completion.component][newCSARURLForInstallation]', this.appToComplete.csarURL);
-                this.sleep(6000);
                 this.completionSuccessful.emit(this.appToComplete);
                 this.showCompleteSelectionModal = false;
             })
@@ -105,12 +104,4 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
             });
     }
 
-    sleep(milliseconds: any) {
-        const start = new Date().getTime();
-        for (let i = 0; i < 1e7; i++) {
-            if ((new Date().getTime() - start) > milliseconds) {
-                break;
-            }
-        }
-    }
 }
