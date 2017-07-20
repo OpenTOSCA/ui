@@ -12,5 +12,5 @@
 import { LinkReference } from './link-reference';
 
 export class ResourceSupport {
-    _links: Array<Map<string, LinkReference>>;
+    _links: Map<string, LinkReference>;
 }
