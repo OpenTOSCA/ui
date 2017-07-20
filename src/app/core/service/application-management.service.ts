@@ -28,6 +28,8 @@ import * as _ from 'lodash';
 import { DOCUMENT } from '@angular/platform-browser';
 import { CsarList } from '../model/new-api/csar-list.model';
 import { Csar } from 'app/core/model/new-api/csar.model';
+import { ServiceTemplateInstance } from '../model/new-api/service-template-instance.model';
+import { Plan } from '../model/new-api/plan.model';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -86,19 +88,21 @@ export class ApplicationManagementService {
     /**
      * Lookup the parameters required by the buildplan of a CSAR
      * @param appID
-     * @returns {Observable<PlanParameters>}
+     * @returns {Observable<Plan>}
      */
-    getBuildPlanParameters(appID: string): Observable<PlanOperationMetaData> {
-        return this.getServiceTemplatePath(appID)
+    getBuildPlan(appID: string): Observable<Plan> {
+        return this.getServiceTemplatePathNG(appID)
             .flatMap(serviceTemplatePath => {
                 const url = new Path(serviceTemplatePath)
-                    .append(this.configService.getBuildPlanPath()).toString();
+                    .append('buildplans')
+                    .toString();
                 const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
                 return this.http.get(url, reqOpts)
-                    .map(response => response.json() as PlanOperationMetaData)
-                    .catch(err => this.logger.handleObservableError('[application.service][getBuildPlanParameters]', err));
+                    // Todo For now it is okay to fetch the first build plan but we have to keep this in mind
+                    .map(response => response.json()['plans'][0] as Plan)
+                    .catch(err => this.logger.handleObservableError('[application.service][getBuildPlan]', err));
             })
-            .catch(err => this.logger.handleObservableError('[application.service][getBuildPlanParameters]', err));
+            .catch(err => this.logger.handleObservableError('[application.service][getBuildPlan]', err));
     }
 
     getTerminationPlan(appID: string): Observable<PlanOperationMetaData> {
@@ -173,26 +177,28 @@ export class ApplicationManagementService {
     /**
      * Triggers the provisioning of a new service instance
      * @param appID ID (CSAR name) of the service which shall be provisioned
-     * @param planMetaData PlanParameters object that containes required input parameters for the buildplan
+     * @param plan PlanParameters object that containes required input parameters for the buildplan
      * @returns {Promise<BuildplanPollResource>}
      */
-    startProvisioning(appID: string, planMetaData: PlanOperationMetaData): Promise<BuildplanPollResource> {
+    startProvisioning(plan: Plan): Observable<string> {
         this.logger.log('[application.service][startProvisioning]', 'Starting Provisioning');
-        this.logger.log('[application.service][startProvisioning]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(planMetaData));
-        this.logger.log('[application.service][startProvisioning]', 'Posting to: ' + planMetaData.Reference.href);
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        reqOpts.headers.append('Content-Type', 'text/plain');
+        this.logger.log('[application.service][startProvisioning]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(plan));
+        const url = new Path(plan._links['self'].href)
+            .append('instances')
+            .toString();
+        this.logger.log('[application.service][startProvisioning]', 'Posting to: ' + url);
 
-        return this.http.post(planMetaData.Reference.href, planMetaData.Plan, reqOpts)
-            .toPromise()
-            .then(response => {
-                this.logger.log('[application.service][startProvisioning]', 'Server responded to post: ' + response);
-                return response.json();
+        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
+
+        return this.http.post(url, plan.input_parameters, reqOpts)
+            .map((response: Response) => {
+                this.logger.log('[application.service][startProvisioning]', 'Response headers are: ' + response.headers);
+                return response.headers['Location'];
             })
             .catch(err => this.logger.handleError('[application.service][startProvisioning]', err));
     }
 
-    pollForServiceTemplateInstanceCreation(pollURL: string): Promise<string> {
+    pollForServiceTemplateInstanceCreation(pollURL: string): Promise<ServiceTemplateInstance> {
         const waitTime = 10000;
 
         this.logger.log('[application.service][pollForServiceTemplateInstanceCreation]',

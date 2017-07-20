@@ -17,19 +17,20 @@ import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
 import { Csar } from '../core/model/new-api/csar.model';
 import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
+import { Plan } from '../core/model/new-api/plan.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;
     currentApp?: Csar;
     currentAppInstances?: Array<ServiceTemplateInstance>;
-    currentBuildPlanOperationMetaData?: PlanOperationMetaData;
+    currentBuildPlan?: Plan;
 }
 
 export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
     currentApp: null,
     currentAppInstances: [],
-    currentBuildPlanOperationMetaData: null
+    currentBuildPlan: null
 };
 
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,
@@ -66,9 +67,9 @@ export function applicationManagementReducer(state: ApplicationManagementState =
             return Object.assign({}, state, {
                 currentAppInstances: []
             });
-        case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA:
+        case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN:
             return Object.assign({}, state, {
-                currentBuildPlanOperationMetaData: action.payload
+                currentBuildPlan: action.payload
             });
         default:
             return state;

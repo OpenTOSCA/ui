@@ -33,6 +33,7 @@ import { NgUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeploymentCompletionService } from '../core/service/deployment-completion.service';
+import { BuildplanMonitorComponent } from './buildplan-monitor/buildplan-monitor.component';
 
 @NgModule({
     imports: [
@@ -59,7 +60,8 @@ import { DeploymentCompletionService } from '../core/service/deployment-completi
         ApplicationInstanceListComponent,
         ApplicationUploadComponent,
         ApplicationComponent,
-        ApplicationOverviewComponent
+        ApplicationOverviewComponent,
+        BuildplanMonitorComponent,
     ],
     providers: [
         ConfigurationService,

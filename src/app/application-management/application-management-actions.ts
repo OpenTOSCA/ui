@@ -16,6 +16,7 @@ import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model
 import { Action } from '../store/store.action';
 import { Csar } from '../core/model/new-api/csar.model';
 import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
+import { Plan } from '../core/model/new-api/plan.model';
 
 @Injectable()
 export class ApplicationManagementActions {
@@ -28,7 +29,7 @@ export class ApplicationManagementActions {
     static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
 
-    static UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA = 'UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA';
+    static UPDATE_CURRENT_BUILD_PLAN = 'UPDATE_CURRENT_BUILD_PLAN';
 
     static addContainerApplications(apps: Array<Csar>): Action {
         return {
@@ -72,9 +73,9 @@ export class ApplicationManagementActions {
         };
     }
 
-    static updateBuildPlanOperationMetaData(metaData: PlanOperationMetaData): Action {
+    static updateBuildPlan(metaData: Plan): Action {
         return {
-            type: ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA,
+            type: ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN,
             payload: metaData
         };
     }

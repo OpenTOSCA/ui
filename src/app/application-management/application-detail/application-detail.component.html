@@ -20,43 +20,6 @@
                     </ng-template>
                 </div>
 
-                <!-- Buttons -->
-                <!-- Todo Move Open Application Button to ServiceInstanceListEntryView -->
-                <div style="margin-bottom: 10px;">
-                    <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
-                       [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
-
-                    <div id="loaderContainer">
-                        <div id="loader" *ngIf="provisioningInProgress"></div>
-                    </div>
-                </div>
-
-                <!-- Todo Move PlanOutput to ServiceInstanceListEntryView -->
-                <div class="panel panel-success" *ngIf="planOutputParameters">
-                    <div class="panel-heading">Results of the last provisioning task</div>
-                    <div class="panel-body">
-                        <p>The provisioning of the instance was successful. The output parameters are listed
-                            bellow:</p>
-                    </div>
-
-                    <!-- Table -->
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Parameter</th>
-                            <th>Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let param of planOutputParameters; let i = index">
-                            <td *ngIf="showOutputParameter(param)">{{i + 1}}</td>
-                            <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Name}}</td>
-                            <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Value}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
                 <div>
                     <h2>Version</h2>
                     <p *ngIf="app?.version && app?.version !==''; else noVersion">
@@ -119,20 +82,20 @@
     <p-header>
         Please fill in following parameters
     </p-header>
-    <div *ngFor="let param of buildPlanOperationMetaData?.Plan.InputParameters">
-        <div class="card mb-2" *ngIf="showParam(param.InputParameter)">
-            <h6 class="card-header">{{ param.InputParameter.Name }}</h6>
+    <div *ngFor="let param of (currentBuildPlan | async)?.input_parameters">
+        <div class="card mb-2" *ngIf="showParam(param.name)">
+            <h6 class="card-header">{{ param.name }}</h6>
             <div class="card-block">
-                <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
-                          class="form-control" placeholder="{{param.InputParameter.Name}}"
-                          [(ngModel)]="param.InputParameter.Value"
+                <textarea *ngIf="param.name.indexOf('Key') > 0" type="text"
+                          class="form-control" placeholder="{{param.name}}"
+                          [(ngModel)]="param.value"
                           (ngModelChange)="checkAllInputsFilled()"></textarea>
-                <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
-                       class="form-control" placeholder="{{param.InputParameter.Name}}"
-                       [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
-                <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)"
-                       type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
-                       [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
+                <input *ngIf="param.name.indexOf('Password') > 0" type="password"
+                       class="form-control" placeholder="{{param.name}}"
+                       [(ngModel)]="param.value" (ngModelChange)="checkAllInputsFilled()">
+                <input *ngIf="(param.name.indexOf('Password') == -1) && (param.name.indexOf('Key') == -1)"
+                       type="text" class="form-control" placeholder="{{param.name}}"
+                       [(ngModel)]="param.value" (ngModelChange)="checkAllInputsFilled()">
             </div>
         </div>
     </div>

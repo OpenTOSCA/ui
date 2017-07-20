@@ -31,6 +31,8 @@ import { DeploymentCompletionComponent } from './component/deployment-completion
 import { DeploymentCompletionService } from './service/deployment-completion.service';
 import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
 import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
+import { BuildplanMonitoringService } from './service/buildplan-monitoring.service';
+import { FilterOutputParams } from './pipe/filter-output-params.pipe';
 
 @NgModule({
     imports: [
@@ -50,7 +52,8 @@ import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
         SearchComponent,
         DeploymentCompletionComponent,
         SortPipe,
-        HumanizeBytesPipe
+        HumanizeBytesPipe,
+        FilterOutputParams
     ],
     exports: [
         ActionBarComponent,
@@ -61,7 +64,8 @@ import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
         SearchComponent,
         DeploymentCompletionComponent,
         SortPipe,
-        HumanizeBytesPipe
+        HumanizeBytesPipe,
+        FilterOutputParams
     ],
     providers: [
         ApplicationInstanceManagementService,
@@ -70,7 +74,8 @@ import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
         DatePipe,
         ApplicationInstancesManagementService,
         RepositoryManagementService,
-        DeploymentCompletionService
+        DeploymentCompletionService,
+        BuildplanMonitoringService
     ]
 })
 export class CoreModule {

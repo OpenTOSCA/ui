@@ -128,13 +128,13 @@ export class ApplicationUploadComponent implements OnInit {
      */
     handleUpload(data: any): void {
         this.zone.run(() => {
-            if (this.uploadingFile.progress['percent'] < 100) {
+            if (this.uploadingFile && this.uploadingFile.progress['percent'] < 100) {
                 this.deploymentInProgress = false;
                 this.deploymentDone = false;
             } else {
                 this.deploymentInProgress = true;
             }
-            if (this.uploadingFile.status === 201) {
+            if (this.uploadingFile && this.uploadingFile.status === 201) {
                 this.deploymentDone = true;
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
@@ -147,7 +147,7 @@ export class ApplicationUploadComponent implements OnInit {
                 this.resetUploadStats();
                 this.closeModal();
             }
-            if (this.uploadingFile.status === 406) {
+            if (this.uploadingFile && this.uploadingFile.status === 406) {
                 const location = JSON.parse(this.uploadingFile.response);
                 this.linkToWineryResourceForCompletion = location ['Location']  as string;
                 this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion,
@@ -159,7 +159,7 @@ export class ApplicationUploadComponent implements OnInit {
                     })
                     .catch(err => this.logger.handleError('[application-upload.component][getAppFromCompletionHandlerWinery]', err));
             }
-            if (this.uploadingFile.status === 500) {
+            if (this.uploadingFile && this.uploadingFile.status === 500) {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'error',
