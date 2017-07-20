@@ -176,7 +176,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.provisioningInProgress = true;
         this.provisioningDone = false;
         const app = this.ngRedux.getState().container.currentApp;
-        this.appService.startProvisioning(this.ngRedux.getState().container.currentBuildPlan)
+        this.appService.triggerBuildPlan(this.ngRedux.getState().container.currentBuildPlan)
             .subscribe(location => {
                 this.logger.log(
                     '[application-details.component][startProvisioning]',
