@@ -18,6 +18,7 @@ import { PlanOperationMetaData } from '../../core/model/planOperationMetaData.mo
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { Csar } from '../../core/model/new-api/csar.model';
+import { Plan } from '../../core/model/new-api/plan.model';
 
 @Injectable()
 export class ApplicationDetailResolverService {
@@ -26,13 +27,13 @@ export class ApplicationDetailResolverService {
         return Observable.forkJoin(
             [
                 this.appService.getCsarDescriptionByCsarID(route.params['id']).retry(3),
-                this.appService.getBuildPlanParameters(route.params['id']).retry(3),
+                this.appService.getBuildPlan(route.params['id']).retry(3),
                 this.appService.getTerminationPlan(route.params['id']).retry(3)
             ]
         )
             .map((result: Array<any>) => new ApplicationDetail(
                 <Csar>result[0],
-                <PlanOperationMetaData>result[1],
+                <Plan>result[1],
                 <PlanOperationMetaData>result[2]
                 )
             )

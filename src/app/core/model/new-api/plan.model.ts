@@ -12,11 +12,12 @@
 
 import { ResourceSupport } from './resource-support.model';
 import { PlanParameter } from '../plan-parameter.model';
-import { PlanLogEntry } from './plan-log-entry.model';
 
-export class PlanInstance extends ResourceSupport {
+export class Plan extends ResourceSupport {
     id: string;
-    state: string;
-    output: Array<PlanParameter>;
-    logs: Array<PlanLogEntry>;
+    plan_type: string;
+    plan_language: string;
+    input_parameters: Array<PlanParameter>;
+    output_parameters: Array<PlanParameter>;
+    plan_model_reference: string;
 }

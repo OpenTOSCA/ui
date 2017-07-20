@@ -35,12 +35,12 @@
             </ng-template>
         </div>
     </div>
-    <div class="row" *ngIf="(uploadingFile?.progress | json)?.percent > 0">
+    <div class="row" *ngIf="uploadingFile?.progress['percent'] > 0">
         <div class="col-sm-4 offset-md-3">
             <h6>File Upload in Progress</h6>
         </div>
         <div class="col-sm-5">
-            <p-progressBar [value]="(uploadingFile?.progress | json)?.percent"></p-progressBar>
+            <p-progressBar [value]="uploadingFile?.progress['percent']"></p-progressBar>
             <small><em>current upload speed: {{ currentSpeed }}</em></small>
         </div>
     </div>
