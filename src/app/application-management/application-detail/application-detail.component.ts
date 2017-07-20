@@ -10,17 +10,14 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import { PlanOperationMetaData } from '../../core/model/planOperationMetaData.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { PlanParameter } from '../../core/model/plan-parameter.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationDetail } from '../../core/model/application-detail.model';
 import * as _ from 'lodash';
 import { TriggerTerminationPlanEvent } from '../../core/model/trigger-termination-plan-event.model';
-import { Path } from '../../core/util/path';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { ApplicationInstancesManagementService } from '../../core/service/application-instances-management.service';
@@ -43,13 +40,10 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     public provisioningInProgress = false;
     public provisioningDone = false;
     public allInputsFilled = true;
-    public terminationPlan: PlanOperationMetaData;
     public showStartProvisioningModal = false;
-    private serviceTemplateInstancesURL: string;
 
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationManagementService,
-                private sanitizer: DomSanitizer,
                 private ngRedux: NgRedux<AppState>,
                 private logger: OpenToscaLoggerService,
                 private router: Router,
@@ -85,11 +79,9 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
                         data.applicationDetail.buildPlan)
                     );
-                    this.serviceTemplateInstancesURL = _.trimEnd(
-                        data.applicationDetail.terminationPlanResource.Reference.href,
-                        '%7BinstanceId%7D'
-                    );
-                    this.terminationPlan = data.applicationDetail.terminationPlanResource;
+                    this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
+                        data.applicationDetail.terminationPlan
+                    ));
                     // Load also application instances for list
                     this.updateAppInstancesList(data.applicationDetail.app);
                     // Prepare breadcrumb
@@ -118,32 +110,25 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     emitTerminationPlan(terminationEvent: TriggerTerminationPlanEvent): void {
-        const app = this.ngRedux.getState().container.currentApp;
-        this.appService.getServiceTemplatePathNG(app.id)
-            .subscribe(serviceTemplatePath => {
-                console.log(serviceTemplatePath);
-                const instanceId = terminationEvent.instanceID;
-                console.log(instanceId);
-                const plan = this.terminationPlan.Plan.ID;
-                console.log(plan);
-                const url = new Path(serviceTemplatePath)
-                    .append('instances')
-                    .append(instanceId + '')
-                    .append('managementplans')
-                    .append(plan)
-                    .append('instances')
-                    .toString();
-                this.appService.getServiceTemplatePath(app.id).subscribe(path => {
-                    this.appService.triggerPlan(url, []);
-                    this.ngRedux.dispatch(GrowlActions.addGrowl(
-                        {
-                            severity: 'info',
-                            summary: 'Termination started',
-                            detail: 'The termination process has been started.'
-                        }
-                    ));
-                });
+        const terminationPlan = Object.assign({}, this.ngRedux.getState().container.currentTerminationPlan);
+        terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent.instanceID);
+        console.log(terminationPlan);
+        this.appService.triggerTerminationPlan(terminationPlan)
+            .subscribe(result => {
+                // TODO Location header is filled with correct plan instance url but is not accessible in a http 201 response
+                this.logger.log('[application-detail.component][emitTerminationPlan]', result);
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'info',
+                        summary: 'Termination started',
+                        detail: 'The termination plan has been started.'
+                    }
+                ));
             });
+    }
+
+    triggerUpdateAppInstancesList(): void {
+        this.updateAppInstancesList(this.ngRedux.getState().container.currentApp);
     }
 
     updateAppInstancesList(app: Csar): void {
@@ -187,7 +172,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     'Now starting to poll for service template instance creation'
                 );
                 // we wait for two seconds so that servicetemplate instance is created
-                setTimeout(()=> this.updateAppInstancesList(app), 5000);
+                setTimeout(() => this.triggerUpdateAppInstancesList(), 2000);
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'success',

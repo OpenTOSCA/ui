@@ -14,10 +14,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { PlanParameter } from '../model/plan-parameter.model';
 import * as _ from 'lodash';
 
-@Pipe({ name: 'filterOutputParams' })
+@Pipe({name: 'filterOutputParams'})
 export class FilterOutputParams implements PipeTransform {
 
     transform(params: Array<PlanParameter>, blacklist: Array<string>): any {
-        return params.filter((param)=> !_.includes(blacklist, param.name));
+        return params.filter((param) => !_.includes(blacklist, param.name));
     }
 }

@@ -1,4 +1,6 @@
-<!-- TODO we need a reload button to update instances list -->
+<button class="btn btn-primary mb-2" (click)="reloadInstances()">
+    <i class="fa fa-refresh"></i> Refresh Instances List
+</button>
 <p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
     <p-column expander="true" [style]="{'width':'45px'}"></p-column>
     <p-column field="id" header="InstanceID" [sortable]="true"></p-column>

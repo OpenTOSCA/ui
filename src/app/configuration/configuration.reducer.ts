@@ -19,13 +19,19 @@ export interface ConfigurationState {
     repositoryAPI?: string;
     buildPlanPath?: string;
     terminationPlanPath?: string;
+    opentoscaLifecycleInterfaceName?: string;
+    initiationOperationName?: string;
+    terminationOperationName?: string;
 }
 
 export const INITIAL_STATE: ConfigurationState = {
     containerAPI: 'http://localhost:1337',
     repositoryAPI: 'http://stable.winery.opentosca.org/winery/servicetemplates/',
     buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
-    terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan'
+    terminationPlanPath: '/boundarydefinitions/interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan',
+    opentoscaLifecycleInterfaceName: 'OpenTOSCA-Lifecycle-Interface',
+    initiationOperationName: 'initiate',
+    terminationOperationName: 'terminate'
 };
 
 export function configurationReducer(state: ConfigurationState = INITIAL_STATE,

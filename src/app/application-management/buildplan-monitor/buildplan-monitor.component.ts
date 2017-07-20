@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ServiceTemplateInstance } from '../../core/model/new-api/service-template-instance.model';
 import { BuildplanMonitoringService } from '../../core/service/buildplan-monitoring.service';
 import { PlanInstance } from '../../core/model/new-api/plan-instance.model';
-import { PlanParameter } from '../../core/model/plan-parameter.model';
 
 @Component({
     selector: 'opentosca-ui-buildplan-monitor',
@@ -11,7 +10,7 @@ import { PlanParameter } from '../../core/model/plan-parameter.model';
 })
 export class BuildplanMonitorComponent implements OnInit, OnDestroy {
 
-    @Input("service-template-instance") stInstance: ServiceTemplateInstance;
+    @Input('service-template-instance') stInstance: ServiceTemplateInstance;
     bpInstance: PlanInstance;
     selfserviceApplicationUrl: string;
     private timeout: any;
@@ -39,12 +38,12 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.bpInstance = result;
                 if (result.state !== 'FINISHED') {
-                    this.timeout = setTimeout(() => this.pollForPlanFinish(), 2000)
+                    this.timeout = setTimeout(() => this.pollForPlanFinish(), 2000);
                 } else {
                     clearTimeout(this.timeout);
                     this.setSelfServiceApplicationUrl(this.getSelfServiceApplicationUrlFromOutput());
                 }
-            })
+            });
     }
 
     setSelfServiceApplicationUrl(url: string): void {

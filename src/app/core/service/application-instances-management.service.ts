@@ -10,13 +10,12 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
+
 import { Injectable } from '@angular/core';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
-import { ApplicationManagementService } from './application-management.service';
 import { Observable } from 'rxjs/Observable';
 import { ApplicationInstance } from '../model/application-instance.model';
 import { Csar } from '../model/new-api/csar.model';
-import { ServiceTemplateInstanceListEntry } from '../model/new-api/service-template-instance-list-entry.model';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { ServiceTemplateList } from '../model/new-api/service-template-list.model';
 import { ServiceTemplate } from '../model/new-api/service-template.model';
@@ -27,7 +26,6 @@ import { ServiceTemplateInstance } from '../model/new-api/service-template-insta
 export class ApplicationInstancesManagementService {
 
     constructor(private logger: OpenToscaLoggerService,
-                private appService: ApplicationManagementService,
                 private http: Http) {
     }
 
@@ -72,24 +70,7 @@ export class ApplicationInstancesManagementService {
      * Loads instances of the current app
      */
     loadInstancesList(appID: string): Observable<Array<ApplicationInstance>> {
-        return this.appService.getServiceTemplateInstancesByAppID(appID)
-            .flatMap(instancesReferences => {
-                return this.appService.getPropertiesOfServiceTemplateInstances(instancesReferences)
-                    .map(instancesPropertiesList => {
-                        const preparedResults: Array<ApplicationInstance> = [];
-                        for (const instanceProperties of instancesPropertiesList) {
-                            const appInstance = new ApplicationInstance(appID, instanceProperties.instanceReference, instanceProperties);
-                            preparedResults.push(appInstance);
-                        }
-                        return preparedResults;
-                    })
-                    .catch(reason => this.logger.handleError(
-                        '[application-instances.service][loadInstancesList][getProvisioningStateofServiceTemplateInstance]',
-                        reason));
-            })
-            .catch(reason => this.logger.handleError(
-                '[application-instances.service][loadInstancesList][getServiceTemplateInstancesByAppID]', reason
-            ));
+        return Observable.of([]);
     }
 
 }

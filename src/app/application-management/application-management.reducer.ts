@@ -12,7 +12,6 @@
  */
 
 import * as _ from 'lodash';
-import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model';
 import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
 import { Csar } from '../core/model/new-api/csar.model';
@@ -24,13 +23,15 @@ export interface ApplicationManagementState {
     currentApp?: Csar;
     currentAppInstances?: Array<ServiceTemplateInstance>;
     currentBuildPlan?: Plan;
+    currentTerminationPlan?: Plan;
 }
 
 export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
     currentApp: null,
     currentAppInstances: [],
-    currentBuildPlan: null
+    currentBuildPlan: null,
+    currentTerminationPlan: null
 };
 
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,
@@ -70,6 +71,10 @@ export function applicationManagementReducer(state: ApplicationManagementState =
         case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN:
             return Object.assign({}, state, {
                 currentBuildPlan: action.payload
+            });
+        case ApplicationManagementActions.UPDATE_CURRENT_TERMINATION_PLAN:
+            return Object.assign({}, state, {
+                currentTerminationPlan: action.payload
             });
         default:
             return state;

@@ -10,6 +10,7 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
+
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -31,12 +32,7 @@ export class ApplicationDetailResolverService {
                 this.appService.getTerminationPlan(route.params['id']).retry(3)
             ]
         )
-            .map((result: Array<any>) => new ApplicationDetail(
-                <Csar>result[0],
-                <Plan>result[1],
-                <PlanOperationMetaData>result[2]
-                )
-            )
+            .map((result: Array<any>) => new ApplicationDetail(<Csar>result[0], <Plan>result[1], <Plan>result[2]))
             .catch(reason => {
                 return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
             });

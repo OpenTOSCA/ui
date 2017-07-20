@@ -12,7 +12,6 @@
  */
 
 import { Injectable } from '@angular/core';
-import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model';
 import { Action } from '../store/store.action';
 import { Csar } from '../core/model/new-api/csar.model';
 import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
@@ -30,6 +29,7 @@ export class ApplicationManagementActions {
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
 
     static UPDATE_CURRENT_BUILD_PLAN = 'UPDATE_CURRENT_BUILD_PLAN';
+    static UPDATE_CURRENT_TERMINATION_PLAN = 'UPDATE_CURRENT_TERMINATION_PLAN';
 
     static addContainerApplications(apps: Array<Csar>): Action {
         return {
@@ -73,10 +73,17 @@ export class ApplicationManagementActions {
         };
     }
 
-    static updateBuildPlan(metaData: Plan): Action {
+    static updateBuildPlan(plan: Plan): Action {
         return {
             type: ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN,
-            payload: metaData
+            payload: plan
+        };
+    }
+
+    static updateTerminationPlan(plan: Plan): Action {
+        return {
+            type: ApplicationManagementActions.UPDATE_CURRENT_TERMINATION_PLAN,
+            payload: plan
         };
     }
 

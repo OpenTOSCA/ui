@@ -11,7 +11,6 @@
  *     Michael Wurster - initial implementation
  */
 
-import { PlanOperationMetaData } from './planOperationMetaData.model';
 import { Csar } from './new-api/csar.model';
 import { Plan } from './new-api/plan.model';
 
@@ -19,6 +18,6 @@ export class ApplicationDetail {
 
     constructor(public app: Csar,
                 public buildPlan: Plan,
-                public terminationPlanResource: PlanOperationMetaData) {
+                public terminationPlan: Plan) {
     }
 }
