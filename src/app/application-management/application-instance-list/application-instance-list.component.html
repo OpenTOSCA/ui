@@ -1,3 +1,4 @@
+<!-- TODO we need a reload button to update instances list -->
 <p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
     <p-column expander="true" [style]="{'width':'45px'}"></p-column>
     <p-column field="id" header="InstanceID" [sortable]="true"></p-column>
@@ -9,14 +10,17 @@
     </p-column>
     <ng-template let-inst pTemplate="rowexpansion">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-3">
                 <p>Initialized: {{ inst.created_at | date:'medium' }}</p>
                 <p>State: {{ inst.state }}</p>
                 <p *ngIf="inst.state !== 'DELETED'">
-                    <button class="btn btn-danger" (onclick)="emitTerminationPlan(inst)">
+                    <button class="btn btn-danger" (click)="terminateInstance(inst.id)">
                         <i class="fa fa-remove"></i> Delete Instance
                     </button>
                 </p>
+            </div>
+            <div class="col-sm-9">
+                <opentosca-ui-buildplan-monitor *ngIf="inst._links['build_plan_instance']" [service-template-instance]="inst"></opentosca-ui-buildplan-monitor>
             </div>
         </div>
     </ng-template>

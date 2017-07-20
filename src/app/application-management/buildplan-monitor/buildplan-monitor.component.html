@@ -1,0 +1,37 @@
+<div *ngIf="bpInstance?.state === 'FINISHED'; else NotFinished">
+    <a class="btn btn-success"
+       *ngIf="stInstance.state !== 'DELETED' && selfserviceApplicationUrl && selfserviceApplicationUrl !== ''"
+       [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
+
+    <div class="card has-success"
+         *ngIf="stInstance.state !== 'DELETED' && bpInstance.output && (!selfserviceApplicationUrl || selfserviceApplicationUrl === '')">
+        <div class="card-header">Build Plan Result</div>
+        <div class="card-block">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let param of bpInstance.output | filterOutputParams:['instanceId', 'CorrelationID']; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ param.name }}</td>
+                    <td>{{ param.value }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #NotFinished>
+    <div class="card">
+        <div class="card-block">
+            Build Plan is still running
+            <sk-fading-circle></sk-fading-circle>
+            Logs: {{ bpInstance?.logs | json }}
+        </div>
+    </div>
+</ng-template>
