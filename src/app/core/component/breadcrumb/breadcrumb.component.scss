@@ -1,13 +1,16 @@
+
 body a.ui-state-active, body a.ui-state-highlight {
-  //background-color: #ffffff;
   span.ui-menuitem-text {
     background-color: #ffffff;
   }
 }
 
-.ui-breadcrumb.ui-corner-all {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  border-radius: 0;
+.ui-breadcrumb--no-background {
+  background: none;
+}
+
+.ui-breadcrumb--border-bottom {
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }

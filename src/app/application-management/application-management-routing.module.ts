@@ -28,7 +28,6 @@ const routes: Routes = [
             {
                 path: '',
                 component: ApplicationOverviewComponent,
-                pathMatch: 'full'
             },
             {
                 path: ':id',

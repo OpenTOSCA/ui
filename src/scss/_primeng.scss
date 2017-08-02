@@ -1,5 +1,5 @@
+@import "../../node_modules/primeng/resources/themes/omega/theme.css";
 @import "../../node_modules/primeng/resources/primeng.css";
-@import "../../node_modules/primeng/resources/themes/bootstrap/theme.css";
 
 body .ui-dialog-footer {
   border-left: 0 !important;
@@ -11,4 +11,14 @@ body .ui-dialog-footer {
 .modal-scrollable {
   height: 600px;
   width: 50%;
+}
+
+legend {
+  font-size: 1.2em !important;
+}
+
+.ui-widget-content {
+  a.btn {
+    color: white;
+  }
 }

@@ -43,7 +43,12 @@ export class ApplicationOverviewComponent implements OnInit {
 
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push({label: 'Applications'});
+        breadCrumbs.push(
+            {
+                label: 'Applications',
+                routerLink: ['applications']
+            }
+        );
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.getResolvedApplications();
     }

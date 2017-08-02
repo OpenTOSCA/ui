@@ -87,7 +87,8 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     // Prepare breadcrumb
                     this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
                         {
-                            label: data.applicationDetail.app.id
+                            label: data.applicationDetail.app.id,
+                            routerLink: ['applications', data.applicationDetail.app.id]
                         }));
                 },
                 reason => {
