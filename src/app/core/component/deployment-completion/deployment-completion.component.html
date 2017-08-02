@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="showCompleteConfirmationModal" [width]="400" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="showCompleteConfirmationModal" modal="true">
     <p-header>
         Apply completion?
     </p-header>
@@ -15,7 +15,7 @@
     </p-footer>
 </p-dialog>
 
-<p-dialog [(visible)]="showCompleteSelectionModal" [width]="400" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="showCompleteSelectionModal" modal="true">
     <p-header>
         Selection
     </p-header>

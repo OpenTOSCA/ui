@@ -80,7 +80,8 @@
     </p-fieldset>
 </div>
 
-<p-dialog [(visible)]="showStartProvisioningModal" [width]="400" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="showStartProvisioningModal"
+          [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Please fill in following parameters
     </p-header>
