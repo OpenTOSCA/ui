@@ -31,6 +31,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 Before conducting a release, we have to [lock down](https://docs.npmjs.com/files/package-locks) the dependency versions:
 ```
+npm install --no-shrinkwrap
 npm shrinkwrap
 ```
 
