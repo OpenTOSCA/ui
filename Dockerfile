@@ -11,15 +11,14 @@ COPY . /opt/opentosca/ui
 RUN mvn package
 
 
-FROM openjdk:8
+FROM tomcat:8.5-jre8
 LABEL maintainer "Michael Wurster <miwurster@gmail.com>"
 
-RUN rm /dev/random && ln -s /dev/urandom /dev/random
+RUN rm /dev/random && ln -s /dev/urandom /dev/random \
+    && rm -rf ${CATALINA_HOME}/webapps/*
 
-COPY --from=builder /opt/opentosca/ui/build/target /opt/opentosca/ui
+COPY --from=builder /opt/opentosca/ui/target/opentosca-ui.war ${CATALINA_HOME}/webapps/ROOT.war
 
-WORKDIR /opt/opentosca/ui
+EXPOSE 8080
 
-EXPOSE 8088
-
-CMD java -jar /opt/opentosca/ui/opentosca-ui.war --server.port=8088
+CMD ${CATALINA_HOME}/bin/catalina.sh run

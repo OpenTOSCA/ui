@@ -9,6 +9,7 @@ target/
 /src/**/*.js
 /src/**/*.js.map
 npm-debug.log
+/node
 
 # compiled output
 /dist
