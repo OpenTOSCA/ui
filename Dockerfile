@@ -1,17 +1,14 @@
 FROM maven:3-jdk-8 as builder
 
-ARG GIT_REPO_URL=https://github.com/OpenTOSCA/ui.git
-ARG GIT_BRANCH=master
-
 RUN rm /dev/random && ln -s /dev/urandom /dev/random \
     && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get update -qq && apt-get install -qqy \
         nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --recursive --depth=1 ${GIT_REPO_URL} -b ${GIT_BRANCH} /opt/opentosca/ui \
-    && cd /opt/opentosca/ui \
-    && mvn package
+WORKDIR /opt/opentosca/ui
+COPY . /opt/opentosca/ui
+RUN mvn package
 
 
 FROM openjdk:8
