@@ -1,10 +1,6 @@
 FROM maven:3-jdk-8 as builder
 
-RUN rm /dev/random && ln -s /dev/urandom /dev/random \
-    && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-    && apt-get update -qq && apt-get install -qqy \
-        nodejs \
-    && rm -rf /var/lib/apt/lists/*
+RUN rm /dev/random && ln -s /dev/urandom /dev/random
 
 WORKDIR /opt/opentosca/ui
 COPY . /opt/opentosca/ui
