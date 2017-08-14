@@ -13,8 +13,8 @@ before_install:
 
 script:
   - ./mvnw package --fail-at-end
-  - mkdir build/wars
-  - cp build/target/*.war build/wars
+  - mkdir build
+  - cp target/*.war build
 
 deploy:
   provider: s3
@@ -23,7 +23,7 @@ deploy:
   secret_access_key: $AWSSecretKey
   bucket: builds.opentosca.org
   acl: public_read
-  local_dir: build/wars/
+  local_dir: build/
   upload-dir: ui/$TRAVIS_BRANCH
   region: eu-central-1
   on:
