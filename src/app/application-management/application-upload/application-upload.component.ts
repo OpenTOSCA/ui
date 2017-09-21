@@ -13,6 +13,7 @@
  */
 
 import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Http } from '@angular/http';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
@@ -66,6 +67,7 @@ export class ApplicationUploadComponent implements OnInit {
             private repositoryManagementService: RepositoryManagementService,
             private ngRedux: NgRedux<AppState>,
             private router: Router,
+            private http: Http,
             private logger: OpenToscaLoggerService) {
         this.inputUploadEvents = new EventEmitter<string>();
     }
@@ -124,25 +126,33 @@ export class ApplicationUploadComponent implements OnInit {
                 .toString();
         this.repositoryManagementService.installAppInContainer(this.tempData.cur, postURL)
         .then(response => {
-            /*app.isInstalling = false;
-            this.appService.isAppDeployedInContainer(app.id)
-                .then(result => app.inContainer = result);*/
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Upload Succeeded',
+                    detail: 'New Application was successfully uploaded and deployed to container'
+                }
+            ));
+            this.updateApplicationsInStore();
         })
         .catch(err => {
-            /*app.isInstalling = false;
-            // Injector
-            if (err.status === 406) {
-                this.appToComplete = app;
-                this.linkToWineryResource = err.json()['Location'] as string;
-                this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
-                this.startCompletionProcess = true;
-            } else {
-                this.appService.isAppDeployedInContainer(app.id)
-                    .then(result => {
-                        app.inContainer = result;
-                    });
-            }*/
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Application was not successfully uploaded and deployed. Server responded: ' + err
+                }
+            ));
         });
+        this.closeModal();
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'info',
+                summary: 'Deploying Container ' + this.tempData.cur.name,
+                detail: 'Your container is uploaded and installed in the background.'
+            }
+        ));
+        this.resetUploadStats();
     }
 
     /**
@@ -332,11 +342,28 @@ export class ApplicationUploadComponent implements OnInit {
         });
     }
 
+    /**
+     * Validator function for the url
+     * @param url string of the enter value
+     * @return must return the value for the datastructure
+     */
     urlValidator(url: string): string {
-        this.tempData.validURL = true;
+        this.tempData.validURL = false;
+        this.http.head(url).subscribe(
+            response => {
+                if (response.ok) {
+                    this.tempData.validURL = true;
+                }
+            }
+        );
         return url;
     }
 
+    /**
+     * Validator function for the name
+     * @param url string of the enter value
+     * @return must return the value for the datastructure
+     */
     nameValidator(name: string): string {
         this.tempData.validName = true;
         return name;
