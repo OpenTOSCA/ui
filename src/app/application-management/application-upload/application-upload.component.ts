@@ -26,6 +26,8 @@ import { DeploymentCompletionService } from '../../core/service/deployment-compl
 import { RepositoryManagementService } from '../../core/service/repository-management.service';
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
+import { CsarUploadReference } from '../../core/model/new-api/csar-upload-request.model';
+
 
 @Component({
     selector: 'opentosca-ui-application-upload',
@@ -46,14 +48,27 @@ export class ApplicationUploadComponent implements OnInit {
     public uploadingFile: UploadedFile;
     public selectedFile: any;
     public showModal = true;
-    // contains the url entered by the user to upload
-    public uploadingURL: string;
-    // states if the uploading url is valid
-    public uploadingURLisValid: boolean;
+
+    // temporary data derived from the user input for the url upload
+    private tempData = {
+        cur: new CsarUploadReference(null, null),
+        validURL: false,
+        validName: false
+    };
 
     private zone: NgZone;
     private lastUpdate: number;
 
+    constructor(
+            private adminService: ConfigurationService,
+            private appService: ApplicationManagementService,
+            private deploymentService: DeploymentCompletionService,
+            private repositoryManagementService: RepositoryManagementService,
+            private ngRedux: NgRedux<AppState>,
+            private router: Router,
+            private logger: OpenToscaLoggerService) {
+        this.inputUploadEvents = new EventEmitter<string>();
+    }
 
     ngOnInit(): void {
         this.zone = new NgZone({enableLongStackTrace: false});
@@ -82,17 +97,6 @@ export class ApplicationUploadComponent implements OnInit {
         this.router.navigate(['../applications', {outlets: {modal: null}}]);
     }
 
-    constructor(private adminService: ConfigurationService,
-                private appService: ApplicationManagementService,
-                private deploymentService: DeploymentCompletionService,
-                private repositoryManagementService: RepositoryManagementService,
-                private ngRedux: NgRedux<AppState>,
-                private router: Router,
-                private logger: OpenToscaLoggerService) {
-        this.inputUploadEvents = new EventEmitter<string>();
-        this.uploadingURLisValid = false;
-    }
-
     /**
      * Saves selected file to show it in template
      * @param event
@@ -115,7 +119,7 @@ export class ApplicationUploadComponent implements OnInit {
      * Starts upload of selected url to container
      */
     startURLUpload(): void {
-        // TODO Write Install routine to install this.uploadingURL
+        // TODO Write Install routine to install this.tempData
 
         // Code from the Repository to install apps
         /*this.marketService.installAppInContainer(app, postURL)
@@ -227,8 +231,10 @@ export class ApplicationUploadComponent implements OnInit {
         this.deploymentInProgress = false;
         this.uploadingFile = null;
         this.selectedFile = null;
-        this.uploadingURL = null;
-        this.uploadingURLisValid = false;
+        this.tempData.cur.url = null;
+        this.tempData.cur.name = null;
+        this.tempData.validURL = false;
+        this.tempData.validName = false;
     }
 
     /**
@@ -325,6 +331,13 @@ export class ApplicationUploadComponent implements OnInit {
         });
     }
 
-    updateInputValidator(url: string): void {
+    urlValidator(url: string): string {
+        this.tempData.validURL = true;
+        return url;
+    }
+
+    nameValidator(name: string): string {
+        this.tempData.validName = true;
+        return name;
     }
 }

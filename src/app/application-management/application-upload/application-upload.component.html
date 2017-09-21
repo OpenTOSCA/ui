@@ -32,18 +32,36 @@
                     <div
                             class="form-group has-feedback"
                             [ngClass]="{
-                                'has-success': uploadingURL && uploadingURLisValid,
-                                'has-danger': uploadingURL && !uploadingURLisValid
+                                'has-success': this.tempData.cur.url && this.tempData.validURL,
+                                'has-danger': this.tempData.cur.url && !this.tempData.validURL
                             }"
                     >
                         <input
                                 type="text"
                                 class="form-control"
                                 placeholder="URL to archive file"
-                                (input)="uploadingURL=$event.target.value; updateInputValidator($event.target.value)"
+                                (input)="this.tempData.cur.url = urlValidator($event.target.value)"
                                 [ngClass]="{
-                                    'form-control-success': uploadingURL && uploadingURLisValid,
-                                    'form-control-danger': uploadingURL && !uploadingURLisValid
+                                    'form-control-success': this.tempData.cur.url && this.tempData.validURL,
+                                    'form-control-danger': this.tempData.cur.url && !this.tempData.validURL
+                                }"
+                        >
+                    </div>
+                    <div
+                            class="form-group has-feedback"
+                            [ngClass]="{
+                                'has-success': this.tempData.cur.name && this.tempData.validName,
+                                'has-danger': this.tempData.cur.name && !this.tempData.validName
+                            }"
+                    >
+                        <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Name for the archive file"
+                                (input)="this.tempData.cur.name = nameValidator($event.target.value)"
+                                [ngClass]="{
+                                    'form-control-success': this.tempData.cur.name && this.tempData.validName,
+                                    'form-control-danger': this.tempData.cur.name && !this.tempData.validName
                                 }"
                         >
                     </div>
@@ -71,11 +89,11 @@
     <p-footer>
         <div class="d-flex justify-content-end">
             <button
-                    *ngIf="uploadingURL"
+                    *ngIf="this.tempData.cur.url && this.tempData.cur.name"
                     type="button"
                     class="btn btn-success mr-2"
                     (click)="startURLUpload()"
-                    [disabled]="!uploadingURLisValid"
+                    [disabled]="!(this.tempData.validURL && this.tempData.validName)"
             >
                 Upload from URL
             </button>
