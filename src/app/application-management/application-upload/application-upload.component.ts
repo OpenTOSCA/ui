@@ -46,6 +46,10 @@ export class ApplicationUploadComponent implements OnInit {
     public uploadingFile: UploadedFile;
     public selectedFile: any;
     public showModal = true;
+    // contains the url entered by the user to upload
+    public uploadingURL: string;
+    // states if the uploading url is valid
+    public uploadingURLisValid: boolean;
 
     private zone: NgZone;
     private lastUpdate: number;
@@ -86,6 +90,7 @@ export class ApplicationUploadComponent implements OnInit {
                 private router: Router,
                 private logger: OpenToscaLoggerService) {
         this.inputUploadEvents = new EventEmitter<string>();
+        this.uploadingURLisValid = false;
     }
 
     /**
@@ -104,6 +109,36 @@ export class ApplicationUploadComponent implements OnInit {
      */
     startUpload(): void {
         this.inputUploadEvents.emit('startUpload');
+    }
+
+    /**
+     * Starts upload of selected url to container
+     */
+    startURLUpload(): void {
+        // TODO Write Install routine to install this.uploadingURL
+
+        // Code from the Repository to install apps
+        /*this.marketService.installAppInContainer(app, postURL)
+        .then(response => {
+            app.isInstalling = false;
+            this.appService.isAppDeployedInContainer(app.id)
+                .then(result => app.inContainer = result);
+        })
+        .catch(err => {
+            app.isInstalling = false;
+            // Injector
+            if (err.status === 406) {
+                this.appToComplete = app;
+                this.linkToWineryResource = err.json()['Location'] as string;
+                this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
+                this.startCompletionProcess = true;
+            } else {
+                this.appService.isAppDeployedInContainer(app.id)
+                    .then(result => {
+                        app.inContainer = result;
+                    });
+            }
+        });*/
     }
 
     /**
@@ -192,6 +227,8 @@ export class ApplicationUploadComponent implements OnInit {
         this.deploymentInProgress = false;
         this.uploadingFile = null;
         this.selectedFile = null;
+        this.uploadingURL = null;
+        this.uploadingURLisValid = false;
     }
 
     /**
@@ -286,5 +323,8 @@ export class ApplicationUploadComponent implements OnInit {
                 this.resetUploadStats();
             }
         });
+    }
+
+    updateInputValidator(url: string): void {
     }
 }
