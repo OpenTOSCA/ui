@@ -15,8 +15,9 @@
                         [events]="inputUploadEvents"
                         (beforeUpload)="beforeUpload($event)"
                         (onUpload)="handleUpload($event)"
-                        (onClick)="resetUploadStats()"
-                        (change)="onChange($event)">
+                        (click)="resetUploadStats()"
+                        (change)="onChange($event)"
+                >
             </span>
         </div>
         <div class="col-sm-9">
