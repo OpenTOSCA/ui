@@ -36,7 +36,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 
 export class ApplicationUploadComponent implements OnInit {
     public deploymentInProgress = false;
-    public deploymentDone = false;
+    public deploymentDone = false; // unused ?!!
     public currentSpeed: string;
     public options: NgUploaderOptions;
     public linkToWineryResourceForCompletion: string;
