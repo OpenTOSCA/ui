@@ -11,6 +11,7 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
+import { CsarUploadReference } from '../../core/model/new-api/csar-upload-request.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
@@ -76,7 +77,8 @@ export class RepositoryOverviewComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerAPIURL())
             .append('csars')
             .toString();
-        this.marketService.installAppInContainer(app, postURL)
+        const tmpApp = new CsarUploadReference(app.csarURL, app.id);
+        this.marketService.installAppInContainer(tmpApp, postURL)
             .then(response => {
                 app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)

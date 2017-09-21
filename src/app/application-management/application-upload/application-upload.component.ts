@@ -119,17 +119,17 @@ export class ApplicationUploadComponent implements OnInit {
      * Starts upload of selected url to container
      */
     startURLUpload(): void {
-        // TODO Write Install routine to install this.tempData
-
-        // Code from the Repository to install apps
-        /*this.marketService.installAppInContainer(app, postURL)
+        const postURL = new Path(this.adminService.getContainerAPIURL())
+                .append('csars')
+                .toString();
+        this.repositoryManagementService.installAppInContainer(this.tempData.cur, postURL)
         .then(response => {
-            app.isInstalling = false;
+            /*app.isInstalling = false;
             this.appService.isAppDeployedInContainer(app.id)
-                .then(result => app.inContainer = result);
+                .then(result => app.inContainer = result);*/
         })
         .catch(err => {
-            app.isInstalling = false;
+            /*app.isInstalling = false;
             // Injector
             if (err.status === 406) {
                 this.appToComplete = app;
@@ -141,8 +141,8 @@ export class ApplicationUploadComponent implements OnInit {
                     .then(result => {
                         app.inContainer = result;
                     });
-            }
-        });*/
+            }*/
+        });
     }
 
     /**
@@ -270,7 +270,8 @@ export class ApplicationUploadComponent implements OnInit {
                 const postURL = new Path(this.adminService.getContainerAPIURL())
                     .append('csars')
                     .toString();
-                this.repositoryManagementService.installAppInContainer(app, postURL)
+                const tmpApp = new CsarUploadReference(app.csarURL, app.id)
+                this.repositoryManagementService.installAppInContainer(tmpApp, postURL)
                     .then(response => {
                         this.appService.isAppDeployedInContainer(app.id)
                             .then(output => {
