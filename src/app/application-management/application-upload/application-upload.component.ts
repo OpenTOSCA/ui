@@ -51,7 +51,7 @@ export class ApplicationUploadComponent implements OnInit {
     public showModal = true;
 
     // temporary data derived from the user input for the url upload
-    private tempData = {
+    public tempData = {
         cur: new CsarUploadReference(null, null),
         validURL: false,
         validName: false
