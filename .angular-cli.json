@@ -22,9 +22,7 @@
         "scss/app.scss",
         "scss/loader.scss"
       ],
-      "scripts": [
-        "../node_modules/prismjs/prism.js"
-      ],
+      "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

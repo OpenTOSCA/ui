@@ -25,7 +25,7 @@ import { ApplicationComponent } from './application/application.component';
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
 import { RouterModule } from '@angular/router';
 import {
-    AccordionModule, FieldsetModule, CodeHighlighterModule, DialogModule, TooltipModule,
+    AccordionModule, FieldsetModule, DialogModule, TooltipModule,
     ProgressBarModule, DataTableModule, SharedModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +39,6 @@ import { BuildplanMonitorComponent } from './buildplan-monitor/buildplan-monitor
     imports: [
         ApplicationManagementRoutingModule,
         CommonModule,
-        CodeHighlighterModule,
         FormsModule,
         DialogModule,
         DataTableModule,
