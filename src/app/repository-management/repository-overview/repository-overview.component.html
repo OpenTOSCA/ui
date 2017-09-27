@@ -1,7 +1,8 @@
 <opentosca-ui-action-bar>
     <form class="form-inline">
         <opentosca-ui-search [placeholder]="'Filter applications...'"
-                             (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
+                             (searchTermChanged)="searchTermChanged($event)">
+        </opentosca-ui-search>
         <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
             <i class="fa fa-refresh"></i>
         </opentosca-ui-action-item>
@@ -53,4 +54,5 @@
 </div>
 <opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
                                     [linkToWineryResource]="linkToWineryResource"
-                                    (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>
+                                    (completionSuccessful)="installInContainer($event)">
+</opentosca-ui-deployment-completion>
