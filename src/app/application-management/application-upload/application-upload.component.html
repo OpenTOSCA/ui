@@ -16,8 +16,7 @@
                         (beforeUpload)="beforeUpload($event)"
                         (onUpload)="handleUpload($event)"
                         (click)="resetUploadStats()"
-                        (change)="onChange($event)"
-                >
+                        (change)="onChange($event)">
             </span>
         </div>
         <div class="col-sm-9">
@@ -34,8 +33,7 @@
                             [ngClass]="{
                                 'has-success': this.tempData.cur.url && this.tempData.validURL,
                                 'has-danger': this.tempData.cur.url && !this.tempData.validURL
-                            }"
-                    >
+                            }">
                         <input
                                 type="text"
                                 class="form-control"
@@ -44,16 +42,14 @@
                                 [ngClass]="{
                                     'form-control-success': this.tempData.cur.url && this.tempData.validURL,
                                     'form-control-danger': this.tempData.cur.url && !this.tempData.validURL
-                                }"
-                        >
+                                }">
                     </div>
                     <div
                             class="form-group has-feedback"
                             [ngClass]="{
                                 'has-success': this.tempData.cur.name && this.tempData.validName,
                                 'has-danger': this.tempData.cur.name && !this.tempData.validName
-                            }"
-                    >
+                            }">
                         <input
                                 type="text"
                                 class="form-control"
@@ -62,8 +58,7 @@
                                 [ngClass]="{
                                     'form-control-success': this.tempData.cur.name && this.tempData.validName,
                                     'form-control-danger': this.tempData.cur.name && !this.tempData.validName
-                                }"
-                        >
+                                }" >
                     </div>
                 </form>
             </ng-template>
@@ -93,8 +88,7 @@
                     type="button"
                     class="btn btn-success mr-2"
                     (click)="startURLUpload()"
-                    [disabled]="!(this.tempData.validURL && this.tempData.validName)"
-            >
+                    [disabled]="!(this.tempData.validURL && this.tempData.validName)">
                 Upload from URL
             </button>
             <button
@@ -102,23 +96,20 @@
                     type="button"
                     class="btn btn-success mr-2"
                     (click)="startUpload()"
-                    [disabled]="(uploadingFile?.progress | json)?.percent > 0"
-            >
+                    [disabled]="(uploadingFile?.progress | json)?.percent > 0">
                 Start Upload
             </button>
             <button
                     *ngIf="(uploadingFile?.progress | json)?.percent > 0 && (uploadingFile?.progress | json)?.percent < 100"
                     type="button"
                     class="btn btn-danger mr-2"
-                    (click)="abortUpload()"
-            >
+                    (click)="abortUpload()">
                 Abort Upload
             </button>
             <button
                     type="button"
                     class="btn btn-secondary"
-                    (click)="closeModal()"
-            >
+                    (click)="closeModal()">
                 Close
             </button>
         </div>
@@ -126,4 +117,5 @@
 </p-dialog>
 <opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
                                     [linkToWineryResource]="linkToWineryResourceForCompletion"
-                                    (completionSuccessful)="installInContainer($event)"></opentosca-ui-deployment-completion>
+                                    (completionSuccessful)="installInContainer($event)">
+</opentosca-ui-deployment-completion>

@@ -365,6 +365,7 @@ export class ApplicationUploadComponent implements OnInit {
      * @return must return the value for the datastructure
      */
     nameValidator(name: string): string {
+        // TODO do actual validation!
         this.tempData.validName = true;
         return name;
     }
