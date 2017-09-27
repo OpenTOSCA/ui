@@ -58,7 +58,7 @@
                                 [ngClass]="{
                                     'form-control-success': this.tempData.cur.name && this.tempData.validName,
                                     'form-control-danger': this.tempData.cur.name && !this.tempData.validName
-                                }" >
+                                }">
                     </div>
                 </form>
             </ng-template>
@@ -78,7 +78,7 @@
             <h6>Archive Deployment in Progress</h6>
         </div>
         <div class="col-sm-5 spinner">
-            <sk-fading-circle></sk-fading-circle>
+            <sk-fading-circle />
         </div>
     </div>
     <p-footer>
@@ -115,7 +115,9 @@
         </div>
     </p-footer>
 </p-dialog>
-<opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
-                                    [linkToWineryResource]="linkToWineryResourceForCompletion"
-                                    (completionSuccessful)="installInContainer($event)">
+<opentosca-ui-deployment-completion
+        *ngIf="startCompletionProcess"
+        [appToComplete]="appToComplete"
+        [linkToWineryResource]="linkToWineryResourceForCompletion"
+        (completionSuccessful)="installInContainer($event)">
 </opentosca-ui-deployment-completion>
