@@ -26,9 +26,9 @@ import { RepositoryManagementActions } from '../repository-management-actions';
 import { Path } from '../../core/util/path';
 
 @Component({
-  selector: 'opentosca-ui-repository-overview',
-  templateUrl: './repository-overview.component.html',
-  styleUrls: ['./repository-overview.component.scss']
+    selector: 'opentosca-ui-repository-overview',
+    templateUrl: './repository-overview.component.html',
+    styleUrls: ['./repository-overview.component.scss']
 })
 export class RepositoryOverviewComponent implements OnInit {
     @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
@@ -41,11 +41,12 @@ export class RepositoryOverviewComponent implements OnInit {
 
     public searchTerm: string;
 
-    constructor(private adminService: ConfigurationService,
-                private appService: ApplicationManagementService,
-                private marketService: RepositoryManagementService,
-                private ngRedux: NgRedux<AppState>,
-                private logger: OpenToscaLoggerService) {
+    constructor(
+            private adminService: ConfigurationService,
+            private appService: ApplicationManagementService,
+            private marketService: RepositoryManagementService,
+            private ngRedux: NgRedux<AppState>,
+            private logger: OpenToscaLoggerService) {
     }
 
     ngOnInit(): void {
