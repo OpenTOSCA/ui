@@ -75,13 +75,13 @@ export class RepositoryManagementService {
 
     /**
      * Deploy CSAR in container via URL to CSAR
-     * @param app MarketplaceApplication to deploy to container
+     * @param app CsarUploadReference to deploy to container
      * @param containerURL Container endpoint URL (e.g., http://localhost:1337)
      * @returns {Promise<any>}
      */
-    installAppInContainer(app: MarketplaceApplication, containerURL: string): Promise<any> {
+    installAppInContainer(app: CsarUploadReference, containerURL: string): Promise<any> {
         const reqOpts = new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})});
-        return this.http.post(containerURL, new CsarUploadReference(app.csarURL, app.id), reqOpts)
+        return this.http.post(containerURL, app, reqOpts)
             .toPromise();
     }
 

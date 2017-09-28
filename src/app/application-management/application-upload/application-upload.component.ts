@@ -13,6 +13,7 @@
  */
 
 import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Http } from '@angular/http';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
@@ -26,6 +27,8 @@ import { DeploymentCompletionService } from '../../core/service/deployment-compl
 import { RepositoryManagementService } from '../../core/service/repository-management.service';
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
+import { CsarUploadReference } from '../../core/model/new-api/csar-upload-request.model';
+
 
 @Component({
     selector: 'opentosca-ui-application-upload',
@@ -36,7 +39,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 
 export class ApplicationUploadComponent implements OnInit {
     public deploymentInProgress = false;
-    public deploymentDone = false;
+    public deploymentDone = false; // unused ?!!
     public currentSpeed: string;
     public options: NgUploaderOptions;
     public linkToWineryResourceForCompletion: string;
@@ -47,9 +50,27 @@ export class ApplicationUploadComponent implements OnInit {
     public selectedFile: any;
     public showModal = true;
 
+    // temporary data derived from the user input for the url upload
+    public tempData = {
+        cur: new CsarUploadReference(null, null),
+        validURL: false,
+        validName: false
+    };
+
     private zone: NgZone;
     private lastUpdate: number;
 
+    constructor(
+            private adminService: ConfigurationService,
+            private appService: ApplicationManagementService,
+            private deploymentService: DeploymentCompletionService,
+            private repositoryManagementService: RepositoryManagementService,
+            private ngRedux: NgRedux<AppState>,
+            private router: Router,
+            private http: Http,
+            private logger: OpenToscaLoggerService) {
+        this.inputUploadEvents = new EventEmitter<string>();
+    }
 
     ngOnInit(): void {
         this.zone = new NgZone({enableLongStackTrace: false});
@@ -78,16 +99,6 @@ export class ApplicationUploadComponent implements OnInit {
         this.router.navigate(['../applications', {outlets: {modal: null}}]);
     }
 
-    constructor(private adminService: ConfigurationService,
-                private appService: ApplicationManagementService,
-                private deploymentService: DeploymentCompletionService,
-                private repositoryManagementService: RepositoryManagementService,
-                private ngRedux: NgRedux<AppState>,
-                private router: Router,
-                private logger: OpenToscaLoggerService) {
-        this.inputUploadEvents = new EventEmitter<string>();
-    }
-
     /**
      * Saves selected file to show it in template
      * @param event
@@ -104,6 +115,44 @@ export class ApplicationUploadComponent implements OnInit {
      */
     startUpload(): void {
         this.inputUploadEvents.emit('startUpload');
+    }
+
+    /**
+     * Starts upload of selected url to container
+     */
+    startURLUpload(): void {
+        const postURL = new Path(this.adminService.getContainerAPIURL())
+                .append('csars')
+                .toString();
+        this.repositoryManagementService.installAppInContainer(this.tempData.cur, postURL)
+        .then(response => {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Upload Succeeded',
+                    detail: 'New Application was successfully uploaded and deployed to container'
+                }
+            ));
+            this.updateApplicationsInStore();
+        })
+        .catch(err => {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Application was not successfully uploaded and deployed. Server responded: ' + err
+                }
+            ));
+        });
+        this.closeModal();
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'info',
+                summary: 'Deploying Container ' + this.tempData.cur.name,
+                detail: 'Your container is uploaded and installed in the background.'
+            }
+        ));
+        this.resetUploadStats();
     }
 
     /**
@@ -192,6 +241,10 @@ export class ApplicationUploadComponent implements OnInit {
         this.deploymentInProgress = false;
         this.uploadingFile = null;
         this.selectedFile = null;
+        this.tempData.cur.url = null;
+        this.tempData.cur.name = null;
+        this.tempData.validURL = false;
+        this.tempData.validName = false;
     }
 
     /**
@@ -227,7 +280,8 @@ export class ApplicationUploadComponent implements OnInit {
                 const postURL = new Path(this.adminService.getContainerAPIURL())
                     .append('csars')
                     .toString();
-                this.repositoryManagementService.installAppInContainer(app, postURL)
+                const tmpApp = new CsarUploadReference(app.csarURL, app.id)
+                this.repositoryManagementService.installAppInContainer(tmpApp, postURL)
                     .then(response => {
                         this.appService.isAppDeployedInContainer(app.id)
                             .then(output => {
@@ -286,5 +340,33 @@ export class ApplicationUploadComponent implements OnInit {
                 this.resetUploadStats();
             }
         });
+    }
+
+    /**
+     * Validator function for the url
+     * @param url string of the enter value
+     * @return must return the value for the datastructure
+     */
+    urlValidator(url: string): string {
+        this.tempData.validURL = false;
+        this.http.head(url).subscribe(
+            response => {
+                if (response.ok) {
+                    this.tempData.validURL = true;
+                }
+            }
+        );
+        return url;
+    }
+
+    /**
+     * Validator function for the name
+     * @param url string of the enter value
+     * @return must return the value for the datastructure
+     */
+    nameValidator(name: string): string {
+        // TODO do actual validation!
+        this.tempData.validName = true;
+        return name;
     }
 }
