@@ -33,6 +33,7 @@ import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
 import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
 import { BuildplanMonitoringService } from './service/buildplan-monitoring.service';
 import { FilterOutputParams } from './pipe/filter-output-params.pipe';
+import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
 
 @NgModule({
     imports: [
@@ -49,6 +50,7 @@ import { FilterOutputParams } from './pipe/filter-output-params.pipe';
         BreadcrumbComponent,
         FuzzySearchPipe,
         InputDebounceComponent,
+        DebouncedValidatedInputComponent,
         SearchComponent,
         DeploymentCompletionComponent,
         SortPipe,
@@ -61,6 +63,7 @@ import { FilterOutputParams } from './pipe/filter-output-params.pipe';
         BreadcrumbComponent,
         FuzzySearchPipe,
         InputDebounceComponent,
+        DebouncedValidatedInputComponent,
         SearchComponent,
         DeploymentCompletionComponent,
         SortPipe,
