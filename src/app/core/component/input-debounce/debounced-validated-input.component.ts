@@ -29,7 +29,8 @@ import { Observable } from 'rxjs/Observable';
                     type="text"
                     class="form-control"
                     [placeholder]="placeholder"
-                    [(ngModel)]="inputValue"
+                    opentosca-ui-debounce
+                    (debouncedValue)="updateAndValidate($event)"
                     [ngClass]="{
                         'form-control-success': inputValidated && inputValid,
                         'form-control-danger': inputValidated && !inputValid
@@ -38,9 +39,6 @@ import { Observable } from 'rxjs/Observable';
     `
 })
 export class DebouncedValidatedInputComponent {
-
-    @Input()
-    delay = 300;
 
     @Input()
     placeholder: string;
@@ -54,28 +52,22 @@ export class DebouncedValidatedInputComponent {
     @Output()
     validityChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    inputValue: string;
-
     inputValidated = false;
     inputValid = false;
 
     constructor(private elementRef: ElementRef, private http: Http) {
-        Observable
-            .fromEvent(elementRef.nativeElement, 'keyup')
-            .map(() => this.inputValue)
-            .debounceTime(this.delay)
-            .distinctUntilChanged()
-            .subscribe(input => {
-                if (this.validator && input) {
-                    this.validator(input).subscribe(valid => {
-                        this.validityChange.emit(valid);
-                        this.inputValid = valid;
-                        this.inputValidated = true;
-                    });
-                } else {
-                    this.inputValidated = false;
-                }
-                this.valueChange.emit(input);
+    }
+
+    updateAndValidate(value: string): void {
+        if (this.validator && value) {
+            this.validator(value).subscribe(valid => {
+                this.validityChange.emit(valid);
+                this.inputValid = valid;
+                this.inputValidated = true;
             });
+        } else {
+            this.inputValidated = false;
+        }
+        this.valueChange.emit(value);
     }
 }

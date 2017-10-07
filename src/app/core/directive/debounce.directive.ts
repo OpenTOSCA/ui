@@ -22,13 +22,16 @@ import { Observable } from 'rxjs/Observable';
     selector: '[opentosca-ui-debounce]',
     // tslint:disable-next-line:use-host-property-decorator
     host: {
-        '[(ngModel)]': 'inputValue'
+        '(input)': 'inputValue = $event.target.value'
     }
 })
 export class DebounceDirective {
 
-    @Input()
-    opentoscaUiDebounce = 300;
+    static readonly DEFAULT_DELAY = 300;
+
+    // tslint:disable-next-line:no-input-rename
+    @Input('opentosca-ui-debounce')
+    delay?: number;
 
     @Output()
     debouncedValue: EventEmitter<string> = new EventEmitter<string>();
@@ -39,7 +42,7 @@ export class DebounceDirective {
         Observable
             .fromEvent(elementRef.nativeElement, 'keyup')
             .map(() => this.inputValue)
-            .debounceTime(this.opentoscaUiDebounce)
+            .debounceTime(this.delay ? this.delay : DebounceDirective.DEFAULT_DELAY)
             .distinctUntilChanged()
             .subscribe(input => {
                 this.debouncedValue.emit(input);

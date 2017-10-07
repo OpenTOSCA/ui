@@ -18,6 +18,7 @@ import { Observable } from 'rxjs/Rx';
 })
 export class InputDebounceComponent {
 
+    // FIXME does not work!
     @Input()
     delay = 300;
 
