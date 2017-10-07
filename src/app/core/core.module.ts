@@ -34,6 +34,7 @@ import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
 import { BuildplanMonitoringService } from './service/buildplan-monitoring.service';
 import { FilterOutputParams } from './pipe/filter-output-params.pipe';
 import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
+import { DebounceDirective } from './directive/debounce.directive';
 
 @NgModule({
     imports: [
@@ -50,6 +51,7 @@ import { DebouncedValidatedInputComponent } from './component/input-debounce/deb
         BreadcrumbComponent,
         FuzzySearchPipe,
         InputDebounceComponent,
+        DebounceDirective,
         DebouncedValidatedInputComponent,
         SearchComponent,
         DeploymentCompletionComponent,
@@ -63,6 +65,7 @@ import { DebouncedValidatedInputComponent } from './component/input-debounce/deb
         BreadcrumbComponent,
         FuzzySearchPipe,
         InputDebounceComponent,
+        DebounceDirective,
         DebouncedValidatedInputComponent,
         SearchComponent,
         DeploymentCompletionComponent,
