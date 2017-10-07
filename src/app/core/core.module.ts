@@ -25,7 +25,6 @@ import { RouterModule } from '@angular/router';
 import { ActionBarComponent } from './component/action-bar/action-bar.component';
 import { ActionItemComponent } from './component/action-bar/action-item.component';
 import { FuzzySearchPipe } from './pipe/fuzzy-search.pipe';
-import { InputDebounceComponent } from './component/action-bar/input-debounce.component';
 import { SearchComponent } from './component/action-bar/search.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
@@ -50,7 +49,6 @@ import { DebounceDirective } from './directive/debounce.directive';
         ActionItemComponent,
         BreadcrumbComponent,
         FuzzySearchPipe,
-        InputDebounceComponent,
         DebounceDirective,
         DebouncedValidatedInputComponent,
         SearchComponent,
@@ -64,7 +62,6 @@ import { DebounceDirective } from './directive/debounce.directive';
         ActionItemComponent,
         BreadcrumbComponent,
         FuzzySearchPipe,
-        InputDebounceComponent,
         DebounceDirective,
         DebouncedValidatedInputComponent,
         SearchComponent,
