@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="60 60 210 210" xmlns="http://www.w3.org/2000/svg">
+ <path d="m100 60-40 40 170 170 40-40-170-170z" fill="#e00" fill-rule="evenodd"/>
+ <path d="m60 230 170-170 40 40-170 170-40-40z" fill="#e00" fill-rule="evenodd"/>
+</svg>
