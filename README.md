@@ -1,9 +1,8 @@
+# OpenTOSCA UI
 
 [![Build Status](https://travis-ci.org/OpenTOSCA/ui.svg?branch=master)](https://travis-ci.org/OpenTOSCA/ui)
 [![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-# OpenTOSCA UI
 
 Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
 
