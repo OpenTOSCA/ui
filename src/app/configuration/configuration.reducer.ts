@@ -38,8 +38,12 @@ export function configurationReducer(state: ConfigurationState = INITIAL_STATE,
                                              action: Action): ConfigurationState {
     switch (action.type) {
         case ConfigurationActions.UPDATE_REPOSITORY_URL:
+            let url = action.payload;
+            if (!url.endsWith('/')) {
+                url = url + '/';
+            }
             return Object.assign({}, state, {
-                repositoryAPI: action.payload
+                repositoryAPI: url
             });
         case ConfigurationActions.UPDATE_CONTAINER_URL:
             return Object.assign({}, state, {
