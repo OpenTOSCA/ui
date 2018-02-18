@@ -1,0 +1,192 @@
+This content is produced and maintained by the OpenTOSCA project. 
+
+* Project home: http://www.opentosca.org
+
+== Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Eclipse Public License 1.0 which is available at
+http://www.eclipse.org/legal/epl-1.0, or the Apache License, Version 2.0 which
+is available at https://www.apache.org/licenses/LICENSE-2.0.
+EPL-1.0 OR Apache-2.0
+
+== Source Code
+
+* https://github.com/OpenTOSCA/ui
+
+== Copyright Holders
+
+Copyright (c) 2016-2017 University of Stuttgart
+Copyright (c) 2016-2017 Karoline Saatkamp
+Copyright (c) 2016-2017 Michael Falkenthal
+Copyright (c) 2016-2017 Oliver Kopp
+Copyright (c) 2017 Kálmán Képes
+Copyright (c) 2017 Michael Wurster
+Copyright (c) 2017 Tobias Wältken
+
+== Third-party Content
+
+form Version: 6.6.0
+* License: MIT
+* Project: https://github.com/angular-redux/form#readme
+
+router Version: 6.3.1
+* License: MIT
+* Project: https://github.com/angular-redux/router#readme
+
+store Version: 6.5.7
+* License: MIT
+* Project: https://github.com/angular-redux/store#readme
+
+animations Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+common Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+compiler Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+core Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+forms Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+http Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+platform-browser Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+platform-browser-dynamic Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular#readme
+
+router Version: 4.4.3
+* License: MIT
+* Project: https://github.com/angular/angular/tree/master/packages/router
+
+async Version: 0.9.2
+* License: MIT
+* Project: https://github.com/caolan/async#readme
+
+bootstrap Version: 4.0.0-alpha.6
+* License: MIT
+* Project: https://getbootstrap.com
+
+clean Version: 4.0.2
+* License: MIT
+* Project: https://github.com/kaelzhang/node-clean#readme
+
+core-js Version: 2.5.1
+* License: MIT
+* Project: https://github.com/zloirock/core-js#readme
+
+deep-diff Version: 0.3.8
+* License: MIT
+* Project: https://github.com/flitbit/diff#readme
+
+font-awesome Version: 4.7.0
+* License: (OFL-1.1 AND MIT)
+* Project: http://fontawesome.io/
+
+fuse.js Version: 3.1.0
+* License: Apache
+* Project: http://fusejs.io
+
+immutable Version: 3.8.1
+* License: BSD-3-Clause
+* Project: https://facebook.github.com/immutable-js
+
+jquery Version: 3.2.1
+* License: MIT
+* Project: https://jquery.com
+
+js-tokens Version: 3.0.2
+* License: MIT
+* Project: https://github.com/lydell/js-tokens#readme
+
+lodash Version: 4.17.4
+* License: MIT
+* Project: https://lodash.com/
+
+lodash-es Version: 4.17.4
+* License: MIT
+* Project: https://lodash.com/custom-builds
+
+loose-envify Version: 1.3.1
+* License: MIT
+* Project: https://github.com/zertosh/loose-envify
+
+make-array Version: 0.1.2
+* License: MIT
+* Project: https://github.com/kaelzhang/make-array#readme
+
+minimist Version: 1.2.0
+* License: MIT
+* Project: https://github.com/substack/minimist
+
+mix2 Version: 1.0.1
+* License: MIT
+* Project: https://github.com/kaelzhang/node-mix2#readme
+
+ngx-uploader Version: 2.2.8
+* License: MIT
+* Project: https://github.com/jkuri/ngx-uploader#readme
+
+popper.js Version: 1.12.5
+* License: MIT
+* Project: https://popper.js.org
+
+primeng Version: 4.2.1
+* License: MIT
+* Project: https://github.com/primefaces/primeng#readme
+
+redux Version: 3.7.2
+* License: MIT
+* Project: http://redux.js.org
+
+redux-logger Version: 3.0.6
+* License: MIT
+* Project: https://github.com/theaqua/redux-logger#readme
+
+redux-observable Version: 0.16.0
+* License: MIT
+* Project: https://github.com/redux-observable/redux-observable#README.md
+
+rxjs Version: 5.4.3
+* License: Apache-2.0
+* Project: https://github.com/ReactiveX/RxJS
+
+skema Version: 1.0.2
+* License: MIT
+* Project: https://github.com/kaelzhang/node-skema#readme
+
+spinkit Version: 1.2.5
+* License: MIT
+* Project: https://github.com/tobiasahlin/SpinKit
+
+symbol-observable Version: 1.0.4
+* License: MIT
+* Project: https://github.com/blesh/symbol-observable#readme
+
+tether Version: 1.4.0
+* License: MIT
+* Project: https://github.com/HubSpot/tether#readme
+
+tslib Version: 1.7.1
+* License: Apache-2.0
+* Project: http://typescriptlang.org/
+
+zone.js Version: 0.8.17
+* License: MIT
+* Project: https://github.com/angular/zone.js#readme
+
