@@ -1,29 +1,26 @@
 <div *ngIf="bpInstance?.state === 'FINISHED'; else NotFinished">
-    <a class="btn btn-success"
-       *ngIf="stInstance.state !== 'DELETED' && selfserviceApplicationUrl && selfserviceApplicationUrl !== ''"
-       [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
-
-    <div class="card has-success"
+    <!--<a class="btn btn-success"-->
+    <!--*ngIf="stInstance.state !== 'DELETED' && selfserviceApplicationUrl && selfserviceApplicationUrl !== ''"-->
+    <!--[href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>-->
+    <div class="card"
          *ngIf="stInstance.state !== 'DELETED' && bpInstance.output && (!selfserviceApplicationUrl || selfserviceApplicationUrl === '')">
-        <div class="card-header">Build Plan Result</div>
-        <div class="card-block">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Parameter</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let param of bpInstance.output | filterOutputParams:['instanceId', 'CorrelationID']; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ param.name }}</td>
-                    <td>{{ param.value }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="card-header pt-1 pb-1">Build Plan Output</div>
+        <table class="table table-hover table-bordered table-sm mb-0">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 10%">#</th>
+                <th scope="col" class="text-left">Parameter</th>
+                <th scope="col" class="text-left">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let param of bpInstance.output | filterOutputParams:['instanceId', 'CorrelationID']; let i = index">
+                <td class="text-center" scope="row">{{ i + 1 }}</td>
+                <td class="truncate" pTooltip="{{ param.name }}" tooltipPosition="top" showDelay="600">{{ param.name }}</td>
+                <td class="truncate" pTooltip="{{ param.value }}" tooltipPosition="top" showDelay="600">{{ param.value }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 <ng-template #NotFinished>

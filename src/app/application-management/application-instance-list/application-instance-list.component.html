@@ -1,28 +1,33 @@
-<button class="btn btn-primary mb-2" (click)="reloadInstances()">
-    <i class="fa fa-refresh"></i> Refresh Instances List
-</button>
+<opentosca-ui-action-bar>
+    <opentosca-ui-action-item (click)="reloadInstances()" styles="btn btn-primary btn-sm">
+        <i class="fa fa-refresh"></i> Refresh
+    </opentosca-ui-action-item>
+</opentosca-ui-action-bar>
 <p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
-    <p-column expander="true" [style]="{'width':'45px'}"></p-column>
-    <p-column field="id" header="InstanceID" [sortable]="true"></p-column>
-    <p-column field="state" header="State" [sortable]="true"></p-column>
-    <p-column field="created_at" header="Date Created" [sortable]="true">
+    <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
+    <p-column field="id" header="Instance ID" [sortable]="true" styleClass="p-2 text-center"></p-column>
+    <p-column field="state" header="State" [sortable]="true" styleClass="p-2 text-center"></p-column>
+    <p-column field="created_at" header="Creation Date" [sortable]="true" styleClass="p-2 text-center">
         <ng-template let-col let-inst="rowData" pTemplate="body">
-            {{ inst.created_at | date:'medium' }}
+            {{ inst.created_at | date:'yyyy-MM-dd HH:mm' }}
+        </ng-template>
+    </p-column>
+    <p-column header="" styleClass="text-center">
+        <ng-template let-col let-inst="rowData" pTemplate="body">
+            <button
+                class="btn btn-danger btn-sm" type="button"
+                *ngIf="inst.state !== 'DELETED'" (click)="terminateInstance(inst.id)"
+                pTooltip="Delete Instance" tooltipPosition="top" showDelay="300">
+                <i class="fa fa-remove"></i>
+            </button>
         </ng-template>
     </p-column>
     <ng-template let-inst pTemplate="rowexpansion">
         <div class="row">
-            <div class="col-sm-3">
-                <p>Initialized: {{ inst.created_at | date:'medium' }}</p>
-                <p>State: {{ inst.state }}</p>
-                <p *ngIf="inst.state !== 'DELETED'">
-                    <button class="btn btn-danger" (click)="terminateInstance(inst.id)">
-                        <i class="fa fa-remove"></i> Delete Instance
-                    </button>
-                </p>
-            </div>
-            <div class="col-sm-9">
-                <opentosca-ui-buildplan-monitor *ngIf="inst._links['build_plan_instance']" [service-template-instance]="inst"></opentosca-ui-buildplan-monitor>
+            <div class="col">
+                <opentosca-ui-buildplan-monitor *ngIf="inst._links['build_plan_instance']"
+                                                [service-template-instance]="inst">
+                </opentosca-ui-buildplan-monitor>
             </div>
         </div>
     </ng-template>

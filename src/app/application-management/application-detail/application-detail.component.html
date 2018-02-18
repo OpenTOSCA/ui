@@ -4,85 +4,69 @@
     </opentosca-ui-action-item>
 </opentosca-ui-action-bar>
 <div class="container-fluid">
-    <p-fieldset [toggleable]="true">
-        <p-header><strong>Application Information</strong></p-header>
-        <div class="row" *ngIf="(app | async); let app; else loading">
-            <div class="col-lg-6">
-                <div>
-                    <h2>Description</h2>
-                    <p *ngIf="app.description && app.description !== ''; else noDescription">
-                        {{app.description}}
-                        <br/>
-                    </p>
-                    <ng-template #noDescription>
-                        <p>
-                            No description provided.
+    <div class="row">
+        <div class="col-5">
+            <p-fieldset>
+                <p-header><strong>Application Information</strong></p-header>
+                <div *ngIf="(app | async); let app; else loading">
+                    <div>
+                        <h2>Description</h2>
+                        <p *ngIf="app.description && app.description !== ''; else noDescription">
+                            {{app.description}}
                         </p>
-                    </ng-template>
-                </div>
-
-                <div>
-                    <h2>Version</h2>
-                    <p *ngIf="app?.version && app?.version !==''; else noVersion">
-                        {{app.version}}
-                    </p>
-                    <ng-template #noVersion>
-                        <p>
-                            No version provided.
+                        <ng-template #noDescription><p>No description provided.</p></ng-template>
+                    </div>
+                    <div>
+                        <h2>Version</h2>
+                        <p *ngIf="app?.version && app?.version !==''; else noVersion">
+                            {{app.version}}
                         </p>
-                    </ng-template>
+                        <ng-template #noVersion><p>No version provided.</p></ng-template>
+                    </div>
+                    <div>
+                        <h2>Authors</h2>
+                        <ul *ngIf="app?.authors?.length > 0; else noAuthors">
+                            <li *ngFor="let author of app.authors">
+                                {{author}}
+                            </li>
+                        </ul>
+                        <ng-template #noAuthors><p>No authors provided.</p></ng-template>
+                    </div>
+                    <div>
+                        <h2>Topology Template</h2>
+                        <div>
+                            <a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage"
+                               [href]="app.image_url"
+                               target="_blank">
+                                <img class="img-responsive" style="max-width: 100%" [src]="app.image_url"/>
+                            </a>
+                        </div>
+                        <ng-template #noTemplateImage><p>No Template Image provided.</p></ng-template>
+                    </div>
                 </div>
-                <div>
-                    <h2>Authors</h2>
-                    <ul *ngIf="app?.authors?.length > 0; else noAuthors">
-                        <li *ngFor="let author of app.authors">
-                            {{author}}
-                        </li>
-                    </ul>
-                    <ng-template #noAuthors>
-                        <p>
-                            No authors provided.
-                        </p>
-                    </ng-template>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <h2>Topology Template</h2>
-                <div>
-                    <a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage" [href]="app.image_url"
-                       target="_blank">
-                        <img class="img-responsive" [src]="app.image_url"/>
-                    </a>
-                </div>
-                <ng-template #noTemplateImage>
-                    <p>
-                        No Template Image provided.
-                    </p>
+                <ng-template #loading>
+                    <p>Loading app info...</p>
                 </ng-template>
-            </div>
+            </p-fieldset>
         </div>
-        <ng-template #loading>
-            <div class="row">
-                <div class="col-lg-12">
-                    Loading App Infos...
+        <div class="col-7">
+            <p-fieldset>
+                <p-header>Instances</p-header>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <opentosca-ui-application-instance-list
+                            (onTerminateInstance)="emitTerminationPlan($event)"
+                            (onReloadInstances)="triggerUpdateAppInstancesList()">
+                        </opentosca-ui-application-instance-list>
+                    </div>
                 </div>
-            </div>
-        </ng-template>
-    </p-fieldset>
-    <p-fieldset [toggleable]="true">
-        <p-header>Application Instances</p-header>
-        <div class="row">
-            <div class="col-lg-12">
-                <opentosca-ui-application-instance-list
-                        (onTerminateInstance)="emitTerminationPlan($event)"
-                        (onReloadInstances)="triggerUpdateAppInstancesList()">
-                </opentosca-ui-application-instance-list>
-            </div>
+            </p-fieldset>
         </div>
-    </p-fieldset>
+    </div>
 </div>
 
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="showStartProvisioningModal"
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
+          [(visible)]="showStartProvisioningModal"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Please fill in following parameters

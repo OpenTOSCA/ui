@@ -13,12 +13,12 @@
     </form>
 </opentosca-ui-action-bar>
 <div class="d-flex flex-row flex-wrap">
-    <div class="card m-2 card-glowing" style="width: 250px"
+    <div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.display_name }}" tooltipPosition="top" showDelay="600"
          *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
         <div class="card-block text-center pb-0">
             <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"
                  onerror="this.src='/assets/Default_Application_Icon.png'">
-            <h6 class="card-title" pTooltip="{{ app.display_name }}" tooltipPosition="top" showDelay="2000">{{ app.display_name }}</h6>
+            <h6 class="card-title truncate">{{ app.display_name }}</h6>
         </div>
         <div class="card-block pt-0">
             <div class="card-text">{{ app.description }}</div>
