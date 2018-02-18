@@ -1,18 +1,13 @@
-language: node_js
+language: java
 
-node_js:
-  - "node"
+jdk:
+  - oraclejdk8
 
-# we build at Ubuntu 14.04 (Trusty Thar) as we want to use a more recent Ubuntu version
 sudo: required
 dist: trusty
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq openjdk-8-jdk maven
-
 script:
-  - ./mvnw package --fail-at-end
+  - mvn package --fail-at-end
   - mkdir build
   - cp target/*.war build
 
