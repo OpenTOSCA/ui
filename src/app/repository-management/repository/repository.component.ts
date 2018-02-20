@@ -13,7 +13,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'opentosca-ui-repository',
+  selector: 'opentosca-repository',
   templateUrl: './repository.component.html',
   styleUrls: ['./repository.component.scss']
 })

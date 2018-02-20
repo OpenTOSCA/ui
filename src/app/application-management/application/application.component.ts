@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { Csar } from '../../core/model/new-api/csar.model';
 
 @Component({
-    selector: 'opentosca-ui-application',
+    selector: 'opentosca-application',
     templateUrl: './application.component.html',
     styleUrls: ['./application.component.scss']
 })

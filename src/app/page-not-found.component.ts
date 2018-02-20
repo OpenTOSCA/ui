@@ -13,7 +13,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'opentosca-ui-page-not-found',
+  selector: 'opentosca-page-not-found',
   templateUrl: './page-not-found.component.html',
   styleUrls: ['./page-not-found.component.scss']
 })

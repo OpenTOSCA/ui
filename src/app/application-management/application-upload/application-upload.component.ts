@@ -13,7 +13,7 @@
  */
 
 import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
@@ -28,10 +28,12 @@ import { RepositoryManagementService } from '../../core/service/repository-manag
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/new-api/csar-upload-request.model';
+import { Observable } from 'rxjs/Rx';
+import { observable } from 'rxjs/symbol/observable';
 
 
 @Component({
-    selector: 'opentosca-ui-application-upload',
+    selector: 'opentosca-application-upload',
     templateUrl: './application-upload.component.html',
     styleUrls: ['./application-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -342,31 +344,49 @@ export class ApplicationUploadComponent implements OnInit {
         });
     }
 
+    urlChange(url: string): void {
+        this.tempData.cur.url = url;
+    }
+
+    nameChange(name: string): void {
+        this.tempData.cur.name = name;
+    }
+
+    urlValidityChange(validity: boolean): void {
+        this.tempData.validURL = validity;
+    }
+
+    nameValidityChange(validity: boolean): void {
+        this.tempData.validName = validity;
+    }
+
     /**
      * Validator function for the url
+     *
      * @param url string of the enter value
-     * @return must return the value for the datastructure
+     * @return returns a Observable of the validity from the url
      */
-    urlValidator(url: string): string {
-        this.tempData.validURL = false;
-        this.http.head(url).subscribe(
-            response => {
-                if (response.ok) {
-                    this.tempData.validURL = true;
+    urlValidator(url: string): Observable<boolean> {
+        return new Observable<boolean>( observer => {
+            this.http.head(url).subscribe(
+                response => {
+                    observer.next(response.ok);
+                },
+                error => {
+                    observer.next(false);
                 }
-            }
-        );
-        return url;
+            );
+        });
     }
 
     /**
      * Validator function for the name
+     *
      * @param url string of the enter value
-     * @return must return the value for the datastructure
+     * @return returns a Observable of the validity from the name
      */
-    nameValidator(name: string): string {
+    nameValidator(name: string): Observable<boolean> {
         // TODO do actual validation!
-        this.tempData.validName = true;
-        return name;
+        return Observable.of(true);
     }
 }
