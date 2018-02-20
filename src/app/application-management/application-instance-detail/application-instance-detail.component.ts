@@ -37,6 +37,10 @@ export class ApplicationInstanceDetailComponent implements OnInit {
 
         this.route.data
             .subscribe((data: { applicationInstanceDetails: ApplicationInstance }) => {
+                    if (data.applicationInstanceDetails === undefined) {
+                        return;
+                    }
+
                     this.instance = data.applicationInstanceDetails;
                     console.log(data.applicationInstanceDetails);
 
