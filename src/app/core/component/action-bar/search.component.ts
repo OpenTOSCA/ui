@@ -23,7 +23,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
                     type="text"
                     class="form-control"
                     [placeholder]="placeholder"
-                    opentosca-debounce
+                    opentoscaDebounce
                     (debouncedValue)="valueChanged($event)">
         </div>
     `

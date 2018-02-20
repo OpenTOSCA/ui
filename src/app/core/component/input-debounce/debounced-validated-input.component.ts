@@ -29,7 +29,7 @@ import { Observable } from 'rxjs/Observable';
                     type="text"
                     class="form-control"
                     [placeholder]="placeholder"
-                    opentosca-debounce
+                    opentoscaDebounce
                     (debouncedValue)="updateAndValidate($event)"
                     [ngClass]="{
                         'form-control-success': inputValidated && inputValid,

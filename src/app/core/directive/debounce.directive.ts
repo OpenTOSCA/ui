@@ -18,7 +18,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @Directive({
-    selector: '[opentosca-debounce]',
+    selector: '[opentoscaDebounce]',
     host: {
         '(input)': 'inputValue = $event.target.value'
     }
@@ -27,7 +27,7 @@ export class DebounceDirective {
 
     static readonly DEFAULT_DELAY = 300;
 
-    @Input('opentosca-debounce')
+    @Input('opentoscaDebounce')
     delay?: number;
 
     @Output()
