@@ -21,7 +21,7 @@ import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 
 @Component({
-  selector: 'opentosca-ui-configuration-management',
+  selector: 'opentosca-configuration-management',
   templateUrl: './configuration-management.component.html',
   styleUrls: ['./configuration-management.component.scss']
 })

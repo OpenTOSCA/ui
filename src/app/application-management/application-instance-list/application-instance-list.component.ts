@@ -18,7 +18,7 @@ import { Observable } from 'rxjs/Observable';
 import { select } from '@angular-redux/store';
 
 @Component({
-    selector: 'opentosca-ui-application-instance-list',
+    selector: 'opentosca-application-instance-list',
     templateUrl: './application-instance-list.component.html',
     styleUrls: ['./application-instance-list.component.scss']
 })

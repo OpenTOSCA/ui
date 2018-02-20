@@ -22,7 +22,7 @@
                 </p>
             </div>
             <div class="col-sm-9">
-                <opentosca-ui-buildplan-monitor *ngIf="inst._links['build_plan_instance']" [service-template-instance]="inst"></opentosca-ui-buildplan-monitor>
+                <opentosca-buildplan-monitor *ngIf="inst._links['build_plan_instance']" [service-template-instance]="inst"></opentosca-buildplan-monitor>
             </div>
         </div>
     </ng-template>

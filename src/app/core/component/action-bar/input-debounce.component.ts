@@ -13,7 +13,7 @@ import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/cor
 import { Observable } from 'rxjs/Rx';
 
 @Component({
-    selector: 'opentosca-ui-input-debounce',
+    selector: 'opentosca-input-debounce',
     template: '<input type="text" class="form-control" [placeholder]="placeholder" [(ngModel)]="inputValue">'
 })
 export class InputDebounceComponent {
