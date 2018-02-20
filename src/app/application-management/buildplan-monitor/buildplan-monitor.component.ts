@@ -4,13 +4,15 @@ import { BuildplanMonitoringService } from '../../core/service/buildplan-monitor
 import { PlanInstance } from '../../core/model/new-api/plan-instance.model';
 
 @Component({
-    selector: 'opentosca-ui-buildplan-monitor',
+    selector: 'opentosca-buildplan-monitor',
     templateUrl: './buildplan-monitor.component.html',
     styleUrls: ['./buildplan-monitor.component.scss']
 })
 export class BuildplanMonitorComponent implements OnInit, OnDestroy {
 
-    @Input('service-template-instance') stInstance: ServiceTemplateInstance;
+    @Input('service-template-instance')
+    stInstance: ServiceTemplateInstance;
+    
     bpInstance: PlanInstance;
     selfserviceApplicationUrl: string;
     private timeout: any;

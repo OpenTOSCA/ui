@@ -98,8 +98,8 @@
       "check-type"
     ],
 
-    "directive-selector": [true, "attribute", "opentosca-ui", "camelCase"],
-    "component-selector": [true, "element", "opentosca-ui", "kebab-case"],
+    "directive-selector": [true, "attribute", "opentosca", "camelCase"],
+    "component-selector": [true, "element", "opentosca", "kebab-case"],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,

@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { MenuItem } from 'primeng/primeng';
 
 @Component({
-    selector: 'opentosca-ui-breadcrumb',
+    selector: 'opentosca-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
     encapsulation: ViewEncapsulation.None

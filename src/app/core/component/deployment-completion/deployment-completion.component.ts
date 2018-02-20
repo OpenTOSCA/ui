@@ -18,7 +18,7 @@ import {InjectionOption} from '../../model/injection-option.model';
 import {DeploymentCompletionService} from '../../service/deployment-completion.service';
 
 @Component({
-    selector: 'opentosca-ui-deployment-completion',
+    selector: 'opentosca-deployment-completion',
     templateUrl: 'deployment-completion.component.html',
 })
 export class DeploymentCompletionComponent implements OnInit, AfterViewInit {

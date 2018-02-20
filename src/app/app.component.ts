@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { GrowlActions } from './core/growl/growl-actions';
 
 @Component({
-    selector: 'opentosca-ui-root',
+    selector: 'opentosca-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })

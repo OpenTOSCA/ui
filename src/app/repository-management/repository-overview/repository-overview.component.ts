@@ -26,7 +26,7 @@ import { RepositoryManagementActions } from '../repository-management-actions';
 import { Path } from '../../core/util/path';
 
 @Component({
-    selector: 'opentosca-ui-repository-overview',
+    selector: 'opentosca-repository-overview',
     templateUrl: './repository-overview.component.html',
     styleUrls: ['./repository-overview.component.scss']
 })

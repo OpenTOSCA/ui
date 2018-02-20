@@ -18,7 +18,7 @@ import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 
 @Component({
-    selector: 'opentosca-ui-application-instance-detail',
+    selector: 'opentosca-application-instance-detail',
     templateUrl: './application-instance-detail.component.html',
     styleUrls: ['./application-instance-detail.component.scss']
 })

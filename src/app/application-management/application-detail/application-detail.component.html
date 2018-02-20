@@ -1,8 +1,8 @@
-<opentosca-ui-action-bar>
-    <opentosca-ui-action-item (click)="showProvisioningModal()" styles="btn-primary">
+<opentosca-action-bar>
+    <opentosca-action-item (click)="showProvisioningModal()" styles="btn-primary">
         <i class="glyphicon glyphicon-plus"></i> Provision New Instance
-    </opentosca-ui-action-item>
-</opentosca-ui-action-bar>
+    </opentosca-action-item>
+</opentosca-action-bar>
 <div class="container-fluid">
     <p-fieldset [toggleable]="true">
         <p-header><strong>Application Information</strong></p-header>
@@ -73,10 +73,10 @@
         <p-header>Application Instances</p-header>
         <div class="row">
             <div class="col-lg-12">
-                <opentosca-ui-application-instance-list
+                <opentosca-application-instance-list
                         (onTerminateInstance)="emitTerminationPlan($event)"
                         (onReloadInstances)="triggerUpdateAppInstancesList()">
-                </opentosca-ui-application-instance-list>
+                </opentosca-application-instance-list>
             </div>
         </div>
     </p-fieldset>

@@ -31,7 +31,7 @@ import { CsarUploadReference } from '../../core/model/new-api/csar-upload-reques
 
 
 @Component({
-    selector: 'opentosca-ui-application-upload',
+    selector: 'opentosca-application-upload',
     templateUrl: './application-upload.component.html',
     styleUrls: ['./application-upload.component.scss'],
     encapsulation: ViewEncapsulation.None
