@@ -20,6 +20,11 @@ import { Observable } from 'rxjs/Observable';
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: '[opentosca-ui-debounce]',
+    
+    // !!! DEPRECATED WARNING !!!
+    // The use of the host parameter is deprecated! This might FAIL in the future
+    // but I could not find another working alternative.
+    
     // tslint:disable-next-line:use-host-property-decorator
     host: {
         '(input)': 'inputValue = $event.target.value'
