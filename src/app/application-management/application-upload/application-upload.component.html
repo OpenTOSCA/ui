@@ -28,38 +28,18 @@
             </div>
             <ng-template #noFileSelected>
                 <form>
-                    <div
-                            class="form-group has-feedback"
-                            [ngClass]="{
-                                'has-success': this.tempData.cur.url && this.tempData.validURL,
-                                'has-danger': this.tempData.cur.url && !this.tempData.validURL
-                            }">
-                        <input
-                                type="text"
-                                class="form-control"
-                                placeholder="URL to archive file"
-                                (input)="this.tempData.cur.url = urlValidator($event.target.value)"
-                                [ngClass]="{
-                                    'form-control-success': this.tempData.cur.url && this.tempData.validURL,
-                                    'form-control-danger': this.tempData.cur.url && !this.tempData.validURL
-                                }">
-                    </div>
-                    <div
-                            class="form-group has-feedback"
-                            [ngClass]="{
-                                'has-success': this.tempData.cur.name && this.tempData.validName,
-                                'has-danger': this.tempData.cur.name && !this.tempData.validName
-                            }">
-                        <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Name for the archive file"
-                                (input)="this.tempData.cur.name = nameValidator($event.target.value)"
-                                [ngClass]="{
-                                    'form-control-success': this.tempData.cur.name && this.tempData.validName,
-                                    'form-control-danger': this.tempData.cur.name && !this.tempData.validName
-                                }">
-                    </div>
+                    <opentosca-debounced-validated-input
+                        placeholder='URL to archive file'
+                        [validator]='urlValidator'
+                        (valueChange)='urlChange($event)'
+                        (validityChange)='urlValidityChange($event)'>
+                    </opentosca-debounced-validated-input>
+                    <opentosca-debounced-validated-input
+                        placeholder='Name for the archive file'
+                        [validator]='nameValidator'
+                        (valueChange)='nameChange($event)'
+                        (validityChange)='nameValidityChange($event)'>
+                    </opentosca-debounced-validated-input>
                 </form>
             </ng-template>
         </div>

@@ -12,7 +12,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
 
     @Input('service-template-instance')
     stInstance: ServiceTemplateInstance;
-    
+
     bpInstance: PlanInstance;
     selfserviceApplicationUrl: string;
     private timeout: any;
