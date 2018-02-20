@@ -25,7 +25,6 @@ import { RouterModule } from '@angular/router';
 import { ActionBarComponent } from './component/action-bar/action-bar.component';
 import { ActionItemComponent } from './component/action-bar/action-item.component';
 import { FuzzySearchPipe } from './pipe/fuzzy-search.pipe';
-import { InputDebounceComponent } from './component/action-bar/input-debounce.component';
 import { SearchComponent } from './component/action-bar/search.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
@@ -33,6 +32,8 @@ import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
 import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
 import { BuildplanMonitoringService } from './service/buildplan-monitoring.service';
 import { FilterOutputParams } from './pipe/filter-output-params.pipe';
+import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
+import { DebounceDirective } from './directive/debounce.directive';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import { FilterOutputParams } from './pipe/filter-output-params.pipe';
         ActionItemComponent,
         BreadcrumbComponent,
         FuzzySearchPipe,
-        InputDebounceComponent,
+        DebounceDirective,
+        DebouncedValidatedInputComponent,
         SearchComponent,
         DeploymentCompletionComponent,
         SortPipe,
@@ -60,7 +62,8 @@ import { FilterOutputParams } from './pipe/filter-output-params.pipe';
         ActionItemComponent,
         BreadcrumbComponent,
         FuzzySearchPipe,
-        InputDebounceComponent,
+        DebounceDirective,
+        DebouncedValidatedInputComponent,
         SearchComponent,
         DeploymentCompletionComponent,
         SortPipe,

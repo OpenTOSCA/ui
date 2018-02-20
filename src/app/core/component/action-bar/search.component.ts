@@ -8,13 +8,25 @@
  *
  * Contributors:
  *     Michael Wurster - initial implementation
+ *     Tobias Wältken
  */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'opentosca-search',
-    templateUrl: 'search.component.html',
-    styleUrls: ['search.component.scss']
+    styles: [
+        'form { padding-left: 0; }'
+    ],
+    template: `
+        <div class="mr-sm-2">
+            <input
+                    type="text"
+                    class="form-control"
+                    [placeholder]="placeholder"
+                    opentosca-debounce
+                    (debouncedValue)="valueChanged($event)">
+        </div>
+    `
 })
 export class SearchComponent {
 
