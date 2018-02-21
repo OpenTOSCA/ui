@@ -1,8 +1,8 @@
-<opentosca-ui-action-bar>
-    <opentosca-ui-action-item (click)="reloadInstances()" styles="btn btn-primary btn-sm">
+<opentosca-action-bar>
+    <opentosca-action-item (click)="reloadInstances()" styles="btn btn-primary btn-sm">
         <i class="fa fa-refresh"></i> Refresh
-    </opentosca-ui-action-item>
-</opentosca-ui-action-bar>
+    </opentosca-action-item>
+</opentosca-action-bar>
 <p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
     <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
     <p-column field="id" header="Instance ID" [sortable]="true" styleClass="p-2 text-center"></p-column>
@@ -25,9 +25,9 @@
     <ng-template let-inst pTemplate="rowexpansion">
         <div class="row">
             <div class="col">
-                <opentosca-ui-buildplan-monitor *ngIf="inst._links['build_plan_instance']"
+                <opentosca-buildplan-monitor *ngIf="inst._links['build_plan_instance']"
                                                 [service-template-instance]="inst">
-                </opentosca-ui-buildplan-monitor>
+                </opentosca-buildplan-monitor>
             </div>
         </div>
     </ng-template>
