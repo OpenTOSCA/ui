@@ -16,7 +16,7 @@ import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actio
 import { AppState } from '../store/app-state.model';
 
 @Component({
-    selector: 'opentosca-ui-about',
+    selector: 'opentosca-about',
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.scss'],
     encapsulation: ViewEncapsulation.None

@@ -29,7 +29,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 import { Plan } from '../../core/model/new-api/plan.model';
 
 @Component({
-    selector: 'opentosca-ui-application-detail',
+    selector: 'opentosca-application-detail',
     templateUrl: './application-detail.component.html',
     styleUrls: ['./application-detail.component.scss']
 })

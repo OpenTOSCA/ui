@@ -1,18 +1,18 @@
-<opentosca-ui-action-bar>
+<opentosca-action-bar>
     <form class="form-inline">
-        <opentosca-ui-search [placeholder]="'Filter applications...'"
+        <opentosca-search [placeholder]="'Filter applications...'"
                              (searchTermChanged)="searchTermChanged($event)">
-        </opentosca-ui-search>
-        <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
+        </opentosca-search>
+        <opentosca-action-item (click)="reloadApplications()" styles="btn-primary">
             <i class="fa fa-refresh"></i>
-        </opentosca-ui-action-item>
+        </opentosca-action-item>
     </form>
     <form class="form-inline">
-        <opentosca-ui-action-item (click)="navigateToRepo()" styles="btn-primary">
+        <opentosca-action-item (click)="navigateToRepo()" styles="btn-primary">
             <i class="fa fa-external-link"></i> Repository Management
-        </opentosca-ui-action-item>
+        </opentosca-action-item>
     </form>
-</opentosca-ui-action-bar>
+</opentosca-action-bar>
 <div class="d-flex flex-row flex-wrap">
     <div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.displayName }}" tooltipPosition="top" showDelay="600"
          *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','description','csarName']; trackBy: trackAppsFn">
@@ -52,7 +52,7 @@
         </div>
     </div>
 </div>
-<opentosca-ui-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
+<opentosca-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"
                                     [linkToWineryResource]="linkToWineryResource"
                                     (completionSuccessful)="installInContainer($event)">
-</opentosca-ui-deployment-completion>
+</opentosca-deployment-completion>

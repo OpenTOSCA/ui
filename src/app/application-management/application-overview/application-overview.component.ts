@@ -23,7 +23,7 @@ import { Csar } from '../../core/model/new-api/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
-    selector: 'opentosca-ui-application-overview',
+    selector: 'opentosca-application-overview',
     templateUrl: './application-overview.component.html',
     styleUrls: ['./application-overview.component.scss'],
     encapsulation: ViewEncapsulation.None
