@@ -3,7 +3,19 @@
 </button>
 <p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
     <p-column expander="true" [style]="{'width':'45px'}"></p-column>
-    <p-column field="id" header="InstanceID" [sortable]="true"></p-column>
+    <p-column field="id" header="InstanceID" [sortable]="true">
+        <ng-template let-col let-inst="rowData" pTemplate="body">
+            <button
+                pTooltip="Show Details"
+                tooltipPosition="top"
+                type="button"
+                [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]"
+                class="btn btn-secondary btn-sm">
+                <i class="fa fa-list"></i>
+                {{ inst.id }}
+            </button>
+        </ng-template>
+    </p-column>
     <p-column field="state" header="State" [sortable]="true"></p-column>
     <p-column field="created_at" header="Date Created" [sortable]="true">
         <ng-template let-col let-inst="rowData" pTemplate="body">
@@ -16,6 +28,9 @@
                 <p>Initialized: {{ inst.created_at | date:'medium' }}</p>
                 <p>State: {{ inst.state }}</p>
                 <p *ngIf="inst.state !== 'DELETED'">
+                    <button class="btn btn-success" [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]">
+                        <i class="fa fa-check"></i> View Instance
+                    </button>
                     <button class="btn btn-danger" (click)="terminateInstance(inst.id)">
                         <i class="fa fa-remove"></i> Delete Instance
                     </button>
