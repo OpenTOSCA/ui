@@ -27,6 +27,7 @@ import { ApplicationManagementActions } from '../application-management-actions'
 import { Csar } from '../../core/model/new-api/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { Plan } from '../../core/model/new-api/plan.model';
+import { AppComponent } from '../../app.component';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -106,6 +107,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationInstance());
         this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationInstances());
         this.ngRedux.dispatch(ApplicationManagementActions.clearCurrentApplication());
     }

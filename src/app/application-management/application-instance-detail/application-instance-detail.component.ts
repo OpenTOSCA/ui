@@ -13,9 +13,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationInstance } from '../../core/model/application-instance.model';
 import { ActivatedRoute } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
+import { ServiceTemplateInstance } from '../../core/model/new-api/service-template-instance.model';
+import { Application } from 'app/core/model/application.model';
+import { ApplicationManagementActions } from '../application-management-actions';
+import { Observable } from 'rxjs/Rx';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'opentosca-application-instance-detail',
@@ -24,7 +29,7 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 })
 export class ApplicationInstanceDetailComponent implements OnInit {
 
-    public instance: ApplicationInstance;
+    @select(['container', 'currentInstance']) instance: Observable<ServiceTemplateInstance>;
 
     constructor(private route: ActivatedRoute,
                 private ngRedux: NgRedux<AppState>) {
@@ -34,27 +39,21 @@ export class ApplicationInstanceDetailComponent implements OnInit {
      * Initialize component
      */
     ngOnInit(): void {
-
         this.route.data
-            .subscribe((data: { applicationInstanceDetails: ApplicationInstance }) => {
-                    if (data.applicationInstanceDetails === undefined) {
-                        return;
-                    }
-
-                    this.instance = data.applicationInstanceDetails;
-                    console.log(data.applicationInstanceDetails);
+            .subscribe((data: { serviceTemplateInstance: ServiceTemplateInstance }) => {
+                    this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstance(data.serviceTemplateInstance));
 
                     const breadCrumbs = [];
                     breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
                     breadCrumbs.push(
                         {
-                            label: data.applicationInstanceDetails.appID,
-                            routerLink: ['/applications', data.applicationInstanceDetails.appID]
+                            label: data.serviceTemplateInstance.csar_id,
+                            routerLink: ['/applications', data.serviceTemplateInstance.csar_id]
                         });
                     breadCrumbs.push(
                         {
                             label: 'Instance: '
-                            + data.applicationInstanceDetails.shortServiceTemplateInstanceID
+                            + data.serviceTemplateInstance.id
                         }
                     );
                     this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
