@@ -1,7 +1,7 @@
 <button class="btn btn-primary mb-2" (click)="reloadInstances()">
     <i class="fa fa-refresh"></i> Refresh Instances List
 </button>
-<p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
+<p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" responsive="true">
     <p-column expander="true" [style]="{'width':'45px'}"></p-column>
     <p-column field="id" header="InstanceID" [sortable]="true">
         <ng-template let-col let-inst="rowData" pTemplate="body">
