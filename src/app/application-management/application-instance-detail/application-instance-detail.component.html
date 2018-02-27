@@ -78,7 +78,11 @@
         </ng-template>
     </p-fieldset>
     <p-fieldset [toggleable]="true">
-        <p-header>Instance Actions</p-header>
+        <p-header>Build Plan Monitor</p-header>
+        <opentosca-buildplan-monitor *ngIf="(instance | async)._links['build_plan_instance']" [service-template-instance]="(instance | async)"></opentosca-buildplan-monitor>
+    </p-fieldset>
+    <p-fieldset [toggleable]="true">
+        <p-header>Management Plans</p-header>
         <div class="row">
             <div class="col-lg-12">
                 <p>
