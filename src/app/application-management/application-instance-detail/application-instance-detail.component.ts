@@ -10,7 +10,7 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ApplicationInstance } from '../../core/model/application-instance.model';
 import { ActivatedRoute } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
@@ -27,7 +27,7 @@ import { DatePipe } from '@angular/common';
     templateUrl: './application-instance-detail.component.html',
     styleUrls: ['./application-instance-detail.component.scss']
 })
-export class ApplicationInstanceDetailComponent implements OnInit {
+export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
 
     @select(['container', 'currentInstance']) instance: Observable<ServiceTemplateInstance>;
 
@@ -59,5 +59,9 @@ export class ApplicationInstanceDetailComponent implements OnInit {
                     this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
                 },
                 reason => console.log('WRONG'));
+    }
+
+    ngOnDestroy(): void {
+        this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationInstance());
     }
 }

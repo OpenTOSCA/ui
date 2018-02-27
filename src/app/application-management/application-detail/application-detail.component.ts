@@ -107,7 +107,6 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationInstance());
         this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationInstances());
         this.ngRedux.dispatch(ApplicationManagementActions.clearCurrentApplication());
     }
