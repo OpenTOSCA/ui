@@ -1,4 +1,3 @@
-
 <p-dataTable [value]="(plans | async)?.plans" responsive="true">
 	<p-column field="id" header="ID"></p-column>
 	<p-column field="plan_type" header="Type">
@@ -17,3 +16,5 @@
 	</p-column>
 	<p-column field="plan_model_reference" header="Reference"></p-column>
 </p-dataTable>
+
+<opentosca-management-plan-execution-dialog [visible]="true" [plan]="(plans | async)?.plans[0]"></opentosca-management-plan-execution-dialog>

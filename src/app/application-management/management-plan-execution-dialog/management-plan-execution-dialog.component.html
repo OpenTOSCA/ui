@@ -1,0 +1,19 @@
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible" [draggable]="false" [resizable]="false" modal="true">
+    <p-header>
+        Current Plan: {{ plan?.id }}
+    </p-header>
+    <div *ngFor="let param of plan?.input_parameters">
+        <div class="card mb-2">
+            <h6 class="card-header">{{ param.name }}</h6>
+            <div class="card-block">
+                <input type="text" class="form-control" placeholder="{{ param.required ? '' : '<optional>' }}" [(ngModel)]="param.value" (ngModelChange)="checkInputs();">
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <button type="button" class="btn btn-primary mr-2" [disabled]="!runnable" (click)="runPlan();">
+            Run Plan
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="visible = false;">Close</button>
+    </p-footer>
+</p-dialog>

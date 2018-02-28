@@ -35,6 +35,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeploymentCompletionService } from '../core/service/deployment-completion.service';
 import { BuildplanMonitorComponent } from './buildplan-monitor/buildplan-monitor.component';
 import { ManagementPlanListComponent } from './management-plan-list/management-plan-list.component';
+import { ManagementPlanExecutionDialogComponent } from './management-plan-execution-dialog/management-plan-execution-dialog.component';
 
 @NgModule({
     imports: [
@@ -62,7 +63,8 @@ import { ManagementPlanListComponent } from './management-plan-list/management-p
         ApplicationComponent,
         ApplicationOverviewComponent,
         BuildplanMonitorComponent,
-        ManagementPlanListComponent
+        ManagementPlanListComponent,
+        ManagementPlanExecutionDialogComponent
     ],
     providers: [
         ConfigurationService,

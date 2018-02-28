@@ -21,6 +21,7 @@ import { Application } from 'app/core/model/application.model';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Observable } from 'rxjs/Rx';
 import { DatePipe } from '@angular/common';
+import { Plan } from '../../core/model/new-api/plan.model';
 
 @Component({
     selector: 'opentosca-application-instance-detail',
@@ -29,7 +30,8 @@ import { DatePipe } from '@angular/common';
 })
 export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
 
-    @select(['container', 'currentInstance']) instance: Observable<ServiceTemplateInstance>;
+    @select(['container', 'currentInstance'])
+    instance: Observable<ServiceTemplateInstance>;
 
     constructor(private route: ActivatedRoute,
                 private ngRedux: NgRedux<AppState>) {
