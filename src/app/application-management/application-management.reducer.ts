@@ -14,9 +14,9 @@
 import * as _ from 'lodash';
 import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
-import { Csar } from '../core/model/new-api/csar.model';
-import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
-import { Plan } from '../core/model/new-api/plan.model';
+import { Csar } from '../core/model/csar.model';
+import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import { Plan } from '../core/model/plan.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;

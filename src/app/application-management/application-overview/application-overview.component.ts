@@ -19,7 +19,7 @@ import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.ser
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
-import { Csar } from '../../core/model/new-api/csar.model';
+import { Csar } from '../../core/model/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({

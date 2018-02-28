@@ -10,13 +10,6 @@
  *     Michael Falkenthal - initial implementation
  */
 export class PlanParameter {
-    // Deprecated
-    public Name: string;        // tslint:disable-line:variable-name
-    public Type: string;        // tslint:disable-line:variable-name
-    public Required: string;    // tslint:disable-line:variable-name
-    public Value: string;       // tslint:disable-line:variable-name
-
-    // New API Model
     public name: string;
     public type: string;
     public required: string;

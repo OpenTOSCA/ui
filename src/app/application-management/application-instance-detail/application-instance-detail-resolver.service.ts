@@ -12,19 +12,17 @@
  */
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { ApplicationInstance } from '../../core/model/application-instance.model';
 import { Observable } from 'rxjs/Observable';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 
 @Injectable()
-export class ApplicationInstanceDetailResolverService implements Resolve<ApplicationInstance> {
+export class ApplicationInstanceDetailResolverService implements Resolve<ServiceTemplateInstance> {
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ApplicationInstance> {
-        return this.appInstService.loadApplicationInstance(route.params['id'], route.params['instID'])
-            .catch(reason => {
-                return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);
-            });
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ServiceTemplateInstance> {
+        return null;
+        // FIXME Solution https://github.com/OpenTOSCA/ui/pull/15
     }
 
     constructor(private appInstService: ApplicationInstanceManagementService, private logger: OpenToscaLoggerService) {

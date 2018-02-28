@@ -13,7 +13,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { ApplicationInstance } from '../model/application-instance.model';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { ApplicationInstancesManagementService } from './application-instances-management.service';
@@ -25,18 +24,5 @@ export class ApplicationInstanceManagementService {
                 private appInstancesService: ApplicationInstancesManagementService) {
     }
 
-    loadApplicationInstance(appID: string, appInstanceID: string): Observable<ApplicationInstance> {
-        return this.appInstancesService.loadInstancesList(appID)
-            .map(instances => {
-                for (const instance of instances) {
-                    if (instance.shortServiceTemplateInstanceID === appInstanceID) {
-                        return instance;
-                    }
-                }
-                this.logger.handleObservableError('[application-instance.service][loadApplicationInstance]',
-                    new Error('Given instance id not found in application instances'));
-            })
-            .catch(reason => this.logger.handleObservableError('[application-instance.service][loadApplicationInstance]', reason));
-
-    }
+    // DON'T remove me this is used by https://github.com/OpenTOSCA/ui/pull/15
 }

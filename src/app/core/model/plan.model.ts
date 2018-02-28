@@ -7,17 +7,17 @@
  * and http://www.apache.org/licenses/LICENSE-2.0
  *
  * Contributors:
- *     Karoline Saatkamp - initial implementation
+ *     Michael Falkenthal - initial implementation
  */
 
-import {TopologyDocumentationElement} from './topology-documentation-element.model';
+import { ResourceSupport } from './resource-support.model';
+import { PlanParameter } from './plan-parameter.model';
 
-export class TopologyTemplate {
-
-    documentation: Array<TopologyDocumentationElement>;
-    any: any;
-    otherAttributes: any;
-    nodeTemplates: any;
-    relationshipTemplates: any;
+export class Plan extends ResourceSupport {
+    id: string;
+    plan_type: string;
+    plan_language: string;
+    input_parameters: Array<PlanParameter>;
+    output_parameters: Array<PlanParameter>;
+    plan_model_reference: string;
 }
-

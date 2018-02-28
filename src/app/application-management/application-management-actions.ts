@@ -13,9 +13,9 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '../store/store.action';
-import { Csar } from '../core/model/new-api/csar.model';
-import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
-import { Plan } from '../core/model/new-api/plan.model';
+import { Csar } from '../core/model/csar.model';
+import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import { Plan } from '../core/model/plan.model';
 
 @Injectable()
 export class ApplicationManagementActions {

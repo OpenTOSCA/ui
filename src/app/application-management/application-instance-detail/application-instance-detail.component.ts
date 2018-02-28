@@ -11,11 +11,11 @@
  *     Michael Wurster - initial implementation
  */
 import { Component, OnInit } from '@angular/core';
-import { ApplicationInstance } from '../../core/model/application-instance.model';
 import { ActivatedRoute } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 
 @Component({
     selector: 'opentosca-application-instance-detail',
@@ -24,7 +24,10 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 })
 export class ApplicationInstanceDetailComponent implements OnInit {
 
-    public instance: ApplicationInstance;
+    // FIXME Solution https://github.com/OpenTOSCA/ui/pull/15
+
+
+    // public instance: ApplicationInstance;
 
     constructor(private route: ActivatedRoute,
                 private ngRedux: NgRedux<AppState>) {
@@ -36,24 +39,24 @@ export class ApplicationInstanceDetailComponent implements OnInit {
     ngOnInit(): void {
 
         this.route.data
-            .subscribe((data: { applicationInstanceDetails: ApplicationInstance }) => {
-                    this.instance = data.applicationInstanceDetails;
-                    console.log(data.applicationInstanceDetails);
+            .subscribe((data: { applicationInstanceDetails: ServiceTemplateInstance }) => {
+                    // this.instance = data.applicationInstanceDetails;
+                    // console.log(data.applicationInstanceDetails);
 
-                    const breadCrumbs = [];
-                    breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
-                    breadCrumbs.push(
-                        {
-                            label: data.applicationInstanceDetails.appID,
-                            routerLink: ['/applications', data.applicationInstanceDetails.appID]
-                        });
-                    breadCrumbs.push(
-                        {
-                            label: 'Instance: '
-                            + data.applicationInstanceDetails.shortServiceTemplateInstanceID
-                        }
-                    );
-                    this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
+                    // const breadCrumbs = [];
+                    // breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
+                    // breadCrumbs.push(
+                    //     {
+                    //         label: data.applicationInstanceDetails.appID,
+                    //         routerLink: ['/applications', data.applicationInstanceDetails.appID]
+                    //     });
+                    // breadCrumbs.push(
+                    //     {
+                    //         label: 'Instance: '
+                    //         + data.applicationInstanceDetails.shortServiceTemplateInstanceID
+                    //     }
+                    // );
+                    // this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
                 },
                 reason => console.log('WRONG'));
     }

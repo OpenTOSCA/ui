@@ -7,13 +7,16 @@
  * and http://www.apache.org/licenses/LICENSE-2.0
  *
  * Contributors:
- *     Michael Falkenthal
+ *     Michael Falkenthal - initial implementation
  */
 
-export class PlanInstance {
-    PlanInstance: {
-        PlanName: string,
-        CorrelationID: string,
-        State: string
-    };
+import { ResourceSupport } from './resource-support.model';
+import { PlanParameter } from './plan-parameter.model';
+import { PlanLogEntry } from './plan-log-entry.model';
+
+export class PlanInstance extends ResourceSupport {
+    id: string;
+    state: string;
+    output: Array<PlanParameter>;
+    logs: Array<PlanLogEntry>;
 }
