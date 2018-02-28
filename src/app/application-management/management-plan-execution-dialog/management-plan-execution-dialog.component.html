@@ -3,7 +3,7 @@
         Current Plan: {{ plan?.id }}
     </p-header>
     <div *ngFor="let param of plan?.input_parameters">
-        <div class="card mb-2">
+        <div class="card mb-2" *ngIf='hiddenElements.indexOf(param.name) === -1'>
             <h6 class="card-header">{{ param.name }}</h6>
             <div class="card-block">
                 <input type="text" class="form-control" placeholder="{{ param.required ? '' : '<optional>' }}" [(ngModel)]="param.value" (ngModelChange)="checkInputs();">

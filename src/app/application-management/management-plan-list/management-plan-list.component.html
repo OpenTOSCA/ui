@@ -15,6 +15,11 @@
 		</ng-template>
 	</p-column>
 	<p-column field="plan_model_reference" header="Reference"></p-column>
+	<p-column [sortable]="false" [style]="{'width':'45px'}">
+		<ng-template let-col let-inst="rowData" pTemplate="body">
+			<button class="btn btn-secondary btn-sm" type="button" (click)="showDialog(inst);"><i class="fa fa-play"></i></button>
+		</ng-template>
+	</p-column>
 </p-dataTable>
 
-<opentosca-management-plan-execution-dialog [visible]="true" [plan]="(plans | async)?.plans[0]"></opentosca-management-plan-execution-dialog>
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="plan"></opentosca-management-plan-execution-dialog>

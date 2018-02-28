@@ -7,7 +7,7 @@
  * and http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plan } from '../../core/model/new-api/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
@@ -19,20 +19,45 @@ import { AppState } from '../../store/app-state.model';
 })
 export class ManagementPlanExecutionDialogComponent {
 
-    @Input()
-    visible: boolean = true;
+    _visible: boolean = true;
 
-    runnable: boolean = false;
+    @Input()
+    get visible(): boolean {
+        return this._visible;
+    }
+
+    @Output()
+    visibleChange = new EventEmitter<boolean>();
+
+    set visible(val: boolean) {
+        this._visible = val;
+        this.visibleChange.emit(val);
+    }
+
 
     @Input()
     plan: Plan = null;
+
+    runnable: boolean = false;
+
+    get hiddenElements(): Array<String> {
+        return [
+            'CorrelationID',
+            'csarID',
+            'serviceTemplateID',
+            'containerApiAddress',
+            'instanceDataAPIUrl',
+            'planCallbackAddress_invoker',
+            'csarEntrypoint'
+        ]
+    }
 
     constructor(private ngRedux: NgRedux<AppState>) {
     }
 
     checkInputs(): void {
         for (const parameter of this.plan.input_parameters) {
-            if (parameter.required !== 'YES') {
+            if (parameter.required !== 'YES' || this.hiddenElements.indexOf(parameter.name) !== -1) {
                 continue;
             }
 
