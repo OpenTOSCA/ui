@@ -12,6 +12,8 @@ import { Plan } from '../../core/model/new-api/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
+import { ApplicationManagementService } from '../../core/service/application-management.service';
+import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -19,26 +21,35 @@ import { AppState } from '../../store/app-state.model';
 })
 export class ManagementPlanExecutionDialogComponent {
 
-    _visible: boolean = true;
+    private _visible: boolean = true;
+    private _plan: Plan;
 
     @Input()
     get visible(): boolean {
         return this._visible;
     }
+    set visible(value: boolean) {
+        this._visible = value;
+        this.visibleChange.emit(value);
+    }
 
     @Output()
     visibleChange = new EventEmitter<boolean>();
 
-    set visible(val: boolean) {
-        this._visible = val;
-        this.visibleChange.emit(val);
-    }
-
 
     @Input()
-    plan: Plan = null;
+    get plan(): Plan {
+        return this._plan;
+    }
+    set plan(value: Plan) {
+        this._plan = value;
 
-    runnable: boolean = false;
+        if (value) {
+            this.checkInputs();
+        }
+    }
+
+    runnable: boolean;
 
     get hiddenElements(): Array<String> {
         return [
@@ -48,11 +59,15 @@ export class ManagementPlanExecutionDialogComponent {
             'containerApiAddress',
             'instanceDataAPIUrl',
             'planCallbackAddress_invoker',
-            'csarEntrypoint'
+            'csarEntrypoint',
+            'OpenTOSCAContainerAPIServiceInstanceID'
         ]
     }
 
-    constructor(private ngRedux: NgRedux<AppState>) {
+    constructor(
+            private appService: ApplicationManagementService,
+            private ngRedux: NgRedux<AppState>,
+            private logger: OpenToscaLoggerService) {
     }
 
     checkInputs(): void {
@@ -71,12 +86,27 @@ export class ManagementPlanExecutionDialogComponent {
 
     runPlan(): void {
         this.visible = false;
-        this.ngRedux.dispatch(GrowlActions.addGrowl(
-            {
-                severity: 'warning',
-                summary: 'Plan NOT started',
-                detail: 'The plan ' + this.plan.id + ' was not run. Blame the Dev!'
-            }
-        ));
+        this.appService.triggerBuildPlan(this.plan).subscribe(() => {
+            this.logger.log(
+                '[management-plan-execution-dialog][run management plan]',
+                'Received result after post ' + JSON.stringify(location)
+            );
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'warning',
+                    summary: 'Management Plan executed',
+                    detail: 'The management plan ' + this.plan.id + ' was executed.'
+                }
+            ));
+        }, err => {
+            this.logger.handleError('[management-plan-execution-dialog][run management plan]', err);
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Failure to execute the Management Plan',
+                    detail: 'The management plan ' + this.plan.id + ' was NOT propperly executed.'
+                }
+            ));
+        });
     }
 }

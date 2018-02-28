@@ -74,36 +74,34 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         const breadCrumbs = [];
         breadCrumbs.push({label: 'Applications', routerLink: 'applications'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
-        this.route.data
-            .subscribe((data: { applicationDetail: ApplicationDetail }) => {
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.applicationDetail.app));
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
-                        data.applicationDetail.buildPlan)
-                    );
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
-                        data.applicationDetail.terminationPlan
-                    ));
-                    // Load also application instances for list
-                    this.updateAppInstancesList(data.applicationDetail.app);
-                    // Prepare breadcrumb
-                    this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
-                        {
-                            label: data.applicationDetail.app.id,
-                            routerLink: ['applications', data.applicationDetail.app.id]
-                        }));
-                },
-                reason => {
-                    this.ngRedux.dispatch(GrowlActions.addGrowl(
-                        {
-                            severity: 'warn',
-                            summary: 'Loading of Data failed',
-                            detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' +
-                            JSON.stringify(reason)
-                        }
-                    ));
+        this.route.data.subscribe((data: { applicationDetail: ApplicationDetail }) => {
+            this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.applicationDetail.app));
+            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
+                data.applicationDetail.buildPlan)
+            );
+            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
+                data.applicationDetail.terminationPlan
+            ));
+            // Load also application instances for list
+            this.updateAppInstancesList(data.applicationDetail.app);
+            // Prepare breadcrumb
+            this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
+                {
+                    label: data.applicationDetail.app.id,
+                    routerLink: ['applications', data.applicationDetail.app.id]
+                }));
+        }, reason => {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'warn',
+                    summary: 'Loading of Data failed',
+                    detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' +
+                    JSON.stringify(reason)
+                }
+            ));
 
-                    this.router.navigate(['/applications']);
-                });
+            this.router.navigate(['/applications']);
+        });
     }
 
     ngOnDestroy(): void {
