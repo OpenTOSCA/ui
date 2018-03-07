@@ -16,7 +16,6 @@ import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Path } from '../util/path';
 import { Observable } from 'rxjs/Observable';
-import { ReferenceHelper } from '../util/reference-helper';
 import * as _ from 'lodash';
 import { CsarList } from '../model/csar-list.model';
 import { Csar } from 'app/core/model/csar.model';

@@ -16,6 +16,8 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Path } from '../util/path';
 import { CsarUploadReference } from '../model/csar-upload-request.model';
+import { MarketplaceApplication } from '../model/marketplace-application.model';
+import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
 
 @Injectable()
 export class RepositoryManagementService {

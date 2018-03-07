@@ -33,7 +33,7 @@ const routes: Routes = [
                 path: ':id',
                 component: ApplicationDetailComponent,
                 resolve: {
-                    applicationDetail: ApplicationDetailResolverService
+                    csar: ApplicationDetailResolverService
                 }
             },
             {

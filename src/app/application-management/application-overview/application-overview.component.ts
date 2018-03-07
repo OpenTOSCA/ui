@@ -13,7 +13,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import { Application } from 'app/core/model/application.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { AppState } from '../../store/app-state.model';
@@ -21,6 +20,7 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
+import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
 
 @Component({
     selector: 'opentosca-application-overview',
@@ -129,7 +129,7 @@ export class ApplicationOverviewComponent implements OnInit {
      * @param app
      * @returns {string}
      */
-    trackAppsFn(index: number, app: Application) {
+    trackAppsFn(index: number, app: Csar) {
         return app.id;
     }
 

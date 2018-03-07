@@ -7,14 +7,17 @@
  * and http://www.apache.org/licenses/LICENSE-2.0
  *
  * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ *     Karoline Saatkamp - initial implementation
  */
 
-import { ResourceReference } from '../model/resource-reference.model';
+import {TopologyDocumentationElement} from './topology-documentation-element.model';
 
-export class ReferenceHelper {
-    public static isSelfReference(ref: ResourceReference): boolean {
-        return ref.title.toLowerCase() === 'self';
-    }
+export class TopologyTemplate {
+
+    documentation: Array<TopologyDocumentationElement>;
+    any: any;
+    otherAttributes: any;
+    nodeTemplates: any;
+    relationshipTemplates: any;
 }
+

@@ -15,6 +15,10 @@ import {Http, Headers} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import * as _ from 'lodash';
 import {OpenToscaLoggerService} from './open-tosca-logger.service';
+import { MarketplaceApplication } from '../model/marketplace-application.model';
+import { InjectionOption } from '../model/injection-option.model';
+import { InjectionOptions } from '../model/injection-options.model';
+import { TopologyTemplate } from '../model/topology-template.model';
 
 @Injectable()
 export class DeploymentCompletionService {
