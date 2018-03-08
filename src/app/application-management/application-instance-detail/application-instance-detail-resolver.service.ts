@@ -16,12 +16,13 @@ import { ApplicationInstance } from '../../core/model/application-instance.model
 import { Observable } from 'rxjs/Observable';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
+import { ServiceTemplateInstance } from '../../core/model/new-api/service-template-instance.model';
 
 @Injectable()
-export class ApplicationInstanceDetailResolverService implements Resolve<ApplicationInstance> {
+export class ApplicationInstanceDetailResolverService implements Resolve<ServiceTemplateInstance> {
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ApplicationInstance> {
-        return this.appInstService.loadApplicationInstance(route.params['id'], route.params['instID'])
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ServiceTemplateInstance> {
+        return this.appInstService.getServiceTemplateInstance(route.params['id'], route.params['instID'])
             .catch(reason => {
                 return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);
             });

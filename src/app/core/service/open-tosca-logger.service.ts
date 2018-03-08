@@ -33,7 +33,11 @@ export class OpenToscaLoggerService {
 
     public handleObservableError(location: string, error: any): Observable<any> {
         console.error('[', new Date(), ']', location, ': ', error);
-        return Observable.throw(error.json().error || error);
+        if (error.json) {
+            return Observable.throw(error.json().error || error);
+        } else {
+            return Observable.throw(error);
+        }
     }
 
     /**
