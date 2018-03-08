@@ -27,6 +27,8 @@ export class ApplicationManagementActions {
     static CLEAR_CURRENT_APPLICATION = 'CLEAR_CURRENT_APPLICATION';
     static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
+    static UPDATE_APPLICATION_INSTANCE = 'UPDATE_APPLICATION_INSTANCE'
+    static CLEAR_APPLICATION_INSTANCE = 'CLEAR_APPLICATION_INSTANCE'
 
     static UPDATE_CURRENT_BUILD_PLAN = 'UPDATE_CURRENT_BUILD_PLAN';
     static UPDATE_CURRENT_TERMINATION_PLAN = 'UPDATE_CURRENT_TERMINATION_PLAN';
@@ -70,6 +72,20 @@ export class ApplicationManagementActions {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES,
             payload: instances
+        };
+    }
+
+    static updateApplicationInstance(instance: ServiceTemplateInstance): Action {
+        return {
+            type: ApplicationManagementActions.UPDATE_APPLICATION_INSTANCE,
+            payload: instance
+        };
+    }
+
+    static clearApplicationInstance(): Action {
+        return {
+            type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCE,
+            payload: null
         };
     }
 

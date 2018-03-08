@@ -34,6 +34,7 @@ import { BuildplanMonitoringService } from './service/buildplan-monitoring.servi
 import { FilterOutputParams } from './pipe/filter-output-params.pipe';
 import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
 import { DebounceDirective } from './directive/debounce.directive';
+import { ManagementPlanService } from './service/management-plan.service';
 
 @NgModule({
     imports: [
@@ -55,7 +56,7 @@ import { DebounceDirective } from './directive/debounce.directive';
         DeploymentCompletionComponent,
         SortPipe,
         HumanizeBytesPipe,
-        FilterOutputParams
+        FilterOutputParams,
     ],
     exports: [
         ActionBarComponent,
@@ -78,7 +79,8 @@ import { DebounceDirective } from './directive/debounce.directive';
         ApplicationInstancesManagementService,
         RepositoryManagementService,
         DeploymentCompletionService,
-        BuildplanMonitoringService
+        BuildplanMonitoringService,
+        ManagementPlanService
     ]
 })
 export class CoreModule {

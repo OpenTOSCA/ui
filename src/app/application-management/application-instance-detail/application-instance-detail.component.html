@@ -1,12 +1,88 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1>Instance Details</h1>
-            <pre>
-                <code class="language-json">
-                    {{instance | json}}
-                </code>
-            </pre>
+    <p-fieldset [toggleable]="true">
+        <p-header><strong>Instance Information</strong></p-header>
+        <div class="row" *ngIf="(instance | async); let instance; else loading">
+            <div class="col-lg-6">
+                <div>
+                    <h2>Current State</h2>
+                    <p *ngIf="instance.state && instance.state !== ''; else noState">
+                        {{instance.state}}
+                        <br/>
+                    </p>
+                    <ng-template #noState>
+                        <p>
+                            No state provided.
+                        </p>
+                    </ng-template>
+                </div>
+                <div>
+                    <h2>Instance ID</h2>
+                    <p *ngIf="instance.id && instance.id !== ''; else noID">
+                        {{instance.id}}
+                        <br/>
+                    </p>
+                    <ng-template #noID>
+                        <p>
+                            No id provided.
+                        </p>
+                    </ng-template>
+                </div>
+                <div>
+                    <h2>CSAR ID</h2>
+                    <p *ngIf="instance.csar_id && instance.csar_id !== ''; else noCsarID">
+                        {{instance.csar_id}}
+                        <br/>
+                    </p>
+                    <ng-template #noCsarID>
+                        <p>
+                            No csar id provided.
+                        </p>
+                    </ng-template>
+                </div>
+                <div>
+                    <h2>Creation Date</h2>
+                    <p *ngIf="instance.created_at && instance.created_at !== ''; else noCreation">
+                        {{instance.created_at | date:'fullDate'}}
+                        <br/>
+                    </p>
+                    <ng-template #noCreation>
+                        <p>
+                            No creation date provided.
+                        </p>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2>Topology Template</h2>
+                <div>
+                    <a *ngIf="instance?.image_url && instance?.image_url !== ''; else noTemplateImage" [href]="instance.image_url"
+                       target="_blank">
+                        <img class="img-responsive" [src]="instance.image_url"/>
+                    </a>
+                </div>
+                <ng-template #noTemplateImage>
+                    <p>
+                        No Template Image provided.
+                    </p>
+                </ng-template>
+            </div>
         </div>
-    </div>
+        <ng-template #loading>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>
+                        Loading Instance Infos...
+                    </p>
+                </div>
+            </div>
+        </ng-template>
+    </p-fieldset>
+    <p-fieldset [toggleable]="true">
+        <p-header>Build Plan Monitor</p-header>
+        <opentosca-buildplan-monitor *ngIf="(instance | async)._links['build_plan_instance']" [service-template-instance]="(instance | async)"></opentosca-buildplan-monitor>
+    </p-fieldset>
+    <p-fieldset [toggleable]="true">
+        <p-header>Management Plans</p-header>
+        <opentosca-management-plan-list [instance]="(instance | async)"></opentosca-management-plan-list>
+    </p-fieldset>
 </div>

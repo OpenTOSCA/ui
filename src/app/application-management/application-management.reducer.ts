@@ -9,6 +9,7 @@
  * Contributors:
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
+ *     Tobias Wältken - added currentInstance
  */
 
 import * as _ from 'lodash';
@@ -22,6 +23,7 @@ export interface ApplicationManagementState {
     applications?: Array<Csar>;
     currentApp?: Csar;
     currentAppInstances?: Array<ServiceTemplateInstance>;
+    currentInstance?: ServiceTemplateInstance;
     currentBuildPlan?: Plan;
     currentTerminationPlan?: Plan;
 }
@@ -30,6 +32,7 @@ export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
     currentApp: null,
     currentAppInstances: [],
+    currentInstance: null,
     currentBuildPlan: null,
     currentTerminationPlan: null
 };
@@ -67,6 +70,14 @@ export function applicationManagementReducer(state: ApplicationManagementState =
         case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES:
             return Object.assign({}, state, {
                 currentAppInstances: []
+            });
+        case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCE:
+            return Object.assign({}, state, {
+                currentInstance: action.payload
+            });
+        case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCE:
+            return Object.assign({}, state, {
+                currentInstance: null
             });
         case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN:
             return Object.assign({}, state, {
