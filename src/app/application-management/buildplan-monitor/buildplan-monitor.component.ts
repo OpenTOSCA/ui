@@ -28,7 +28,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
         this.bpMonitor.getBuildPlan(this.stInstance._links['build_plan_instance'].href)
             .subscribe(result => {
                 this.bpInstance = result;
-                this.setSelfServiceApplicationUrl(this.getSelfServiceApplicationUrlFromOutput());
+                // this.setSelfServiceApplicationUrl(this.getSelfServiceApplicationUrlFromOutput());
                 if (result.state !== 'FINISHED') {
                     this.pollForPlanFinish();
                 }
