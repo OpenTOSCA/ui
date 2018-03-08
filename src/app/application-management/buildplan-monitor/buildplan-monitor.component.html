@@ -1,37 +1,33 @@
-<div *ngIf="bpInstance?.state === 'FINISHED'; else NotFinished">
-    <a class="btn btn-success"
-       *ngIf="stInstance.state !== 'DELETED' && selfserviceApplicationUrl && selfserviceApplicationUrl !== ''"
-       [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
-
-    <div class="card has-success"
-         *ngIf="stInstance.state !== 'DELETED' && bpInstance.output && (!selfserviceApplicationUrl || selfserviceApplicationUrl === '')">
-        <div class="card-header">Build Plan Result</div>
-        <div class="card-block">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Parameter</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let param of bpInstance.output | filterOutputParams:['instanceId', 'CorrelationID']; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ param.name }}</td>
-                    <td>{{ param.value }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+<div *ngIf="bpInstance !== null">
+    <table class="table table-bordered table-sm">
+        <tbody>
+        <tr>
+            <th scope="row" style="width: 20%">State</th>
+            <td>{{ bpInstance?.state }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="card">
+        <div class="card-header pt-1 pb-1">Output</div>
+        <p-dataTable [value]="bpInstance?.outputs" [responsive]="true">
+            <p-column field="name" header="Name" [sortable]="true" styleClass="p-1 text-center"
+                      [style]="{'width':'25%'}"></p-column>
+            <p-column field="value" header="Value" styleClass="p-1 truncate"></p-column>
+        </p-dataTable>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header pt-1 pb-1">Logs</div>
+        <p-dataTable [value]="bpInstance?.logs" [responsive]="true">
+            <p-column field="timestamp" header="Timestamp" [sortable]="true" styleClass="p-1 text-center"
+                      [style]="{'width':'150px'}">
+                <ng-template let-col let-inst="rowData" pTemplate="body">
+                    {{ inst.timestamp | date:'yyyy-MM-dd HH:mm' }}
+                </ng-template>
+            </p-column>
+            <p-column field="status" header="Status" [sortable]="true" styleClass="p-1 text-center"
+                      [style]="{'width':'70px'}"></p-column>
+            <p-column field="message" header="Message" styleClass="p-1 truncate"></p-column>
+        </p-dataTable>
     </div>
 </div>
-<ng-template #NotFinished>
-    <div class="card">
-        <div class="card-block">
-            Build Plan is still running
-            <sk-fading-circle></sk-fading-circle>
-            Logs: {{ bpInstance?.logs | json }}
-        </div>
-    </div>
-</ng-template>

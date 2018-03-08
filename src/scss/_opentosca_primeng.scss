@@ -53,3 +53,11 @@ body {
     word-wrap: break-word;
   }
 }
+
+.ui-datatable.ui-datatable-data-p-0 tr > td {
+    padding: 0;
+}
+
+#grid .ui-datatable-reflow .ui-datatable-data td .ui-column-title {
+    display: inline-block;
+}
