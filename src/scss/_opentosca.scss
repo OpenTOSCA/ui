@@ -482,3 +482,9 @@ a.editInWineryButton:before {
     box-shadow: 3px 3px 5px #bde3ff;
   }
 }
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

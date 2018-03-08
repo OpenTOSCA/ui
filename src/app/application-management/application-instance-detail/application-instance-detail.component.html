@@ -1,71 +1,139 @@
 <div class="container-fluid">
-    <p-fieldset [toggleable]="true">
+    <p-fieldset>
         <p-header><strong>Instance Information</strong></p-header>
-        <div class="row" *ngIf="(instance | async); let instance; else loading">
-            <div class="col-lg-6">
-                <div>
-                    <h2>Current State</h2>
-                    <p *ngIf="instance.state && instance.state !== ''; else noState">
-                        {{instance.state}}
-                        <br/>
-                    </p>
-                    <ng-template #noState>
-                        <p>
-                            No state provided.
-                        </p>
-                    </ng-template>
-                </div>
-                <div>
-                    <h2>Instance ID</h2>
-                    <p *ngIf="instance.id && instance.id !== ''; else noID">
-                        {{instance.id}}
-                        <br/>
-                    </p>
-                    <ng-template #noID>
-                        <p>
-                            No id provided.
-                        </p>
-                    </ng-template>
-                </div>
-                <div>
-                    <h2>CSAR ID</h2>
-                    <p *ngIf="instance.csar_id && instance.csar_id !== ''; else noCsarID">
-                        {{instance.csar_id}}
-                        <br/>
-                    </p>
-                    <ng-template #noCsarID>
-                        <p>
-                            No csar id provided.
-                        </p>
-                    </ng-template>
-                </div>
-                <div>
-                    <h2>Creation Date</h2>
-                    <p *ngIf="instance.created_at && instance.created_at !== ''; else noCreation">
-                        {{instance.created_at | date:'fullDate'}}
-                        <br/>
-                    </p>
-                    <ng-template #noCreation>
-                        <p>
-                            No creation date provided.
-                        </p>
-                    </ng-template>
+        <table class="table table-bordered"
+               *ngIf="(instance | async); let instance; else loading">
+            <tbody>
+            <tr>
+                <th scope="row" style="width: 20%">ID</th>
+                <td>{{ instance.id }}</td>
+            </tr>
+            <tr>
+                <th scope="row" style="width: 20%">State</th>
+                <td>{{ instance.state }}</td>
+            </tr>
+            <tr>
+                <th scope="row" style="width: 20%">Creation Date</th>
+                <td>{{instance.created_at | date:'fullDate'}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <ng-template #loading>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Loading...</p>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <h2>Topology Template</h2>
-                <div>
-                    <a *ngIf="instance?.image_url && instance?.image_url !== ''; else noTemplateImage" [href]="instance.image_url"
-                       target="_blank">
-                        <img class="img-responsive" [src]="instance.image_url"/>
-                    </a>
-                </div>
-                <ng-template #noTemplateImage>
-                    <p>
-                        No Template Image provided.
-                    </p>
+        </ng-template>
+    </p-fieldset>
+    <p-fieldset [toggleable]="true">
+        <p-header>Management Plans</p-header>
+        <opentosca-management-plan-list [instance]="(instance | async)"></opentosca-management-plan-list>
+    </p-fieldset>
+    <p-fieldset [toggleable]="true" [collapsed]="true">
+        <p-header>Build Plan Monitor</p-header>
+        <span *ngIf="(instance | async); let instance;">
+            <opentosca-buildplan-monitor *ngIf="instance._links['build_plan_instance']"
+                                         [service-template-instance]="instance"></opentosca-buildplan-monitor>
+        </span>
+    </p-fieldset>
+    <p-fieldset [toggleable]="true" [collapsed]="true">
+        <p-header>Deployment Tests</p-header>
+        <opentosca-action-bar>
+            <form class="form-inline">
+                <opentosca-action-item (click)="runDeploymentTests()" styles="btn btn-primary btn-sm"
+                                       pTooltip="Run Tests"
+                                       tooltipPosition="top" showDelay="300">
+                    <i class="fa fa-play"></i>
+                </opentosca-action-item>
+                <opentosca-action-item (click)="refresh()" styles="btn btn-default btn-sm">
+                    <i class="fa fa-refresh"></i>
+                </opentosca-action-item>
+            </form>
+        </opentosca-action-bar>
+        <p-dataTable [value]="deploymentTests | async" [expandableRows]="true"
+                     rowExpandMode="single" styleClass="ui-datatable-data-p-0">
+            <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
+            <p-column field="timestamp" header="Executed at" [sortable]="true" styleClass="p-2 text-center"
+                      [style]="{'width':'150px'}">
+                <ng-template let-col let-inst="rowData" pTemplate="body">
+                    {{ inst.timestamp | date:'yyyy-MM-dd HH:mm' }}
                 </ng-template>
-            </div>
-        </div>
+            </p-column>
+            <p-column field="state" header="Overall State" styleClass="p-2 text-center">
+                <ng-template let-col let-inst="rowData" pTemplate="body">
+                    <span *ngIf="inst.state === 'FINISHED'">
+                        <span *ngIf="inst.statistics.total === inst.statistics.success">
+                            <i class="fa fa-check text-success"></i>
+                        </span>
+                        <span *ngIf="inst.statistics.failed > 0 || inst.statistics.unknown > 0">
+                            <i class="fa fa-exclamation text-danger"></i>
+                        </span>
+                    </span>
+                    <span *ngIf="inst.state !== 'FINISHED'" pTooltip="Running" tooltipPosition="top">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                </ng-template>
+            </p-column>
+            <p-column field="statistics.success" header="Success" styleClass="p-1 text-center">
+                <ng-template let-col let-inst="rowData" pTemplate="body">
+                    <h5 class="m-0"><span class="badge badge-success">{{ inst.statistics.success }}</span></h5>
+                </ng-template>
+            </p-column>
+            <p-column field="statistics.failed" header="Failed" styleClass="p-1 text-center">
+                <ng-template let-col let-inst="rowData" pTemplate="body">
+                    <h5 class="m-0"><span class="badge badge-danger">{{ inst.statistics.failed }}</span></h5>
+                </ng-template>
+            </p-column>
+            <p-column field="statistics.unknown" header="Unknown" styleClass="p-1 text-center">
+                <ng-template let-col let-inst="rowData" pTemplate="body">
+                    <h5 class="m-0"><span class="badge badge-warning">{{ inst.statistics.unknown }}</span></h5>
+                </ng-template>
+            </p-column>
+            <ng-template let-inst pTemplate="rowexpansion">
+                <p-dataTable [value]="inst.deployment_test_results" [expandableRows]="true"
+                             rowExpandMode="single">
+                    <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
+                    <p-column field="node_template_instance.name" header="Node Template" styleClass="p-2"
+                              [style]="{'width':'230px'}">
+                        <ng-template let-col let-inst="rowData" pTemplate="body">
+                            <code>{{ inst.node_template_instance.name }}</code>
+                        </ng-template>
+                    </p-column>
+                    <p-column field="state" header="State" styleClass="p-2 text-center"
+                              [style]="{'width':'60px'}">
+                        <ng-template let-col let-inst="rowData" pTemplate="body">
+                            <span *ngIf="inst.state === 'SUCCESS'" pTooltip="Success" tooltipPosition="top">
+                                <i class="fa fa-check text-success"></i>
+                            </span>
+                            <span *ngIf="inst.state === 'FAILED'" pTooltip="Failed" tooltipPosition="top">
+                                <i class="fa fa-exclamation text-danger"></i>
+                            </span>
+                            <span *ngIf="inst.state === 'STARTED'" pTooltip="Running" tooltipPosition="top">
+                                <i class="fa fa-refresh text-info"></i>
+                            </span>
+                            <span *ngIf="inst.state === 'UNKNOWN'" pTooltip="Unknown" tooltipPosition="top">
+                                <i class="fa fa-question text-warning"></i>
+                            </span>
+                        </ng-template>
+                    </p-column>
+                    <p-column field="name" header="Test Name" styleClass="p-2"></p-column>
+                    <p-column field="duration" header="Duration (sec)" styleClass="p-2 text-center"
+                              [style]="{'width':'150px'}">
+                        <ng-template let-col let-inst="rowData" pTemplate="body">
+                            {{ (inst.end - inst.start) / 1000 }}
+                        </ng-template>
+                    </p-column>
+                    <ng-template let-inst pTemplate="rowexpansion">
+                        <span *ngIf="inst.output !== undefined">
+                            <pre class="m-2"><code>{{ inst.output }}</code></pre>
+                        </span>
+                        <span *ngIf="inst.output === undefined">
+                            <pre class="m-2"><code>No output</code></pre>
+                        </span>
+                    </ng-template>
+                </p-dataTable>
+            </ng-template>
+        </p-dataTable>
     </p-fieldset>
 </div>

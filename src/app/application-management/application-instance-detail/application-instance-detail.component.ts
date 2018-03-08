@@ -18,8 +18,9 @@ import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-ac
 import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Observable } from 'rxjs/Rx';
-import { DatePipe } from '@angular/common';
-import { Plan } from '../../core/model/plan.model';
+import { DeploymentTestService } from '../../core/service/deployment-test.service';
+import { DeploymentTest } from '../../core/model/deployment-test';
+import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-application-instance-detail',
@@ -31,8 +32,27 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
     @select(['container', 'currentInstance'])
     instance: Observable<ServiceTemplateInstance>;
 
+    deploymentTests: Observable<Array<DeploymentTest>>;
+    serviceTemplateInstance: ServiceTemplateInstance;
+
     constructor(private route: ActivatedRoute,
-                private ngRedux: NgRedux<AppState>) {
+                private ngRedux: NgRedux<AppState>, private deploymentTestService: DeploymentTestService) {
+    }
+
+    runDeploymentTests(): void {
+        this.deploymentTestService.runDeploymentTest(this.serviceTemplateInstance).subscribe(response => {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'info',
+                    summary: 'Running deployment tests...',
+                    detail: 'Automated application deployment tests have been triggered and are run in background.'
+                }
+            ));
+        });
+    }
+
+    refresh(): void {
+        this.deploymentTests = this.deploymentTestService.getDeploymentTests(this.serviceTemplateInstance);
     }
 
     /**
@@ -42,7 +62,8 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
         this.route.data
             .subscribe((data: { serviceTemplateInstance: ServiceTemplateInstance }) => {
                     this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstance(data.serviceTemplateInstance));
-
+                    this.serviceTemplateInstance = data.serviceTemplateInstance;
+                    this.deploymentTests = this.deploymentTestService.getDeploymentTests(data.serviceTemplateInstance);
                     const breadCrumbs = [];
                     breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
                     breadCrumbs.push(

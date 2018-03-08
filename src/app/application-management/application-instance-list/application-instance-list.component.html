@@ -1,44 +1,30 @@
-<button class="btn btn-primary mb-2" (click)="reloadInstances()">
-    <i class="fa fa-refresh"></i> Refresh Instances List
-</button>
-<p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" responsive="true">
-    <p-column expander="true" [style]="{'width':'45px'}"></p-column>
-    <p-column field="id" header="InstanceID" [sortable]="true">
+<opentosca-action-bar>
+    <opentosca-action-item (click)="reloadInstances()" styles="btn btn-primary btn-sm">
+        <i class="fa fa-refresh"></i> Refresh
+    </opentosca-action-item>
+</opentosca-action-bar>
+<p-dataTable [value]="(currentAppInstances | async)" [responsive]="true">
+    <p-column field="id" header="Instance ID" [sortable]="true" styleClass="p-2 text-center"></p-column>
+    <p-column field="state" header="State" [sortable]="true" styleClass="p-2 text-center"></p-column>
+    <p-column field="created_at" header="Creation Date" [sortable]="true" styleClass="p-2 text-center">
+        <ng-template let-col let-inst="rowData" pTemplate="body">
+            {{ inst.created_at | date:'yyyy-MM-dd HH:mm' }}
+        </ng-template>
+    </p-column>
+    <p-column header="" styleClass="text-center">
         <ng-template let-col let-inst="rowData" pTemplate="body">
             <button
-                pTooltip="Show Details"
-                tooltipPosition="top"
-                type="button"
-                [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]"
-                class="btn btn-secondary btn-sm">
+                class="btn btn-secondary btn-sm" type="button"
+                pTooltip="Show Details" tooltipPosition="top" showDelay="300"
+                [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]">
                 <i class="fa fa-list"></i>
-                {{ inst.id }}
             </button>
+            <!--<button-->
+                <!--class="btn btn-danger btn-sm" type="button"-->
+                <!--*ngIf="inst.state !== 'DELETED'" (click)="terminateInstance(inst.id)"-->
+                <!--pTooltip="Delete Instance" tooltipPosition="top" showDelay="300">-->
+                <!--<i class="fa fa-remove"></i>-->
+            <!--</button>-->
         </ng-template>
     </p-column>
-    <p-column field="state" header="State" [sortable]="true"></p-column>
-    <p-column field="created_at" header="Date Created" [sortable]="true">
-        <ng-template let-col let-inst="rowData" pTemplate="body">
-            {{ inst.created_at | date:'medium' }}
-        </ng-template>
-    </p-column>
-    <ng-template let-inst pTemplate="rowexpansion">
-        <div class="row">
-            <div class="col-sm-3">
-                <p>Initialized: {{ inst.created_at | date:'medium' }}</p>
-                <p>State: {{ inst.state }}</p>
-                <p *ngIf="inst.state !== 'DELETED'">
-                    <button class="btn btn-success" [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]">
-                        <i class="fa fa-check"></i> View Instance
-                    </button>
-                    <button class="btn btn-danger" (click)="terminateInstance(inst.id)">
-                        <i class="fa fa-remove"></i> Delete Instance
-                    </button>
-                </p>
-            </div>
-            <div class="col-sm-9">
-                <opentosca-buildplan-monitor *ngIf="inst._links['build_plan_instance']" [service-template-instance]="inst"></opentosca-buildplan-monitor>
-            </div>
-        </div>
-    </ng-template>
 </p-dataTable>

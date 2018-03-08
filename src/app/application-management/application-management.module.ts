@@ -26,7 +26,7 @@ import { ApplicationOverviewComponent } from './application-overview/application
 import { RouterModule } from '@angular/router';
 import {
     AccordionModule, FieldsetModule, DialogModule, TooltipModule,
-    ProgressBarModule, DataTableModule, SharedModule
+    ProgressBarModule, DataTableModule, SharedModule, ButtonModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { NgUploaderModule } from 'ngx-uploader';
