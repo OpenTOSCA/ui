@@ -21,8 +21,10 @@ import { ServiceTemplateInstance } from '../../core/model/service-template-insta
 export class ApplicationInstanceDetailResolverService implements Resolve<ServiceTemplateInstance> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ServiceTemplateInstance> {
-        return null;
-        // FIXME Solution https://github.com/OpenTOSCA/ui/pull/15
+        return this.appInstService.getServiceTemplateInstance(route.params['id'], route.params['instID'])
+            .catch(reason => {
+                return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);
+            });
     }
 
     constructor(private appInstService: ApplicationInstanceManagementService, private logger: OpenToscaLoggerService) {

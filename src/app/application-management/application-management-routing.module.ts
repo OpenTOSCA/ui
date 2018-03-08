@@ -40,7 +40,7 @@ const routes: Routes = [
                 path: ':id/instances/:instID',
                 component: ApplicationInstanceDetailComponent,
                 resolve: {
-                    applicationInstanceDetails: ApplicationInstanceDetailResolverService
+                    serviceTemplateInstance: ApplicationInstanceDetailResolverService
                 }
             },
             {

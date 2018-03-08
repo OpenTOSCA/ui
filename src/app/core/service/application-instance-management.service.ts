@@ -16,12 +16,27 @@ import { Observable } from 'rxjs/Observable';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { ApplicationInstancesManagementService } from './application-instances-management.service';
+import { ServiceTemplateInstance } from '../model/service-template-instance.model';
+import { ApplicationManagementService } from './application-management.service';
 
 @Injectable()
 export class ApplicationInstanceManagementService {
 
     constructor(private logger: OpenToscaLoggerService,
-                private appInstancesService: ApplicationInstancesManagementService) {
+                private appInstancesService: ApplicationInstancesManagementService,
+                private applicationManagementService: ApplicationManagementService) {
+    }
+
+    getServiceTemplateInstance(appID: string, instanceID: string): Observable<ServiceTemplateInstance> {
+        return this.applicationManagementService.getCsarDescriptionByCsarID(appID).flatMap((app) => {
+            return this.appInstancesService.getServiceTemplateInstancesOfCsar(app);
+        }).map((instances) => {
+            for (const instance of instances) {
+                if (instance.id === parseInt(instanceID, 10)) {
+                    return instance;
+                }
+            }
+        })
     }
 
     // DON'T remove me this is used by https://github.com/OpenTOSCA/ui/pull/15

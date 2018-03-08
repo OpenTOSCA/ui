@@ -25,6 +25,7 @@ import { ApplicationManagementActions } from '../application-management-actions'
 import { Csar } from '../../core/model/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { Plan } from '../../core/model/plan.model';
+import { AppComponent } from '../../app.component';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -71,38 +72,36 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         const breadCrumbs = [];
         breadCrumbs.push({label: 'Applications', routerLink: 'applications'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
-        this.route.data
-            .subscribe((data: { csar: Csar }) => {
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.csar));
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
-                        // TODO load build plan
-                        null
-                    ));
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
-                        // TODO load termination plan
-                        null
-                    ));
-                    // Load also application instances for list
-                    this.updateAppInstancesList(data.csar);
-                    // Prepare breadcrumb
-                    this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
-                        {
-                            label: data.csar.id,
-                            routerLink: ['applications', data.csar.id]
-                        }));
-                },
-                reason => {
-                    this.ngRedux.dispatch(GrowlActions.addGrowl(
-                        {
-                            severity: 'warn',
-                            summary: 'Loading of Data failed',
-                            detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' +
-                            JSON.stringify(reason)
-                        }
-                    ));
+        this.route.data.subscribe((data: { csar: Csar }) => {
+            this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.csar));
+            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
+                // TODO load build plan
+                null
+            ));
+            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
+                // TODO load termination plan
+                null
+            ));
+            // Load also application instances for list
+            this.updateAppInstancesList(data.csar);
+            // Prepare breadcrumb
+            this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
+                {
+                    label: data.csar.id,
+                    routerLink: ['applications', data.csar.id]
+                }));
+        }, reason => {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'warn',
+                    summary: 'Loading of Data failed',
+                    detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' +
+                    JSON.stringify(reason)
+                }
+            ));
 
-                    this.router.navigate(['/applications']);
-                });
+            this.router.navigate(['/applications']);
+        });
     }
 
     ngOnDestroy(): void {
