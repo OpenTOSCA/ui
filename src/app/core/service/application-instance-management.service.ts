@@ -38,6 +38,4 @@ export class ApplicationInstanceManagementService {
             }
         })
     }
-
-    // DON'T remove me this is used by https://github.com/OpenTOSCA/ui/pull/15
 }

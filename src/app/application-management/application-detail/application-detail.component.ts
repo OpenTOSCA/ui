@@ -74,14 +74,12 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.route.data.subscribe((data: { csar: Csar }) => {
             this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.csar));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
-                // TODO load build plan
-                null
-            ));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
-                // TODO load termination plan
-                null
-            ));
+            this.appService.getBuildPlan(data.csar.id).subscribe(buildPlan => {
+                this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(buildPlan));
+            });
+            this.appService.getTerminationPlan(data.csar.id).subscribe(terminationPlan => {
+                this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(terminationPlan));
+            });
             // Load also application instances for list
             this.updateAppInstancesList(data.csar);
             // Prepare breadcrumb
