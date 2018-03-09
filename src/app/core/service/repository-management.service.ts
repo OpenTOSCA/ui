@@ -14,10 +14,10 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
-import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
-import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { Path } from '../util/path';
-import { CsarUploadReference } from '../model/new-api/csar-upload-request.model';
+import { CsarUploadReference } from '../model/csar-upload-request.model';
+import { MarketplaceApplication } from '../model/marketplace-application.model';
+import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
 
 @Injectable()
 export class RepositoryManagementService {

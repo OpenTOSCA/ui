@@ -8,7 +8,7 @@
  */
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Plan } from '../../core/model/new-api/plan.model';
+import { Plan } from '../../core/model/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';

@@ -14,13 +14,12 @@
 import { Injectable } from '@angular/core';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Observable } from 'rxjs/Observable';
-import { ApplicationInstance } from '../model/application-instance.model';
-import { Csar } from '../model/new-api/csar.model';
+import { Csar } from '../model/csar.model';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
-import { ServiceTemplateList } from '../model/new-api/service-template-list.model';
-import { ServiceTemplate } from '../model/new-api/service-template.model';
-import { ServiceTemplateInstanceList } from '../model/new-api/service-template-instance-list.model';
-import { ServiceTemplateInstance } from '../model/new-api/service-template-instance.model';
+import { ServiceTemplateList } from '../model/service-template-list.model';
+import { ServiceTemplate } from '../model/service-template.model';
+import { ServiceTemplateInstanceList } from '../model/service-template-instance-list.model';
+import { ServiceTemplateInstance } from '../model/service-template-instance.model';
 
 @Injectable()
 export class ApplicationInstancesManagementService {
@@ -65,12 +64,4 @@ export class ApplicationInstancesManagementService {
                 '[application-instances.service][getServiceTemplateInstances][fetching service template list]',
                 reason));
     }
-
-    /**
-     * Loads instances of the current app
-     */
-    loadInstancesList(appID: string): Observable<Array<ApplicationInstance>> {
-        return Observable.of([]);
-    }
-
 }

@@ -15,18 +15,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApplicationDetail } from '../../core/model/application-detail.model';
 import * as _ from 'lodash';
-import { TriggerTerminationPlanEvent } from '../../core/model/trigger-termination-plan-event.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { ApplicationInstancesManagementService } from '../../core/service/application-instances-management.service';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
-import { Csar } from '../../core/model/new-api/csar.model';
+import { Csar } from '../../core/model/csar.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
-import { Plan } from '../../core/model/new-api/plan.model';
+import { Plan } from '../../core/model/plan.model';
 import { AppComponent } from '../../app.component';
 
 @Component({
@@ -74,21 +72,21 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         const breadCrumbs = [];
         breadCrumbs.push({label: 'Applications', routerLink: 'applications'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
-        this.route.data.subscribe((data: { applicationDetail: ApplicationDetail }) => {
-            this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.applicationDetail.app));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(
-                data.applicationDetail.buildPlan)
-            );
-            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(
-                data.applicationDetail.terminationPlan
-            ));
+        this.route.data.subscribe((data: { csar: Csar }) => {
+            this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.csar));
+            this.appService.getBuildPlan(data.csar.id).subscribe(buildPlan => {
+                this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(buildPlan));
+            });
+            this.appService.getTerminationPlan(data.csar.id).subscribe(terminationPlan => {
+                this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(terminationPlan));
+            });
             // Load also application instances for list
-            this.updateAppInstancesList(data.applicationDetail.app);
+            this.updateAppInstancesList(data.csar);
             // Prepare breadcrumb
             this.ngRedux.dispatch(BreadcrumbActions.appendBreadcrumb(
                 {
-                    label: data.applicationDetail.app.id,
-                    routerLink: ['applications', data.applicationDetail.app.id]
+                    label: data.csar.id,
+                    routerLink: ['applications', data.csar.id]
                 }));
         }, reason => {
             this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -109,9 +107,9 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(ApplicationManagementActions.clearCurrentApplication());
     }
 
-    emitTerminationPlan(terminationEvent: TriggerTerminationPlanEvent): void {
+    emitTerminationPlan(terminationEvent: string): void {
         const terminationPlan = Object.assign({}, this.ngRedux.getState().container.currentTerminationPlan);
-        terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent.instanceID);
+        terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent);
         console.log(terminationPlan);
         this.appService.triggerTerminationPlan(terminationPlan)
             .subscribe(result => {

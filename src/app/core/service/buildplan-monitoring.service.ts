@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { PlanInstance } from '../model/new-api/plan-instance.model';
+import { PlanInstance } from '../model/plan-instance.model';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 
 @Injectable()

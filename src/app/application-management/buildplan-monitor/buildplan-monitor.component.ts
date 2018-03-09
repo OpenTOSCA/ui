@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ServiceTemplateInstance} from '../../core/model/new-api/service-template-instance.model';
+import {ServiceTemplateInstance} from '../../core/model/service-template-instance.model';
 import {BuildplanMonitoringService} from '../../core/service/buildplan-monitoring.service';
-import {PlanInstance} from '../../core/model/new-api/plan-instance.model';
+import {PlanInstance} from '../../core/model/plan-instance.model';
 
 @Component({
     selector: 'opentosca-buildplan-monitor',

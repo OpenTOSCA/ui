@@ -13,7 +13,7 @@
 import { Component } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import { Csar } from '../../core/model/new-api/csar.model';
+import { Csar } from '../../core/model/csar.model';
 
 @Component({
     selector: 'opentosca-application',

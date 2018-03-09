@@ -15,20 +15,15 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Path } from '../util/path';
-import { ResourceReference } from '../model/resource-reference.model';
-import { PlanParameters } from '../model/plan-parameters.model';
 import { Observable } from 'rxjs/Observable';
-import { ReferenceHelper } from '../util/reference-helper';
-import { BuildplanPollResource } from '../model/buildplan-poll-resource.model';
-import { PlanInstance } from '../model/plan-instance.model';
 import * as _ from 'lodash';
-import { CsarList } from '../model/new-api/csar-list.model';
-import { Csar } from 'app/core/model/new-api/csar.model';
-import { ServiceTemplateInstance } from '../model/new-api/service-template-instance.model';
-import { Plan } from '../model/new-api/plan.model';
+import { CsarList } from '../model/csar-list.model';
+import { Csar } from 'app/core/model/csar.model';
+import { ServiceTemplateInstance } from '../model/service-template-instance.model';
+import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
-import { Interface } from '../model/new-api/interface.model';
+import { Interface } from '../model/interface.model';
 
 @Injectable()
 export class ApplicationManagementService {

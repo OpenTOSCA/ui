@@ -9,10 +9,10 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ServiceTemplateInstance } from '../../core/model/new-api/service-template-instance.model';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 import { ManagementPlanService } from '../../core/service/management-plan.service';
-import { PlanList } from '../../core/model/new-api/plan-list.model';
-import { Plan } from '../../core/model/new-api/plan.model';
+import { PlanList } from '../../core/model/plan-list.model';
+import { Plan } from '../../core/model/plan.model';
 
 @Component({
     selector: 'opentosca-management-plan-list',

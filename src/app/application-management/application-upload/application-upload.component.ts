@@ -27,7 +27,7 @@ import { DeploymentCompletionService } from '../../core/service/deployment-compl
 import { RepositoryManagementService } from '../../core/service/repository-management.service';
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
-import { CsarUploadReference } from '../../core/model/new-api/csar-upload-request.model';
+import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { Observable } from 'rxjs/Rx';
 import { observable } from 'rxjs/symbol/observable';
 

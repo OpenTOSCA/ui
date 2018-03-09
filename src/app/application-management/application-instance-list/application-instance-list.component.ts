@@ -12,8 +12,7 @@
  */
 
 import { Component, EventEmitter, Output } from '@angular/core';
-import { TriggerTerminationPlanEvent } from '../../core/model/trigger-termination-plan-event.model';
-import { ServiceTemplateInstanceListEntry } from '../../core/model/new-api/service-template-instance-list-entry.model';
+import { ServiceTemplateInstanceListEntry } from '../../core/model/service-template-instance-list-entry.model';
 import { Observable } from 'rxjs/Observable';
 import { select } from '@angular-redux/store';
 
@@ -25,14 +24,14 @@ import { select } from '@angular-redux/store';
 export class ApplicationInstanceListComponent {
 
     @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<ServiceTemplateInstanceListEntry>>;
-    @Output() public onTerminateInstance: EventEmitter<TriggerTerminationPlanEvent> = new EventEmitter();
+    @Output() public onTerminateInstance: EventEmitter<string> = new EventEmitter();
     @Output() public onReloadInstances: EventEmitter<null> = new EventEmitter();
 
     constructor() {
     }
 
     terminateInstance(instanceID: string): void {
-        this.onTerminateInstance.emit(new TriggerTerminationPlanEvent(instanceID));
+        this.onTerminateInstance.emit(instanceID);
     }
 
     reloadInstances(): void {

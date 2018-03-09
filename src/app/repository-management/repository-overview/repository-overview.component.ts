@@ -11,7 +11,7 @@
  *     Michael Wurster - initial implementation
  *     Karoline Saatkamp - add deployment completion functionality
  */
-import { CsarUploadReference } from '../../core/model/new-api/csar-upload-request.model';
+import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';

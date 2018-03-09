@@ -9,9 +9,9 @@
 
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
-import { ServiceTemplateInstance } from '../model/new-api/service-template-instance.model';
+import { ServiceTemplateInstance } from '../model/service-template-instance.model';
 import { Observable } from 'rxjs/Rx';
-import { PlanList } from '../model/new-api/plan-list.model';
+import { PlanList } from '../model/plan-list.model';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 
 @Injectable()

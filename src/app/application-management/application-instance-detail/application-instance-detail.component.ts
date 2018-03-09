@@ -10,17 +10,17 @@
  *     Michael Falkenthal - initial implementation
  *     Michael Wurster - initial implementation
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store';
-import {AppState} from '../../store/app-state.model';
-import {BreadcrumbActions} from '../../core/component/breadcrumb/breadcrumb-actions';
-import {ServiceTemplateInstance} from '../../core/model/new-api/service-template-instance.model';
-import {ApplicationManagementActions} from '../application-management-actions';
-import {Observable} from 'rxjs/Rx';
-import {DeploymentTestService} from '../../core/service/deployment-test.service';
-import {DeploymentTest} from '../../core/model/new-api/deployment-test';
-import {GrowlActions} from '../../core/growl/growl-actions';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
+import { AppState } from '../../store/app-state.model';
+import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
+import { ApplicationManagementActions } from '../application-management-actions';
+import { Observable } from 'rxjs/Rx';
+import { DeploymentTestService } from '../../core/service/deployment-test.service';
+import { DeploymentTest } from '../../core/model/deployment-test';
+import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-application-instance-detail',

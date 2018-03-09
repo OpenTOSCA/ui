@@ -11,7 +11,7 @@
  */
 
 import { ResourceSupport } from './resource-support.model';
-import { PlanParameter } from '../plan-parameter.model';
+import { PlanParameter } from './plan-parameter.model';
 
 export class Plan extends ResourceSupport {
     id: string;

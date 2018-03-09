@@ -12,11 +12,10 @@
  */
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { ApplicationInstance } from '../../core/model/application-instance.model';
 import { Observable } from 'rxjs/Observable';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
-import { ServiceTemplateInstance } from '../../core/model/new-api/service-template-instance.model';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 
 @Injectable()
 export class ApplicationInstanceDetailResolverService implements Resolve<ServiceTemplateInstance> {

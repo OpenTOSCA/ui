@@ -10,12 +10,12 @@
  *     Michael Wurster - initial implementation
  */
 
-import {Headers, Http, RequestOptions, Response} from '@angular/http';
-import {OpenToscaLoggerService} from './open-tosca-logger.service';
-import {Observable} from 'rxjs/Observable';
-import {Injectable} from '@angular/core';
-import {DeploymentTest} from '../model/new-api/deployment-test';
-import {ServiceTemplateInstance} from '../model/new-api/service-template-instance.model';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
+import { DeploymentTest } from '../model/deployment-test';
+import { ServiceTemplateInstance } from '../model/service-template-instance.model';
 
 @Injectable()
 export class DeploymentTestService {
