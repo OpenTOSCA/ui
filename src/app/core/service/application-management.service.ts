@@ -142,6 +142,9 @@ export class ApplicationManagementService {
 
     /**
      * Triggers the termination of an service template instance
+     *
+     * TODO REMOVE
+     * @deprecated
      * @param plan
      * @returns {Observable<string>}
      */
@@ -158,17 +161,18 @@ export class ApplicationManagementService {
     }
 
     /**
-     * Triggers the provisioning of a new service instance
-     * @param plan PlanParameters object that containes required input parameters for the buildplan
+     * Triggers the given management plan
+     * @param plan Plan object that containes required input parameters for the buildplan
      * @returns {Promise<BuildplanPollResource>}
      */
-    triggerBuildPlan(plan: Plan): Observable<string> {
-        this.logger.log('[application.service][triggerBuildPlan]', 'Starting Provisioning');
-        this.logger.log('[application.service][triggerBuildPlan]', 'Build Plan Operation Meta Data are: ' + JSON.stringify(plan));
+    triggerManagementPlan(plan: Plan): Observable<string> {
+        this.logger.log('[application-management.service][triggerManagementPlan]',
+                'Starting Management Plan <' + plan.id + '>');
+        this.logger.log('[application-management.service][triggerManagementPlan]',
+                'Build Plan Operation Meta Data are: ' + JSON.stringify(plan));
         const url = new Path(plan._links['self'].href)
             .append('instances')
             .toString();
-        this.logger.log('[application.service][triggerBuildPlan]', 'Posting to: ' + url);
 
         const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
 

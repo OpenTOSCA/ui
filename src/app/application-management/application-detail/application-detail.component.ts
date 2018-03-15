@@ -36,10 +36,8 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
     @select(['container', 'currentApp']) app: Observable<Csar>;
     @select(['container', 'currentBuildPlan']) currentBuildPlan: Observable<Plan>;
-    public provisioningInProgress = false;
-    public provisioningDone = false;
-    public allInputsFilled = true;
-    public showStartProvisioningModal = false;
+
+    dialogVisible: boolean = false;
 
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationManagementService,
@@ -134,81 +132,5 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result));
             });
-    }
-
-    /**
-     * Shows modal to key in required buildplan parameters and start provisioning
-     */
-    public showProvisioningModal(): void {
-        this.showStartProvisioningModal = true;
-    }
-
-    /**
-     * Hides modal key in required buildplan parameters and start provisioning
-     */
-    public hideProvisioningModal(): void {
-        this.showStartProvisioningModal = false;
-    }
-
-    /**
-     * Delegates the provisioning of a new instance to the ApplicationService
-     * and hides the modal
-     */
-    startProvisioning(): void {
-        this.hideProvisioningModal();
-        this.provisioningInProgress = true;
-        this.provisioningDone = false;
-        const app = this.ngRedux.getState().container.currentApp;
-        this.appService.triggerBuildPlan(this.ngRedux.getState().container.currentBuildPlan)
-            .subscribe(location => {
-                this.logger.log(
-                    '[application-details.component][startProvisioning]',
-                    'Received result after post ' + JSON.stringify(location)
-                );
-                this.logger.log(
-                    '[application-details.component][startProvisioning]',
-                    'Now starting to poll for service template instance creation'
-                );
-                // we wait for two seconds so that servicetemplate instance is created
-                setTimeout(() => this.triggerUpdateAppInstancesList(), 2000);
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'success',
-                        summary: 'Provisioning started',
-                        detail: 'The provisioning of a new instance of ' + app.id
-                        + ' started. See instances list below for information about the new instance.'
-                    }
-                ));
-            }, err => {
-                this.emitProvisioningErrorMessage(err);
-                this.logger.handleError('[application-details.component][startProvisioning]', err);
-            });
-    }
-
-    emitProvisioningErrorMessage(err: Error): void {
-        this.app.subscribe(app => {
-            this.ngRedux.dispatch(GrowlActions.addGrowl(
-                {
-                    severity: 'error',
-                    summary: 'Failure at Provisioning',
-                    detail: 'The provisioning of a new instance of ' + app.id + ' was not successfull. Error is: ' + JSON.stringify(err)
-                }
-            ));
-        });
-    }
-
-    /**
-     * Check if all input fields are filled and enable button
-     * @returns {boolean}
-     */
-    checkAllInputsFilled(): boolean {
-        if (this.ngRedux.getState().container.currentBuildPlan) {
-            for (const par of this.ngRedux.getState().container.currentBuildPlan.input_parameters) {
-                if (!(par.value) && this.showParam(par.name)) {
-                    return this.allInputsFilled = true;
-                }
-            }
-            return this.allInputsFilled = false;
-        }
     }
 }

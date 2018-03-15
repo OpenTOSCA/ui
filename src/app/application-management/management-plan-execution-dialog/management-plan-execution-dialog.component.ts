@@ -86,7 +86,7 @@ export class ManagementPlanExecutionDialogComponent {
 
     runPlan(): void {
         this.visible = false;
-        this.appService.triggerBuildPlan(this.plan).subscribe(() => {
+        this.appService.triggerManagementPlan(this.plan).subscribe(() => {
             this.logger.log(
                 '[management-plan-execution-dialog][run management plan]',
                 'Received result after post ' + JSON.stringify(location)

@@ -1,5 +1,5 @@
 <opentosca-action-bar>
-    <opentosca-action-item (click)="showProvisioningModal()" styles="btn-primary">
+    <opentosca-action-item (click)="dialogVisible = true;" styles="btn-primary">
         <i class="glyphicon glyphicon-plus"></i> Provision New Instance
     </opentosca-action-item>
 </opentosca-action-bar>
@@ -65,35 +65,4 @@
     </div>
 </div>
 
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
-          [(visible)]="showStartProvisioningModal"
-          [draggable]="false" [resizable]="false" modal="true">
-    <p-header>
-        Please fill in following parameters
-    </p-header>
-    <div *ngFor="let param of (currentBuildPlan | async)?.input_parameters">
-        <div class="card mb-2" *ngIf="showParam(param.name)">
-            <h6 class="card-header">{{ param.name }}</h6>
-            <div class="card-block">
-                <textarea *ngIf="param.name.indexOf('Key') > 0" type="text"
-                          class="form-control" placeholder="{{param.name}}"
-                          [(ngModel)]="param.value"
-                          (ngModelChange)="checkAllInputsFilled()"></textarea>
-                <input *ngIf="param.name.indexOf('Password') > 0" type="password"
-                       class="form-control" placeholder="{{param.name}}"
-                       [(ngModel)]="param.value" (ngModelChange)="checkAllInputsFilled()">
-                <input *ngIf="(param.name.indexOf('Password') == -1) && (param.name.indexOf('Key') == -1)"
-                       type="text" class="form-control" placeholder="{{param.name}}"
-                       [(ngModel)]="param.value" (ngModelChange)="checkAllInputsFilled()">
-            </div>
-        </div>
-    </div>
-    <p-footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="hideProvisioningModal()">Close</button>
-            <button type="button" class="btn btn-primary" [disabled]="false" (click)="startProvisioning()">Start
-                Provisioning
-            </button>
-        </div>
-    </p-footer>
-</p-dialog>
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="currentBuildPlan | async"></opentosca-management-plan-execution-dialog>
