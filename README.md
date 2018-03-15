@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/OpenTOSCA/ui.svg?branch=master)](https://travis-ci.org/OpenTOSCA/ui)
 [![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOpenTOSCA%2Fui.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FOpenTOSCA%2Fui?ref=badge_shield)
 
 Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
 
@@ -69,6 +70,9 @@ and http://www.apache.org/licenses/LICENSE-2.0.
 
 [Apache License v2.0]: http://www.apache.org/licenses/LICENSE-2.0.html
 [Eclipse Public License v1.0]: http://www.eclipse.org/legal/epl-v10.html
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOpenTOSCA%2Fui.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FOpenTOSCA%2Fui?ref=badge_large)
 
 ## Haftungsausschluss
 
