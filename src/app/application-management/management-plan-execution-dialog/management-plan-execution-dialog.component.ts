@@ -49,6 +49,9 @@ export class ManagementPlanExecutionDialogComponent {
         }
     }
 
+    @Input()
+    inputValidation: boolean = true;
+
     runnable: boolean;
 
     get hiddenElements(): Array<String> {
@@ -71,6 +74,11 @@ export class ManagementPlanExecutionDialogComponent {
     }
 
     checkInputs(): void {
+        if (!this.inputValidation) {
+            this.runnable = true;
+            return;
+        }
+
         for (const parameter of this.plan.input_parameters) {
             if (parameter.required !== 'YES' || this.hiddenElements.indexOf(parameter.name) !== -1) {
                 continue;
