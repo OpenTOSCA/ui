@@ -26,7 +26,7 @@ export interface ConfigurationState {
 
 export const INITIAL_STATE: ConfigurationState = {
     containerAPI: 'http://localhost:1337',
-    repositoryAPI: 'http://localhost:8080/winery/servicetemplates/',
+    repositoryAPI: 'http://localhost:8080/#/servicetemplates/',
     buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
     terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan',
     opentoscaLifecycleInterfaceName: 'OpenTOSCA-Lifecycle-Interface',
