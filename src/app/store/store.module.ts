@@ -43,6 +43,7 @@ export class StoreModule {
         // it too.
         const configState = ConfigurationInitialState;
         configState.containerAPI = `http://${this.document.location.hostname}:1337`;
+        configState.repositoryAPI = `http://${this.document.location.hostname}:8080/winery/servicetemplates/`;
         store.configureStore(
             rootReducer,
             {
