@@ -32,9 +32,9 @@ import { Path } from '../../core/util/path';
 })
 export class RepositoryOverviewComponent implements OnInit {
     @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
-    @select(['administration', 'repositoryAPI']) repositoryURL: Observable<string>;
+    @select(['administration', 'repositoryAPI']) repositoryAPI: Observable<string>;
 
-    public repoURL: string;
+    public repositoryApiUrl: URL;
     public startCompletionProcess = false;
     public appToComplete: MarketplaceApplication;
     public linkToWineryResource: string;
@@ -55,17 +55,16 @@ export class RepositoryOverviewComponent implements OnInit {
         breadCrumbs.push({label: 'OpenTOSCA Repository'});
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.getApps();
-        this.repositoryURL.subscribe(url => this.repoURL = url);
+        this.repositoryAPI.subscribe(url => this.repositoryApiUrl = new URL(url));
     }
 
     reloadApplications(): void {
         this.getApps();
     }
 
-    navigateToRepo(): void {
-        const url = new URL(this.repoURL)
+    navigateToRepositoryUI(): void {
         window.open(
-            url.protocol + '//' + url.host + '/',
+            this.repositoryApiUrl.protocol + '//' + this.repositoryApiUrl.host + '/',
             '_blank'
         );
     }
