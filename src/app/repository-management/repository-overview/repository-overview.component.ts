@@ -63,8 +63,9 @@ export class RepositoryOverviewComponent implements OnInit {
     }
 
     navigateToRepo(): void {
+        const url = new URL(this.repoURL)
         window.open(
-            this.repoURL,
+            url.protocol + '//' + url.host + '/',
             '_blank'
         );
     }
