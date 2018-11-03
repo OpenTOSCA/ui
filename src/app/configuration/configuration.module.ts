@@ -18,12 +18,16 @@ import { ConfigurationRoutingModule } from './configuration-routing.module';
 import { ConfigurationManagementComponent } from './configuration-management/configuration-management.component';
 import { ConfigurationService } from './configuration.service';
 import { RouterModule } from '@angular/router';
+import { PanelModule } from 'primeng/panel';
+import { InputTextModule } from 'primeng/primeng';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        PanelModule,
+        InputTextModule,
         RouterModule,
         ConfigurationRoutingModule
     ],

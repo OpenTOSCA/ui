@@ -12,82 +12,75 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<table class="layoutTable" border="0">
-    <tr>
-        <td class="menu" id="subMenu">
-            <div class="pageTopicIcon">
-                <img src="/assets/img/Applications_Header_Icon.png"/>
+<p-panel>
+    <p-header>
+        Connections
+    </p-header>
+    <div class="p-grid">
+        <div class="p-col-2">
+            Container API
+        </div>
+        <div class="p-col-10">
+            <div class="ui-inputgroup">
+                <input id="containerAPI"
+                       style="width: 100%"
+                       type="text"
+                       pInputText
+                       [ngModel]="containerAPI | async"
+                       [formControl]="containerAPIControl"
+                       placeholder="Enter Container API URL here"
+                       [ngClass]="{'ot-has-success': containerAPIAvailable, 'ot-has-error': !containerAPIAvailable}">
+                <span class="ui-inputgroup-addon"><i
+                        [ngClass]="{'fa fa-check': containerAPIAvailable, 'fa fa-times': !containerAPIAvailable}"></i></span>
             </div>
-        </td>
-        <td>
-            <div id="content">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Connections</h5>
-                    </div>
-                    <div class="card-block">
-                        <form>
-                            <div class="form-group row has-feedback"
-                                 [ngClass]="{'has-success': containerAPIAvailable, 'has-danger': !containerAPIAvailable}">
-                                <div class="col-sm-3">
-                                    <label class="col-form-label" for="containerAPI">Container API</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="containerAPI"
-                                           [formControl]="containerAPIControl" [ngModel]="containerAPI | async"
-                                           placeholder="Enter Container API URL here"
-                                           [ngClass]="{'form-control-success': containerAPIAvailable, 'form-control-danger': !containerAPIAvailable}">
-                                </div>
-                            </div>
-
-                            <div class="form-group row has-feedback"
-                                 [ngClass]="{'has-success': repositoryAPIAvailable, 'has-danger': !repositoryAPIAvailable}">
-                                <div class="col-sm-3">
-                                    <label class="col-form-label" for="repositoryAPI">Repository API</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="repositoryAPI"
-                                           [formControl]="repositoryAPIControl" [ngModel]="repositoryAPI | async"
-                                           placeholder="Enter Repository API URL here"
-                                           [ngClass]="{'form-control-success': repositoryAPIAvailable, 'form-control-danger': !repositoryAPIAvailable}">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <div class="card-header">
-                        <h5 class="mb-0">Smart Service Archive Parameter</h5>
-                    </div>
-                    <div class="card-block">
-                        <form>
-                            <div class="form-group row">
-                                <div class="col-sm-3">
-                                    <label class="col-form-label" for="buildPlanPath">Path to Build Plan</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="buildPlanPath"
-                                           [formControl]="buildPlanPathControl" [ngModel]="buildPlanPath | async"
-                                           placeholder="Enter URI to Build Plan here">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-3">
-                                    <label class="col-form-label" for="terminationPlanPath">
-                                        Path to Termination Plan
-                                    </label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="terminationPlanPath"
-                                           [formControl]="terminationPlanPathControl"
-                                           [ngModel]="terminationPlanPath | async"
-                                           placeholder="Enter URI to Termination Plan here">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        </div>
+        <div class="p-col-2">
+            Repository API
+        </div>
+        <div class="p-col-10">
+            <div class="ui-inputgroup">
+                <input id="repositoryAPI"
+                       style="width: 100%"
+                       type="text"
+                       pInputText
+                       [ngModel]="repositoryAPI | async"
+                       [formControl]="repositoryAPIControl"
+                       placeholder="Enter Repository API URL here"
+                       [ngClass]="{'ot-has-success': repositoryAPIAvailable, 'ot-has-error': !repositoryAPIAvailable}">
+                <span class="ui-inputgroup-addon"><i
+                        [ngClass]="{'fa fa-check': repositoryAPIAvailable, 'fa fa-times': !repositoryAPIAvailable}"></i></span>
             </div>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</p-panel>
+<p-panel [style]="{'margin-top': '15px'}">
+    <p-header>
+        Smart Service Archive Parameter
+    </p-header>
+    <div class="p-grid">
+        <div class="p-col-2">
+            Path to Build Plan
+        </div>
+        <div class="p-col-10">
+            <input type="text"
+                   style="width: 100%"
+                   pInputText
+                   class="form-control" id="buildPlanPath"
+                   [ngModel]="buildPlanPath | async"
+                   [formControl]="buildPlanPathControl"
+                   placeholder="Enter URI to Build Plan here">
+        </div>
+        <div class="p-col-2">
+            Path to Termination Plan
+        </div>
+        <div class="p-col-10">
+            <input type="text"
+                   style="width: 100%"
+                   pInputText
+                   class="form-control" id="terminationPlanPath"
+                   [ngModel]="terminationPlanPath | async"
+                   [formControl]="terminationPlanPathControl"
+                   placeholder="Enter URI to Termination Plan here">
+        </div>
+    </div>
+</p-panel>

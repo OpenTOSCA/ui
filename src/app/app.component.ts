@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Component } from '@angular/core';
-import { Message } from 'primeng/primeng';
+import { MenuItem, Message } from 'primeng/primeng';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from './store/app-state.model';
 import * as _ from 'lodash';
@@ -27,6 +27,29 @@ import { Observable } from 'rxjs';
 export class AppComponent {
     public messages: Array<Message> = [];
     @select(['growl', 'messages']) growls: Observable<Array<Message>>;
+
+    public menuItems: Array<MenuItem> = [
+        {
+            label: 'Applications',
+            icon: 'fa fa-layer-group',
+            routerLink: ['/applications']
+        },
+        {
+            label: 'Repository',
+            icon: 'fab fa-app-store',
+            routerLink: ['/repositories']
+        },
+        {
+            label: 'Administration',
+            icon: 'fa fa-cogs',
+            routerLink: ['/administration']
+        },
+        {
+            label: 'About',
+            icon: 'fa fa-users',
+            routerLink: ['/about']
+        }
+    ];
 
     public constructor(private ngRedux: NgRedux<AppState>) {
         // We need this to pass messages to global growl component

@@ -22,7 +22,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
         <div class="mr-sm-2">
             <input
                     type="text"
-                    class="form-control"
+                    pInputText
                     [placeholder]="placeholder"
                     opentoscaDebounce
                     (debouncedValue)="valueChanged($event)">

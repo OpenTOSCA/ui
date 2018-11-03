@@ -27,7 +27,7 @@ import { ApplicationOverviewComponent } from './application-overview/application
 import { RouterModule } from '@angular/router';
 import {
     AccordionModule, FieldsetModule, DialogModule, TooltipModule,
-    ProgressBarModule, DataTableModule, SharedModule
+    ProgressBarModule, DataTableModule, SharedModule, ToolbarModule, ButtonModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { NgxUploaderModule } from 'ngx-uploader';
@@ -54,7 +54,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
         RouterModule,
         FieldsetModule,
         AccordionModule,
-        CoreModule
+        CoreModule,
+        ToolbarModule,
+        ButtonModule
     ],
     declarations: [
         ApplicationDetailComponent,

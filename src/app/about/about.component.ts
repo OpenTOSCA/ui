@@ -20,7 +20,7 @@ import { AppState } from '../store/app-state.model';
     selector: 'opentosca-about',
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    // encapsulation: ViewEncapsulation.None
 })
 
 export class AboutComponent implements OnInit {

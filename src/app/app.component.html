@@ -12,7 +12,9 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<nav class="menu" id="mainMenu">
+
+
+<!--<nav class="menu" id="mainMenu">
     <div class="openTOSCALogoContainer"></div>
     <a id="applicationsButton" routerLink="/applications" routerLinkActive="selected">Applications</a>
     <a id="marketplaceButton" routerLink="/repositories" routerLinkActive="selected">Repository</a>
@@ -20,6 +22,26 @@
     <a id="aboutButton" routerLink="/about" routerLinkActive="selected">About</a>
 </nav>
 
-<opentosca-breadcrumb></opentosca-breadcrumb>
-<p-growl [value]="messages" sticky="sticky" (valueChange)="growlsChange($event)"></p-growl>
-<router-outlet></router-outlet>
+<opentosca-breadcrumb></opentosca-breadcrumb>-->
+<p-card>
+    <p-header>
+        <div class="p-grid p-nogutter">
+            <div class="p-col-12" id="ot-topbar" style="border-bottom: 1px solid #c8c8c8;">
+                <div class="p-grid">
+                    <div class="p-col-fixed p-col-align-stretch p-col-nogutter" style="width: 210px;">
+                        <img [src]="'../assets/img/OpenTOSCA_Head_Icon.png'" style="width: 100%; margin-left: 20px;">
+                    </div>
+                    <div class="p-col p-col-align-end" style="margin-bottom: -8px;">
+                        <p-tabMenu [model]="menuItems"></p-tabMenu>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-header>
+    <div class="p-grid p-nogutter">
+        <div class="p-col-12">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+    <p-growl [value]="messages" sticky="sticky" (valueChange)="growlsChange($event)"></p-growl>
+</p-card>

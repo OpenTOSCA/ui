@@ -12,3 +12,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
+//#layout-topbar {
+//  box-sizing: border-box;
+//  display: block;
+//  padding: 0;
+//  height: 80px;
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  width: 100%;
+//  z-index: 9997;
+//  box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
+//  background: #20272a url('../assets/img/background.jpg');
+//}
+
+#ot-topbar {
+  background: #20272a url('../assets/img/background.jpg');
+}
