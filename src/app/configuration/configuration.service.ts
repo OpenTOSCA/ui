@@ -1,28 +1,29 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { NgRedux } from '@angular-redux/store';
-import 'rxjs/add/operator/toPromise';
 import { AppState } from '../store/app-state.model';
 import { ConfigurationActions } from './configuration-actions';
 import { RepositoryManagementActions } from '../repository-management/repository-management-actions';
 import { ApplicationManagementActions } from '../application-management/application-management-actions';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ConfigurationService {
 
-    constructor(private http: Http,
+    constructor(private http: HttpClient,
                 private ngRedux: NgRedux<AppState>) {
     }
 
@@ -96,20 +97,25 @@ export class ConfigurationService {
      * Checks if container API responds
      * @returns {Promise<Response>}
      */
-    isContainerAvailable(): Promise<Response> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(this.ngRedux.getState().administration.containerAPI, reqOpts)
-            .toPromise();
+    isContainerAvailable(): Observable<Object> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        return this.http.get(this.ngRedux.getState().administration.containerAPI, httpOptions)
     }
 
     /**
      * Checks if repository API responds
      * @returns {Promise<Response>}
      */
-    isRepositoryAvailable(): Promise<Response> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, reqOpts)
-            .toPromise();
+    isRepositoryAvailable(): Observable<Object> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, httpOptions)
     }
-
 }

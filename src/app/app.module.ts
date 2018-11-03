@@ -1,19 +1,19 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AboutComponent } from './about/about.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -23,10 +23,11 @@ import { RepositoryManagementModule } from './repository-management/repository-m
 import { ConfigurationModule } from './configuration/configuration.module';
 import { CoreModule } from './core/core.module';
 import { AccordionModule, GrowlModule } from 'primeng/primeng';
-
 import { NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
+import { HttpClientModule } from '@angular/common/http';
+import { MaterialImportModule } from './material-import/material-import.module';
 
 @NgModule({
     declarations: [
@@ -38,8 +39,9 @@ import { StoreModule } from './store/store.module';
         AccordionModule,
         BrowserModule,
         FormsModule,
-        HttpModule,
+        HttpClientModule,
         GrowlModule,
+        MaterialImportModule,
         NgReduxModule,
         NgReduxRouterModule,
         ApplicationManagementModule,

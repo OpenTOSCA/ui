@@ -1,20 +1,19 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
- *     Karoline Saatkamp - add deployment completion functionality
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
 import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
@@ -24,6 +23,7 @@ import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { RepositoryManagementActions } from '../repository-management-actions';
 import { Path } from '../../core/util/path';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-repository-overview',
@@ -42,11 +42,11 @@ export class RepositoryOverviewComponent implements OnInit {
     public searchTerm: string;
 
     constructor(
-            private adminService: ConfigurationService,
-            private appService: ApplicationManagementService,
-            private marketService: RepositoryManagementService,
-            private ngRedux: NgRedux<AppState>,
-            private logger: OpenToscaLoggerService) {
+        private adminService: ConfigurationService,
+        private appService: ApplicationManagementService,
+        private marketService: RepositoryManagementService,
+        private ngRedux: NgRedux<AppState>,
+        private logger: OpenToscaLoggerService) {
     }
 
     ngOnInit(): void {
@@ -80,12 +80,11 @@ export class RepositoryOverviewComponent implements OnInit {
             .toString();
         const tmpApp = new CsarUploadReference(app.csarURL, app.id);
         this.marketService.installAppInContainer(tmpApp, postURL)
-            .then(response => {
+            .subscribe(response => {
                 app.isInstalling = false;
                 this.appService.isAppDeployedInContainer(app.id)
                     .then(result => app.inContainer = result);
-            })
-            .catch(err => {
+            }, err => {
                 app.isInstalling = false;
                 // Injector
                 if (err.status === 406) {
@@ -107,20 +106,21 @@ export class RepositoryOverviewComponent implements OnInit {
      */
     getApps(): void {
         this.marketService.getAppsFromMarketPlace()
-            .then(references => {
-                const appPromises = [] as Array<Promise<MarketplaceApplication>>;
+            .subscribe(references => {
+                const appObservables = [] as Array<Observable<MarketplaceApplication>>;
                 for (const reference of references) {
-                    appPromises.push(this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL()));
+                    appObservables.push(this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL()));
                 }
-                Promise.all(appPromises)
-                    .then(apps => {
-                        for (const app of apps) {
-                            this.appService.isAppDeployedInContainer(app.id)
-                                .then(result => app.inContainer = result);
-                        }
-                        this.ngRedux.dispatch(RepositoryManagementActions.addRepositoryApplications(apps));
-                    })
-                    .catch(reason => this.logger.handleError('[marketplace-overview.component][getApps]', reason));
+                forkJoin(appObservables)
+                    .subscribe(apps => {
+                            for (const app of apps) {
+                                this.appService.isAppDeployedInContainer(app.id)
+                                    .then(result => app.inContainer = result);
+                            }
+                            this.ngRedux.dispatch(RepositoryManagementActions.addRepositoryApplications(apps));
+                        },
+                        reason => this.logger.handleError('[marketplace-overview.component][getApps]', reason)
+                    )
             });
     }
 

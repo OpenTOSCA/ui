@@ -1,3 +1,17 @@
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
 <p-dialog (onHide)="adaptRoute()" [(visible)]="showModal" modal="true" draggable="false" resizable="false" width="800">
     <p-header>
         Upload new Application
@@ -6,7 +20,7 @@
         <div class="col-sm-3">
             <span class="btn btn-primary btn-file">
                 Select local File
-                <input
+                <!--<input
                         type="file"
                         class="btn btn-primary"
                         name="myFile"
@@ -16,15 +30,23 @@
                         (beforeUpload)="beforeUpload($event)"
                         (onUpload)="handleUpload($event)"
                         (click)="resetUploadStats()"
-                        (change)="onChange($event)">
+                        (change)="onChange($event)">-->
+                <input
+                        type="file"
+                        class="btn btn-primary"
+                        ngFileSelect
+                        [options]="options"
+                        (uploadOutput)="onUploadOutput($event)"
+                        [uploadInput]="uploadInput">
+  or choose file(s)
             </span>
         </div>
         <div class="col-sm-9">
-            <div *ngIf="selectedFile; else noFileSelected">
+            <div *ngIf="uploadingFile; else noFileSelected">
                 <h6 class="mt-2">Selected File</h6>
-                <p>Name: {{ selectedFile?.name }}</p>
-                <p>Size: {{ selectedFile?.size | humanizeBytes}}</p>
-                <p>Last Modified: {{ selectedFile?.lastModifiedDate}}</p>
+                <p>Name: {{ uploadingFile?.name }}</p>
+                <p>Size: {{ uploadingFile?.size | humanizeBytes}}</p>
+                <p>Last Modified: {{ uploadingFile?.lastModifiedDate}}</p>
             </div>
             <ng-template #noFileSelected>
                 <form>
@@ -44,16 +66,16 @@
             </ng-template>
         </div>
     </div>
-    <div class="row" *ngIf="uploadingFile?.progress['percent'] > 0">
+    <div class="row" *ngIf="uploadingFile?.progress.data.percentage > 0">
         <div class="col-sm-4 offset-md-3">
             <h6>File Upload in Progress</h6>
         </div>
         <div class="col-sm-5">
-            <p-progressBar [value]="uploadingFile?.progress['percent']"></p-progressBar>
-            <small><em>current upload speed: {{ currentSpeed }}</em></small>
+            <p-progressBar [value]="uploadingFile?.data.progress.percentage"></p-progressBar>
+            <small><em>current upload speed: {{ uploadingFile.progress.data.speedHuman }}</em></small>
         </div>
     </div>
-    <div class="row mt-1" *ngIf="deploymentInProgress && !(uploadingFile?.status === 500)">
+    <div class="row mt-1" *ngIf="deploymentInProgress && !(uploadingFile?.responseStatus === 500)">
         <div class="col-sm-4 offset-md-3">
             <h6>Archive Deployment in Progress</h6>
         </div>
@@ -72,15 +94,15 @@
                 Upload from URL
             </button>
             <button
-                    *ngIf="selectedFile"
+                    *ngIf="uploadingFile"
                     type="button"
                     class="btn btn-success mr-2"
                     (click)="startUpload()"
-                    [disabled]="(uploadingFile?.progress | json)?.percent > 0">
+                    [disabled]="uploadingFile?.progress.status === 1">
                 Start Upload
             </button>
             <button
-                    *ngIf="(uploadingFile?.progress | json)?.percent > 0 && (uploadingFile?.progress | json)?.percent < 100"
+                    *ngIf="uploadingFile?.progress.status === 1"
                     type="button"
                     class="btn btn-danger mr-2"
                     (click)="abortUpload()">

@@ -1,28 +1,31 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Oliver Kopp - fixing of URL encoding
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Path } from '../util/path';
 import { CsarUploadReference } from '../model/csar-upload-request.model';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class RepositoryManagementService {
 
-    constructor(private http: Http,
+    constructor(private http: HttpClient,
                 private adminService: ConfigurationService,
                 private logger: OpenToscaLoggerService) {
     }
@@ -31,17 +34,20 @@ export class RepositoryManagementService {
      * Retrieve a list of references to applications available on the marketplace
      * @returns {Promise<Array<MarketplaceApplicationReference>>}
      */
-    getAppsFromMarketPlace(): Promise<Array<MarketplaceApplicationReference>> {
+    getAppsFromMarketPlace(): Observable<Array<MarketplaceApplicationReference>> {
         const url = this.adminService.getWineryAPIURL();
         this.logger.log('[marketplace.service][getAppsFromMarketPlace] Loading Apps from repo: ', url);
-        const headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(url, {headers: headers})
-            .toPromise()
-            .then(response => {
-                // TODO: Check, if Apps are already installed in container
-                return response.json() as MarketplaceApplicationReference[];
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
             })
-            .catch(err => this.logger.handleError('[marketplace.service][getAppsFromMarketPlace]', err));
+        };
+        return this.http.get<Array<MarketplaceApplicationReference>>(url, httpOptions)
+            .pipe(
+                // TODO: Check, if Apps are already installed in container
+                catchError(err => this.logger.handleError('[marketplace.service][getAppsFromMarketPlace]', err)
+                )
+            )
     }
 
     /**
@@ -50,27 +56,33 @@ export class RepositoryManagementService {
      * @param marketPlaceUrl URL to winery instance
      * @returns {Promise<MarketplaceApplication>}
      */
-    getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Promise<MarketplaceApplication> {
+    getAppFromMarketPlace(appReference: MarketplaceApplicationReference, marketPlaceUrl: string): Observable<MarketplaceApplication> {
         const url = marketPlaceUrl + encodeURIComponent(encodeURIComponent(appReference.namespace))
             + '/' + encodeURIComponent(encodeURIComponent(appReference.id));    // tslint:disable-line:max-line-length
         const selfServiceURL = url + '/selfserviceportal';
-        const headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(selfServiceURL, {headers: headers})
-            .toPromise()
-            .then(response => {
-                const app = response.json() as MarketplaceApplication;
-                app.iconUrl = selfServiceURL + '/' + app.iconUrl;
-                app.imageUrl = selfServiceURL + '/' + app.imageUrl;
-                app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
-                app.repositoryURL = url;
-                app.id = appReference.id;
-                app.isInstalling = false;
-                if (!app.displayName || app.displayName === '') {
-                    app.displayName = appReference.id;
-                }
-                return app;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
             })
-            .catch(err => this.logger.handleError('[marketplace.service][getAppFromMarketPlace]', err));
+        };
+        return this.http.get(selfServiceURL, httpOptions)
+            .pipe(
+                map(response => {
+                    const app = response as MarketplaceApplication;
+                    app.iconUrl = selfServiceURL + '/' + app.iconUrl;
+                    app.imageUrl = selfServiceURL + '/' + app.imageUrl;
+                    app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
+                    app.repositoryURL = url;
+                    app.id = appReference.id;
+                    app.isInstalling = false;
+                    if (!app.displayName || app.displayName === '') {
+                        app.displayName = appReference.id;
+                    }
+                    return app;
+                }
+            ),
+                catchError(err => this.logger.handleError('[marketplace.service][getAppFromMarketPlace]', err))
+            )
     }
 
     /**
@@ -79,18 +91,21 @@ export class RepositoryManagementService {
      * @param containerURL Container endpoint URL (e.g., http://localhost:1337)
      * @returns {Promise<any>}
      */
-    installAppInContainer(app: CsarUploadReference, containerURL: string): Promise<any> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})});
-        return this.http.post(containerURL, app, reqOpts)
-            .toPromise();
+    installAppInContainer(app: CsarUploadReference, containerURL: string): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+        return this.http.post(containerURL, app, httpOptions)
     }
 
     /**
      * Retrieve app description from data.json
      * @param appID CSAR id/name (e.g. XYZ.csar)
-     * @returns {Promise<Application>}
+     * @returns {Promise<MarketplaceApplication>}
      */
-    getAppDescription(appID: string): Promise<MarketplaceApplication> {
+    getAppDescription(appID: string): Observable<MarketplaceApplication> {
         // Remove .csar if present
         if (appID.indexOf('.csar') > -1) {
             appID = appID.split('.')[0];
@@ -107,22 +122,27 @@ export class RepositoryManagementService {
         const dataJSONUrl = new Path(metaDataUrl)
             .append('data.json')
             .toString();
-        const headers = new Headers({'Accept': 'application/json'});
-
-        return this.http.get(dataJSONUrl, {headers: headers})
-            .toPromise()
-            .then(response => {
-                const app = response.json() as MarketplaceApplication;
-                app.id = appID;
-                app.iconUrl = metaDataUrl + '/' + app.iconUrl;
-                app.imageUrl = metaDataUrl + '/' + app.imageUrl;
-                for (const i in app.screenshotUrls) {
-                    if (app.screenshotUrls[i]) {
-                        app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
-                    }
-                }
-                return app;
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
             })
-            .catch(err => this.logger.handleError('[marketplace.service][getAppDescription]', err));
+        };
+
+        return this.http.get(dataJSONUrl, httpOptions)
+            .pipe(
+                map(response => {
+                    const app = response as MarketplaceApplication;
+                    app.id = appID;
+                    app.iconUrl = metaDataUrl + '/' + app.iconUrl;
+                    app.imageUrl = metaDataUrl + '/' + app.imageUrl;
+                    for (const i in app.screenshotUrls) {
+                        if (app.screenshotUrls[i]) {
+                            app.screenshotUrls[i] = metaDataUrl + '/' + app.screenshotUrls[i];
+                        }
+                    }
+                    return app;
+                }),
+                catchError(err => this.logger.handleError('[marketplace.service][getAppDescription]', err))
+            )
     }
 }

@@ -1,20 +1,19 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
- *     Karoline Saatkamp - add deployment completion functionality
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
 import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
+import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
@@ -28,9 +27,10 @@ import { RepositoryManagementService } from '../../core/service/repository-manag
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
-import { Observable } from 'rxjs/Rx';
-import { observable } from 'rxjs/symbol/observable';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 
+// Todo Fix ngx-uploader
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -43,12 +43,12 @@ export class ApplicationUploadComponent implements OnInit {
     public deploymentInProgress = false;
     public deploymentDone = false; // unused ?!!
     public currentSpeed: string;
-    public options: NgUploaderOptions;
+    public options: UploaderOptions;
     public linkToWineryResourceForCompletion: string;
     public appToComplete: MarketplaceApplication;
     public startCompletionProcess: boolean;
-    public inputUploadEvents: EventEmitter<string>;
-    public uploadingFile: UploadedFile;
+    public uploadInput: EventEmitter<UploadInput> = new EventEmitter<UploadInput>();
+    public uploadingFile: UploadFile;
     public selectedFile: any;
     public showModal = true;
 
@@ -59,38 +59,24 @@ export class ApplicationUploadComponent implements OnInit {
         validName: false
     };
 
-    private zone: NgZone;
     private lastUpdate: number;
 
     constructor(
-            private adminService: ConfigurationService,
-            private appService: ApplicationManagementService,
-            private deploymentService: DeploymentCompletionService,
-            private repositoryManagementService: RepositoryManagementService,
-            private ngRedux: NgRedux<AppState>,
-            private router: Router,
-            private http: Http,
-            private logger: OpenToscaLoggerService) {
-        this.inputUploadEvents = new EventEmitter<string>();
+        private adminService: ConfigurationService,
+        private appService: ApplicationManagementService,
+        private deploymentService: DeploymentCompletionService,
+        private repositoryManagementService: RepositoryManagementService,
+        private ngRedux: NgRedux<AppState>,
+        private router: Router,
+        private http: HttpClient,
+        private logger: OpenToscaLoggerService) {
+
     }
 
     ngOnInit(): void {
-        this.zone = new NgZone({enableLongStackTrace: false});
-        const postURL = new Path(this.adminService.getContainerAPIURL())
-            .append('csars')
-            .toString();
-
         this.options = {
-            url: postURL,
-            customHeaders: {
-                'Accept': 'application/json'
-            },
-            filterExtensions: true,
-            allowedExtensions: ['csar'],
-            calculateSpeed: true,
-            previewUrl: true,
-            autoUpload: false,
-        };
+            concurrency: 1,
+        }
     }
 
     closeModal(): void {
@@ -102,21 +88,18 @@ export class ApplicationUploadComponent implements OnInit {
     }
 
     /**
-     * Saves selected file to show it in template
-     * @param event
-     */
-    onChange(event): void {
-        const files = event.target.files;
-        if (files && files.length > 0) {
-            this.selectedFile = files[0];
-        }
-    }
-
-    /**
      * Starts upload of selected file to container
      */
     startUpload(): void {
-        this.inputUploadEvents.emit('startUpload');
+        const postURL = new Path(this.adminService.getContainerAPIURL())
+            .append('csars')
+            .toString();
+        this.uploadInput.emit({
+            type: 'uploadFile',
+            url: postURL,
+            method: 'POST',
+            file: this.uploadingFile
+        });
     }
 
     /**
@@ -124,28 +107,29 @@ export class ApplicationUploadComponent implements OnInit {
      */
     startURLUpload(): void {
         const postURL = new Path(this.adminService.getContainerAPIURL())
-                .append('csars')
-                .toString();
+            .append('csars')
+            .toString();
         this.repositoryManagementService.installAppInContainer(this.tempData.cur, postURL)
-        .then(response => {
-            this.ngRedux.dispatch(GrowlActions.addGrowl(
-                {
-                    severity: 'success',
-                    summary: 'Upload Succeeded',
-                    detail: 'New Application was successfully uploaded and deployed to container'
-                }
-            ));
-            this.updateApplicationsInStore();
-        })
-        .catch(err => {
-            this.ngRedux.dispatch(GrowlActions.addGrowl(
-                {
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Application was not successfully uploaded and deployed. Server responded: ' + err
-                }
-            ));
-        });
+            .toPromise()
+            .then(response => {
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'success',
+                        summary: 'Upload Succeeded',
+                        detail: 'New Application was successfully uploaded and deployed to container'
+                    }
+                ));
+                this.updateApplicationsInStore();
+            })
+            .catch(err => {
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Application was not successfully uploaded and deployed. Server responded: ' + err
+                    }
+                ));
+            });
         this.closeModal();
         this.ngRedux.dispatch(GrowlActions.addGrowl(
             {
@@ -158,71 +142,124 @@ export class ApplicationUploadComponent implements OnInit {
     }
 
     /**
-     * Save uploadingFile for access in template
-     * @param uploadingFile
-     */
-    beforeUpload(uploadingFile: UploadedFile): void {
-        this.uploadingFile = uploadingFile;
-    }
-
-    /**
      * Abort an upload in progress
      */
     abortUpload(): void {
-        this.uploadingFile.xhr.abort();
+        this.uploadInput.emit({type: 'cancelAll'});
         this.resetUploadStats();
     }
 
-    /**
-     * Callback for ngx-uploader to process progress and status of file upload
-     * @param data
-     */
-    handleUpload(data: any): void {
-        this.zone.run(() => {
-            if (this.uploadingFile && this.uploadingFile.progress['percent'] < 100) {
-                this.deploymentInProgress = false;
-                this.deploymentDone = false;
-            } else {
+    // Todo Implement proper handling
+    onUploadOutput(output: UploadOutput): void {
+        console.log('Invoking onUploadOutout handle', output);
+        switch (output.type) {
+            case 'rejected':
+                console.log('You selected a file with wrong type');
+                break;
+            /*case 'allAddedToQueue':
+                // uncomment this if you want to auto upload files when added
+                // const event: UploadInput = {
+                //   type: 'uploadAll',
+                //   url: '/upload',
+                //   method: 'POST',
+                //   data: { foo: 'bar' }
+                // };
+                // this.uploadInput.emit(event);
+                break;*/
+            case 'addedToQueue':
+                console.log('addedToQueue');
+                if (typeof output.file !== 'undefined') {
+                    this.uploadingFile = output.file;
+                }
+                break;
+            case 'uploading':
+                if (typeof output.file !== 'undefined') {
+                    // update current data in files array for uploading file
+                    this.uploadingFile = output.file;
+                    this.deploymentInProgress = false;
+                    this.deploymentDone = false;
+                }
+                break;
+            case 'removed':
+                // remove file from array when removed
+                this.uploadingFile = null;
+                break;
+            /*case 'dragOver':
+                this.dragOver = true;
+                break;
+            case 'dragOut':
+            case 'drop':
+                this.dragOver = false;
+                break;*/
+            case 'done':
+                // The file is uploaded
                 this.deploymentInProgress = true;
-            }
-            if (this.uploadingFile && this.uploadingFile.status === 201) {
-                this.deploymentDone = true;
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'success',
-                        summary: 'Upload Succeeded',
-                        detail: 'New Application was successfully uploaded and deployed to container'
-                    }
-                ));
-                this.updateApplicationsInStore();
-                this.resetUploadStats();
-                this.closeModal();
-            }
-            if (this.uploadingFile && this.uploadingFile.status === 406) {
-                const location = JSON.parse(this.uploadingFile.response);
-                this.linkToWineryResourceForCompletion = location ['Location']  as string;
-                this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion,
-                    data.originalName.substr(0, this.uploadingFile.originalName.lastIndexOf('.csar')))
-                    .then(app => {
-                        this.appToComplete = app;
-                        this.startCompletionProcess = true;
-                        this.resetUploadStats();
-                    })
-                    .catch(err => this.logger.handleError('[application-upload.component][getAppFromCompletionHandlerWinery]', err));
-            }
-            if (this.uploadingFile && this.uploadingFile.status === 500) {
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Application was not successfully uploaded and deployed. Server responded: ' + this.uploadingFile.statusText
-                    }
-                ));
-                this.closeModal();
-            }
-            this.updateCurrentSpeed(data.progress.speedHumanized);
-        });
+                if (this.uploadingFile && this.uploadingFile.responseStatus === 201) {
+                    this.deploymentDone = true;
+                    this.ngRedux.dispatch(GrowlActions.addGrowl(
+                        {
+                            severity: 'success',
+                            summary: 'Upload Succeeded',
+                            detail: 'New Application was successfully uploaded and deployed to container'
+                        }
+                    ));
+                    this.updateApplicationsInStore();
+                    this.resetUploadStats();
+                    this.closeModal();
+                }
+                break;
+        }
     }
+
+    // /**
+    //  * Callback for ngx-uploader to process progress and status of file upload
+    //  * @param data
+    //  */
+    // handleUpload(data: any): void {
+    //     this.zone.run(() => {
+    //         if (this.uploadingFile && this.uploadingFile.progress.data.percentage < 100) {
+    //             this.deploymentInProgress = false;
+    //             this.deploymentDone = false;
+    //         } else {
+    //             this.deploymentInProgress = true;
+    //         }
+    //         if (this.uploadingFile && this.uploadingFile.responseStatus === 201) {
+    //             this.deploymentDone = true;
+    //             this.ngRedux.dispatch(GrowlActions.addGrowl(
+    //                 {
+    //                     severity: 'success',
+    //                     summary: 'Upload Succeeded',
+    //                     detail: 'New Application was successfully uploaded and deployed to container'
+    //                 }
+    //             ));
+    //             this.updateApplicationsInStore();
+    //             this.resetUploadStats();
+    //             this.closeModal();
+    //         }
+    //         if (this.uploadingFile && this.uploadingFile.responseStatus === 406) {
+    //             const location = JSON.parse(this.uploadingFile.response);
+    //             this.linkToWineryResourceForCompletion = location ['Location']  as string;
+    //             this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion,
+    //                 data.originalName.substr(0, this.uploadingFile.nativeFile.name.lastIndexOf('.csar')))
+    //                 .then(app => {
+    //                     this.appToComplete = app;
+    //                     this.startCompletionProcess = true;
+    //                     this.resetUploadStats();
+    //                 })
+    //                 .catch(err => this.logger.handleError('[application-upload.component][getAppFromCompletionHandlerWinery]', err));
+    //         }
+    //         if (this.uploadingFile && this.uploadingFile.responseStatus === 500) {
+    //             this.ngRedux.dispatch(GrowlActions.addGrowl(
+    //                 {
+    //                     severity: 'error',
+    //                     summary: 'Error',
+    //                     detail: 'Application was not successfully uploaded and deployed. Server responded: ' + this.uploadingFile.response
+    //                 }
+    //             ));
+    //             this.closeModal();
+    //         }
+    //     });
+    // }
 
     /**
      * Reload applications from Container and update redux store
@@ -249,31 +286,31 @@ export class ApplicationUploadComponent implements OnInit {
         this.tempData.validName = false;
     }
 
-    /**
-     * Trigger update of variable to show current upload speed
-     * @param speed
-     */
-    updateCurrentSpeed(speed: string): void {
-        if (this.lastUpdate === undefined) {
-            this.lastUpdate = Date.now();
-            this.setCurrentSpeed(speed);
-        }
-        // we only update current speed every 0.5 seconds
-        if ((Date.now() - this.lastUpdate) > 500) {
-            this.setCurrentSpeed(speed);
-            this.lastUpdate = Date.now();
-        }
-    }
+    // /**
+    //  * Trigger update of variable to show current upload speed
+    //  * @param speed
+    //  */
+    // updateCurrentSpeed(speed: string): void {
+    //     if (this.lastUpdate === undefined) {
+    //         this.lastUpdate = Date.now();
+    //         this.setCurrentSpeed(speed);
+    //     }
+    //     // we only update current speed every 0.5 seconds
+    //     if ((Date.now() - this.lastUpdate) > 500) {
+    //         this.setCurrentSpeed(speed);
+    //         this.lastUpdate = Date.now();
+    //     }
+    // }
 
-    /**
-     * Update variable to show current upload speed
-     * @param speed
-     */
-    setCurrentSpeed(speed: string): void {
-        if (speed) {
-            this.currentSpeed = speed;
-        }
-    }
+    // /**
+    //  * Update variable to show current upload speed
+    //  * @param speed
+    //  */
+    // setCurrentSpeed(speed: string): void {
+    //     if (speed) {
+    //         this.currentSpeed = speed;
+    //     }
+    // }
 
     installInContainer(app: MarketplaceApplication): void {
         this.deploymentInProgress = true;
@@ -282,8 +319,9 @@ export class ApplicationUploadComponent implements OnInit {
                 const postURL = new Path(this.adminService.getContainerAPIURL())
                     .append('csars')
                     .toString();
-                const tmpApp = new CsarUploadReference(app.csarURL, app.id)
+                const tmpApp = new CsarUploadReference(app.csarURL, app.id);
                 this.repositoryManagementService.installAppInContainer(tmpApp, postURL)
+                    .toPromise()
                     .then(response => {
                         this.appService.isAppDeployedInContainer(app.id)
                             .then(output => {
@@ -367,26 +405,26 @@ export class ApplicationUploadComponent implements OnInit {
      * @return returns a Observable of the validity from the url
      */
     urlValidator(url: string): Observable<boolean> {
-        return new Observable<boolean>( observer => {
-            this.http.head(url).subscribe(
-                response => {
-                    observer.next(response.ok);
-                },
-                error => {
-                    observer.next(false);
-                }
-            );
+        return new Observable<boolean>(observer => {
+            this.http.head(url)
+                .subscribe((response: HttpResponse<any>) => {
+                        observer.next(response.ok);
+                    },
+                    error => {
+                        observer.next(false);
+                    }
+                );
         });
     }
 
     /**
      * Validator function for the name
      *
-     * @param url string of the enter value
+     * @param name string of the enter value
      * @return returns a Observable of the validity from the name
      */
     nameValidator(name: string): Observable<boolean> {
         // TODO do actual validation!
-        return Observable.of(true);
+        return of(true);
     }
 }
