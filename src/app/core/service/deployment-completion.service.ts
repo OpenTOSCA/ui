@@ -1,42 +1,46 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Karoline Saatkamp - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
 import {Injectable} from '@angular/core';
-import {Http, Headers} from '@angular/http';
-import 'rxjs/add/operator/toPromise';
 import * as _ from 'lodash';
 import {OpenToscaLoggerService} from './open-tosca-logger.service';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { InjectionOption } from '../model/injection-option.model';
 import { InjectionOptions } from '../model/injection-options.model';
 import { TopologyTemplate } from '../model/topology-template.model';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class DeploymentCompletionService {
 
-    constructor(private http: Http,
+    constructor(private http: HttpClient,
                 private logger: OpenToscaLoggerService) {
     }
 
     getInjectionOptions(serviceTemplateURL: string): Promise<any> {
         const postURL = serviceTemplateURL + '/injector/options';
-        const headers = new Headers({'Accept': 'application/json'});
-
-        return this.http.get(postURL, {headers: headers})
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        return this.http.get(postURL, httpOptions)
             .toPromise()
             .then(response => {
                 console.log('InjectionOption Winery Response:');
-                console.log(response.json());
-                const injectionOptionsResponse = response.json();
+                console.log(response);
+                const injectionOptionsResponse = response;
                 const injectionOptions = new InjectionOptions();
                 let injectionOptionEntries = [] as InjectionOption[];
                 let options = [] as TopologyTemplate[];
@@ -85,10 +89,17 @@ export class DeploymentCompletionService {
 
     injectNewHosts(serviceTemplateURL: string, completionSelection: any): Promise<any> {
         const postURL = serviceTemplateURL + '/injector/replace';
-        const headers = new Headers({'Content-Type': 'application/json'});
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            }),
+            observe: 'response'
+        };
         this.logger.log('[deployment-completion.service][injectNewHosts][request-url]', JSON.stringify(postURL));
 
-        return this.http.post(postURL, completionSelection, {headers: headers})
+        // Todo Check if observe: 'response' works to get the whole response including headers (https://angular.io/guide/http)
+        // @ts-ignore
+        return this.http.post<HttpResponse<any>>(postURL, completionSelection, httpOptions)
             .toPromise()
             .then(response => {
                 const injectedserviceTemplateURL = response.headers.get('Location') as string;
@@ -100,10 +111,15 @@ export class DeploymentCompletionService {
     getAppFromCompletionHandlerWinery(serviceTemplateUrl: string, appId: string): Promise<MarketplaceApplication> {
         const selfServiceURL = serviceTemplateUrl + '/selfserviceportal';
         const headers = new Headers({'Accept': 'application/json'});
-        return this.http.get(selfServiceURL, {headers: headers})
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+        return this.http.get<MarketplaceApplication>(selfServiceURL, httpOptions)
             .toPromise()
             .then(response => {
-                const app = response.json() as MarketplaceApplication;
+                const app = response;
                 app.iconUrl = selfServiceURL + '/' + app.iconUrl;
                 app.imageUrl = selfServiceURL + '/' + app.imageUrl;
                 app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';

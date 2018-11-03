@@ -1,14 +1,15 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,16 +27,16 @@ import { ApplicationOverviewComponent } from './application-overview/application
 import { RouterModule } from '@angular/router';
 import {
     AccordionModule, FieldsetModule, DialogModule, TooltipModule,
-    ProgressBarModule, DataTableModule, SharedModule, ButtonModule
+    ProgressBarModule, DataTableModule, SharedModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
-import { NgUploaderModule } from 'ngx-uploader';
+import { NgxUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeploymentCompletionService } from '../core/service/deployment-completion.service';
 import { BuildplanMonitorComponent } from './buildplan-monitor/buildplan-monitor.component';
 import { ManagementPlanListComponent } from './management-plan-list/management-plan-list.component';
 import { ManagementPlanExecutionDialogComponent } from './management-plan-execution-dialog/management-plan-execution-dialog.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
@@ -45,10 +46,10 @@ import { ManagementPlanExecutionDialogComponent } from './management-plan-execut
         DialogModule,
         DataTableModule,
         SharedModule,
-        NgUploaderModule,
+        NgxUploaderModule,
         TooltipModule,
         ProgressBarModule,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         NgSpinKitModule,
         RouterModule,
         FieldsetModule,

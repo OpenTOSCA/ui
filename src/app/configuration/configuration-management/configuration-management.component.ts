@@ -1,24 +1,25 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
 import { FormControl } from '@angular/forms';
 import { ConfigurationService } from '../configuration.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import 'rxjs/add/operator/debounceTime';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
+import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'opentosca-configuration-management',
@@ -53,16 +54,24 @@ export class ConfigurationManagementComponent implements OnInit {
         this.repositoryAPI.subscribe(value => this.checkAvailabilityOfRepository());
 
         this.containerAPIControl.valueChanges
-            .debounceTime(500)
+            .pipe(
+                debounceTime(500)
+            )
             .subscribe(newValue => this.updateContainerURL(newValue));
         this.repositoryAPIControl.valueChanges
-            .debounceTime(500)
+            .pipe(
+                debounceTime(500)
+            )
             .subscribe(newValue => this.updateRepositoryURL(newValue));
         this.buildPlanPathControl.valueChanges
-            .debounceTime(500)
+            .pipe(
+                debounceTime(500)
+            )
             .subscribe(newValue => this.updateBuildPlanPath(newValue));
         this.terminationPlanPathControl.valueChanges
-            .debounceTime(500)
+            .pipe(
+                debounceTime(500)
+            )
             .subscribe(newValue => this.updateTerminationPlanPath(newValue));
     }
 
@@ -71,8 +80,8 @@ export class ConfigurationManagementComponent implements OnInit {
      */
     checkAvailabilityOfContainer(): void {
         this.configService.isContainerAvailable()
-            .then(success => this.containerAPIAvailable = true)
-            .catch(err => this.containerAPIAvailable = false);
+            .subscribe(success => this.containerAPIAvailable = true,
+                    err => this.containerAPIAvailable = false);
     }
 
     /**
@@ -80,8 +89,8 @@ export class ConfigurationManagementComponent implements OnInit {
      */
     checkAvailabilityOfRepository(): void {
         this.configService.isRepositoryAvailable()
-            .then(success => this.repositoryAPIAvailable = true)
-            .catch(err => this.repositoryAPIAvailable = false);
+            .subscribe(success => this.repositoryAPIAvailable = true,
+                    err => this.repositoryAPIAvailable = false);
     }
 
     /**
