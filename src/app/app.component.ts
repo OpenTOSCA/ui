@@ -45,7 +45,7 @@ export class AppComponent {
         },
         {
             label: 'About',
-            icon: 'fa fa-users',
+            icon: 'fa fa-info-circle',
             routerLink: ['/about']
         }
     ];

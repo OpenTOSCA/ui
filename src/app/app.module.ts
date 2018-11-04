@@ -22,7 +22,7 @@ import { ApplicationManagementModule } from './application-management/applicatio
 import { RepositoryManagementModule } from './repository-management/repository-management.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { CoreModule } from './core/core.module';
-import { AccordionModule, CardModule, GrowlModule } from 'primeng/primeng';
+import { AccordionModule, CardModule, GrowlModule, PanelModule } from 'primeng/primeng';
 import { NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
@@ -38,6 +38,7 @@ import {TabMenuModule} from 'primeng/tabmenu';
     ],
     imports: [
         AccordionModule,
+        PanelModule,
         BrowserModule,
         FormsModule,
         HttpClientModule,
