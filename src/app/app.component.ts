@@ -15,7 +15,6 @@ import { Component } from '@angular/core';
 import { MenuItem, Message } from 'primeng/primeng';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from './store/app-state.model';
-import * as _ from 'lodash';
 import { GrowlActions } from './core/growl/growl-actions';
 import { Observable } from 'rxjs';
 

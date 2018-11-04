@@ -17,7 +17,7 @@ import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { Path } from '../util/path';
 import * as _ from 'lodash';
 import { CsarList } from '../model/csar-list.model';
-import { Csar } from 'app/core/model/csar.model';
+import { Csar } from '../model/csar.model';
 import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';

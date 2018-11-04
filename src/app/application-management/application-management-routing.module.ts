@@ -16,10 +16,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { ApplicationDetailResolverService } from './application-detail/application-detail-resolver.service';
 import { ApplicationInstanceDetailResolverService } from './application-instance-detail/application-instance-detail-resolver.service';
-import { ApplicationInstanceDetailComponent } from 'app/application-management/application-instance-detail/application-instance-detail.component'; // tslint:disable-line
 import { ApplicationDetailComponent } from './application-detail/application-detail.component';
 import { ApplicationComponent } from './application/application.component';
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
+import { ApplicationInstanceDetailComponent } from './application-instance-detail/application-instance-detail.component';
 
 const routes: Routes = [
     {

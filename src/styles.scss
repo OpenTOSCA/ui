@@ -11,9 +11,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-@import "primeng";
-@import "../../node_modules/primeflex/primeflex";
-@import "font-awesome";
-// @import "bootstrap";
-// @import "opentosca";
-// @import "opentosca_primeng";
+
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/primeng/resources/themes/nova-light/theme.css";
+@import "../node_modules/primeng/resources/primeng.css";
+
+$fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
+
+@import "../node_modules/primeflex/primeflex";
