@@ -61,7 +61,7 @@ export class RepositoryComponent implements OnInit {
                 forkJoin(o)
                     .subscribe(apps => {
                             for (const app of apps) {
-                                this.applicationService.isAppDeployedInContainer(app.id)
+                                this.applicationService.isApplicationInstalled(app.id)
                                     .then(result => app.inContainer = result);
                             }
                             this.ngRedux.dispatch(RepositoryActions.addRepositoryApplications(apps));
@@ -97,7 +97,7 @@ export class RepositoryComponent implements OnInit {
         this.repositoryService.installApplication(tmpApp, postURL)
             .subscribe(() => {
                 app.isInstalling = false;
-                this.applicationService.isAppDeployedInContainer(app.id)
+                this.applicationService.isApplicationInstalled(app.id)
                     .then(result => app.inContainer = result);
             }, err => {
                 app.isInstalling = false;
@@ -114,7 +114,7 @@ export class RepositoryComponent implements OnInit {
                         summary: 'Error installing application in OpenTOSCA Container',
                         detail: err.message
                     }));
-                    this.applicationService.isAppDeployedInContainer(app.id)
+                    this.applicationService.isApplicationInstalled(app.id)
                         .then(result => {
                             app.inContainer = result;
                         });

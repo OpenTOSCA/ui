@@ -60,7 +60,7 @@ export class ApplicationOverviewComponent implements OnInit {
     deleteFromContainer(app: Csar): void {
         this.removingApp = true;
         this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
-        this.appService.deleteAppFromContainer(app.id)
+        this.appService.deleteApplication(app.id)
             .subscribe((response: Response) => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {

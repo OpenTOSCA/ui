@@ -314,7 +314,7 @@ export class ApplicationUploadComponent implements OnInit {
 
     installInContainer(app: MarketplaceApplication): void {
         this.deploymentInProgress = true;
-        this.appService.isAppDeployedInContainer(app.id).then(result => {
+        this.appService.isApplicationInstalled(app.id).then(result => {
             if (!result) {
                 const postURL = new Path(this.adminService.getContainerUrl())
                     .append('csars')
@@ -323,7 +323,7 @@ export class ApplicationUploadComponent implements OnInit {
                 this.repositoryManagementService.installApplication(tmpApp, postURL)
                     .toPromise()
                     .then(response => {
-                        this.appService.isAppDeployedInContainer(app.id)
+                        this.appService.isApplicationInstalled(app.id)
                             .then(output => {
                                 if (output) {
                                     this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -354,7 +354,7 @@ export class ApplicationUploadComponent implements OnInit {
                     })
                     .catch(err => {
                         console.log(err);
-                        this.appService.isAppDeployedInContainer(app.id)
+                        this.appService.isApplicationInstalled(app.id)
                             .then(output => {
                                 if (output) {
                                     this.deploymentDone = true;

@@ -27,15 +27,15 @@ export class ApplicationInstanceManagementService {
                 private applicationManagementService: ApplicationManagementService) {
     }
 
-    getServiceTemplateInstance(appID: string, instanceID: string): Observable<ServiceTemplateInstance> {
-        return this.applicationManagementService.getCsarDescriptionByCsarID(appID)
+    getServiceTemplateInstance(appId: string, instanceId: string): Observable<ServiceTemplateInstance> {
+        return this.applicationManagementService.getDescriptionByCsarId(appId)
             .pipe(
                 flatMap((app) => {
                     return this.appInstancesService.getServiceTemplateInstancesOfCsar(app);
                 }),
                 map((instances) => {
                     for (const instance of instances) {
-                        if (instance.id === +instanceID) {
+                        if (instance.id === +instanceId) {
                             return instance;
                         }
                     }

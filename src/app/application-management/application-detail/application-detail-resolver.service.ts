@@ -24,7 +24,7 @@ import { catchError } from 'rxjs/operators';
 export class ApplicationDetailResolverService {
 
     resolve(route: ActivatedRouteSnapshot): Observable<Csar> {
-        return this.appService.getCsarDescriptionByCsarID(route.params['id'])
+        return this.appService.getDescriptionByCsarId(route.params['id'])
             .pipe(
                 catchError(reason => {
                     return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
