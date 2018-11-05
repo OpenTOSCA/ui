@@ -14,7 +14,7 @@
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 
@@ -37,15 +37,14 @@ export class DebounceDirective {
     inputValue: string;
 
     constructor(private elementRef: ElementRef, private http: HttpClient) {
-            fromEvent(elementRef.nativeElement, 'keyup')
-                .pipe(
-                    map(() => this.inputValue),
-                    debounceTime(this.delay ? this.delay : DebounceDirective.DEFAULT_DELAY),
-                    distinctUntilChanged()
-
-                )
-                .subscribe(input => {
-                    this.debouncedValue.emit(input);
-                });
+        fromEvent(elementRef.nativeElement, 'keyup')
+            .pipe(
+                map(() => this.inputValue),
+                debounceTime(this.delay ? this.delay : DebounceDirective.DEFAULT_DELAY),
+                distinctUntilChanged()
+            )
+            .subscribe(input => {
+                this.debouncedValue.emit(input);
+            });
     }
 }

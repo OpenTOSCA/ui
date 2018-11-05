@@ -12,18 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { ConfigurationService } from './configuration.service';
 
 describe('ConfigurationService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ConfigurationService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [ConfigurationService]
+        });
     });
-  });
 
-  it('should ...', inject([ConfigurationService], (service: ConfigurationService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should ...', inject([ConfigurationService], (service: ConfigurationService) => {
+        expect(service).toBeTruthy();
+    }));
 });

@@ -25,7 +25,7 @@ export const INITIAL_STATE: BreadcrumbState = {
 };
 
 export function breadcrumbReducer(state: BreadcrumbState = INITIAL_STATE,
-                                             action: Action): BreadcrumbState {
+                                  action: Action): BreadcrumbState {
     switch (action.type) {
 
         case BreadcrumbActions.UPDATE_BREADCRUMB:

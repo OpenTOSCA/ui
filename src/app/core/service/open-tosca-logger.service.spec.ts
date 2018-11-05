@@ -12,18 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
 
 describe('OpenToscaLoggerService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [OpenToscaLoggerService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [OpenToscaLoggerService]
+        });
     });
-  });
 
-  it('should ...', inject([OpenToscaLoggerService], (service: OpenToscaLoggerService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should ...', inject([OpenToscaLoggerService], (service: OpenToscaLoggerService) => {
+        expect(service).toBeTruthy();
+    }));
 });

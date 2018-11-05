@@ -12,7 +12,8 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible" [draggable]="false" [resizable]="false" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible"
+          [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ plan?.id }}
     </p-header>
@@ -20,7 +21,8 @@
         <div class="card mb-2" *ngIf='hiddenElements.indexOf(param.name) === -1'>
             <h6 class="card-header">{{ param.name }}</h6>
             <div class="card-block">
-                <textarea class="form-control" placeholder="{{ param.required ? '' : '<optional>' }}" [(ngModel)]="param.value" (ngModelChange)="checkInputs();"></textarea>
+                <textarea class="form-control" placeholder="{{ param.required ? '' : '<optional>' }}"
+                          [(ngModel)]="param.value" (ngModelChange)="checkInputs();"></textarea>
             </div>
         </div>
     </div>

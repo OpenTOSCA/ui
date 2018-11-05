@@ -13,27 +13,29 @@
   -->
 
 <p-dataTable [value]="(plans | async)?.plans" responsive="true">
-	<!--<p-column field="id" header="ID"></p-column>-->
-	<p-column field="plan_type" header="Type" [style]="{'width':'25%'}" styleClass="p-2 text-center">
-		<ng-template let-col let-inst="rowData" pTemplate="body">
-			<a target="_blank" [href]="inst.plan_type">
-				{{ inst.plan_type.match('[^/]*$')[0] }}
-			</a>
-		</ng-template>
-	</p-column>
-	<!--<p-column field="plan_language" header="Language">-->
-		<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-			<!--<a target="_blank" [href]="inst.plan_language">-->
-				<!--{{ inst.plan_language.match('[^/]*$')[0] }}-->
-			<!--</a>-->
-		<!--</ng-template>-->
-	<!--</p-column>-->
-	<p-column field="plan_model_reference" header="Reference" styleClass="p-2"></p-column>
-	<p-column [sortable]="false" [style]="{'width':'45px'}">
-		<ng-template let-col let-inst="rowData" pTemplate="body">
-			<button class="btn btn-secondary btn-sm" type="button" (click)="showDialog(inst);"><i class="fa fa-play"></i></button>
-		</ng-template>
-	</p-column>
+    <!--<p-column field="id" header="ID"></p-column>-->
+    <p-column field="plan_type" header="Type" [style]="{'width':'25%'}" styleClass="p-2 text-center">
+        <ng-template let-col let-inst="rowData" pTemplate="body">
+            <a target="_blank" [href]="inst.plan_type">
+                {{ inst.plan_type.match('[^/]*$')[0] }}
+            </a>
+        </ng-template>
+    </p-column>
+    <!--<p-column field="plan_language" header="Language">-->
+    <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+    <!--<a target="_blank" [href]="inst.plan_language">-->
+    <!--{{ inst.plan_language.match('[^/]*$')[0] }}-->
+    <!--</a>-->
+    <!--</ng-template>-->
+    <!--</p-column>-->
+    <p-column field="plan_model_reference" header="Reference" styleClass="p-2"></p-column>
+    <p-column [sortable]="false" [style]="{'width':'45px'}">
+        <ng-template let-col let-inst="rowData" pTemplate="body">
+            <button class="btn btn-secondary btn-sm" type="button" (click)="showDialog(inst);"><i
+                class="fa fa-play"></i></button>
+        </ng-template>
+    </p-column>
 </p-dataTable>
 
-<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="plan"></opentosca-management-plan-execution-dialog>
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible"
+                                            [plan]="plan"></opentosca-management-plan-execution-dialog>

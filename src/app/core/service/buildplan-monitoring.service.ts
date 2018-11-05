@@ -23,8 +23,8 @@ import { catchError } from 'rxjs/operators';
 export class BuildplanMonitoringService {
 
     constructor(
-            private http: HttpClient,
-            private logger: OpenToscaLoggerService) {
+        private http: HttpClient,
+        private logger: OpenToscaLoggerService) {
     }
 
     getBuildPlan(url: string): Observable<PlanInstance> {
@@ -36,7 +36,7 @@ export class BuildplanMonitoringService {
         return this.http.get<PlanInstance>(url, httpOptions)
             .pipe(
                 catchError(err => this.logger.handleObservableError('[buildplan-monitor.service][getBuildPlan]', err))
-            )
+            );
     }
 
 }

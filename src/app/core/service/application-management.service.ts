@@ -48,7 +48,7 @@ export class ApplicationManagementService {
      * @returns {Observable<any>}
      */
     deleteAppFromContainer(appID: string): Observable<any> {
-        const url = new Path(this.ngRedux.getState().administration.containerAPI)
+        const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
             .append(this.fixAppID(appID))
             .toString();
@@ -61,7 +61,7 @@ export class ApplicationManagementService {
      * @returns {Observable<Array<Csar>>}
      */
     getResolvedApplications(): Observable<Array<Csar>> {
-        const url = new Path(this.ngRedux.getState().administration.containerAPI)
+        const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
             .toString();
         const httpOptions = {
@@ -79,7 +79,7 @@ export class ApplicationManagementService {
                     return observables.length > 0 ? forkJoin(observables) : of([]);
                 }),
                 flatMap(result => result)
-            )
+            );
     }
 
     /**
@@ -108,13 +108,13 @@ export class ApplicationManagementService {
                                 this.logger.handleObservableError('[application.service][getBuildPlan]', err);
                                 return throwError(err);
                             })
-                        )
+                        );
                 }),
                 catchError(err => {
                     this.logger.handleObservableError('[application.service][getBuildPlan]', err);
                     return throwError(err);
                 })
-            )
+            );
     }
 
     getTerminationPlan(appID: string): Observable<Plan> {
@@ -124,7 +124,7 @@ export class ApplicationManagementService {
                     const url = new Path(serviceTemplatePath)
                         .append('boundarydefinitions')
                         .append('interfaces')
-                        .append(this.ngRedux.getState().administration.opentoscaLifecycleInterfaceName)
+                        .append(this.ngRedux.getState().administration.planLifecycleInterface)
                         .toString();
                     const httpOptions = {
                         headers: new HttpHeaders({
@@ -135,20 +135,20 @@ export class ApplicationManagementService {
                         .pipe(
                             map(response => response as Interface),
                             map((i: Interface) => {
-                                return i.operations[this.ngRedux.getState().administration.terminationOperationName]
+                                return i.operations[this.ngRedux.getState().administration.planOperationTerminate]
                                     ._embedded.plan;
-                                }),
+                            }),
                             catchError(err => {
                                 this.logger.handleObservableError('[application.service][getTerminationPlan]', err);
                                 return throwError(err);
                             })
-                        )
+                        );
                 }),
                 catchError(err => {
                     this.logger.handleObservableError('[application.service][getTerminationPlan]', err);
                     return throwError(err);
                 })
-            )
+            );
     }
 
     /**
@@ -158,7 +158,7 @@ export class ApplicationManagementService {
      */
     getServiceTemplatePathNG(appID: string): Observable<string> {
 
-        const url = new Path(this.ngRedux.getState().administration.containerAPI)
+        const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
             .append(this.fixAppID(appID))
             .append('servicetemplates')
@@ -175,7 +175,7 @@ export class ApplicationManagementService {
                     return response['service_templates'][0]._links['self'].href;
                 }),
                 catchError(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err))
-            )
+            );
     }
 
     /**
@@ -202,7 +202,7 @@ export class ApplicationManagementService {
                     return response.headers['Location'];
                 }),
                 catchError(err => this.logger.handleError('[application-management.service][triggerTerminationPlan]', err))
-            )
+            );
     }
 
     /**
@@ -232,7 +232,7 @@ export class ApplicationManagementService {
                     return response.headers['Location'];
                 }),
                 catchError(err => this.logger.handleError('[application.service][triggerBuildPlan]', err))
-            )
+            );
     }
 
     /**
@@ -244,7 +244,7 @@ export class ApplicationManagementService {
     isAppDeployedInContainer(appID: string): Promise<boolean> {
         appID = this.fixAppID(appID);
 
-        const csarUrl = new Path(this.ngRedux.getState().administration.containerAPI)
+        const csarUrl = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
             .append(appID)
             .toString();
@@ -266,7 +266,7 @@ export class ApplicationManagementService {
      */
     getCsarDescriptionByCsarID(csarID: string): Observable<Csar> {
         csarID = this.fixAppID(csarID);
-        const url = new Path(this.ngRedux.getState().administration.containerAPI)
+        const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
             .append(csarID)
             .toString();
@@ -282,6 +282,6 @@ export class ApplicationManagementService {
                         .handleObservableError('[application.service][getCsarDescriptionByCsarID]', err);
                     return throwError(err);
                 })
-            )
+            );
     }
 }

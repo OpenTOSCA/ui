@@ -85,7 +85,7 @@ export class ApplicationOverviewComponent implements OnInit {
                         severity: 'error',
                         summary: 'Error',
                         detail: 'Application ' + app.id +
-                        ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
+                            ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
                     }
                 ));
                 this.appService.getResolvedApplications()

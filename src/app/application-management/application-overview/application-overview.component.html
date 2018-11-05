@@ -14,7 +14,7 @@
 <opentosca-action-bar>
     <form class="form-inline">
         <opentosca-search [placeholder]="'Filter applications...'"
-                             (searchTermChanged)="searchTermChanged($event)"></opentosca-search>
+                          (searchTermChanged)="searchTermChanged($event)"></opentosca-search>
         <opentosca-action-item (click)="reloadApplications()" styles="btn-primary">
             <i class="fa fa-refresh"></i>
         </opentosca-action-item>
@@ -26,7 +26,8 @@
     </form>
 </opentosca-action-bar>
 <div class="d-flex flex-row flex-wrap">
-    <div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.display_name }}" tooltipPosition="top" showDelay="600"
+    <div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.display_name }}" tooltipPosition="top"
+         showDelay="600"
          *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
         <div class="card-block text-center pb-0">
             <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"

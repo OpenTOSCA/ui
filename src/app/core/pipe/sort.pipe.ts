@@ -18,7 +18,7 @@ import * as _ from 'lodash';
 @Pipe({ name: 'sort' })
 export class SortPipe implements PipeTransform {
 
-    transform(collection: any[], params: string[], orders: ReadonlyArray<boolean|'asc'|'desc'>): any {
+    transform(collection: any[], params: string[], orders: ReadonlyArray<boolean | 'asc' | 'desc'>): any {
         return _.orderBy(collection, params, orders);
     }
 }

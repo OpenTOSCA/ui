@@ -12,7 +12,8 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="showCompleteConfirmationModal" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
+          [(visible)]="showCompleteConfirmationModal" modal="true">
     <p-header>
         Apply completion?
     </p-header>
@@ -29,7 +30,8 @@
     </p-footer>
 </p-dialog>
 
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="showCompleteSelectionModal" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
+          [(visible)]="showCompleteSelectionModal" modal="true">
     <p-header>
         Selection
     </p-header>
@@ -64,8 +66,9 @@
                         <select class="form-control" id="sel2" name="selectOption"
                                 [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
                                 required>
-                            <option *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
-                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                            <option
+                                *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
+                                [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
                             </option>
                         </select>
                     </div>

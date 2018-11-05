@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Plan } from '../../core/model/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
@@ -33,6 +33,7 @@ export class ManagementPlanExecutionDialogComponent {
     get visible(): boolean {
         return this._visible;
     }
+
     set visible(value: boolean) {
         this._visible = value;
         this.visibleChange.emit(value);
@@ -46,6 +47,7 @@ export class ManagementPlanExecutionDialogComponent {
     get plan(): Plan {
         return this._plan;
     }
+
     set plan(value: Plan) {
         this._plan = value;
 
@@ -69,13 +71,13 @@ export class ManagementPlanExecutionDialogComponent {
             'planCallbackAddress_invoker',
             'csarEntrypoint',
             'OpenTOSCAContainerAPIServiceInstanceID'
-        ]
+        ];
     }
 
     constructor(
-            private appService: ApplicationManagementService,
-            private ngRedux: NgRedux<AppState>,
-            private logger: OpenToscaLoggerService) {
+        private appService: ApplicationManagementService,
+        private ngRedux: NgRedux<AppState>,
+        private logger: OpenToscaLoggerService) {
     }
 
     checkInputs(): void {

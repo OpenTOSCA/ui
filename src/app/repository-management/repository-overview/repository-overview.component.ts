@@ -51,8 +51,8 @@ export class RepositoryOverviewComponent implements OnInit {
 
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push({label: 'Repository', routerLink: 'repositories'});
-        breadCrumbs.push({label: 'OpenTOSCA Repository'});
+        breadCrumbs.push({ label: 'Repository', routerLink: 'repositories' });
+        breadCrumbs.push({ label: 'OpenTOSCA Repository' });
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.getApps();
         this.repositoryAPI.subscribe(url => this.repositoryApiUrl = new URL(url));
@@ -120,7 +120,7 @@ export class RepositoryOverviewComponent implements OnInit {
                             this.ngRedux.dispatch(RepositoryManagementActions.addRepositoryApplications(apps));
                         },
                         reason => this.logger.handleError('[marketplace-overview.component][getApps]', reason)
-                    )
+                    );
             });
     }
 

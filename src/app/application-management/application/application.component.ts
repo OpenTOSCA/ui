@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 })
 export class ApplicationComponent {
     @select(['container', 'currentApp']) app: Observable<Csar>;
+
     constructor() {
     }
 }

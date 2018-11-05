@@ -57,7 +57,7 @@ export function applicationManagementReducer(state: ApplicationManagementState =
             });
         case ApplicationManagementActions.UPDATE_CURRENT_APPLICATION:
             return Object.assign({}, state, {
-                currentApp : action.payload
+                currentApp: action.payload
             });
         case ApplicationManagementActions.CLEAR_CURRENT_APPLICATION:
             return Object.assign({}, state, {

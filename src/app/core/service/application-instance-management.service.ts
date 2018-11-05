@@ -40,6 +40,6 @@ export class ApplicationInstanceManagementService {
                         }
                     }
                 })
-            )
+            );
     }
 }

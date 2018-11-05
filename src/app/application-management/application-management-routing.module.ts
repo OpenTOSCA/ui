@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { ApplicationDetailResolverService } from './application-detail/application-detail-resolver.service';
 import { ApplicationInstanceDetailResolverService } from './application-instance-detail/application-instance-detail-resolver.service';
@@ -54,7 +54,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
-export class ApplicationManagementRoutingModule { }
+export class ApplicationManagementRoutingModule {
+}

@@ -16,27 +16,31 @@ import { Action } from '../store/store.action';
 import { ConfigurationActions } from './configuration-actions';
 
 export interface ConfigurationState {
-    containerAPI?: string;
-    repositoryAPI?: string;
+    containerUrl?: string;
+    repositoryUrl?: string;
+    planLifecycleInterface?: string;
+    planOperationInitiate?: string;
+    planOperationTerminate?: string;
+
+    // TODO: Refactor to use single configuration items
     buildPlanPath?: string;
     terminationPlanPath?: string;
-    opentoscaLifecycleInterfaceName?: string;
-    initiationOperationName?: string;
-    terminationOperationName?: string;
 }
 
 export const INITIAL_STATE: ConfigurationState = {
-    containerAPI: 'http://localhost:1337',
-    repositoryAPI: 'http://localhost:8080/winery/servicetemplates/',
+    containerUrl: 'http://localhost:1337',
+    repositoryUrl: 'http://localhost:8080/winery/servicetemplates',
+    planLifecycleInterface: 'OpenTOSCA-Lifecycle-Interface',
+    planOperationInitiate: 'initiate',
+    planOperationTerminate: 'terminate',
+
+    // TODO: Refactor to use single configuration items
     buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
     terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan',
-    opentoscaLifecycleInterfaceName: 'OpenTOSCA-Lifecycle-Interface',
-    initiationOperationName: 'initiate',
-    terminationOperationName: 'terminate'
 };
 
 export function configurationReducer(state: ConfigurationState = INITIAL_STATE,
-                                             action: Action): ConfigurationState {
+                                     action: Action): ConfigurationState {
     switch (action.type) {
         case ConfigurationActions.UPDATE_REPOSITORY_URL:
             let url = action.payload;
@@ -44,11 +48,11 @@ export function configurationReducer(state: ConfigurationState = INITIAL_STATE,
                 url = url + '/';
             }
             return Object.assign({}, state, {
-                repositoryAPI: url
+                repositoryUrl: url
             });
         case ConfigurationActions.UPDATE_CONTAINER_URL:
             return Object.assign({}, state, {
-                containerAPI: action.payload
+                containerUrl: action.payload
             });
         case ConfigurationActions.UPDATE_TERMINATIONPLANPATH:
             return Object.assign({}, state, {

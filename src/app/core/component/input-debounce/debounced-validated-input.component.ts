@@ -11,7 +11,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -19,18 +19,18 @@ import { HttpClient } from '@angular/common/http';
     selector: 'opentosca-debounced-validated-input',
     template: `
         <div
-                class="form-group has-feedback"
-                [ngClass]="{
+            class="form-group has-feedback"
+            [ngClass]="{
                     'has-success': inputValidated && inputValid,
                     'has-danger': inputValidated && !inputValid
                 }">
             <input
-                    type="text"
-                    class="form-control"
-                    [placeholder]="placeholder"
-                    opentoscaDebounce
-                    (debouncedValue)="updateAndValidate($event)"
-                    [ngClass]="{
+                type="text"
+                class="form-control"
+                [placeholder]="placeholder"
+                opentoscaDebounce
+                (debouncedValue)="updateAndValidate($event)"
+                [ngClass]="{
                         'form-control-success': inputValidated && inputValid,
                         'form-control-danger': inputValidated && !inputValid
                     }">

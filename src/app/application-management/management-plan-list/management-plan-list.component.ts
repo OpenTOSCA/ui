@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 import { ManagementPlanService } from '../../core/service/management-plan.service';
 import { PlanList } from '../../core/model/plan-list.model';

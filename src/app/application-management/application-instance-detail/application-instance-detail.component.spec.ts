@@ -17,23 +17,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplicationInstanceDetailComponent } from './application-instance-detail.component';
 
 describe('ApplicationInstanceDetailComponent', () => {
-  let component: ApplicationInstanceDetailComponent;
-  let fixture: ComponentFixture<ApplicationInstanceDetailComponent>;
+    let component: ApplicationInstanceDetailComponent;
+    let fixture: ComponentFixture<ApplicationInstanceDetailComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ApplicationInstanceDetailComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ApplicationInstanceDetailComponent]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ApplicationInstanceDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ApplicationInstanceDetailComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

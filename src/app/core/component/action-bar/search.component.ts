@@ -11,7 +11,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'opentosca-search',
@@ -21,11 +21,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     template: `
         <div class="mr-sm-2">
             <input
-                    type="text"
-                    pInputText
-                    [placeholder]="placeholder"
-                    opentoscaDebounce
-                    (debouncedValue)="valueChanged($event)">
+                type="text"
+                pInputText
+                [placeholder]="placeholder"
+                opentoscaDebounce
+                (debouncedValue)="valueChanged($event)">
         </div>
     `
 })

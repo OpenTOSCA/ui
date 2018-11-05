@@ -1,0 +1,19 @@
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+$ot-info: #007ad9;
+$ot-info-hover: #116fbf;
+$ot-success: #34A835;
+$ot-success-hover: #107D11;
+$ot-warning: #D38B10;
+$ot-warning-hover: #ED990B;
+$ot-danger: #e91224;
+$ot-danger-hover: #c01120;
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -12,18 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { ApplicationDetailResolverService } from './application-detail-resolver.service';
 
 describe('ApplicationDetailResolverService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ApplicationDetailResolverService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [ApplicationDetailResolverService]
+        });
     });
-  });
 
-  it('should ...', inject([ApplicationDetailResolverService], (service: ApplicationDetailResolverService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should ...', inject([ApplicationDetailResolverService], (service: ApplicationDetailResolverService) => {
+        expect(service).toBeTruthy();
+    }));
 });

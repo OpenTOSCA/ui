@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import {TopologyTemplate} from './topology-template.model';
+import { TopologyTemplate } from './topology-template.model';
 
 export class InjectionOption {
 

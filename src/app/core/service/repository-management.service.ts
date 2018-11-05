@@ -47,7 +47,7 @@ export class RepositoryManagementService {
                 // TODO: Check, if Apps are already installed in container
                 catchError(err => this.logger.handleError('[marketplace.service][getAppsFromMarketPlace]', err)
                 )
-            )
+            );
     }
 
     /**
@@ -68,21 +68,21 @@ export class RepositoryManagementService {
         return this.http.get(selfServiceURL, httpOptions)
             .pipe(
                 map(response => {
-                    const app = response as MarketplaceApplication;
-                    app.iconUrl = selfServiceURL + '/' + app.iconUrl;
-                    app.imageUrl = selfServiceURL + '/' + app.imageUrl;
-                    app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
-                    app.repositoryURL = url;
-                    app.id = appReference.id;
-                    app.isInstalling = false;
-                    if (!app.displayName || app.displayName === '') {
-                        app.displayName = appReference.id;
+                        const app = response as MarketplaceApplication;
+                        app.iconUrl = selfServiceURL + '/' + app.iconUrl;
+                        app.imageUrl = selfServiceURL + '/' + app.imageUrl;
+                        app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
+                        app.repositoryURL = url;
+                        app.id = appReference.id;
+                        app.isInstalling = false;
+                        if (!app.displayName || app.displayName === '') {
+                            app.displayName = appReference.id;
+                        }
+                        return app;
                     }
-                    return app;
-                }
-            ),
+                ),
                 catchError(err => this.logger.handleError('[marketplace.service][getAppFromMarketPlace]', err))
-            )
+            );
     }
 
     /**
@@ -97,7 +97,7 @@ export class RepositoryManagementService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.post(containerURL, app, httpOptions)
+        return this.http.post(containerURL, app, httpOptions);
     }
 
     /**
@@ -143,6 +143,6 @@ export class RepositoryManagementService {
                     return app;
                 }),
                 catchError(err => this.logger.handleError('[marketplace.service][getAppDescription]', err))
-            )
+            );
     }
 }

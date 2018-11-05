@@ -12,10 +12,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ServiceTemplateInstance} from '../../core/model/service-template-instance.model';
-import {BuildplanMonitoringService} from '../../core/service/buildplan-monitoring.service';
-import {PlanInstance} from '../../core/model/plan-instance.model';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
+import { BuildplanMonitoringService } from '../../core/service/buildplan-monitoring.service';
+import { PlanInstance } from '../../core/model/plan-instance.model';
 
 @Component({
     selector: 'opentosca-buildplan-monitor',

@@ -12,9 +12,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import {OpenToscaLoggerService} from './open-tosca-logger.service';
+import { OpenToscaLoggerService } from './open-tosca-logger.service';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { InjectionOption } from '../model/injection-option.model';
 import { InjectionOptions } from '../model/injection-options.model';
@@ -110,7 +110,7 @@ export class DeploymentCompletionService {
 
     getAppFromCompletionHandlerWinery(serviceTemplateUrl: string, appId: string): Promise<MarketplaceApplication> {
         const selfServiceURL = serviceTemplateUrl + '/selfserviceportal';
-        const headers = new Headers({'Accept': 'application/json'});
+        const headers = new Headers({ 'Accept': 'application/json' });
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'

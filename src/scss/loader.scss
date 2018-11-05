@@ -12,7 +12,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-
 /**
  * Custom Preloading Screen
  * https://ihatetomatoes.net/create-custom-preloading-screen/
@@ -30,77 +29,77 @@ $loader-three-spin: 1.5s;
 $loader-three-color: #f9c922;
 
 #loader-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
 
-  background: #222;
+    background: #222;
 }
 
 #loader {
-  display: block;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  z-index: 1500;
-  border-radius: 50%;
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    z-index: 1500;
+    border-radius: 50%;
 
-  // First loading animation
-  border: $loader-width solid transparent;
-  border-top-color: $loader-one-color;
-  animation: spin $loader-one-spin linear infinite;
+    // First loading animation
+    border: $loader-width solid transparent;
+    border-top-color: $loader-one-color;
+    animation: spin $loader-one-spin linear infinite;
 
-  &:before {
-      content: "";
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      right: 5px;
-      bottom: 5px;
-      border-radius: 50%;
+    &:before {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 50%;
 
-      // Second loading animation
-      border: $loader-width solid transparent;
-      border-top-color: $loader-two-color;
-      animation: spin $loader-two-spin linear infinite;
-  }
+        // Second loading animation
+        border: $loader-width solid transparent;
+        border-top-color: $loader-two-color;
+        animation: spin $loader-two-spin linear infinite;
+    }
 
-  &:after {
-      content: "";
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
-      border-radius: 50%;
+    &:after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        border-radius: 50%;
 
-      // Third loading animation
-      border: $loader-width solid transparent;
-      border-top-color: $loader-three-color;
-      animation: spin $loader-three-spin linear infinite;
-  }
+        // Third loading animation
+        border: $loader-width solid transparent;
+        border-top-color: $loader-three-color;
+        animation: spin $loader-three-spin linear infinite;
+    }
 }
 
 @-webkit-keyframes spin {
-  0%   {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  0%   {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

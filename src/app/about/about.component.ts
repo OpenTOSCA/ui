@@ -11,27 +11,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
-import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
-import { AppState } from '../store/app-state.model';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'opentosca-about',
     templateUrl: './about.component.html',
-    styleUrls: ['./about.component.scss'],
-    // encapsulation: ViewEncapsulation.None
 })
-
 export class AboutComponent implements OnInit {
 
-    ngOnInit(): void {
-        const breadCrumbs = [];
-        breadCrumbs.push({label: 'About'});
-        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
+    constructor(/* private ngRedux: NgRedux<AppState> */) {
     }
 
-    constructor(private ngRedux: NgRedux<AppState>) {
+    ngOnInit(): void {
+        // const breadCrumbs = [];
+        // breadCrumbs.push({ label: 'About' });
+        // this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
     }
 }
-

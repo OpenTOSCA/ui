@@ -32,7 +32,7 @@ export class ConfigurationService {
      * @returns {string}
      */
     getWineryAPIURL(): string {
-        return this.ngRedux.getState().administration.repositoryAPI;
+        return this.ngRedux.getState().administration.repositoryUrl;
     }
 
     /**
@@ -49,7 +49,7 @@ export class ConfigurationService {
      * @returns {string}
      */
     getContainerAPIURL(): string {
-        return this.ngRedux.getState().administration.containerAPI;
+        return this.ngRedux.getState().administration.containerUrl;
     }
 
     /**
@@ -103,7 +103,7 @@ export class ConfigurationService {
                 'Accept': 'application/json'
             })
         };
-        return this.http.get(this.ngRedux.getState().administration.containerAPI, httpOptions)
+        return this.http.get(this.ngRedux.getState().administration.containerUrl, httpOptions);
     }
 
     /**
@@ -116,6 +116,6 @@ export class ConfigurationService {
                 'Accept': 'application/json'
             })
         };
-        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, httpOptions)
+        return this.http.get(this.ngRedux.getState().administration.repositoryUrl, httpOptions);
     }
 }

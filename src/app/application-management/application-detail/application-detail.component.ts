@@ -54,12 +54,12 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
      */
     public showParam(name: string): boolean {
         return (!(name === 'CorrelationID' ||
-        name === 'csarID' ||
-        name === 'serviceTemplateID' ||
-        name === 'containerApiAddress' ||
-        name === 'instanceDataAPIUrl' ||
-        name === 'planCallbackAddress_invoker' ||
-        name === 'csarEntrypoint'));
+            name === 'csarID' ||
+            name === 'serviceTemplateID' ||
+            name === 'containerApiAddress' ||
+            name === 'instanceDataAPIUrl' ||
+            name === 'planCallbackAddress_invoker' ||
+            name === 'csarEntrypoint'));
     }
 
     /**
@@ -68,7 +68,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         const breadCrumbs = [];
-        breadCrumbs.push({label: 'Applications', routerLink: 'applications'});
+        breadCrumbs.push({ label: 'Applications', routerLink: 'applications' });
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
         this.route.data.subscribe((data: { csar: Csar }) => {
             this.ngRedux.dispatch(ApplicationManagementActions.updateCurrentApplication(data.csar));
@@ -92,7 +92,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                     severity: 'warn',
                     summary: 'Loading of Data failed',
                     detail: 'Loading of data for the selected app failed. Please try to load it again. Server returned: ' +
-                    JSON.stringify(reason)
+                        JSON.stringify(reason)
                 }
             ));
 

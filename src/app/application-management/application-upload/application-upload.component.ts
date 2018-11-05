@@ -12,8 +12,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, NgZone, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
+import { Component, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
+import { UploaderOptions, UploadFile, UploadInput, UploadOutput } from 'ngx-uploader';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
@@ -76,7 +76,7 @@ export class ApplicationUploadComponent implements OnInit {
     ngOnInit(): void {
         this.options = {
             concurrency: 1,
-        }
+        };
     }
 
     closeModal(): void {
@@ -84,7 +84,7 @@ export class ApplicationUploadComponent implements OnInit {
     }
 
     adaptRoute(): void {
-        this.router.navigate(['../applications', {outlets: {modal: null}}]);
+        this.router.navigate(['../applications', { outlets: { modal: null } }]);
     }
 
     /**
@@ -145,7 +145,7 @@ export class ApplicationUploadComponent implements OnInit {
      * Abort an upload in progress
      */
     abortUpload(): void {
-        this.uploadInput.emit({type: 'cancelAll'});
+        this.uploadInput.emit({ type: 'cancelAll' });
         this.resetUploadStats();
     }
 

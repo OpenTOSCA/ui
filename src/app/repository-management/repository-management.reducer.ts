@@ -26,7 +26,7 @@ export const INITIAL_STATE: RepositoryManagementState = {
 };
 
 export function repositoryManagementReducer(state: RepositoryManagementState = INITIAL_STATE,
-                                             action: Action): RepositoryManagementState {
+                                            action: Action): RepositoryManagementState {
     switch (action.type) {
 
         case RepositoryManagementActions.ADD_REPOSITORY_APPLICATIONS:

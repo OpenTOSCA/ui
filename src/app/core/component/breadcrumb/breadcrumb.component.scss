@@ -12,19 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-
 body a.ui-state-active, body a.ui-state-highlight {
-  span.ui-menuitem-text {
-    background-color: #ffffff;
-  }
+    span.ui-menuitem-text {
+        background-color: #ffffff;
+    }
 }
 
 .ui-breadcrumb--no-background {
-  background: none;
+    background: none;
 }
 
 .ui-breadcrumb--border-bottom {
-  border-top: none;
-  border-left: none;
-  border-right: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }

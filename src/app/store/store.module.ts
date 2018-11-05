@@ -12,17 +12,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Inject, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store';
-import { NgReduxRouterModule, NgReduxRouter } from '@angular-redux/router';
-
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { DevToolsExtension, NgRedux, NgReduxModule } from '@angular-redux/store';
+import { NgReduxRouter, NgReduxRouterModule } from '@angular-redux/router';
 // Redux ecosystem stuff.
 import { createLogger } from 'redux-logger';
 import { AppState } from './app-state.model';
 import { rootReducer } from './store.reducer';
 import { INITIAL_STATE as ApplicationManagementInitialState } from '../application-management/application-management.reducer';
 import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/configuration.reducer';
-import { DOCUMENT } from '@angular/common';
 
 @NgModule({
     imports: [
@@ -42,16 +40,19 @@ export class StoreModule {
         // chrome extension is available in the browser, tell Redux about
         // it too.
         const configState = ConfigurationInitialState;
-        configState.containerAPI = `http://${this.document.location.hostname}:1337`;
-        configState.repositoryAPI = `http://${this.document.location.hostname}:8080/winery/servicetemplates/`;
+
+        // TODO: Trigger this update as an action on app start
+        configState.containerUrl = `http://${this.document.location.hostname}:1337`;
+        configState.repositoryUrl = `http://${this.document.location.hostname}:8080/winery/servicetemplates/`;
+
         store.configureStore(
             rootReducer,
             {
                 container: ApplicationManagementInitialState,
                 administration: configState
             },
-            [ createLogger() ],
-            devTools.isEnabled() ? [ devTools.enhancer() ] : []);
+            [createLogger()],
+            devTools.isEnabled() ? [devTools.enhancer()] : []);
 
         // Enable syncing of Angular router state with our Redux store.
         ngReduxRouter.initialize();

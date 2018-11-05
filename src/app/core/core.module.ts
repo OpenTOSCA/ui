@@ -36,7 +36,7 @@ import { FilterOutputParams } from './pipe/filter-output-params.pipe';
 import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
 import { DebounceDirective } from './directive/debounce.directive';
 import { ManagementPlanService } from './service/management-plan.service';
-import {DeploymentTestService} from './service/deployment-test.service';
+import { DeploymentTestService } from './service/deployment-test.service';
 
 @NgModule({
     imports: [

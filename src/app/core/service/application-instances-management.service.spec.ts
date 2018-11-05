@@ -12,18 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { ApplicationInstancesManagementService } from './application-instances-management.service';
 
 describe('ApplicationInstancesManagementService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ApplicationInstancesManagementService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [ApplicationInstancesManagementService]
+        });
     });
-  });
 
-  it('should ...', inject([ApplicationInstancesManagementService], (service: ApplicationInstancesManagementService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should ...', inject([ApplicationInstancesManagementService], (service: ApplicationInstancesManagementService) => {
+        expect(service).toBeTruthy();
+    }));
 });

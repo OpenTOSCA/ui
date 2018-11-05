@@ -36,7 +36,7 @@ export class DeploymentTestService {
             .pipe(
                 map((data: any) => data.items),
                 catchError(error => this.logger.handleObservableError('[deployment-test.service][getDeploymentTests]', error))
-            )
+            );
     }
 
     runDeploymentTest(serviceTemplateInstance: ServiceTemplateInstance): Observable<Object> {

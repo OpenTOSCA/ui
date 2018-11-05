@@ -19,8 +19,8 @@ import { ServiceTemplateList } from '../model/service-template-list.model';
 import { ServiceTemplate } from '../model/service-template.model';
 import { ServiceTemplateInstanceList } from '../model/service-template-instance-list.model';
 import { ServiceTemplateInstance } from '../model/service-template-instance.model';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { forkJoin, Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { forkJoin, Observable } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 
 @Injectable()
@@ -49,30 +49,30 @@ export class ApplicationInstancesManagementService {
                                             for (const entry of instanceList.service_template_instances) {
                                                 obs.push(this.http.get(entry._links['self'].href, httpOptions));
                                             }
-                                                return forkJoin(obs)
-                                                    /*.pipe(
-                                                        mergeMap((rawFullInstances: Array<HttpResponse<any>>) => {
-                                                            const resultAry: Array<ServiceTemplateInstance> = [];
-                                                            for (const r of rawFullInstances) {
-                                                                resultAry.push(r.json());
-                                                            }
-                                                            return of(resultAry);
-                                                        })
-                                                    );*/
-                                            }),
-                                            catchError(reason => this.logger.handleError(
-                                                '[application-instances.service][getServiceTemplateInstances][fetching instances]',
-                                                reason))
-                                    )
+                                            return forkJoin(obs);
+                                            /*.pipe(
+                                                mergeMap((rawFullInstances: Array<HttpResponse<any>>) => {
+                                                    const resultAry: Array<ServiceTemplateInstance> = [];
+                                                    for (const r of rawFullInstances) {
+                                                        resultAry.push(r.json());
+                                                    }
+                                                    return of(resultAry);
+                                                })
+                                            );*/
+                                        }),
+                                        catchError(reason => this.logger.handleError(
+                                            '[application-instances.service][getServiceTemplateInstances][fetching instances]',
+                                            reason))
+                                    );
                             }),
                             catchError(reason => this.logger.handleError(
                                 '[application-instances.service][getServiceTemplateInstances][fetching service template]',
                                 reason))
-                        )
+                        );
                 }),
                 catchError(reason => this.logger.handleError(
                     '[application-instances.service][getServiceTemplateInstances][fetching service template list]',
                     reason))
-            )
+            );
     }
 }

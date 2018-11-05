@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 @import "../node_modules/primeicons/primeicons.css";
 @import "../node_modules/primeng/resources/themes/nova-light/theme.css";
 @import "../node_modules/primeng/resources/primeng.css";
@@ -21,11 +20,15 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 
 @import "../node_modules/primeflex/primeflex";
 
+@import "scss/helper";
+@import "scss/inputgroup";
 
 
 
-
-.img-fluid {
-    max-width: 100%;
-    height: auto;
+body {
+    margin: 0;
+    min-height: 100%;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 }

@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import {TopologyDocumentationElement} from './topology-documentation-element.model';
+import { TopologyDocumentationElement } from './topology-documentation-element.model';
 
 export class TopologyTemplate {
 

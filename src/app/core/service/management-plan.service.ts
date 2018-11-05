@@ -38,6 +38,6 @@ export class ManagementPlanService {
                     this.logger.handleObservableError('[management-plan.service][getManagementPlans]', err);
                     return throwError(err);
                 })
-            )
+            );
     }
 }

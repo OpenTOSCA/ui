@@ -66,7 +66,7 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
                     this.serviceTemplateInstance = data.serviceTemplateInstance;
                     this.deploymentTests = this.deploymentTestService.getDeploymentTests(data.serviceTemplateInstance);
                     const breadCrumbs = [];
-                    breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
+                    breadCrumbs.push({ label: 'Applications', routerLink: '/applications' });
                     breadCrumbs.push(
                         {
                             label: data.serviceTemplateInstance.csar_id,
@@ -75,7 +75,7 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
                     breadCrumbs.push(
                         {
                             label: 'Instance: '
-                            + data.serviceTemplateInstance.id
+                                + data.serviceTemplateInstance.id
                         }
                     );
                     this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));

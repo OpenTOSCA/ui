@@ -14,7 +14,6 @@
 import { Message } from 'primeng/primeng';
 import { Action } from '../../store/store.action';
 import { GrowlActions } from './growl-actions';
-import * as _ from 'lodash';
 
 export interface GrowlState {
     messages?: Array<Message>;
@@ -24,8 +23,7 @@ export const INITIAL_STATE: GrowlState = {
     messages: []
 };
 
-export function growlReducer(state: GrowlState = INITIAL_STATE,
-                             action: Action): GrowlState {
+export function growlReducer(state: GrowlState = INITIAL_STATE, action: Action): GrowlState {
     switch (action.type) {
         case GrowlActions.ADD_GROWL:
             const newState = Object.assign({}, state);

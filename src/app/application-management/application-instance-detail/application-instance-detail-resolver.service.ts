@@ -28,7 +28,7 @@ export class ApplicationInstanceDetailResolverService implements Resolve<Service
                 catchError(reason => {
                     return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);
                 })
-            )
+            );
     }
 
     constructor(private appInstService: ApplicationInstanceManagementService, private logger: OpenToscaLoggerService) {

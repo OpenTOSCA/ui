@@ -12,18 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { RepositoryManagementService } from './repository-management.service';
 
 describe('RepositoryManagementService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [RepositoryManagementService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [RepositoryManagementService]
+        });
     });
-  });
 
-  it('should ...', inject([RepositoryManagementService], (service: RepositoryManagementService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should ...', inject([RepositoryManagementService], (service: RepositoryManagementService) => {
+        expect(service).toBeTruthy();
+    }));
 });

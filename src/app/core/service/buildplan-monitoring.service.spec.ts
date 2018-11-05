@@ -12,18 +12,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { BuildplanMonitoringService } from './buildplan-monitoring.service';
 
 describe('BuildplanMonitoringService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [BuildplanMonitoringService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [BuildplanMonitoringService]
+        });
     });
-  });
 
-  it('should be created', inject([BuildplanMonitoringService], (service: BuildplanMonitoringService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([BuildplanMonitoringService], (service: BuildplanMonitoringService) => {
+        expect(service).toBeTruthy();
+    }));
 });

@@ -27,8 +27,7 @@ import { NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
 import { HttpClientModule } from '@angular/common/http';
-// PrimeNG Stuff
-import {TabMenuModule} from 'primeng/tabmenu';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
     declarations: [
@@ -52,7 +51,9 @@ import {TabMenuModule} from 'primeng/tabmenu';
         ConfigurationModule,
         CoreModule,
         StoreModule,
-        AppRoutingModule, // this must be the last routing module, because it contains '' and ** routing
+
+        // AppRoutingModule must be the last routing module
+        AppRoutingModule
     ],
     providers: [],
     bootstrap: [

@@ -22,9 +22,9 @@ import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
-  selector: 'opentosca-configuration-management',
-  templateUrl: './configuration-management.component.html',
-  styleUrls: ['./configuration-management.component.scss']
+    selector: 'opentosca-configuration-management',
+    templateUrl: './configuration-management.component.html',
+    styleUrls: ['./configuration-management.component.scss']
 })
 export class ConfigurationManagementComponent implements OnInit {
 
@@ -47,7 +47,7 @@ export class ConfigurationManagementComponent implements OnInit {
     ngOnInit(): void {
 
         const breadCrumbs = [];
-        breadCrumbs.push({label: 'Administration'});
+        breadCrumbs.push({ label: 'Administration' });
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
 
         this.containerAPI.subscribe(value => this.checkAvailabilityOfContainer());
@@ -81,7 +81,7 @@ export class ConfigurationManagementComponent implements OnInit {
     checkAvailabilityOfContainer(): void {
         this.configService.isContainerAvailable()
             .subscribe(success => this.containerAPIAvailable = true,
-                    err => this.containerAPIAvailable = false);
+                err => this.containerAPIAvailable = false);
     }
 
     /**
@@ -90,7 +90,7 @@ export class ConfigurationManagementComponent implements OnInit {
     checkAvailabilityOfRepository(): void {
         this.configService.isRepositoryAvailable()
             .subscribe(success => this.repositoryAPIAvailable = true,
-                    err => this.repositoryAPIAvailable = false);
+                err => this.repositoryAPIAvailable = false);
     }
 
     /**

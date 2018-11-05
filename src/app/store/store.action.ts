@@ -12,7 +12,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-export interface Action {
-    type: string;
+import { AnyAction } from 'redux';
+
+export interface Action extends AnyAction {
     payload: any;
 }

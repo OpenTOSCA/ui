@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryOverviewComponent } from './repository-overview/repository-overview.component';
 
@@ -30,7 +30,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
-export class RepositoryManagementRoutingModule { }
+export class RepositoryManagementRoutingModule {
+}

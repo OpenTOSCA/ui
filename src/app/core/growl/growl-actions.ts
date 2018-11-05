@@ -18,6 +18,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class GrowlActions {
+
     static ADD_GROWL = 'ADD_GROWL';
     static UPDATE_GROWLS = 'UPDATE_GROWLS';
 
