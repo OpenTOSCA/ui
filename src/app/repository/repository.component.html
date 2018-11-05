@@ -42,15 +42,15 @@
             <p-footer>
                 <button pButton type="button" (click)="open(app.repositoryURL)"
                         class="ui-button-info" icon="fas fa-external-link-alt"
-                        pTooltip="Show details..." showDelay="2000" tooltipPosition="top"></button>
+                        pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
                 &nbsp;
                 <button pButton type="button" (click)="open(app.csarURL)"
                         class="ui-button-info" icon="fas fa-download"
-                        pTooltip="Download as CSAR..." showDelay="2000" tooltipPosition="top"></button>
+                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"></button>
                 &nbsp;
                 <button pButton type="button" (click)="install(app)"
                         class="ui-button-info" icon="fas fa-plus-circle"
-                        pTooltip="Install in OpenTOSCA Container" showDelay="2000" tooltipPosition="top"
+                        pTooltip="Install in OpenTOSCA Container" showDelay="500" tooltipPosition="top"
                         *ngIf="!app.inContainer && !app.isInstalling"></button>
                 <button type="button"
                         class="ui-button-secondary ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only spinner"
@@ -59,12 +59,13 @@
                     <sk-three-bounce class="ui-button-icon"></sk-three-bounce>
                 </button>
                 <button pButton type="button" class="ui-button-success" icon="fas fa-check"
-                        pTooltip="Already installed in OpenTOSCA Container" showDelay="2000" tooltipPosition="top"
+                        pTooltip="Already installed in OpenTOSCA Container" tooltipPosition="top"
                         *ngIf="app.inContainer && !app.isInstalling"></button>
             </p-footer>
         </p-card>
     </div>
 </div>
+<!--TODO-->
 <!--<opentosca-deployment-completion *ngIf="startCompletionProcess" [appToComplete]="appToComplete"-->
 <!--[linkToWineryResource]="linkToWineryResource" (completionSuccessful)="installInContainer($event)">-->
 <!--</opentosca-deployment-completion>-->

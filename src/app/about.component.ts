@@ -12,8 +12,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Component, OnInit } from '@angular/core';
-import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
-import { AppState } from '../store/app-state.model';
+import { BreadcrumbActions } from './core/component/breadcrumb/breadcrumb-actions';
+import { AppState } from './store/app-state.model';
 import { NgRedux } from '@angular-redux/store';
 import { MenuItem } from 'primeng/api';
 
@@ -29,8 +29,8 @@ export class AboutComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // const breadCrumbs = [];
-        // breadCrumbs.push();
-        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([{ label: 'About', routerLink: ['/about'] }]));
+        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
+            { label: 'About', routerLink: ['/about'] }
+        ]));
     }
 }

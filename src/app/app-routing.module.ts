@@ -11,11 +11,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { AboutComponent } from './about/about.component';
+import { AboutComponent } from './about.component';
 
 const routes: Routes = [
     {

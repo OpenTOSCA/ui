@@ -14,7 +14,7 @@
 
 import { Injectable } from '@angular/core';
 import { OpenToscaLoggerService } from './open-tosca-logger.service';
-import { Path } from '../util/path';
+import { Path } from '../path';
 import * as _ from 'lodash';
 import { CsarList } from '../model/csar-list.model';
 import { Csar } from '../model/csar.model';
@@ -28,6 +28,11 @@ import { catchError, flatMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class ApplicationManagementService {
+    constructor(private http: HttpClient,
+                private ngRedux: NgRedux<AppState>,
+                private logger: OpenToscaLoggerService) {
+    }
+
     /**
      * Helper that ensures that appID always ends with .csar
      * @param appID
@@ -35,11 +40,6 @@ export class ApplicationManagementService {
      */
     public fixAppID(appID: string): string {
         return _.endsWith(appID.toLowerCase(), '.csar') ? appID : appID + '.csar';
-    }
-
-    constructor(private http: HttpClient,
-                private ngRedux: NgRedux<AppState>,
-                private logger: OpenToscaLoggerService) {
     }
 
     /**
@@ -255,8 +255,8 @@ export class ApplicationManagementService {
         };
         return this.http.get(csarUrl, httpOptions)
             .toPromise()
-            .then(response => true)
-            .catch(reason => false);
+            .then(() => true)
+            .catch(() => false);
     }
 
     /**

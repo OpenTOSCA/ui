@@ -21,7 +21,6 @@
         <div class="p-col-6">
             <div class="ui-inputgroup">
                 <input id="containerUrl" type="text" pInputText placeholder="Enter Container API URL here"
-                       [ngModel]="containerUrl | async"
                        [formControl]="containerUrlControl"
                        [ngClass]="{'ot-has-success': containerUrlAvailable, 'ot-has-error': !containerUrlAvailable}">
                 <span class="ui-inputgroup-addon">
@@ -38,7 +37,6 @@
         <div class="p-col-6">
             <div class="ui-inputgroup">
                 <input id="repositoryUrl" type="text" pInputText placeholder="Enter Repository API URL here"
-                       [ngModel]="repositoryUrl | async"
                        [formControl]="repositoryUrlControl"
                        [ngClass]="{'ot-has-success': repositoryUrlAvailable, 'ot-has-error': !repositoryUrlAvailable}">
                 <span class="ui-inputgroup-addon">
@@ -58,7 +56,6 @@
         </div>
         <div class="p-col-6">
             <input id="planLifecycleInterface" type="text" pInputText placeholder="Enter name here"
-                   [ngModel]="planLifecycleInterface | async"
                    [formControl]="planLifecycleInterfaceControl">
         </div>
     </div>
@@ -68,7 +65,6 @@
         </div>
         <div class="p-col-6">
             <input id="planOperationInitiate" type="text" pInputText placeholder="Enter name here"
-                   [ngModel]="planOperationInitiate | async"
                    [formControl]="planOperationInitiateControl">
         </div>
     </div>
@@ -78,7 +74,6 @@
         </div>
         <div class="p-col-6">
             <input id="planOperationTerminate" type="text" pInputText pInputText placeholder="Enter name here"
-                   [ngModel]="planOperationTerminate | async"
                    [formControl]="planOperationTerminateControl">
         </div>
     </div>

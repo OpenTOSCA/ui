@@ -24,7 +24,7 @@ import { ApplicationManagementActions } from '../application-management-actions'
 import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
 import { DeploymentCompletionService } from '../../core/service/deployment-completion.service';
 import { RepositoryService } from '../../core/service/repository.service';
-import { Path } from '../../core/util/path';
+import { Path } from '../../core/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';

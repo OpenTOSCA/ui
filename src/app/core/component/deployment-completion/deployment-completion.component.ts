@@ -23,8 +23,8 @@ import { DeploymentCompletionService } from '../../service/deployment-completion
     templateUrl: 'deployment-completion.component.html',
 })
 export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
-    @Input('appToComplete') appToComplete: MarketplaceApplication;
-    @Input('linkToWineryResource') linkToWineryResource: string;
+    @Input() appToComplete: MarketplaceApplication;
+    @Input() linkToWineryResource: string;
     @Output() completionSuccessful = new EventEmitter<MarketplaceApplication>();
 
     public showCompleteConfirmationModal = true;

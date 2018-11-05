@@ -22,8 +22,9 @@ import { RepositoryService } from '../core/service/repository.service';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { ApplicationManagementService } from '../core/service/application-management.service';
 import { OpenToscaLoggerService } from '../core/service/open-tosca-logger.service';
-import { Path } from '../core/util/path';
+import { Path } from '../core/path';
 import { CsarUploadReference } from '../core/model/csar-upload-request.model';
+import { GrowlActions } from '../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-repository',
@@ -108,6 +109,11 @@ export class RepositoryComponent implements OnInit {
                     // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
                     // this.startCompletionProcess = true;
                 } else {
+                    this.ngRedux.dispatch(GrowlActions.addGrowl({
+                        severity: 'error',
+                        summary: 'Error installing application in OpenTOSCA Container',
+                        detail: err.message
+                    }));
                     this.applicationService.isAppDeployedInContainer(app.id)
                         .then(result => {
                             app.inContainer = result;

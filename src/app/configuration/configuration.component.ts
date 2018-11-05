@@ -14,19 +14,19 @@
 import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { FormControl } from '@angular/forms';
-import { ConfigurationService } from '../configuration.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import { AppState } from '../../store/app-state.model';
+import { ConfigurationService } from './configuration.service';
+import { OpenToscaLoggerService } from '../core/service/open-tosca-logger.service';
+import { AppState } from '../store/app-state.model';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
+import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
 
 @Component({
     selector: 'opentosca-configuration-management',
-    templateUrl: './configuration-management.component.html',
-    styleUrls: ['./configuration-management.component.scss']
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.scss']
 })
-export class ConfigurationManagementComponent implements OnInit {
+export class ConfigurationComponent implements OnInit {
 
     @select(['administration', 'containerUrl']) containerUrl: Observable<string>;
     public containerUrlControl: FormControl = new FormControl();
@@ -35,7 +35,6 @@ export class ConfigurationManagementComponent implements OnInit {
     @select(['administration', 'repositoryUrl']) repositoryUrl: Observable<string>;
     public repositoryUrlControl: FormControl = new FormControl();
     public repositoryUrlAvailable: boolean;
-
 
     @select(['administration', 'planLifecycleInterface']) planLifecycleInterface: Observable<string>;
     public planLifecycleInterfaceControl: FormControl = new FormControl();
@@ -53,8 +52,18 @@ export class ConfigurationManagementComponent implements OnInit {
 
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([{ label: 'Administration', routerLink: ['/administration'] }]));
 
-        this.containerUrl.subscribe(() => this.checkAvailabilityOfContainer());
-        this.repositoryUrl.subscribe(() => this.checkAvailabilityOfRepository());
+        this.containerUrl.subscribe(value => {
+            this.checkAvailabilityOfContainer();
+            this.containerUrlControl.setValue(value);
+        });
+        this.repositoryUrl.subscribe(value => {
+                this.checkAvailabilityOfRepository();
+                this.repositoryUrlControl.setValue(value);
+            }
+        );
+        this.planLifecycleInterface.subscribe(value => this.planLifecycleInterfaceControl.setValue(value));
+        this.planOperationInitiate.subscribe(value => this.planOperationInitiateControl.setValue(value));
+        this.planOperationTerminate.subscribe(value => this.planOperationTerminateControl.setValue(value));
 
         this.containerUrlControl.valueChanges
             .pipe(

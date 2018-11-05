@@ -13,12 +13,12 @@
  */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConfigurationManagementComponent } from './configuration-management/configuration-management.component';
+import { ConfigurationComponent } from './configuration.component';
 
 const routes: Routes = [
     {
         path: 'administration',
-        component: ConfigurationManagementComponent
+        component: ConfigurationComponent
     },
 ];
 

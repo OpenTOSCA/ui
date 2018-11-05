@@ -21,12 +21,6 @@ export class OpenToscaLoggerService {
     constructor(private datePipe: DatePipe) {
     }
 
-    /**
-     * Print errors to console
-     * @param location string that indicates where the error occurred
-     * @param error
-     * @returns {Promise<void>|Promise<any>}
-     */
     public handleError(location: string, error: any): Promise<any> {
         console.error('[', new Date(), ']', location, ': ', error);
         return Promise.reject(error.message || error);
@@ -41,13 +35,7 @@ export class OpenToscaLoggerService {
         }
     }
 
-    /**
-     * Print log messages to console
-     * @param location
-     * @param message
-     */
     public log(location: string, message: string): void {
         console.log('[', this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'), ']', location, ': ', message);
     }
-
 }

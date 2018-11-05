@@ -15,7 +15,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfigurationRoutingModule } from './configuration-routing.module';
-import { ConfigurationManagementComponent } from './configuration-management/configuration-management.component';
+import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './configuration.service';
 import { RouterModule } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
@@ -35,7 +35,7 @@ import { InputTextModule } from 'primeng/primeng';
         ConfigurationService
     ],
     declarations: [
-        ConfigurationManagementComponent
+        ConfigurationComponent
     ]
 })
 export class ConfigurationModule {
