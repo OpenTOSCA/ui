@@ -11,16 +11,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { MenuItem } from 'primeng/primeng';
 import { Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-breadcrumb',
-    templateUrl: './breadcrumb.component.html',
-    styleUrls: ['./breadcrumb.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    templateUrl: './breadcrumb.component.html'
 })
 export class BreadcrumbComponent {
 

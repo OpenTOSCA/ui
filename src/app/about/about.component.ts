@@ -12,6 +12,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Component, OnInit } from '@angular/core';
+import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
+import { AppState } from '../store/app-state.model';
+import { NgRedux } from '@angular-redux/store';
+import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'opentosca-about',
@@ -19,12 +23,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutComponent implements OnInit {
 
-    constructor(/* private ngRedux: NgRedux<AppState> */) {
+    private items: MenuItem[];
+
+    constructor(private ngRedux: NgRedux<AppState>) {
     }
 
     ngOnInit(): void {
         // const breadCrumbs = [];
-        // breadCrumbs.push({ label: 'About' });
-        // this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
+        // breadCrumbs.push();
+        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([{ label: 'About', routerLink: ['/about'] }]));
     }
 }

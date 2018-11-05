@@ -19,6 +19,7 @@ import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.ser
 import { AppState } from '../../store/app-state.model';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 
 @Component({
     selector: 'opentosca-configuration-management',
@@ -50,9 +51,7 @@ export class ConfigurationManagementComponent implements OnInit {
 
     ngOnInit(): void {
 
-        // const breadCrumbs = [];
-        // breadCrumbs.push({ label: 'Administration' });
-        // this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
+        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([{ label: 'Administration', routerLink: ['/administration'] }]));
 
         this.containerUrl.subscribe(() => this.checkAvailabilityOfContainer());
         this.repositoryUrl.subscribe(() => this.checkAvailabilityOfRepository());

@@ -44,7 +44,6 @@ body {
 }
 
 #ot-topbar-menu {
-
     .ui-tabmenu-nav {
         border-bottom: 0 !important;
 
@@ -52,4 +51,13 @@ body {
             border-bottom: 0 !important;
         }
     }
+}
+
+.ui-breadcrumb {
+    background-color: #f5f5f5 !important;
+    border: 0 !important;
+    border-bottom: 1px solid #c8c8c8 !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
 }

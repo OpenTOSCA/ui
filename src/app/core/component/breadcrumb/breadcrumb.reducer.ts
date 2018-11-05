@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { BreadcrumbActions } from './breadcrumb-actions';
 import { Action } from '../../../store/store.action';
 import { MenuItem } from 'primeng/primeng';

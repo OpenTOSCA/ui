@@ -11,16 +11,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Injectable } from '@angular/core';
 import { Action } from '../../../store/store.action';
 import { MenuItem } from 'primeng/primeng';
 
 @Injectable()
 export class BreadcrumbActions {
+
     static UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB';
     static APPEND_BREADCRUMB = 'APPEND_BREADCRUMB';
-
 
     static updateBreadcrumb(breadcrumbs: Array<MenuItem>): Action {
         return {
