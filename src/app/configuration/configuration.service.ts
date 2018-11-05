@@ -15,7 +15,7 @@ import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../store/app-state.model';
 import { ConfigurationActions } from './configuration-actions';
-import { RepositoryManagementActions } from '../repository-management/repository-management-actions';
+import { RepositoryActions } from '../repository/repository-actions.service';
 import { ApplicationManagementActions } from '../application-management/application-management-actions';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -33,7 +33,7 @@ export class ConfigurationService {
 
     setRepositoryUrl(url: string) {
         this.ngRedux.dispatch(ConfigurationActions.updateRepositoryUrl(url));
-        this.ngRedux.dispatch(RepositoryManagementActions.clearRepositoryApplications());
+        this.ngRedux.dispatch(RepositoryActions.clearRepositoryApplications());
     }
 
     isRepositoryAvailable(): Observable<Object> {

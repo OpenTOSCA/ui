@@ -17,7 +17,7 @@ import { composeReducers, defaultFormReducer } from '@angular-redux/form';
 import { routerReducer } from '@angular-redux/router';
 import { applicationManagementReducer } from '../application-management/application-management.reducer';
 import { configurationReducer } from '../configuration/configuration.reducer';
-import { repositoryManagementReducer } from '../repository-management/repository-management.reducer';
+import { repositoryReducer } from '../repository/repository.reducer';
 import { breadcrumbReducer } from '../core/component/breadcrumb/breadcrumb.reducer';
 import { growlReducer } from '../core/growl/growl.reducer';
 
@@ -26,7 +26,7 @@ export const rootReducer = composeReducers(
     combineReducers({
         container: applicationManagementReducer,
         administration: configurationReducer,
-        repository: repositoryManagementReducer,
+        repository: repositoryReducer,
         breadcrumb: breadcrumbReducer,
         growl: growlReducer,
         router: routerReducer,

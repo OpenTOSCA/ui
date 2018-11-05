@@ -19,7 +19,7 @@ import { AboutComponent } from './about/about.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { ApplicationManagementModule } from './application-management/application-management.module';
-import { RepositoryManagementModule } from './repository-management/repository-management.module';
+import { RepositoryModule } from './repository/repository.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { CoreModule } from './core/core.module';
 import { AccordionModule, CardModule, GrowlModule, PanelModule } from 'primeng/primeng';
@@ -47,7 +47,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
         TabMenuModule,
         CardModule,
         ApplicationManagementModule,
-        RepositoryManagementModule,
+        RepositoryModule,
         ConfigurationModule,
         CoreModule,
         StoreModule,

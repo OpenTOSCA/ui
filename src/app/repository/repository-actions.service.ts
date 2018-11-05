@@ -17,29 +17,29 @@ import { Action } from '../store/store.action';
 import { MarketplaceApplication } from '../core/model/marketplace-application.model';
 
 @Injectable()
-export class RepositoryManagementActions {
+export class RepositoryActions {
+
     static ADD_REPOSITORY_APPLICATIONS = 'ADD_REPOSITORY_APPLICATIONS';
     static REMOVE_REPOSITORY_APPLICATION = 'REMOVE_REPOSITORY_APPLICATION';
     static CLEAR_REPOSITORY_APPLICATIONS = 'CLEAR_REPOSITORY_APPLICATIONS';
 
-
     static addRepositoryApplications(apps: Array<MarketplaceApplication>): Action {
         return {
-            type: RepositoryManagementActions.ADD_REPOSITORY_APPLICATIONS,
+            type: RepositoryActions.ADD_REPOSITORY_APPLICATIONS,
             payload: apps
         };
     }
 
     static clearRepositoryApplications(): Action {
         return {
-            type: RepositoryManagementActions.CLEAR_REPOSITORY_APPLICATIONS,
+            type: RepositoryActions.CLEAR_REPOSITORY_APPLICATIONS,
             payload: null
         };
     }
 
     static removeRepositoryApplication(app: MarketplaceApplication): Action {
         return {
-            type: RepositoryManagementActions.REMOVE_REPOSITORY_APPLICATION,
+            type: RepositoryActions.REMOVE_REPOSITORY_APPLICATION,
             payload: app
         };
     }

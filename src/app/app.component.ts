@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
         {
             label: 'Repository',
             icon: 'fab fa-app-store',
-            routerLink: ['/repositories']
+            routerLink: ['/repository']
         },
         {
             label: 'Administration',

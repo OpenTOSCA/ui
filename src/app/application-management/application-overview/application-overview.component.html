@@ -13,8 +13,8 @@
   -->
 <opentosca-action-bar>
     <form class="form-inline">
-        <opentosca-search [placeholder]="'Filter applications...'"
-                          (searchTermChanged)="searchTermChanged($event)"></opentosca-search>
+        <opentosca-filter [placeholder]="'Filter applications...'"
+                          (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
         <opentosca-action-item (click)="reloadApplications()" styles="btn-primary">
             <i class="fa fa-refresh"></i>
         </opentosca-action-item>

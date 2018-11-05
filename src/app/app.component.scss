@@ -12,6 +12,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
+:host ::ng-deep .ui-panel {
+    margin-bottom: 15px;
+}
+
+:host ::ng-deep #ot-topbar-menu {
+    .ui-tabmenu-nav {
+        border-bottom: 0 !important;
+        .ui-tabmenuitem {
+            border-bottom: 0 !important;
+        }
+    }
+}
+
 #ot-layout-wrapper {
     margin-bottom: 40px; // Margin bottom by footer height
 }

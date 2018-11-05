@@ -23,7 +23,7 @@ import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
 import { DeploymentCompletionService } from '../../core/service/deployment-completion.service';
-import { RepositoryManagementService } from '../../core/service/repository-management.service';
+import { RepositoryService } from '../../core/service/repository.service';
 import { Path } from '../../core/util/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
@@ -65,7 +65,7 @@ export class ApplicationUploadComponent implements OnInit {
         private adminService: ConfigurationService,
         private appService: ApplicationManagementService,
         private deploymentService: DeploymentCompletionService,
-        private repositoryManagementService: RepositoryManagementService,
+        private repositoryManagementService: RepositoryService,
         private ngRedux: NgRedux<AppState>,
         private router: Router,
         private http: HttpClient,
@@ -109,7 +109,7 @@ export class ApplicationUploadComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        this.repositoryManagementService.installAppInContainer(this.tempData.cur, postURL)
+        this.repositoryManagementService.installApplication(this.tempData.cur, postURL)
             .toPromise()
             .then(response => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -320,7 +320,7 @@ export class ApplicationUploadComponent implements OnInit {
                     .append('csars')
                     .toString();
                 const tmpApp = new CsarUploadReference(app.csarURL, app.id);
-                this.repositoryManagementService.installAppInContainer(tmpApp, postURL)
+                this.repositoryManagementService.installApplication(tmpApp, postURL)
                     .toPromise()
                     .then(response => {
                         this.appService.isAppDeployedInContainer(app.id)

@@ -18,7 +18,8 @@ import { Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-breadcrumb',
-    templateUrl: './breadcrumb.component.html'
+    templateUrl: './breadcrumb.component.html',
+    styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent {
 

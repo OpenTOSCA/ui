@@ -13,26 +13,29 @@
  */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RepositoryManagementRoutingModule } from './repository-management-routing.module';
+import { RepositoryRoutingModule } from './repository-routing.module';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { RepositoryComponent } from './repository/repository.component';
-import { RepositoryOverviewComponent } from './repository-overview/repository-overview.component';
+import { RepositoryComponent } from './repository.component';
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '../core/core.module';
 import { NgSpinKitModule } from 'ng-spin-kit';
-import { TooltipModule } from 'primeng/primeng';
+import { ButtonModule, CardModule, ScrollPanelModule, ToolbarModule, TooltipModule } from 'primeng/primeng';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
         TooltipModule,
+        CardModule,
+        ButtonModule,
+        ScrollPanelModule,
+        ToolbarModule,
         NgSpinKitModule,
-        RepositoryManagementRoutingModule,
-        CoreModule
+        CoreModule,
+        RepositoryRoutingModule
     ],
-    declarations: [RepositoryComponent, RepositoryOverviewComponent],
+    declarations: [RepositoryComponent],
     providers: [ConfigurationService]
 })
-export class RepositoryManagementModule {
+export class RepositoryModule {
 }

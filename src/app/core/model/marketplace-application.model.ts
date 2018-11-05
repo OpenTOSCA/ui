@@ -15,7 +15,6 @@ export class MarketplaceApplication {
     name: string;
     logoPath: string;
     topologyTemplatePath: string;
-
     id: string;
     csarName: string;
     csarURL: string;
@@ -31,5 +30,4 @@ export class MarketplaceApplication {
     options: Object[];
     inContainer: boolean;
     isInstalling: boolean;
-
 }

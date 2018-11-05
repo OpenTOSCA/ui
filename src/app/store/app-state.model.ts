@@ -12,14 +12,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { ApplicationManagementState } from '../application-management/application-management.reducer';
-import { RepositoryManagementState } from '../repository-management/repository-management.reducer';
+import { RepositoryState } from '../repository/repository.reducer';
 import { ConfigurationState } from '../configuration/configuration.reducer';
 import { BreadcrumbState } from '../core/component/breadcrumb/breadcrumb.reducer';
 import { GrowlState } from '../core/growl/growl.reducer';
 
 export interface AppState {
     container?: ApplicationManagementState;
-    repository?: RepositoryManagementState;
+    repository?: RepositoryState;
     administration?: ConfigurationState;
     breadcrumb?: BreadcrumbState;
     growl?: GrowlState;

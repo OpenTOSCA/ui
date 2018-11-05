@@ -11,12 +11,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-
 
 @Directive({
     selector: '[opentoscaDebounce]',

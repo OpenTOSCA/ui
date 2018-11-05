@@ -14,25 +14,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'opentosca-search',
-    styles: [
-        'form { padding-left: 0; }'
-    ],
-    template: `
-        <div class="mr-sm-2">
-            <input
-                type="text"
-                pInputText
-                [placeholder]="placeholder"
-                opentoscaDebounce
-                (debouncedValue)="valueChanged($event)">
-        </div>
-    `
+    selector: 'opentosca-filter',
+    templateUrl: './filter.component.html'
 })
-export class SearchComponent {
+export class FilterComponent {
 
     @Input()
-    public placeholder = '';
+    public placeholder = 'Filter...';
 
     @Output()
     searchTermChanged: EventEmitter<string> = new EventEmitter<string>();

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2018 University of Stuttgart.
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -11,4 +11,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { RepositoryComponent } from './repository.component';
 
+const routes: Routes = [
+    {
+        path: 'repository',
+        component: RepositoryComponent,
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class RepositoryRoutingModule {
+}

@@ -11,35 +11,33 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import * as _ from 'lodash';
 import { Action } from '../store/store.action';
 import { MarketplaceApplication } from '../core/model/marketplace-application.model';
-import { RepositoryManagementActions } from './repository-management-actions';
+import { RepositoryActions } from './repository-actions.service';
 
-export interface RepositoryManagementState {
+export interface RepositoryState {
     applications?: Array<MarketplaceApplication>;
 }
 
-export const INITIAL_STATE: RepositoryManagementState = {
+export const INITIAL_STATE: RepositoryState = {
     applications: []
 };
 
-export function repositoryManagementReducer(state: RepositoryManagementState = INITIAL_STATE,
-                                            action: Action): RepositoryManagementState {
+export function repositoryReducer(state: RepositoryState = INITIAL_STATE,
+                                  action: Action): RepositoryState {
     switch (action.type) {
-
-        case RepositoryManagementActions.ADD_REPOSITORY_APPLICATIONS:
+        case RepositoryActions.ADD_REPOSITORY_APPLICATIONS:
             return Object.assign({}, state, {
                 applications: action.payload
             });
-        case RepositoryManagementActions.REMOVE_REPOSITORY_APPLICATION:
+        case RepositoryActions.REMOVE_REPOSITORY_APPLICATION:
             return Object.assign({}, state, {
                 applications: _.filter(state.applications, function (a) {
                     return !(a.id === action.payload.id);
                 })
             });
-        case RepositoryManagementActions.CLEAR_REPOSITORY_APPLICATIONS:
+        case RepositoryActions.CLEAR_REPOSITORY_APPLICATIONS:
             return Object.assign({}, state, {
                 applications: []
             });

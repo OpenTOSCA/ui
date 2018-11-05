@@ -21,16 +21,16 @@ import { ApplicationManagementService } from './service/application-management.s
 import { ApplicationInstanceManagementService } from './service/application-instance-management.service';
 import { ConfigurationModule } from '../configuration/configuration.module';
 import { ApplicationInstancesManagementService } from './service/application-instances-management.service';
-import { RepositoryManagementService } from './service/repository-management.service';
+import { RepositoryService } from './service/repository.service';
 import { RouterModule } from '@angular/router';
 import { ActionBarComponent } from './component/action-bar/action-bar.component';
 import { ActionItemComponent } from './component/action-bar/action-item.component';
 import { FuzzySearchPipe } from './pipe/fuzzy-search.pipe';
-import { SearchComponent } from './component/action-bar/search.component';
+import { FilterComponent } from './component/filter.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
 import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
-import { BreadcrumbModule, DialogModule } from 'primeng/primeng';
+import { BreadcrumbModule, DialogModule, InputTextModule } from 'primeng/primeng';
 import { BuildplanMonitoringService } from './service/buildplan-monitoring.service';
 import { FilterOutputParams } from './pipe/filter-output-params.pipe';
 import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
@@ -45,6 +45,7 @@ import { DeploymentTestService } from './service/deployment-test.service';
         DialogModule,
         FormsModule,
         RouterModule,
+        InputTextModule,
         ConfigurationModule,
     ],
     declarations: [
@@ -54,7 +55,7 @@ import { DeploymentTestService } from './service/deployment-test.service';
         FuzzySearchPipe,
         DebounceDirective,
         DebouncedValidatedInputComponent,
-        SearchComponent,
+        FilterComponent,
         DeploymentCompletionComponent,
         SortPipe,
         HumanizeBytesPipe,
@@ -67,7 +68,7 @@ import { DeploymentTestService } from './service/deployment-test.service';
         FuzzySearchPipe,
         DebounceDirective,
         DebouncedValidatedInputComponent,
-        SearchComponent,
+        FilterComponent,
         DeploymentCompletionComponent,
         SortPipe,
         HumanizeBytesPipe,
@@ -79,7 +80,7 @@ import { DeploymentTestService } from './service/deployment-test.service';
         OpenToscaLoggerService,
         DatePipe,
         ApplicationInstancesManagementService,
-        RepositoryManagementService,
+        RepositoryService,
         DeploymentCompletionService,
         BuildplanMonitoringService,
         ManagementPlanService,
