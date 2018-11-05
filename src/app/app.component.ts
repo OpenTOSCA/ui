@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
     public messages: Array<Message> = [];
     @select(['growl', 'messages']) growls: Observable<Array<Message>>;
 
