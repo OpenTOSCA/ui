@@ -11,19 +11,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MenuItem, Message } from 'primeng/primeng';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from './store/app-state.model';
 import { GrowlActions } from './core/growl/growl-actions';
 import { Observable } from 'rxjs';
+import { ConfigurationActions } from './configuration/configuration-actions';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'opentosca-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
     public messages: Array<Message> = [];
     @select(['growl', 'messages']) growls: Observable<Array<Message>>;
@@ -51,7 +53,7 @@ export class AppComponent {
         }
     ];
 
-    constructor(private ngRedux: NgRedux<AppState>) {
+    constructor(private ngRedux: NgRedux<AppState>, @Inject(DOCUMENT) private document: any) {
         // We need this to pass messages to global Growl component
         this.growls.subscribe(messages => {
             this.messages = messages;
@@ -60,5 +62,12 @@ export class AppComponent {
 
     public updateGrowls(messages: Array<Message>): void {
         this.ngRedux.dispatch(GrowlActions.updateGrowls(messages));
+    }
+
+    ngOnInit(): void {
+        this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(`http://${this.document.location.hostname}:1337`));
+        this.ngRedux.dispatch(ConfigurationActions.updateRepositoryUrl(
+            `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
+        ));
     }
 }
