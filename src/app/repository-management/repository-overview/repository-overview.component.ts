@@ -75,7 +75,7 @@ export class RepositoryOverviewComponent implements OnInit {
      */
     installInContainer(app: MarketplaceApplication): void {
         app.isInstalling = true;
-        const postURL = new Path(this.adminService.getContainerAPIURL())
+        const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
         const tmpApp = new CsarUploadReference(app.csarURL, app.id);
@@ -109,7 +109,7 @@ export class RepositoryOverviewComponent implements OnInit {
             .subscribe(references => {
                 const appObservables = [] as Array<Observable<MarketplaceApplication>>;
                 for (const reference of references) {
-                    appObservables.push(this.marketService.getAppFromMarketPlace(reference, this.adminService.getWineryAPIURL()));
+                    appObservables.push(this.marketService.getAppFromMarketPlace(reference, this.adminService.getRepositoryUrl()));
                 }
                 forkJoin(appObservables)
                     .subscribe(apps => {

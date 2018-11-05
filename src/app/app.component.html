@@ -18,10 +18,17 @@
         <p-tabMenu id="ot-topbar-menu" [model]="menuItems"></p-tabMenu>
     </div>
     <div id="ot-content">
+        <div style="height: 30px; background: #f1f1f1;"></div>
         <!--<opentosca-breadcrumb></opentosca-breadcrumb>-->
         <div id="ot-content-wrapper">
             <router-outlet></router-outlet>
         </div>
     </div>
 </div>
+
+<div class="footer">
+    <p>Copyright (c) 2012-2017 University of Stuttgart</p>
+
+</div>
+
 <p-growl [value]="messages" sticky="sticky" (valueChange)="updateGrowls($event)"></p-growl>

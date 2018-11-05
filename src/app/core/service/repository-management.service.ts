@@ -35,7 +35,7 @@ export class RepositoryManagementService {
      * @returns {Promise<Array<MarketplaceApplicationReference>>}
      */
     getAppsFromMarketPlace(): Observable<Array<MarketplaceApplicationReference>> {
-        const url = this.adminService.getWineryAPIURL();
+        const url = this.adminService.getRepositoryUrl();
         this.logger.log('[marketplace.service][getAppsFromMarketPlace] Loading Apps from repo: ', url);
         const httpOptions = {
             headers: new HttpHeaders({
@@ -111,7 +111,7 @@ export class RepositoryManagementService {
             appID = appID.split('.')[0];
         }
 
-        const metaDataUrl = new Path(this.adminService.getContainerAPIURL())
+        const metaDataUrl = new Path(this.adminService.getContainerUrl())
             .append('containerapi')
             .append('CSARs')
             .append(appID)

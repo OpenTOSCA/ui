@@ -17,7 +17,6 @@ import { FormControl } from '@angular/forms';
 import { ConfigurationService } from '../configuration.service';
 import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
 import { AppState } from '../../store/app-state.model';
-import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -28,16 +27,21 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class ConfigurationManagementComponent implements OnInit {
 
-    @select(['administration', 'buildPlanPath']) buildPlanPath: Observable<string>;
-    public buildPlanPathControl: FormControl = new FormControl();
-    @select(['administration', 'terminationPlanPath']) terminationPlanPath: Observable<string>;
-    public terminationPlanPathControl: FormControl = new FormControl();
-    @select(['administration', 'containerAPI']) containerAPI: Observable<string>;
-    public containerAPIControl: FormControl = new FormControl();
-    public containerAPIAvailable: boolean;
-    @select(['administration', 'repositoryAPI']) repositoryAPI: Observable<string>;
-    public repositoryAPIControl: FormControl = new FormControl();
-    public repositoryAPIAvailable: boolean;
+    @select(['administration', 'containerUrl']) containerUrl: Observable<string>;
+    public containerUrlControl: FormControl = new FormControl();
+    public containerUrlAvailable: boolean;
+
+    @select(['administration', 'repositoryUrl']) repositoryUrl: Observable<string>;
+    public repositoryUrlControl: FormControl = new FormControl();
+    public repositoryUrlAvailable: boolean;
+
+
+    @select(['administration', 'planLifecycleInterface']) planLifecycleInterface: Observable<string>;
+    public planLifecycleInterfaceControl: FormControl = new FormControl();
+    @select(['administration', 'planOperationInitiate']) planOperationInitiate: Observable<string>;
+    public planOperationInitiateControl: FormControl = new FormControl();
+    @select(['administration', 'planOperationTerminate']) planOperationTerminate: Observable<string>;
+    public planOperationTerminateControl: FormControl = new FormControl();
 
     constructor(private configService: ConfigurationService,
                 private ngRedux: NgRedux<AppState>,
@@ -46,90 +50,80 @@ export class ConfigurationManagementComponent implements OnInit {
 
     ngOnInit(): void {
 
-        const breadCrumbs = [];
-        breadCrumbs.push({ label: 'Administration' });
-        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
+        // const breadCrumbs = [];
+        // breadCrumbs.push({ label: 'Administration' });
+        // this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
 
-        this.containerAPI.subscribe(value => this.checkAvailabilityOfContainer());
-        this.repositoryAPI.subscribe(value => this.checkAvailabilityOfRepository());
+        this.containerUrl.subscribe(() => this.checkAvailabilityOfContainer());
+        this.repositoryUrl.subscribe(() => this.checkAvailabilityOfRepository());
 
-        this.containerAPIControl.valueChanges
+        this.containerUrlControl.valueChanges
             .pipe(
                 debounceTime(500)
             )
-            .subscribe(newValue => this.updateContainerURL(newValue));
-        this.repositoryAPIControl.valueChanges
+            .subscribe(newValue => this.updateContainerUrl(newValue));
+        this.repositoryUrlControl.valueChanges
             .pipe(
                 debounceTime(500)
             )
-            .subscribe(newValue => this.updateRepositoryURL(newValue));
-        this.buildPlanPathControl.valueChanges
+            .subscribe(newValue => this.updateRepositoryUrl(newValue));
+
+        this.planLifecycleInterfaceControl.valueChanges
             .pipe(
                 debounceTime(500)
             )
-            .subscribe(newValue => this.updateBuildPlanPath(newValue));
-        this.terminationPlanPathControl.valueChanges
+            .subscribe(newValue => this.updatePlanLifecycleInterface(newValue));
+        this.planOperationInitiateControl.valueChanges
             .pipe(
                 debounceTime(500)
             )
-            .subscribe(newValue => this.updateTerminationPlanPath(newValue));
+            .subscribe(newValue => this.updatePlanOperationInitiate(newValue));
+        this.planOperationTerminateControl.valueChanges
+            .pipe(
+                debounceTime(500)
+            )
+            .subscribe(newValue => this.updatePlanOperationTerminate(newValue));
     }
 
-    /**
-     * Checks if container API responds
-     */
     checkAvailabilityOfContainer(): void {
         this.configService.isContainerAvailable()
-            .subscribe(success => this.containerAPIAvailable = true,
-                err => this.containerAPIAvailable = false);
+            .subscribe(() => this.containerUrlAvailable = true,
+                () => this.containerUrlAvailable = false);
     }
 
-    /**
-     * Checks if repository API responds
-     */
     checkAvailabilityOfRepository(): void {
         this.configService.isRepositoryAvailable()
-            .subscribe(success => this.repositoryAPIAvailable = true,
-                err => this.repositoryAPIAvailable = false);
+            .subscribe(() => this.repositoryUrlAvailable = true,
+                () => this.repositoryUrlAvailable = false);
     }
 
-    /**
-     * Delegates update of build plan path to AdministrationService
-     * @param newValue
-     */
-    updateBuildPlanPath(newValue: string): void {
+    updateContainerUrl(newValue: string): void {
+        this.configService.setContainerUrl(newValue);
+        this.logger.log('[administration.component][updateRepositoryUrl] Updated container URL to: ',
+            this.configService.getContainerUrl());
+    }
+
+    updateRepositoryUrl(newValue: string): void {
+        this.configService.setRepositoryUrl(newValue);
+        this.logger.log('[administration.component][updateRepositoryUrl] Updated repository URL to: ',
+            this.configService.getRepositoryUrl());
+    }
+
+    updatePlanLifecycleInterface(newValue: string): void {
         this.configService.setBuildPlanPath(newValue);
-        this.logger.log('[administration.component][updateBuildPlanPath] Updated build plan path to: ',
+        this.logger.log('[administration.component][updatePlanLifecycleInterface] Updated lifecycle interface name to: ',
             this.configService.getBuildPlanPath());
     }
 
-    /**
-     * Delegates update of termination plan path to AdministrationService
-     * @param newValue
-     */
-    updateTerminationPlanPath(newValue: string): void {
+    updatePlanOperationInitiate(newValue: string): void {
         this.configService.setTerminationPlanPath(newValue);
-        this.logger.log('[administration.component][updateTerminationPlanPath] Updated termination plan path to: ',
+        this.logger.log('[administration.component][updatePlanOperationInitiate] Updated initiate plan name to: ',
             this.configService.getTerminationPlanPath());
     }
 
-    /**
-     * Delegates update of container API URL to AdministrationService
-     * @param newValue
-     */
-    updateContainerURL(newValue: string): void {
-        this.configService.setContainerAPIURL(newValue);
-        this.logger.log('[administration.component][updateRepositoryURL] Updated container URL to: ',
-            this.configService.getContainerAPIURL());
-    }
-
-    /**
-     * Delegates update of repository API URL to AdministrationService
-     * @param newValue
-     */
-    updateRepositoryURL(newValue: string): void {
-        this.configService.setWineryAPIURL(newValue);
-        this.logger.log('[administration.component][updateRepositoryURL] Updated repository URL to: ',
-            this.configService.getWineryAPIURL());
+    updatePlanOperationTerminate(newValue: string): void {
+        this.configService.setTerminationPlanPath(newValue);
+        this.logger.log('[administration.component][updatePlanOperationTerminate] Updated termination plan name to: ',
+            this.configService.getTerminationPlanPath());
     }
 }

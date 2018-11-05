@@ -21,10 +21,6 @@ export interface ConfigurationState {
     planLifecycleInterface?: string;
     planOperationInitiate?: string;
     planOperationTerminate?: string;
-
-    // TODO: Refactor to use single configuration items
-    buildPlanPath?: string;
-    terminationPlanPath?: string;
 }
 
 export const INITIAL_STATE: ConfigurationState = {
@@ -35,8 +31,8 @@ export const INITIAL_STATE: ConfigurationState = {
     planOperationTerminate: 'terminate',
 
     // TODO: Refactor to use single configuration items
-    buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
-    terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan',
+    // buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
+    // terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan',
 };
 
 export function configurationReducer(state: ConfigurationState = INITIAL_STATE,

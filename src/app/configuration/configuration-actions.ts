@@ -17,36 +17,45 @@ import { Action } from '../store/store.action';
 
 @Injectable()
 export class ConfigurationActions {
+
     static UPDATE_REPOSITORY_URL = 'UPDATE_REPOSITORY_URL';
     static UPDATE_CONTAINER_URL = 'UPDATE_CONTAINER_URL';
-    static UPDATE_BUILDPLANPATH = 'UPDATE_BUILDPLANPATH';
-    static UPDATE_TERMINATIONPLANPATH = 'UPDATE_TERMINATIONPLANPATH';
+    static UPDATE_PLAN_LIFECYCLE_INTERFACE_NAME = 'UPDATE_PLAN_LIFECYCLE_INTERFACE_NAME';
+    static UPDATE_PLAN_OPERATION_INITIATE_NAME = 'UPDATE_PLAN_OPERATION_INITIATE_NAME';
+    static UPDATE_PLAN_OPERATION_TERMINATION_NAME = 'UPDATE_PLAN_OPERATION_TERMINATEION_NAME';
 
-    static updateRepositoryURL(url: string): Action {
+    static updateRepositoryUrl(url: string): Action {
         return {
             type: ConfigurationActions.UPDATE_REPOSITORY_URL,
             payload: url
         };
     }
 
-    static updateContainerURL(url: string): Action {
+    static updateContainerUrl(url: string): Action {
         return {
             type: ConfigurationActions.UPDATE_CONTAINER_URL,
             payload: url
         };
     }
 
-    static updateBuildPlanPath(path: string): Action {
+    static updatePlanLifecycleInterface(name: string): Action {
         return {
-            type: ConfigurationActions.UPDATE_BUILDPLANPATH,
-            payload: path
+            type: ConfigurationActions.UPDATE_PLAN_LIFECYCLE_INTERFACE_NAME,
+            payload: name
         };
     }
 
-    static updateTerminationPlanPath(path: string): Action {
+    static updatePlanOperationInitiate(name: string): Action {
         return {
-            type: ConfigurationActions.UPDATE_TERMINATIONPLANPATH,
-            payload: path
+            type: ConfigurationActions.UPDATE_PLAN_OPERATION_INITIATE_NAME,
+            payload: name
+        };
+    }
+
+    static updatePlanOperationTerminate(name: string): Action {
+        return {
+            type: ConfigurationActions.UPDATE_PLAN_OPERATION_TERMINATION_NAME,
+            payload: name
         };
     }
 }

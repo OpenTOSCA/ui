@@ -91,7 +91,7 @@ export class ApplicationUploadComponent implements OnInit {
      * Starts upload of selected file to container
      */
     startUpload(): void {
-        const postURL = new Path(this.adminService.getContainerAPIURL())
+        const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
         this.uploadInput.emit({
@@ -106,7 +106,7 @@ export class ApplicationUploadComponent implements OnInit {
      * Starts upload of selected url to container
      */
     startURLUpload(): void {
-        const postURL = new Path(this.adminService.getContainerAPIURL())
+        const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
         this.repositoryManagementService.installAppInContainer(this.tempData.cur, postURL)
@@ -316,7 +316,7 @@ export class ApplicationUploadComponent implements OnInit {
         this.deploymentInProgress = true;
         this.appService.isAppDeployedInContainer(app.id).then(result => {
             if (!result) {
-                const postURL = new Path(this.adminService.getContainerAPIURL())
+                const postURL = new Path(this.adminService.getContainerUrl())
                     .append('csars')
                     .toString();
                 const tmpApp = new CsarUploadReference(app.csarURL, app.id);

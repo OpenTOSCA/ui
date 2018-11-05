@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Pipe, PipeTransform } from '@angular/core';
 import { PlanParameter } from '../model/plan-parameter.model';
 import * as _ from 'lodash';

@@ -27,76 +27,33 @@ export class ConfigurationService {
                 private ngRedux: NgRedux<AppState>) {
     }
 
-    /**
-     * Returns wineryAPI
-     * @returns {string}
-     */
-    getWineryAPIURL(): string {
+    getRepositoryUrl(): string {
         return this.ngRedux.getState().administration.repositoryUrl;
     }
 
-    /**
-     * Sets wineryAPI to new value
-     * @param url
-     */
-    setWineryAPIURL(url: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateRepositoryURL(url));
+    setRepositoryUrl(url: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updateRepositoryUrl(url));
         this.ngRedux.dispatch(RepositoryManagementActions.clearRepositoryApplications());
     }
 
-    /**
-     * Returns containerAPIURL
-     * @returns {string}
-     */
-    getContainerAPIURL(): string {
+    isRepositoryAvailable(): Observable<Object> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        return this.http.get(this.ngRedux.getState().administration.repositoryUrl, httpOptions);
+    }
+
+    getContainerUrl(): string {
         return this.ngRedux.getState().administration.containerUrl;
     }
 
-    /**
-     * Sets containerAPIURL to new value
-     * @param url
-     */
-    setContainerAPIURL(url: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateContainerURL(url));
+    setContainerUrl(url: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(url));
         this.ngRedux.dispatch(ApplicationManagementActions.clearContainerApplication());
     }
 
-    /**
-     * Returns buildPlanPath
-     * @returns {string}
-     */
-    getBuildPlanPath(): string {
-        return this.ngRedux.getState().administration.buildPlanPath;
-    }
-
-    /**
-     * Returns buildPlanPath
-     * @returns {string}
-     */
-    getTerminationPlanPath(): string {
-        return this.ngRedux.getState().administration.terminationPlanPath;
-    }
-
-    /**
-     * Sets buildPlanPath to new value
-     * @param path
-     */
-    setBuildPlanPath(path: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateBuildPlanPath(path));
-    }
-
-    /**
-     * Sets terminationPlanPath to new value
-     * @param path
-     */
-    setTerminationPlanPath(path: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateTerminationPlanPath(path));
-    }
-
-    /**
-     * Checks if container API responds
-     * @returns {Promise<Response>}
-     */
     isContainerAvailable(): Observable<Object> {
         const httpOptions = {
             headers: new HttpHeaders({
@@ -106,16 +63,27 @@ export class ConfigurationService {
         return this.http.get(this.ngRedux.getState().administration.containerUrl, httpOptions);
     }
 
-    /**
-     * Checks if repository API responds
-     * @returns {Promise<Response>}
-     */
-    isRepositoryAvailable(): Observable<Object> {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
-        return this.http.get(this.ngRedux.getState().administration.repositoryUrl, httpOptions);
+    setPlanLifecycleInterface(name: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updatePlanLifecycleInterface(name));
+    }
+
+    getPlanLifecycleInterface(): string {
+        return this.ngRedux.getState().administration.planLifecycleInterface;
+    }
+
+    setPlanOperationInitiate(name: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updatePlanOperationInitiate(name));
+    }
+
+    getPlanOperationInitiate(): string {
+        return this.ngRedux.getState().administration.planOperationInitiate;
+    }
+
+    setPlanOperationTerminate(name: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updatePlanOperationTerminate(name));
+    }
+
+    getPlanOperationTerminate(): string {
+        return this.ngRedux.getState().administration.planOperationTerminate;
     }
 }
