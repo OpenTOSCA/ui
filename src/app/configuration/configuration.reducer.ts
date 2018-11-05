@@ -29,10 +29,6 @@ export const INITIAL_STATE: ConfigurationState = {
     planLifecycleInterface: 'OpenTOSCA-Lifecycle-Interface',
     planOperationInitiate: 'initiate',
     planOperationTerminate: 'terminate',
-
-    // TODO: Refactor to use single configuration items
-    // buildPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/initiate/Plan',
-    // terminationPlanPath: '/BoundaryDefinitions/Interfaces/OpenTOSCA-Lifecycle-Interface/Operations/terminate/Plan',
 };
 
 export function configurationReducer(state: ConfigurationState = INITIAL_STATE,
@@ -50,13 +46,17 @@ export function configurationReducer(state: ConfigurationState = INITIAL_STATE,
             return Object.assign({}, state, {
                 containerUrl: action.payload
             });
-        case ConfigurationActions.UPDATE_TERMINATIONPLANPATH:
+        case ConfigurationActions.UPDATE_PLAN_LIFECYCLE_INTERFACE_NAME:
             return Object.assign({}, state, {
-                terminationPlanPath: action.payload
+                planLifecycleInterface: action.payload
             });
-        case ConfigurationActions.UPDATE_BUILDPLANPATH:
+        case ConfigurationActions.UPDATE_PLAN_OPERATION_INITIATE_NAME:
             return Object.assign({}, state, {
-                buildPlanPath: action.payload
+                planOperationInitiate: action.payload
+            });
+        case ConfigurationActions.UPDATE_PLAN_OPERATION_TERMINATION_NAME:
+            return Object.assign({}, state, {
+                planOperationTerminate: action.payload
             });
         default:
             return state;

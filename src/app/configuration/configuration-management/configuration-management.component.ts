@@ -110,20 +110,20 @@ export class ConfigurationManagementComponent implements OnInit {
     }
 
     updatePlanLifecycleInterface(newValue: string): void {
-        this.configService.setBuildPlanPath(newValue);
+        this.configService.setPlanLifecycleInterface(newValue);
         this.logger.log('[administration.component][updatePlanLifecycleInterface] Updated lifecycle interface name to: ',
-            this.configService.getBuildPlanPath());
+            this.configService.getPlanLifecycleInterface());
     }
 
     updatePlanOperationInitiate(newValue: string): void {
-        this.configService.setTerminationPlanPath(newValue);
+        this.configService.setPlanOperationInitiate(newValue);
         this.logger.log('[administration.component][updatePlanOperationInitiate] Updated initiate plan name to: ',
-            this.configService.getTerminationPlanPath());
+            this.configService.getPlanOperationInitiate());
     }
 
     updatePlanOperationTerminate(newValue: string): void {
-        this.configService.setTerminationPlanPath(newValue);
+        this.configService.setPlanOperationTerminate(newValue);
         this.logger.log('[administration.component][updatePlanOperationTerminate] Updated termination plan name to: ',
-            this.configService.getTerminationPlanPath());
+            this.configService.getPlanOperationTerminate());
     }
 }
