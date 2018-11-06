@@ -12,10 +12,8 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<div style="display: inline-block">
-    <div class="ui-inputgroup">
-        <span class="ui-inputgroup-addon"><i class="fas fa-filter"></i></span>
-        <input type="text" pInputText [placeholder]="placeholder"
-               opentoscaDebounce (debouncedValue)="valueChanged($event)">
-    </div>
+<div class="ui-inputgroup">
+    <span class="ui-inputgroup-addon"><i class="fas fa-filter"></i></span>
+    <input type="text" pInputText [placeholder]="placeholder"
+           opentoscaDebounce (debouncedValue)="valueChanged($event)">
 </div>
