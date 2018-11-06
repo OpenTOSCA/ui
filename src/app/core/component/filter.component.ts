@@ -15,7 +15,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'opentosca-filter',
-    templateUrl: './filter.component.html'
+    templateUrl: './filter.component.html',
+    styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent {
 
