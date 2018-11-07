@@ -12,22 +12,52 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-.card-title {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.ot-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    .ot-item {
+        width: 280px;
+        margin-bottom: 15px;
+        margin-right: 15px;
+
+        img {
+            width: auto;
+            height: 80px;
+        }
+    }
 }
 
-.card-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+div.ui-card-header {
+    text-align: center;
+    padding-top: 10px;
 }
 
-.ui-dialog-title {
-    font-size: 1.2em !important;
+div.ui-card {
+    height: 290px;
 }
+
+div.ui-card-footer {
+    text-align: center;
+}
+
+
+//.card-title {
+//    display: -webkit-box;
+//    -webkit-line-clamp: 2;
+//    -webkit-box-orient: vertical;
+//    overflow: hidden;
+//    text-overflow: ellipsis;
+//}
+//
+//.card-text {
+//    display: -webkit-box;
+//    -webkit-line-clamp: 3;
+//    -webkit-box-orient: vertical;
+//    overflow: hidden;
+//    text-overflow: ellipsis;
+//}
+//
+//.ui-dialog-title {
+//    font-size: 1.2em !important;
+//}

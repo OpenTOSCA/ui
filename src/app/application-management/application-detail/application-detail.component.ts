@@ -17,7 +17,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 import { ApplicationInstancesManagementService } from '../../core/service/application-instances-management.service';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
@@ -42,7 +42,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
                 private appService: ApplicationManagementService,
                 private ngRedux: NgRedux<AppState>,
-                private logger: OpenToscaLoggerService,
+                private logger: LoggerService,
                 private router: Router,
                 private appInstancesService: ApplicationInstancesManagementService) {
     }

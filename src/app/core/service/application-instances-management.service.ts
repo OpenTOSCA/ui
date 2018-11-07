@@ -13,7 +13,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { Csar } from '../model/csar.model';
 import { ServiceTemplateList } from '../model/service-template-list.model';
 import { ServiceTemplate } from '../model/service-template.model';
@@ -26,7 +26,7 @@ import { catchError, mergeMap } from 'rxjs/operators';
 @Injectable()
 export class ApplicationInstancesManagementService {
 
-    constructor(private logger: OpenToscaLoggerService,
+    constructor(private logger: LoggerService,
                 private http: HttpClient) {
     }
 

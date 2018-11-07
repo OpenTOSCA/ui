@@ -14,7 +14,7 @@
 
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { InjectionOption } from '../model/injection-option.model';
 import { InjectionOptions } from '../model/injection-options.model';
@@ -25,7 +25,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 export class DeploymentCompletionService {
 
     constructor(private http: HttpClient,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     getInjectionOptions(serviceTemplateURL: string): Promise<any> {

@@ -13,7 +13,7 @@
  */
 import { Injectable } from '@angular/core';
 import { ConfigurationService } from '../../configuration/configuration.service';
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { CsarUploadReference } from '../model/csar-upload-request.model';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
@@ -26,7 +26,7 @@ export class RepositoryService {
 
     constructor(private http: HttpClient,
                 private adminService: ConfigurationService,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     getApplications(): Observable<Array<MarketplaceApplicationReference>> {

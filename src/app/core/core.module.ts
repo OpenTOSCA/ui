@@ -16,7 +16,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from './component/breadcrumb/breadcrumb.component';
 import { SortPipe } from './pipe/sort.pipe';
-import { OpenToscaLoggerService } from './service/open-tosca-logger.service';
+import { LoggerService } from './service/logger.service';
 import { ApplicationManagementService } from './service/application-management.service';
 import { ApplicationInstanceManagementService } from './service/application-instance-management.service';
 import { ConfigurationModule } from '../configuration/configuration.module';
@@ -77,7 +77,7 @@ import { DeploymentTestService } from './service/deployment-test.service';
     providers: [
         ApplicationInstanceManagementService,
         ApplicationManagementService,
-        OpenToscaLoggerService,
+        LoggerService,
         DatePipe,
         ApplicationInstancesManagementService,
         RepositoryService,

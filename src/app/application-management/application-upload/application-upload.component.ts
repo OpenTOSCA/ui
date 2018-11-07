@@ -18,7 +18,7 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
 import { Router } from '@angular/router';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
@@ -69,7 +69,7 @@ export class ApplicationUploadComponent implements OnInit {
         private ngRedux: NgRedux<AppState>,
         private router: Router,
         private http: HttpClient,
-        private logger: OpenToscaLoggerService) {
+        private logger: LoggerService) {
 
     }
 

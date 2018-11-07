@@ -22,45 +22,76 @@
                 [routerLink]="[{ outlets: { modal: ['upload'] } }]" ></button>
     </div>
 </p-toolbar>
-<!--<opentosca-action-bar>-->
-    <!--<form class="form-inline">-->
-        <!--<opentosca-filter [placeholder]="'Filter applications...'"-->
-                          <!--(searchTermChanged)="searchTermChanged($event)"></opentosca-filter>-->
-        <!--<opentosca-action-item (click)="reloadApplications()" styles="btn-primary">-->
-            <!--<i class="fa fa-refresh"></i>-->
-        <!--</opentosca-action-item>-->
-    <!--</form>-->
-    <!--<form class="form-inline">-->
-        <!--<opentosca-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary">-->
-            <!--<i class="fa fa-upload"></i> Upload New Application-->
-        <!--</opentosca-action-item>-->
-    <!--</form>-->
-<!--</opentosca-action-bar>-->
-<div class="d-flex flex-row flex-wrap">
-    <div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.display_name }}" tooltipPosition="top"
-         showDelay="600"
-         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
-        <div class="card-block text-center pb-0">
-            <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"
-                 onerror="this.src='/assets/Default_Application_Icon.png'">
-            <h6 class="card-title truncate">{{ app.display_name }}</h6>
-        </div>
-        <div class="card-block pt-0">
-            <div class="card-text">{{ app.description }}</div>
-        </div>
-        <div class="card-footer text-muted text-center">
-            <button pTooltip="Show Details" tooltipPosition="top" type="button" [routerLink]="['/applications', app.id]"
-                    class="btn btn-secondary btn-sm">
-                <i class="fa fa-list"></i>
-            </button>
-            <button pTooltip="Delete App" tooltipPosition="top" type="button"
-                    class="btn btn-danger btn-sm"
-                    (click)="showDeleteConfirmationModal(app)">
-                <i class="fa fa-remove"></i>
-            </button>
-        </div>
+
+<div class="ot-container">
+    <div class="ot-item"
+         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','csarName']; trackBy: trackFn">
+        <p-card>
+            <p-header>
+                <img class="img-fluid" [src]="app.icon_url"
+                     onerror="this.src='/assets/Default_Application_Icon.png'">
+            </p-header>
+            <div class="ui-card-title truncate">
+                {{ app.display_name }}
+            </div>
+            <p-scrollPanel [style]="{width: '100%', height: '80px'}">
+                {{ app.description }}
+            </p-scrollPanel>
+            <p-footer>
+                <button pButton type="button" (click)="open(app.repositoryURL)"
+                        class="ui-button-info" icon="fas fa-external-link-alt"
+                        pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="open(app.csarURL)"
+                        class="ui-button-info" icon="fas fa-download"
+                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="install(app)"
+                        class="ui-button-info" icon="fas fa-plus-circle"
+                        pTooltip="Install in OpenTOSCA Container" showDelay="500" tooltipPosition="top"
+                        *ngIf="!app.inContainer && !app.isInstalling"></button>
+                <button type="button"
+                        class="ui-button-secondary ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only spinner"
+                        pTooltip="Installing application in OpenTOSCA Container" tooltipPosition="top"
+                        *ngIf="!app.inContainer && app.isInstalling">
+                    <sk-three-bounce class="ui-button-icon"></sk-three-bounce>
+                </button>
+                <button pButton type="button" class="ui-button-success" icon="fas fa-check"
+                        pTooltip="Already installed in OpenTOSCA Container" tooltipPosition="top"
+                        *ngIf="app.inContainer && !app.isInstalling"></button>
+            </p-footer>
+        </p-card>
     </div>
 </div>
+
+
+<!--<div class="d-flex flex-row flex-wrap">-->
+    <!--<div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.display_name }}" tooltipPosition="top"-->
+         <!--showDelay="600"-->
+         <!--*ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">-->
+        <!--<div class="card-block text-center pb-0">-->
+            <!--<img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"-->
+                 <!--onerror="this.src='/assets/Default_Application_Icon.png'">-->
+            <!--<h6 class="card-title truncate">{{ app.display_name }}</h6>-->
+        <!--</div>-->
+        <!--<div class="card-block pt-0">-->
+            <!--<div class="card-text">{{ app.description }}</div>-->
+        <!--</div>-->
+        <!--<div class="card-footer text-muted text-center">-->
+            <!--<button pTooltip="Show Details" tooltipPosition="top" type="button" [routerLink]="['/applications', app.id]"-->
+                    <!--class="btn btn-secondary btn-sm">-->
+                <!--<i class="fa fa-list"></i>-->
+            <!--</button>-->
+            <!--<button pTooltip="Delete App" tooltipPosition="top" type="button"-->
+                    <!--class="btn btn-danger btn-sm"-->
+                    <!--(click)="showDeleteConfirmationModal(app)">-->
+                <!--<i class="fa fa-remove"></i>-->
+            <!--</button>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+
 <p-dialog [(visible)]="showChildModal" [width]="300" modal="true">
     <p-header>
         Really delete App?

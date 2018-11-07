@@ -15,7 +15,7 @@
 import { Injectable } from '@angular/core';
 import { ServiceTemplateInstance } from '../model/service-template-instance.model';
 import { PlanList } from '../model/plan-list.model';
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class ManagementPlanService {
         })
     };
 
-    constructor(private http: HttpClient, private logger: OpenToscaLoggerService) {
+    constructor(private http: HttpClient, private logger: LoggerService) {
     }
 
     getManagementPlans(instance: ServiceTemplateInstance): Observable<PlanList> {

@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { Injectable } from '@angular/core';
 import { DeploymentTest } from '../model/deployment-test';
 import { ServiceTemplateInstance } from '../model/service-template-instance.model';
@@ -23,7 +23,7 @@ import { catchError, map } from 'rxjs/operators';
 @Injectable()
 export class DeploymentTestService {
 
-    constructor(private http: HttpClient, private logger: OpenToscaLoggerService) {
+    constructor(private http: HttpClient, private logger: LoggerService) {
     }
 
     getDeploymentTests(serviceTemplateInstance: ServiceTemplateInstance): Observable<Array<DeploymentTest>> {

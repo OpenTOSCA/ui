@@ -20,6 +20,7 @@ import { Plan } from '../core/model/plan.model';
 
 @Injectable()
 export class ApplicationManagementActions {
+
     static ADD_CONTAINER_APPLICATIONS = 'ADD_CONTAINER_APPLICATIONS';
     static REMOVE_CONTAINER_APPLICATION = 'REMOVE_CONTAINER_APPLICATION';
     static CLEAR_CONTAINER_APPLICATIONS = 'CLEAR_CONTAINER_APPLICATIONS';

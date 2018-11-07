@@ -11,37 +11,36 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/csar.model';
-import { GrowlActions } from '../../core/growl/growl-actions';
 import { Observable } from 'rxjs';
 
 @Component({
     selector: 'opentosca-application-overview',
     templateUrl: './application-overview.component.html',
-    styleUrls: ['./application-overview.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./application-overview.component.scss']
 })
 export class ApplicationOverviewComponent implements OnInit {
+
     @select(['container', 'applications']) public readonly apps: Observable<Array<Csar>>;
 
     // Todo: Do something great with it... or not
-    @select(['container', 'currentApp']) app: Observable<Csar>;
+    // @select(['container', 'currentApp']) app: Observable<Csar>;
 
-    public removingApp = false;
-    public appToDelete: Csar;
+    // public removingApp = false;
+    // public appToDelete: Csar;
+    // public showChildModal = false;
+
     public searchTerm: string;
-    public showChildModal = false;
 
-    constructor(private appService: ApplicationManagementService,
-                private ngRedux: NgRedux<AppState>,
-                private logger: OpenToscaLoggerService) {
+    constructor(private applicationService: ApplicationManagementService,
+                private ngRedux: NgRedux<AppState>, private logger: LoggerService) {
     }
 
     ngOnInit(): void {
@@ -49,76 +48,73 @@ export class ApplicationOverviewComponent implements OnInit {
         breadCrumbs.push(
             {
                 label: 'Applications',
-                routerLink: ['applications']
+                routerLink: ['/applications']
             }
         );
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
-        this.getResolvedApplications();
+        this.refresh();
     }
 
-    /**
-     * Delegate app deletion to the ApplicationService
-     * @param app
-     */
-    deleteFromContainer(app: Csar): void {
-        this.removingApp = true;
-        this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
-        this.appService.deleteApplication(app.id)
-            .subscribe((response: Response) => {
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'success',
-                        summary: 'Deletion Successfull',
-                        detail: 'Application ' + app.id + ' was successfully deleted.'
-                    }
-                ));
-                this.logger.log('[applications-overview.component][deleteFromContainer]',
-                    'Application successfully deleted, received response: ' + JSON.stringify(response));
-                this.appService.getResolvedApplications()
-                    .subscribe(result => {
-                        this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(result));
-                    });
-                this.removingApp = false;
-                this.hideDeleteConfirmationModal();
-            }, err => {
-                this.removingApp = false;
-                this.hideDeleteConfirmationModal();
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Application ' + app.id +
-                            ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
-                    }
-                ));
-                this.appService.getResolvedApplications()
-                    .subscribe(result => {
-                        this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(result));
-                    });
-                this.logger.handleError('[applications-overview.component][deleteFromContainer]', err);
-                this.hideDeleteConfirmationModal();
-            });
-    }
+    // /**
+    //  * Delegate app deletion to the ApplicationService
+    //  * @param app
+    //  */
+    // deleteFromContainer(app: Csar): void {
+    //     this.removingApp = true;
+    //     this.logger.log('[applications-overview.component][deleteFromContainer]', 'Trying to delete the following App: ' + app.id);
+    //     this.appService.deleteApplication(app.id)
+    //         .subscribe((response: Response) => {
+    //             this.ngRedux.dispatch(GrowlActions.addGrowl(
+    //                 {
+    //                     severity: 'success',
+    //                     summary: 'Deletion Successfull',
+    //                     detail: 'Application ' + app.id + ' was successfully deleted.'
+    //                 }
+    //             ));
+    //             this.logger.log('[applications-overview.component][deleteFromContainer]',
+    //                 'Application successfully deleted, received response: ' + JSON.stringify(response));
+    //             this.appService.getResolvedApplications()
+    //                 .subscribe(result => {
+    //                     this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(result));
+    //                 });
+    //             this.removingApp = false;
+    //             this.hideDeleteConfirmationModal();
+    //         }, err => {
+    //             this.removingApp = false;
+    //             this.hideDeleteConfirmationModal();
+    //             this.ngRedux.dispatch(GrowlActions.addGrowl(
+    //                 {
+    //                     severity: 'error',
+    //                     summary: 'Error',
+    //                     detail: 'Application ' + app.id +
+    //                         ' was not successfully deleted. Server responded: ' + JSON.stringify(err)
+    //                 }
+    //             ));
+    //             this.appService.getResolvedApplications()
+    //                 .subscribe(result => {
+    //                     this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(result));
+    //                 });
+    //             this.logger.handleError('[applications-overview.component][deleteFromContainer]', err);
+    //             this.hideDeleteConfirmationModal();
+    //         });
+    // }
 
-    reloadApplications(): void {
-        this.getResolvedApplications();
-    }
+    // reloadApplications(): void {
+    //     this.getResolvedApplications();
+    // }
 
-    hideDeleteConfirmationModal(): void {
-        this.showChildModal = false;
-        this.appToDelete = null;
-    }
+    // hideDeleteConfirmationModal(): void {
+    //     this.showChildModal = false;
+    //     this.appToDelete = null;
+    // }
+    //
+    // showDeleteConfirmationModal(appToDelete: Csar): void {
+    //     this.appToDelete = appToDelete;
+    //     this.showChildModal = true;
+    // }
 
-    showDeleteConfirmationModal(appToDelete: Csar): void {
-        this.appToDelete = appToDelete;
-        this.showChildModal = true;
-    }
-
-    /**
-     * Load applications from container containing all meta data
-     */
-    getResolvedApplications(): void {
-        this.appService.getResolvedApplications()
+    refresh(): void {
+        this.applicationService.getResolvedApplications()
             .subscribe(apps => {
                 this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
             }, reason => {
@@ -126,13 +122,7 @@ export class ApplicationOverviewComponent implements OnInit {
             });
     }
 
-    /**
-     * Tracking for ngFor to enable tracking of id field of Application
-     * @param index
-     * @param app
-     * @returns {string}
-     */
-    trackAppsFn(index: number, app: Csar) {
+    trackFn(index: number, app: Csar) {
         return app.id;
     }
 

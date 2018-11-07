@@ -14,7 +14,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceApplication } from '../../model/marketplace-application.model';
-import { OpenToscaLoggerService } from '../../service/open-tosca-logger.service';
+import { LoggerService } from '../../service/logger.service';
 import { InjectionOption } from '../../model/injection-option.model';
 import { DeploymentCompletionService } from '../../service/deployment-completion.service';
 
@@ -40,7 +40,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
     constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     ngOnInit() {

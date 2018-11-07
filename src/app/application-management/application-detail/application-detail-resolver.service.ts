@@ -15,7 +15,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 import { Csar } from '../../core/model/csar.model';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -32,6 +32,6 @@ export class ApplicationDetailResolverService {
             );
     }
 
-    constructor(private appService: ApplicationManagementService, private logger: OpenToscaLoggerService) {
+    constructor(private appService: ApplicationManagementService, private logger: LoggerService) {
     }
 }

@@ -15,7 +15,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { FormControl } from '@angular/forms';
 import { ConfigurationService } from './configuration.service';
-import { OpenToscaLoggerService } from '../core/service/open-tosca-logger.service';
+import { LoggerService } from '../core/service/logger.service';
 import { AppState } from '../store/app-state.model';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -45,7 +45,7 @@ export class ConfigurationComponent implements OnInit {
 
     constructor(private configService: ConfigurationService,
                 private ngRedux: NgRedux<AppState>,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     ngOnInit(): void {

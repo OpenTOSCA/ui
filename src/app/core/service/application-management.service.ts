@@ -13,7 +13,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { Path } from '../path';
 import * as _ from 'lodash';
 import { CsarList } from '../model/csar-list.model';
@@ -30,7 +30,7 @@ import { catchError, flatMap, map } from 'rxjs/operators';
 export class ApplicationManagementService {
 
     constructor(private http: HttpClient, private ngRedux: NgRedux<AppState>,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     public normalizeApplicationId(id: string): string {

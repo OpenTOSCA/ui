@@ -18,7 +18,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -77,7 +77,7 @@ export class ManagementPlanExecutionDialogComponent {
     constructor(
         private appService: ApplicationManagementService,
         private ngRedux: NgRedux<AppState>,
-        private logger: OpenToscaLoggerService) {
+        private logger: LoggerService) {
     }
 
     checkInputs(): void {

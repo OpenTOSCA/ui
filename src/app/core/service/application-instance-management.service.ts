@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Injectable } from '@angular/core';
-import { OpenToscaLoggerService } from './open-tosca-logger.service';
+import { LoggerService } from './logger.service';
 import { ApplicationInstancesManagementService } from './application-instances-management.service';
 import { ServiceTemplateInstance } from '../model/service-template-instance.model';
 import { ApplicationManagementService } from './application-management.service';
@@ -22,7 +22,7 @@ import { flatMap, map } from 'rxjs/operators';
 @Injectable()
 export class ApplicationInstanceManagementService {
 
-    constructor(private logger: OpenToscaLoggerService,
+    constructor(private logger: LoggerService,
                 private appInstancesService: ApplicationInstancesManagementService,
                 private applicationManagementService: ApplicationManagementService) {
     }

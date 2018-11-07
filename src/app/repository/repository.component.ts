@@ -21,7 +21,7 @@ import { RepositoryActions } from './repository-actions.service';
 import { RepositoryService } from '../core/service/repository.service';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { ApplicationManagementService } from '../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../core/service/open-tosca-logger.service';
+import { LoggerService } from '../core/service/logger.service';
 import { Path } from '../core/path';
 import { CsarUploadReference } from '../core/model/csar-upload-request.model';
 import { GrowlActions } from '../core/growl/growl-actions';
@@ -40,7 +40,7 @@ export class RepositoryComponent implements OnInit {
 
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     ngOnInit() {

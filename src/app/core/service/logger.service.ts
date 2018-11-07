@@ -16,7 +16,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 
 @Injectable()
-export class OpenToscaLoggerService {
+export class LoggerService {
 
     constructor(private datePipe: DatePipe) {
     }

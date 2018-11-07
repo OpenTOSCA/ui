@@ -13,7 +13,7 @@
  */
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
 import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 import { Observable } from 'rxjs';
@@ -31,6 +31,6 @@ export class ApplicationInstanceDetailResolverService implements Resolve<Service
             );
     }
 
-    constructor(private appInstService: ApplicationInstanceManagementService, private logger: OpenToscaLoggerService) {
+    constructor(private appInstService: ApplicationInstanceManagementService, private logger: LoggerService) {
     }
 }

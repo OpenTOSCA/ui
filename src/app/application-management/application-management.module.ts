@@ -27,10 +27,12 @@ import { RouterModule } from '@angular/router';
 import {
     AccordionModule,
     ButtonModule,
+    CardModule,
     DataTableModule,
     DialogModule,
     FieldsetModule,
     ProgressBarModule,
+    ScrollPanelModule,
     SharedModule,
     ToolbarModule,
     TooltipModule
@@ -54,6 +56,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
         SharedModule,
         NgxUploaderModule,
         TooltipModule,
+        CardModule,
+        ButtonModule,
+        ScrollPanelModule,
+        ToolbarModule,
         ProgressBarModule,
         NoopAnimationsModule,
         NgSpinKitModule,
