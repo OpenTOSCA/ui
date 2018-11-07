@@ -21,7 +21,7 @@
                 class="ui-button-info" icon="fas fa-external-link-alt" label="Open Repository">
         </button>
         &nbsp;
-        <opentosca-filter (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
+        <opentosca-filter [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
     </div>
 </p-toolbar>
 
