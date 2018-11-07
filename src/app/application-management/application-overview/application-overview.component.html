@@ -11,20 +11,31 @@
   ~
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
-<opentosca-action-bar>
-    <form class="form-inline">
-        <opentosca-filter [placeholder]="'Filter applications...'"
-                          (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
-        <opentosca-action-item (click)="reloadApplications()" styles="btn-primary">
-            <i class="fa fa-refresh"></i>
-        </opentosca-action-item>
-    </form>
-    <form class="form-inline">
-        <opentosca-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary">
-            <i class="fa fa-upload"></i> Upload New Application
-        </opentosca-action-item>
-    </form>
-</opentosca-action-bar>
+<p-toolbar>
+    <div class="ui-toolbar-group-left">
+        <button pButton type="button" (click)="reloadApplications()"
+                icon="fas fa-sync-alt"></button>
+        &nbsp;
+        <opentosca-filter [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
+        <button pButton type="button" style="display: inline-block; margin-left: 10px"
+                class="ui-button-info" icon="fa fa-upload"
+                [routerLink]="[{ outlets: { modal: ['upload'] } }]" ></button>
+    </div>
+</p-toolbar>
+<!--<opentosca-action-bar>-->
+    <!--<form class="form-inline">-->
+        <!--<opentosca-filter [placeholder]="'Filter applications...'"-->
+                          <!--(searchTermChanged)="searchTermChanged($event)"></opentosca-filter>-->
+        <!--<opentosca-action-item (click)="reloadApplications()" styles="btn-primary">-->
+            <!--<i class="fa fa-refresh"></i>-->
+        <!--</opentosca-action-item>-->
+    <!--</form>-->
+    <!--<form class="form-inline">-->
+        <!--<opentosca-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary">-->
+            <!--<i class="fa fa-upload"></i> Upload New Application-->
+        <!--</opentosca-action-item>-->
+    <!--</form>-->
+<!--</opentosca-action-bar>-->
 <div class="d-flex flex-row flex-wrap">
     <div class="card m-2 card-glowing" style="width: 250px" pTooltip="{{ app.display_name }}" tooltipPosition="top"
          showDelay="600"
@@ -66,3 +77,4 @@
         <button *ngIf="removingApp" type="button" class="btn btn-danger" [disabled]="true">Removing...</button>
     </p-footer>
 </p-dialog>
+<router-outlet name="modal"></router-outlet>

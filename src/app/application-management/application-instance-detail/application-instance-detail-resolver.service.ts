@@ -23,7 +23,7 @@ import { catchError } from 'rxjs/operators';
 export class ApplicationInstanceDetailResolverService implements Resolve<ServiceTemplateInstance> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ServiceTemplateInstance> {
-        return this.appInstService.getServiceTemplateInstance(route.params['id'], route.params['instID'])
+        return this.appInstService.getServiceTemplateInstance(route.params['id'], route.params['instanceId'])
             .pipe(
                 catchError(reason => {
                     return this.logger.handleError('[application-instance-details-resolver.service][resolve]', reason);

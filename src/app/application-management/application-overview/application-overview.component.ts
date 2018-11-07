@@ -31,6 +31,9 @@ import { Observable } from 'rxjs';
 export class ApplicationOverviewComponent implements OnInit {
     @select(['container', 'applications']) public readonly apps: Observable<Array<Csar>>;
 
+    // Todo: Do something great with it... or not
+    @select(['container', 'currentApp']) app: Observable<Csar>;
+
     public removingApp = false;
     public appToDelete: Csar;
     public searchTerm: string;

@@ -17,39 +17,34 @@ import { ApplicationUploadComponent } from './application-upload/application-upl
 import { ApplicationDetailResolverService } from './application-detail/application-detail-resolver.service';
 import { ApplicationInstanceDetailResolverService } from './application-instance-detail/application-instance-detail-resolver.service';
 import { ApplicationDetailComponent } from './application-detail/application-detail.component';
-import { ApplicationComponent } from './application/application.component';
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
 import { ApplicationInstanceDetailComponent } from './application-instance-detail/application-instance-detail.component';
 
 const routes: Routes = [
     {
         path: 'applications',
-        component: ApplicationComponent,
+        component: ApplicationOverviewComponent,
         children: [
-            {
-                path: '',
-                component: ApplicationOverviewComponent,
-            },
-            {
-                path: ':id',
-                component: ApplicationDetailComponent,
-                resolve: {
-                    csar: ApplicationDetailResolverService
-                }
-            },
-            {
-                path: ':id/instances/:instID',
-                component: ApplicationInstanceDetailComponent,
-                resolve: {
-                    serviceTemplateInstance: ApplicationInstanceDetailResolverService
-                }
-            },
             {
                 path: 'upload',
                 component: ApplicationUploadComponent,
                 outlet: 'modal'
             }
         ]
+    },
+    {
+        path: 'applications/:id',
+        component: ApplicationDetailComponent,
+        resolve: {
+            csar: ApplicationDetailResolverService
+        }
+    },
+    {
+        path: 'applications/:id/instances/:instanceId',
+        component: ApplicationInstanceDetailComponent,
+        resolve: {
+            serviceTemplateInstance: ApplicationInstanceDetailResolverService
+        }
     },
 ];
 

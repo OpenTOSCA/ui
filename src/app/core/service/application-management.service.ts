@@ -80,9 +80,8 @@ export class ApplicationManagementService {
                             'Accept': 'application/json'
                         })
                     };
-                    // const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-                    return this.http.get(url, httpOptions)
                     // Todo For now it is okay to fetch the first build plan but we have to keep this in mind
+                    return this.http.get(url, httpOptions)
                         .pipe(
                             map(response => response['plans'][0] as Plan),
                             catchError(err => {
@@ -112,10 +111,9 @@ export class ApplicationManagementService {
                             'Accept': 'application/json'
                         })
                     };
-                    return this.http.get(url, httpOptions)
+                    return this.http.get<Interface>(url, httpOptions)
                         .pipe(
-                            map(response => response as Interface),
-                            map((i: Interface) => {
+                            map(i => {
                                 return i.operations[this.ngRedux.getState().administration.planOperationTerminate]
                                     ._embedded.plan;
                             }),

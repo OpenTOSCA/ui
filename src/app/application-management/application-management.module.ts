@@ -22,7 +22,6 @@ import { ApplicationInstanceDetailResolverService } from './application-instance
 import { ApplicationInstanceListComponent } from './application-instance-list/application-instance-list.component';
 import { ApplicationUploadComponent } from './application-upload/application-upload.component';
 import { ApplicationDetailResolverService } from './application-detail/application-detail-resolver.service';
-import { ApplicationComponent } from './application/application.component';
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
 import { RouterModule } from '@angular/router';
 import {
@@ -70,7 +69,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
         ApplicationInstanceDetailComponent,
         ApplicationInstanceListComponent,
         ApplicationUploadComponent,
-        ApplicationComponent,
         ApplicationOverviewComponent,
         BuildplanMonitorComponent,
         ManagementPlanListComponent,
