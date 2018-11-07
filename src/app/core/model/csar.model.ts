@@ -22,4 +22,6 @@ export class Csar extends ResourceSupport {
     image_url: string;
     name: string;
     version: string;
+
+    deleting$ = false;
 }

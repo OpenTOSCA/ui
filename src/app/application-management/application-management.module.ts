@@ -27,7 +27,7 @@ import { RouterModule } from '@angular/router';
 import {
     AccordionModule,
     ButtonModule,
-    CardModule,
+    CardModule, ConfirmationService, ConfirmDialogModule,
     DataTableModule,
     DialogModule,
     FieldsetModule,
@@ -60,6 +60,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
         ButtonModule,
         ScrollPanelModule,
         ToolbarModule,
+        ConfirmDialogModule,
         ProgressBarModule,
         NoopAnimationsModule,
         NgSpinKitModule,
@@ -82,6 +83,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     ],
     providers: [
         ConfigurationService,
+        ConfirmationService,
         ApplicationInstanceDetailResolverService,
         ApplicationDetailResolverService,
         DeploymentCompletionService
