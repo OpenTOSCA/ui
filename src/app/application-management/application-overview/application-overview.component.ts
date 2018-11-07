@@ -88,7 +88,7 @@ export class ApplicationOverviewComponent implements OnInit {
     refresh(): void {
         this.applicationService.getResolvedApplications()
             .subscribe(apps => {
-                this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
+                this.ngRedux.dispatch(ApplicationManagementActions.updateApplications(apps));
             }, error => {
                 this.logger.handleObservableError('[applications-overview.component][refresh]', error);
             });

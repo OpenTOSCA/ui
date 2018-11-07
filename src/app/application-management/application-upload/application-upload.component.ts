@@ -267,7 +267,7 @@ export class ApplicationUploadComponent implements OnInit {
     updateApplicationsInStore(): void {
         this.appService.getResolvedApplications()
             .subscribe(apps => {
-                this.ngRedux.dispatch(ApplicationManagementActions.addContainerApplications(apps));
+                this.ngRedux.dispatch(ApplicationManagementActions.updateApplications(apps));
             }, reason => {
                 this.logger.handleError('[application-upload.component][updateApplicationsInStore]', reason);
             });

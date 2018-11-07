@@ -51,7 +51,7 @@ export class ConfigurationService {
 
     setContainerUrl(url: string) {
         this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(url));
-        this.ngRedux.dispatch(ApplicationManagementActions.clearContainerApplication());
+        this.ngRedux.dispatch(ApplicationManagementActions.clearApplications());
     }
 
     isContainerAvailable(): Observable<Object> {

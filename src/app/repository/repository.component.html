@@ -15,7 +15,8 @@
 <p-toolbar>
     <div class="ui-toolbar-group-left">
         <button pButton type="button" (click)="refresh()"
-                class="ui-button-info" icon="fas fa-sync-alt"></button>
+                class="ui-button-info" icon="fas fa-sync-alt"
+                pTooltip="Refresh" showDelay="500" tooltipPosition="top"></button>
         &nbsp;
         <button pButton type="button" (click)="openRepository()"
                 class="ui-button-info" icon="fas fa-external-link-alt" label="Open Repository">

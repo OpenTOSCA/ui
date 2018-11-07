@@ -12,81 +12,85 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import * as _ from 'lodash';
 import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
 import { Csar } from '../core/model/csar.model';
-import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
 import { Plan } from '../core/model/plan.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;
-    currentApp?: Csar;
-    currentAppInstances?: Array<ServiceTemplateInstance>;
-    currentInstance?: ServiceTemplateInstance;
-    currentBuildPlan?: Plan;
-    currentTerminationPlan?: Plan;
+    application?: {
+        csar?: Csar;
+        buildPlan?: Plan;
+        terminationPlan?: Plan;
+    };
+    // currentAppInstances?: Array<ServiceTemplateInstance>;
+    // currentInstance?: ServiceTemplateInstance;
+    // current
 }
 
 export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
-    currentApp: null,
-    currentAppInstances: [],
-    currentInstance: null,
-    currentBuildPlan: null,
-    currentTerminationPlan: null
+    application: {
+        csar: null,
+        buildPlan: null,
+        terminationPlan: null,
+    },
+    // currentApp: null,
+    // currentAppInstances: [],
+    // currentInstance: null,
+    // buildPlan: null,
+    // currentTerminationPlan: null
 };
 
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,
                                              action: Action): ApplicationManagementState {
     switch (action.type) {
-        case ApplicationManagementActions.ADD_CONTAINER_APPLICATIONS:
-            return Object.assign({}, state, {
-                applications: action.payload
-            });
-        case ApplicationManagementActions.REMOVE_CONTAINER_APPLICATION:
-            return Object.assign({}, state, {
-                // Todo can we do this without lodash?
-                applications: _.filter(state.applications, function (a) {
-                    return !(a.id === action.payload.id);
-                })
-            });
-        case ApplicationManagementActions.CLEAR_CONTAINER_APPLICATIONS:
+        case ApplicationManagementActions.CLEAR_APPLICATIONS:
             return Object.assign({}, state, {
                 applications: []
             });
-        case ApplicationManagementActions.UPDATE_CURRENT_APPLICATION:
+        case ApplicationManagementActions.UPDATE_APPLICATIONS:
             return Object.assign({}, state, {
-                currentApp: action.payload
+                applications: action.payload
             });
-        case ApplicationManagementActions.CLEAR_CURRENT_APPLICATION:
+        case ApplicationManagementActions.UPDATE_APPLICATION_CSAR:
             return Object.assign({}, state, {
-                currentApp: null
+                application: {
+                    ...state.application, csar: action.payload
+                }
             });
-        case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES:
-            return Object.assign({}, state, {
-                currentAppInstances: action.payload
-            });
-        case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES:
-            return Object.assign({}, state, {
-                currentAppInstances: []
-            });
-        case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCE:
-            return Object.assign({}, state, {
-                currentInstance: action.payload
-            });
-        case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCE:
-            return Object.assign({}, state, {
-                currentInstance: null
-            });
-        case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN:
-            return Object.assign({}, state, {
-                currentBuildPlan: action.payload
-            });
-        case ApplicationManagementActions.UPDATE_CURRENT_TERMINATION_PLAN:
-            return Object.assign({}, state, {
-                currentTerminationPlan: action.payload
-            });
+
+
+
+        // case ApplicationManagementActions.CLEAR_APPLICATION_CSAR:
+        //     return Object.assign({}, state, {
+        //         currentApp: null
+        //     });
+        // case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES:
+        //     return Object.assign({}, state, {
+        //         currentAppInstances: action.payload
+        //     });
+        // case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES:
+        //     return Object.assign({}, state, {
+        //         currentAppInstances: []
+        //     });
+        // case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCE:
+        //     return Object.assign({}, state, {
+        //         currentInstance: action.payload
+        //     });
+        // case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCE:
+        //     return Object.assign({}, state, {
+        //         currentInstance: null
+        //     });
+        // case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN:
+        //     return Object.assign({}, state, {
+        //         buildPlan: action.payload
+        //     });
+        // case ApplicationManagementActions.UPDATE_CURRENT_TERMINATION_PLAN:
+        //     return Object.assign({}, state, {
+        //         currentTerminationPlan: action.payload
+        //     });
         default:
             return state;
     }

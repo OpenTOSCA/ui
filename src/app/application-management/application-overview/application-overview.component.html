@@ -14,8 +14,8 @@
 
 <p-toolbar>
     <div class="ui-toolbar-group-left">
-        <button pButton type="button" (click)="refresh()"
-                icon="fas fa-sync-alt"></button>
+        <button pButton type="button" (click)="refresh()" icon="fas fa-sync-alt"
+                pTooltip="Refresh" showDelay="500" tooltipPosition="top"></button>
         &nbsp;
         <opentosca-filter [placeholder]="'Filter applications...'"
                           (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>

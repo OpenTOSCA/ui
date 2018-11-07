@@ -11,9 +11,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { LoggerService } from '../../core/service/logger.service';
 import { Csar } from '../../core/model/csar.model';
@@ -21,17 +20,17 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()
-export class ApplicationDetailResolverService {
+export class ApplicationDetailResolverService implements Resolve<Csar> {
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Csar> {
-        return this.appService.getDescriptionByCsarId(route.params['id'])
-            .pipe(
-                catchError(reason => {
-                    return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
-                })
-            );
+    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
     }
 
-    constructor(private appService: ApplicationManagementService, private logger: LoggerService) {
+    resolve(route: ActivatedRouteSnapshot): Observable<Csar> {
+        return this.applicationService.getDescriptionByCsarId(route.params['id'])
+            .pipe(
+                catchError(reason => {
+                    return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+                })
+            );
     }
 }

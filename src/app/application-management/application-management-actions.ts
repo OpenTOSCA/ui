@@ -15,18 +15,17 @@
 import { Injectable } from '@angular/core';
 import { Action } from '../store/store.action';
 import { Csar } from '../core/model/csar.model';
-import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
 import { Plan } from '../core/model/plan.model';
+import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
 
 @Injectable()
 export class ApplicationManagementActions {
 
-    static ADD_CONTAINER_APPLICATIONS = 'ADD_CONTAINER_APPLICATIONS';
-    static REMOVE_CONTAINER_APPLICATION = 'REMOVE_CONTAINER_APPLICATION';
-    static CLEAR_CONTAINER_APPLICATIONS = 'CLEAR_CONTAINER_APPLICATIONS';
+    static UPDATE_APPLICATIONS = 'UPDATE_APPLICATIONS';
+    static CLEAR_APPLICATIONS = 'CLEAR_APPLICATIONS';
 
-    static UPDATE_CURRENT_APPLICATION = 'UPDATE_CURRENT_APPLICATION';
-    static CLEAR_CURRENT_APPLICATION = 'CLEAR_CURRENT_APPLICATION';
+    static UPDATE_APPLICATION_CSAR = 'UPDATE_APPLICATION_CSAR';
+    static CLEAR_APPLICATION_CSAR = 'CLEAR_APPLICATION_CSAR';
     static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
     static UPDATE_APPLICATION_INSTANCE = 'UPDATE_APPLICATION_INSTANCE';
@@ -35,39 +34,26 @@ export class ApplicationManagementActions {
     static UPDATE_CURRENT_BUILD_PLAN = 'UPDATE_CURRENT_BUILD_PLAN';
     static UPDATE_CURRENT_TERMINATION_PLAN = 'UPDATE_CURRENT_TERMINATION_PLAN';
 
-    static addContainerApplications(apps: Array<Csar>): Action {
+    static updateApplications(csars: Array<Csar>): Action {
         return {
-            type: ApplicationManagementActions.ADD_CONTAINER_APPLICATIONS,
-            payload: apps
+            type: ApplicationManagementActions.UPDATE_APPLICATIONS,
+            payload: csars
         };
     }
 
-    static removeContainerApplication(app: Csar): Action {
+    static clearApplications(): Action {
+        return { type: ApplicationManagementActions.CLEAR_APPLICATIONS };
+    }
+
+    static updateApplicationCsar(csar: Csar): Action {
         return {
-            type: ApplicationManagementActions.REMOVE_CONTAINER_APPLICATION,
-            payload: app
+            type: ApplicationManagementActions.UPDATE_APPLICATION_CSAR,
+            payload: csar
         };
     }
 
-    static clearContainerApplication(): Action {
-        return {
-            type: ApplicationManagementActions.CLEAR_CONTAINER_APPLICATIONS,
-            payload: null
-        };
-    }
-
-    static updateCurrentApplication(app: Csar): Action {
-        return {
-            type: ApplicationManagementActions.UPDATE_CURRENT_APPLICATION,
-            payload: app
-        };
-    }
-
-    static clearCurrentApplication(): Action {
-        return {
-            type: ApplicationManagementActions.CLEAR_CURRENT_APPLICATION,
-            payload: null
-        };
+    static clearApplicationCsar(): Action {
+        return { type: ApplicationManagementActions.CLEAR_APPLICATION_CSAR };
     }
 
     static updateApplicationInstances(instances: Array<ServiceTemplateInstance>): Action {
