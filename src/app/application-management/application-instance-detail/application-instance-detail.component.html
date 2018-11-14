@@ -12,70 +12,80 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<div class="container-fluid">
-    <p-fieldset>
-        <p-header><strong>Instance Information</strong></p-header>
-        <table class="table table-bordered"
-               *ngIf="(instance | async); let instance; else loading">
-            <tbody>
-            <tr>
-                <th scope="row" style="width: 20%">ID</th>
-                <td>{{ instance.id }}</td>
-            </tr>
-            <tr>
-                <th scope="row" style="width: 20%">State</th>
-                <td>{{ instance.state }}</td>
-            </tr>
-            <tr>
-                <th scope="row" style="width: 20%">Creation Date</th>
-                <td>{{instance.created_at | date:'fullDate'}}</td>
-            </tr>
-            </tbody>
-        </table>
-        <ng-template #loading>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Loading...</p>
-                </div>
-            </div>
-        </ng-template>
-    </p-fieldset>
-    <p-fieldset [toggleable]="true">
-        <p-header>Management Plans</p-header>
-        <opentosca-management-plan-list [instance]="(instance | async)"></opentosca-management-plan-list>
-    </p-fieldset>
-    <p-fieldset [toggleable]="true" [collapsed]="true">
-        <p-header>Build Plan Monitor</p-header>
-        <span *ngIf="(instance | async); let instance;">
+
+<p-fieldset *ngIf="(instance | async); let instance; else loading" [style]="{'margin-bottom': '10px'}">
+    <p-header><strong>Instance Information</strong></p-header>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <strong>ID</strong>
+        </div>
+        <div class="p-col">
+            {{instance.id}}
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <strong>State</strong>
+        </div>
+        <div class="p-col">
+            {{instance.state}}
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <strong>Creation Date</strong>
+        </div>
+        <div class="p-col">
+            {{instance.created_at | date:'fullDate'}}
+        </div>
+    </div>
+</p-fieldset>
+<ng-template #loading>
+    <p>Loading...</p>
+</ng-template>
+<p-fieldset [style]="{'margin-bottom': '10px'}">
+    <p-header><strong>Management Plan Instances</strong></p-header>
+
+</p-fieldset>
+<p-fieldset [toggleable]="true" [collapsed]="true" [style]="{'margin-bottom': '10px'}">
+    <p-header><strong>Build Plan Monitor</strong></p-header>
+    <span *ngIf="(instance | async); let instance;">
             <opentosca-buildplan-monitor *ngIf="instance._links['build_plan_instance']"
                                          [service-template-instance]="instance"></opentosca-buildplan-monitor>
         </span>
-    </p-fieldset>
-    <p-fieldset [toggleable]="true" [collapsed]="true">
-        <p-header>Deployment Tests</p-header>
-        <opentosca-action-bar>
-            <form class="form-inline">
-                <opentosca-action-item (click)="runDeploymentTests()" styles="btn btn-primary btn-sm"
-                                       pTooltip="Run Tests"
-                                       tooltipPosition="top" showDelay="300">
-                    <i class="fa fa-play"></i>
-                </opentosca-action-item>
-                <opentosca-action-item (click)="refresh()" styles="btn btn-default btn-sm">
-                    <i class="fa fa-refresh"></i>
-                </opentosca-action-item>
-            </form>
-        </opentosca-action-bar>
-        <p-dataTable [value]="deploymentTests | async" [expandableRows]="true"
-                     rowExpandMode="single" styleClass="ui-datatable-data-p-0">
-            <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
-            <p-column field="timestamp" header="Executed at" [sortable]="true" styleClass="p-2 text-center"
-                      [style]="{'width':'150px'}">
-                <ng-template let-col let-inst="rowData" pTemplate="body">
-                    {{ inst.timestamp | date:'yyyy-MM-dd HH:mm' }}
-                </ng-template>
-            </p-column>
-            <p-column field="state" header="Overall State" styleClass="p-2 text-center">
-                <ng-template let-col let-inst="rowData" pTemplate="body">
+</p-fieldset>
+<p-fieldset [toggleable]="true" [style]="{'margin-bottom': '10px'}">
+    <p-header><strong>Management Plans</strong></p-header>
+    <opentosca-management-plan-list [instance]="(instance | async)"></opentosca-management-plan-list>
+</p-fieldset>
+<p-fieldset [toggleable]="true" [collapsed]="true" [style]="{'margin-bottom': '10px'}">
+    <p-header><strong>Deployment Tests</strong></p-header>
+    <button pButton type="button"
+            (click)="runDeploymentTests()"
+            pTooltip="Run Tests"
+            tooltipPosition="top"
+            showDelay="300"
+            icon="fa fa-play">
+    </button>
+    &nbsp;
+    <button pButton type="button"
+            (click)="refresh()"
+            pTooltip="Refresh"
+            tooltipPosition="top"
+            showDelay="300"
+            icon="fas fa-sync-alt">
+    </button>
+    <p-dataTable [value]="deploymentTests | async" [expandableRows]="true"
+                 rowExpandMode="single" styleClass="ui-datatable-data-p-0" [style]="{'margin-top': '10px'}">
+        <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
+        <p-column field="timestamp" header="Executed at" [sortable]="true" styleClass="p-2 text-center"
+                  [style]="{'width':'150px'}">
+            <ng-template let-col let-inst="rowData" pTemplate="body">
+                {{ inst.timestamp | date:'yyyy-MM-dd HH:mm' }}
+            </ng-template>
+        </p-column>
+        <p-column field="state" header="Overall State" styleClass="p-2 text-center">
+            <ng-template let-col let-inst="rowData" pTemplate="body">
                     <span *ngIf="inst.state === 'FINISHED'">
                         <span *ngIf="inst.statistics.total === inst.statistics.success">
                             <i class="fa fa-check text-success"></i>
@@ -84,70 +94,70 @@
                             <i class="fa fa-exclamation text-danger"></i>
                         </span>
                     </span>
-                    <span *ngIf="inst.state !== 'FINISHED'" pTooltip="Running" tooltipPosition="top">
+                <span *ngIf="inst.state !== 'FINISHED'" pTooltip="Running" tooltipPosition="top">
                         <i class="fa fa-refresh"></i>
                     </span>
-                </ng-template>
-            </p-column>
-            <p-column field="statistics.success" header="Success" styleClass="p-1 text-center">
-                <ng-template let-col let-inst="rowData" pTemplate="body">
-                    <h5 class="m-0"><span class="badge badge-success">{{ inst.statistics.success }}</span></h5>
-                </ng-template>
-            </p-column>
-            <p-column field="statistics.failed" header="Failed" styleClass="p-1 text-center">
-                <ng-template let-col let-inst="rowData" pTemplate="body">
-                    <h5 class="m-0"><span class="badge badge-danger">{{ inst.statistics.failed }}</span></h5>
-                </ng-template>
-            </p-column>
-            <p-column field="statistics.unknown" header="Unknown" styleClass="p-1 text-center">
-                <ng-template let-col let-inst="rowData" pTemplate="body">
-                    <h5 class="m-0"><span class="badge badge-warning">{{ inst.statistics.unknown }}</span></h5>
-                </ng-template>
-            </p-column>
-            <ng-template let-inst pTemplate="rowexpansion">
-                <p-dataTable [value]="inst.deployment_test_results" [expandableRows]="true"
-                             rowExpandMode="single">
-                    <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
-                    <p-column field="node_template_instance.name" header="Node Template" styleClass="p-2"
-                              [style]="{'width':'230px'}">
-                        <ng-template let-col let-inst="rowData" pTemplate="body">
-                            <code>{{ inst.node_template_instance.name }}</code>
-                        </ng-template>
-                    </p-column>
-                    <p-column field="state" header="State" styleClass="p-2 text-center"
-                              [style]="{'width':'60px'}">
-                        <ng-template let-col let-inst="rowData" pTemplate="body">
+            </ng-template>
+        </p-column>
+        <p-column field="statistics.success" header="Success" styleClass="p-1 text-center">
+            <ng-template let-col let-inst="rowData" pTemplate="body">
+                <h5 class="m-0"><span class="badge badge-success">{{ inst.statistics.success }}</span></h5>
+            </ng-template>
+        </p-column>
+        <p-column field="statistics.failed" header="Failed" styleClass="p-1 text-center">
+            <ng-template let-col let-inst="rowData" pTemplate="body">
+                <h5 class="m-0"><span class="badge badge-danger">{{ inst.statistics.failed }}</span></h5>
+            </ng-template>
+        </p-column>
+        <p-column field="statistics.unknown" header="Unknown" styleClass="p-1 text-center">
+            <ng-template let-col let-inst="rowData" pTemplate="body">
+                <h5 class="m-0"><span class="badge badge-warning">{{ inst.statistics.unknown }}</span></h5>
+            </ng-template>
+        </p-column>
+        <ng-template let-inst pTemplate="rowexpansion">
+            <p-dataTable [value]="inst.deployment_test_results" [expandableRows]="true"
+                         rowExpandMode="single">
+                <p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>
+                <p-column field="node_template_instance.name" header="Node Template" styleClass="p-2"
+                          [style]="{'width':'230px'}">
+                    <ng-template let-col let-inst="rowData" pTemplate="body">
+                        <code>{{ inst.node_template_instance.name }}</code>
+                    </ng-template>
+                </p-column>
+                <p-column field="state" header="State" styleClass="p-2 text-center"
+                          [style]="{'width':'60px'}">
+                    <ng-template let-col let-inst="rowData" pTemplate="body">
                             <span *ngIf="inst.state === 'SUCCESS'" pTooltip="Success" tooltipPosition="top">
                                 <i class="fa fa-check text-success"></i>
                             </span>
-                            <span *ngIf="inst.state === 'FAILED'" pTooltip="Failed" tooltipPosition="top">
+                        <span *ngIf="inst.state === 'FAILED'" pTooltip="Failed" tooltipPosition="top">
                                 <i class="fa fa-exclamation text-danger"></i>
                             </span>
-                            <span *ngIf="inst.state === 'STARTED'" pTooltip="Running" tooltipPosition="top">
+                        <span *ngIf="inst.state === 'STARTED'" pTooltip="Running" tooltipPosition="top">
                                 <i class="fa fa-refresh text-info"></i>
                             </span>
-                            <span *ngIf="inst.state === 'UNKNOWN'" pTooltip="Unknown" tooltipPosition="top">
+                        <span *ngIf="inst.state === 'UNKNOWN'" pTooltip="Unknown" tooltipPosition="top">
                                 <i class="fa fa-question text-warning"></i>
                             </span>
-                        </ng-template>
-                    </p-column>
-                    <p-column field="name" header="Test Name" styleClass="p-2"></p-column>
-                    <p-column field="duration" header="Duration (sec)" styleClass="p-2 text-center"
-                              [style]="{'width':'150px'}">
-                        <ng-template let-col let-inst="rowData" pTemplate="body">
-                            {{ (inst.end - inst.start) / 1000 }}
-                        </ng-template>
-                    </p-column>
-                    <ng-template let-inst pTemplate="rowexpansion">
+                    </ng-template>
+                </p-column>
+                <p-column field="name" header="Test Name" styleClass="p-2"></p-column>
+                <p-column field="duration" header="Duration (sec)" styleClass="p-2 text-center"
+                          [style]="{'width':'150px'}">
+                    <ng-template let-col let-inst="rowData" pTemplate="body">
+                        {{ (inst.end - inst.start) / 1000 }}
+                    </ng-template>
+                </p-column>
+                <ng-template let-inst pTemplate="rowexpansion">
                         <span *ngIf="inst.output !== undefined">
                             <pre class="m-2"><code>{{ inst.output }}</code></pre>
                         </span>
-                        <span *ngIf="inst.output === undefined">
+                    <span *ngIf="inst.output === undefined">
                             <pre class="m-2"><code>No output</code></pre>
                         </span>
-                    </ng-template>
-                </p-dataTable>
-            </ng-template>
-        </p-dataTable>
-    </p-fieldset>
-</div>
+                </ng-template>
+            </p-dataTable>
+        </ng-template>
+    </p-dataTable>
+</p-fieldset>
+

@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Plan } from '../../core/model/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
@@ -24,42 +24,27 @@ import { LoggerService } from '../../core/service/logger.service';
     selector: 'opentosca-management-plan-execution-dialog',
     templateUrl: './management-plan-execution-dialog.component.html'
 })
-export class ManagementPlanExecutionDialogComponent {
+export class ManagementPlanExecutionDialogComponent implements OnInit{
 
-    private _visible: boolean = true;
-    private _plan: Plan;
 
-    @Input()
-    get visible(): boolean {
-        return this._visible;
+    @Input() visible: boolean = false;
+    @Output() visibleChange = new EventEmitter<boolean>();
+    @Input() plan: Plan;
+    @Input() inputValidation: boolean = true;
+
+    public runnable: boolean;
+
+    constructor(
+        private appService: ApplicationManagementService,
+        private ngRedux: NgRedux<AppState>,
+        private logger: LoggerService) {
     }
 
-    set visible(value: boolean) {
-        this._visible = value;
-        this.visibleChange.emit(value);
-    }
-
-    @Output()
-    visibleChange = new EventEmitter<boolean>();
-
-
-    @Input()
-    get plan(): Plan {
-        return this._plan;
-    }
-
-    set plan(value: Plan) {
-        this._plan = value;
-
-        if (value) {
+    ngOnInit(): void {
+        if(this.plan) {
             this.checkInputs();
         }
     }
-
-    @Input()
-    inputValidation: boolean = true;
-
-    runnable: boolean;
 
     get hiddenElements(): Array<String> {
         return [
@@ -74,26 +59,26 @@ export class ManagementPlanExecutionDialogComponent {
         ];
     }
 
-    constructor(
-        private appService: ApplicationManagementService,
-        private ngRedux: NgRedux<AppState>,
-        private logger: LoggerService) {
+    /**
+     * Closes the modal and emits change event.
+     */
+    closeModal(): void {
+        this.visible = false;
+        this.visibleChange.emit(false);
     }
 
     checkInputs(): void {
-        if (!this.inputValidation) {
+        if (false === this.inputValidation) {
+            this.logger.log('[management-plan-execution-dialog.component][checkInputs]:', 'Input Validation deactivated');
             this.runnable = true;
             return;
         }
-
         for (const parameter of this.plan.input_parameters) {
-            if (parameter.required !== 'YES' || this.hiddenElements.indexOf(parameter.name) !== -1) {
-                continue;
-            }
-
-            if (parameter.value == null || parameter.value === '') {
-                this.runnable = false;
-                return;
+            if((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
+                if (parameter.value == null || parameter.value === '') {
+                    this.runnable = false;
+                    return;
+                }
             }
         }
         this.runnable = true;
@@ -118,7 +103,7 @@ export class ManagementPlanExecutionDialogComponent {
             this.ngRedux.dispatch(GrowlActions.addGrowl(
                 {
                     severity: 'error',
-                    summary: 'Failure to execute the Management Plan',
+                    summary: 'Failure at Management Plan Execution',
                     detail: 'The management plan ' + this.plan.id + ' was NOT propperly executed.'
                 }
             ));

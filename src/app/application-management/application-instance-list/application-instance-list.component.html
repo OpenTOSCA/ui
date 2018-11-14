@@ -12,11 +12,6 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<opentosca-action-bar>
-    <opentosca-action-item (click)="reloadInstances()" styles="btn btn-primary btn-sm">
-        <i class="fa fa-refresh"></i> Refresh
-    </opentosca-action-item>
-</opentosca-action-bar>
 <p-dataTable [value]="(currentAppInstances | async)" [responsive]="true">
     <p-column field="id" header="Instance ID" [sortable]="true" styleClass="p-2 text-center"></p-column>
     <p-column field="state" header="State" [sortable]="true" styleClass="p-2 text-center"></p-column>
@@ -25,14 +20,29 @@
             {{ inst.created_at | date:'yyyy-MM-dd HH:mm' }}
         </ng-template>
     </p-column>
-    <p-column header="" styleClass="text-center">
+    <p-column header="" styleClass="text-center" [style]="{'width':'15%'}">
         <ng-template let-col let-inst="rowData" pTemplate="body">
-            <button
-                class="btn btn-secondary btn-sm" type="button"
-                pTooltip="Show Details" tooltipPosition="top" showDelay="300"
-                [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]">
-                <i class="fa fa-list"></i>
-            </button>
+            <div class="ui-toolbar-group-right">
+                <button pButton
+                        icon="fas fa-list"
+                        type="button"
+                        pTooltip="Show Details"
+                        tooltipPosition="top"
+                        showDelay="300"
+                        [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]">
+                </button>
+                &nbsp;
+                <button *ngIf="terminationPlanAvailable"
+                        pButton
+                        icon="far fa-trash-alt"
+                        type="button"
+                        class="ui-button-danger"
+                        pTooltip="Delete instance"
+                        tooltipPosition="top"
+                        showDelay="300"
+                        (click)="terminateInstance(inst.id)">
+                </button>
+            </div>
             <!--<button-->
             <!--class="btn btn-danger btn-sm" type="button"-->
             <!--*ngIf="inst.state !== 'DELETED'" (click)="terminateInstance(inst.id)"-->

@@ -11,12 +11,16 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
+
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceApplication } from '../../model/marketplace-application.model';
 import { LoggerService } from '../../service/logger.service';
 import { InjectionOption } from '../../model/injection-option.model';
 import { DeploymentCompletionService } from '../../service/deployment-completion.service';
+import { InjectionOptionsResponse } from '../../model/injection-options-response.model';
+
+// Todo: Finish refactoring of deployment-completion.component and test it
 
 @Component({
     selector: 'opentosca-deployment-completion',
@@ -25,15 +29,16 @@ import { DeploymentCompletionService } from '../../service/deployment-completion
 export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     @Input() appToComplete: MarketplaceApplication;
     @Input() linkToWineryResource: string;
-    @Output() completionSuccessful = new EventEmitter<MarketplaceApplication>();
-
-    public showCompleteConfirmationModal = true;
-    public showCompleteSelectionModal = false;
+    @Input() visible: boolean;
+    @Output() visibleChange = new EventEmitter<boolean>();
+    @Output() onCompletionSuccess = new EventEmitter<MarketplaceApplication>();
+    @Output() onCompletionAbort = new EventEmitter<void>();
+    @Output() onCompletionError = new EventEmitter<string>();
 
     public completeApp = false;
     public hostCompletionOptions: Array<InjectionOption> = null;
     public connectionCompletionOptions: Array<InjectionOption> = null;
-    public completionSelection: any = {
+    public completionSelection: InjectionOptionsResponse = {
         'hostInjections': {},
         'connectionInjections': {}
     };
@@ -44,64 +49,43 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.getInjectionOptions(this.linkToWineryResource);
     }
 
     ngAfterViewInit(): void {
-        this.showCompleteConfirmationModal = true;
-        console.log(this.appToComplete);
     }
 
-    adaptRouteBackToMarketPlace(): void {
-        this.router.navigate(['../repository']);
-    }
-
-
-    cancelCompleteConfirmationModal(): void {
-        this.showCompleteConfirmationModal = false;
-    }
-
-    showCompleteSelectionModel(): void {
-        this.showCompleteConfirmationModal = false;
-        this.showCompleteSelectionModal = true;
-    }
-
-    cancelCompleteSelectionModal(): void {
-        this.showCompleteSelectionModal = false;
-    }
-
-    startCompletion(): void {
-        this.completeApp = true;
-        this.getInjectionOptions(this.linkToWineryResource);
-        this.showCompleteSelectionModel();
+    abortCompletion(): void {
+        this.visible = false;
+        this.onCompletionAbort.emit();
     }
 
     getInjectionOptions(linkToWineryResource: string): void {
         this.completionService.getInjectionOptions(linkToWineryResource)
             .then(injectionOptions => {
-
                 if (injectionOptions == null) {
-                    this.completionSuccessful.emit(this.appToComplete);
-                    this.showCompleteSelectionModal = false;
+                    this.onCompletionSuccess.emit(this.appToComplete);
+                    this.visible = false;
                 } else {
                     this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
                     this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
-                    console.log('Das sind die Host Completion Options');
-                    console.log(this.hostCompletionOptions);
+                    this.logger.log('[deployment-completion.component][getInjectionOptions]', 'Got host completion options: ' + this.hostCompletionOptions);
                 }
             });
     }
 
     injectNewHosts(): void {
-        console.log(JSON.stringify(this.completionSelection));
+        this.logger.log('[deployment-completion.component][injectNewHosts]', 'Injecting new hosts: ' + JSON.stringify(this.completionSelection));
         this.completionService.injectNewHosts(this.linkToWineryResource, this.completionSelection)
             .then(injectedServiceTemplateURL => {
                 this.appToComplete.csarURL = injectedServiceTemplateURL.substr(0, injectedServiceTemplateURL.lastIndexOf('/')) + '?csar';
                 this.logger.log('[deployment-completion.component][newCSARURLForInstallation]', this.appToComplete.csarURL);
-                this.completionSuccessful.emit(this.appToComplete);
-                this.showCompleteSelectionModal = false;
+                this.onCompletionSuccess.emit(this.appToComplete);
+                this.visible = false;
             })
             .catch(err => {
                 this.logger.handleError('[deployment-completion.component][injectNewHosts]', err);
+                this.onCompletionError.emit(err);
             });
     }
 

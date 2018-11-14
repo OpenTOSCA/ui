@@ -16,21 +16,41 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { LoggerService } from '../../core/service/logger.service';
 import { Csar } from '../../core/model/csar.model';
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
+import { Plan } from '../../core/model/plan.model';
 
 @Injectable()
-export class ApplicationDetailResolverService implements Resolve<Csar> {
+export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
 
     constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
     }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<Csar> {
-        return this.applicationService.getDescriptionByCsarId(route.params['id'])
-            .pipe(
-                catchError(reason => {
-                    return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
-                })
-            );
+    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+        return forkJoin(
+            this.applicationService.getCsar(route.params['id']),
+            this.applicationService.getBuildPlan(route.params['id'])
+                .pipe(
+                    catchError(() => of(null))
+                ),
+            this.applicationService.getTerminationPlan(route.params['id'])
+                .pipe(
+                    catchError(() => of(null))
+                )
+        )
+        .pipe(
+            mergeMap(result => {
+                return of({csar: result[0], buildPlan: result[1], terminationPlan: result[2]});
+            }),
+            catchError(reason => {
+                return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+            }))
+
+        // return this.applicationService.getCsar(route.params['id'])
+        //     .pipe(
+        //         catchError(reason => {
+        //             return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+        //         })
+        //     );
     }
 }

@@ -31,8 +31,7 @@
     <p-column field="plan_model_reference" header="Reference" styleClass="p-2"></p-column>
     <p-column [sortable]="false" [style]="{'width':'45px'}">
         <ng-template let-col let-inst="rowData" pTemplate="body">
-            <button class="btn btn-secondary btn-sm" type="button" (click)="showDialog(inst);"><i
-                class="fa fa-play"></i></button>
+            <button pButton icon="fa fa-play" type="button" (click)="showDialog(inst);"></button>
         </ng-template>
     </p-column>
 </p-dataTable>

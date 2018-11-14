@@ -38,4 +38,8 @@ export class LoggerService {
     public log(location: string, message: string): void {
         console.log('[', this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'), ']', location, ': ', message);
     }
+
+    public error(location: string, message: string): void {
+        console.error('[', this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'), ']', location, ': ', message);
+    }
 }

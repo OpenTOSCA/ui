@@ -15,7 +15,6 @@
 import { TopologyDocumentationElement } from './topology-documentation-element.model';
 
 export class TopologyTemplate {
-
     documentation: Array<TopologyDocumentationElement>;
     any: any;
     otherAttributes: any;

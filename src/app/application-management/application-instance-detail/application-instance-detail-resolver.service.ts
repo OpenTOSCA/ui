@@ -17,7 +17,7 @@ import { LoggerService } from '../../core/service/logger.service';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
 import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class ApplicationInstanceDetailResolverService implements Resolve<ServiceTemplateInstance> {

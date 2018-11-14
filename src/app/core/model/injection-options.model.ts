@@ -15,7 +15,6 @@
 import { InjectionOption } from './injection-option.model';
 
 export class InjectionOptions {
-
     hostInjectionOptions: Array<InjectionOption>;
     connectionInjectionOptions: Array<InjectionOption>;
 }

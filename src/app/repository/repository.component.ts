@@ -107,7 +107,7 @@ export class RepositoryComponent implements OnInit {
                     // this.appToComplete = app;
                     // this.linkToWineryResource = err.json()['Location'] as string;
                     // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
-                    // this.startCompletionProcess = true;
+                    // this.showCompletionDialog = true;
                 } else {
                     this.ngRedux.dispatch(GrowlActions.addGrowl({
                         severity: 'error',

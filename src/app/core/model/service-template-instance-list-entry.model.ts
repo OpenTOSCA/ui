@@ -11,8 +11,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
+
 import { ResourceSupport } from './resource-support.model';
 
+/**
+ * Class that reflects ServiceTemplateInstanceListEntry ressource provided by API
+ */
 export class ServiceTemplateInstanceListEntry extends ResourceSupport {
     id: number;
     created_at: string;

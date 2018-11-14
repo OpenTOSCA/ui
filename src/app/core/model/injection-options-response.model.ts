@@ -12,12 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { ResourceSupport } from './resource-support.model';
-
-/**
- * Class that reflects ServiceTemplateListEntry ressource provided by API
- */
-export class ServiceTemplateListEntry extends ResourceSupport {
-    id: string;
-    name: string;
+export class InjectionOptionsResponse {
+    hostInjections: any;
+    connectionInjections: any;
 }

@@ -22,7 +22,7 @@ import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { Interface } from '../model/interface.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 
@@ -33,14 +33,14 @@ export class ApplicationManagementService {
                 private logger: LoggerService) {
     }
 
-    public normalizeApplicationId(id: string): string {
-        return _.endsWith(id.toLowerCase(), '.csar') ? id : id + '.csar';
+    public normalizeApplicationId(csarId: string): string {
+        return _.endsWith(csarId.toLowerCase(), '.csar') ? csarId : csarId + '.csar';
     }
 
-    deleteApplication(id: string): Observable<any> {
+    deleteApplication(csarId: string): Observable<any> {
         const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
-            .append(this.normalizeApplicationId(id))
+            .append(this.normalizeApplicationId(csarId))
             .toString();
         this.logger.log('[application.service][deleteApplication]', 'Sending delete to ' + url);
         return this.http.delete(url);
@@ -68,8 +68,8 @@ export class ApplicationManagementService {
             );
     }
 
-    getBuildPlan(id: string): Observable<Plan> {
-        return this.getServiceTemplatePath(id)
+    getBuildPlan(csarId: string): Observable<Plan> {
+        return this.getFirstServiceTemplateOfCsar(csarId)
             .pipe(
                 flatMap(serviceTemplatePath => {
                     const url = new Path(serviceTemplatePath)
@@ -97,8 +97,8 @@ export class ApplicationManagementService {
             );
     }
 
-    getTerminationPlan(id: string): Observable<Plan> {
-        return this.getServiceTemplatePath(id)
+    getTerminationPlan(csarId: string): Observable<Plan> {
+        return this.getFirstServiceTemplateOfCsar(csarId)
             .pipe(
                 flatMap(serviceTemplatePath => {
                     const url = new Path(serviceTemplatePath)
@@ -130,10 +130,10 @@ export class ApplicationManagementService {
             );
     }
 
-    getServiceTemplatePath(id: string): Observable<string> {
+    getFirstServiceTemplateOfCsar(csarId: string): Observable<string> {
         const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
-            .append(this.normalizeApplicationId(id))
+            .append(this.normalizeApplicationId(csarId))
             .append('servicetemplates')
             .toString();
         const httpOptions = {
@@ -146,29 +146,7 @@ export class ApplicationManagementService {
                 map(response => {
                     return response['service_templates'][0]._links['self'].href;
                 }),
-                catchError(err => this.logger.handleObservableError('[application.service][getServiceTemplatePath]', err))
-            );
-    }
-
-    /**
-     * @deprecated
-     */
-    triggerTerminationPlan(plan: Plan): Observable<string> {
-        const url = new Path(plan._links['self'].href)
-            .append('instances')
-            .toString();
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
-        return this.http.post(url, [], httpOptions)
-            .pipe(
-                map((response: Response) => {
-                    this.logger.log('[application-management.service][triggerTerminationPlan]', 'Result: ' + response);
-                    return response.headers['Location'];
-                }),
-                catchError(err => this.logger.handleError('[application-management.service][triggerTerminationPlan]', err))
+                catchError(err => this.logger.handleObservableError('[application.service][getFirstServiceTemplateOfCsar]', err))
             );
     }
 
@@ -182,16 +160,15 @@ export class ApplicationManagementService {
             .toString();
         const httpOptions = {
             headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
+                'Accept': 'text/plain'
+            }),
         };
-        return this.http.post(url, plan.input_parameters, httpOptions)
+        return this.http.post(url, plan.input_parameters, {...httpOptions, responseType: 'text', observe: 'response'})
             .pipe(
-                map((response: Response) => {
-                    this.logger.log('[application.service][triggerBuildPlan]', 'Response headers are: ' + response.headers);
-                    return response.headers['Location'];
+                map(response => {
+                    return response.headers.get('Location');
                 }),
-                catchError(err => this.logger.handleError('[application.service][triggerBuildPlan]', err))
+                catchError(err => this.logger.handleError('[application.service][triggerManagementPlan]', err))
             );
     }
 
@@ -212,7 +189,7 @@ export class ApplicationManagementService {
             .catch(() => false);
     }
 
-    getDescriptionByCsarId(csarId: string): Observable<Csar> {
+    getCsar(csarId: string): Observable<Csar> {
         csarId = this.normalizeApplicationId(csarId);
         const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
@@ -227,7 +204,7 @@ export class ApplicationManagementService {
             .pipe(
                 catchError((err: any) => {
                     this.logger
-                        .handleObservableError('[application.service][getDescriptionByCsarId]', err);
+                        .handleObservableError('[application.service][getCsar]', err);
                     return throwError(err);
                 })
             );

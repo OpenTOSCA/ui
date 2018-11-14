@@ -31,7 +31,7 @@ export class DebounceDirective {
 
     inputValue: string;
 
-    constructor(private elementRef: ElementRef, private http: HttpClient) {
+    constructor(private elementRef: ElementRef) {
         fromEvent(elementRef.nativeElement, 'keyup')
             .pipe(
                 map(() => this.inputValue),

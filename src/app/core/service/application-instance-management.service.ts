@@ -11,13 +11,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
+
 import { Injectable } from '@angular/core';
 import { LoggerService } from './logger.service';
 import { ApplicationInstancesManagementService } from './application-instances-management.service';
 import { ServiceTemplateInstance } from '../model/service-template-instance.model';
 import { ApplicationManagementService } from './application-management.service';
 import { Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class ApplicationInstanceManagementService {
@@ -28,12 +29,12 @@ export class ApplicationInstanceManagementService {
     }
 
     getServiceTemplateInstance(appId: string, instanceId: string): Observable<ServiceTemplateInstance> {
-        return this.applicationManagementService.getDescriptionByCsarId(appId)
+        return this.applicationManagementService.getCsar(appId)
             .pipe(
-                flatMap((app) => {
+                mergeMap(app => {
                     return this.appInstancesService.getServiceTemplateInstancesOfCsar(app);
                 }),
-                map((instances) => {
+                map(instances => {
                     for (const instance of instances) {
                         if (instance.id === +instanceId) {
                             return instance;

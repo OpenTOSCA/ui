@@ -17,14 +17,15 @@
         <button pButton type="button" (click)="refresh()" icon="fas fa-sync-alt"
                 pTooltip="Refresh" showDelay="500" tooltipPosition="top"></button>
         &nbsp;
+        <button pButton type="button" style="display: inline-block"
+                class="ui-button-info" icon="fa fa-upload"
+                (click)="showModal = true"
+                pTooltip="Upload new Application" showDelay="500"></button>
+        &nbsp;
         <opentosca-filter [placeholder]="'Filter applications...'"
                           (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
-        <button pButton type="button" style="display: inline-block; margin-left: 10px"
-                class="ui-button-info" icon="fa fa-upload"
-                [routerLink]="[{ outlets: { modal: ['upload'] } }]"></button>
     </div>
 </p-toolbar>
-
 <div class="ot-container">
     <div class="ot-item"
          *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackFn">
@@ -58,5 +59,14 @@
         </p-card>
     </div>
 </div>
-<p-confirmDialog header="Remove application?" width="425"></p-confirmDialog>
-<router-outlet name="modal"></router-outlet>
+<p-confirmDialog width="425"></p-confirmDialog>
+<opentosca-application-upload [(showModal)]="showModal" (onUploadComplete)="refresh()"></opentosca-application-upload>
+<!-- Todo deployment-completion component is currently disabled until it is aligned with new style and refactored -->
+<opentosca-deployment-completion *ngIf="false"
+        [(visible)]="showCompletionDialog"
+        [appToComplete]="appToComplete"
+        [linkToWineryResource]="linkToWineryResourceForCompletion"
+        (onCompletionSuccess)="onCompletionSuccess($event)"
+        (onCompletionAbort)="onCompletionAbort()"
+        (onCompletionError)="onCompletionError($event)">
+</opentosca-deployment-completion>

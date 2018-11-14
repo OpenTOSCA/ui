@@ -14,7 +14,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationManagementRoutingModule } from './application-management-routing.module';
-import { ConfigurationService } from './../configuration/configuration.service';
+import { ConfigurationService } from '../configuration/configuration.service';
 import { ApplicationDetailComponent } from './application-detail/application-detail.component';
 import { CoreModule } from '../core/core.module';
 import { ApplicationInstanceDetailComponent } from './application-instance-detail/application-instance-detail.component';
@@ -27,24 +27,27 @@ import { RouterModule } from '@angular/router';
 import {
     AccordionModule,
     ButtonModule,
-    CardModule, ConfirmationService, ConfirmDialogModule,
+    CardModule,
+    ConfirmationService,
+    ConfirmDialogModule,
     DataTableModule,
     DialogModule,
     FieldsetModule,
+    FileUploadModule,
     ProgressBarModule,
-    ScrollPanelModule,
     SharedModule,
+    TabViewModule,
+    ScrollPanelModule,
     ToolbarModule,
-    TooltipModule
+    TooltipModule, ProgressSpinnerModule, InputTextareaModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
-import { NgxUploaderModule } from 'ngx-uploader';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import { DeploymentCompletionService } from '../core/service/deployment-completion.service';
 import { BuildplanMonitorComponent } from './buildplan-monitor/buildplan-monitor.component';
 import { ManagementPlanListComponent } from './management-plan-list/management-plan-list.component';
 import { ManagementPlanExecutionDialogComponent } from './management-plan-execution-dialog/management-plan-execution-dialog.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
@@ -54,19 +57,22 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
         DialogModule,
         DataTableModule,
         SharedModule,
-        NgxUploaderModule,
         TooltipModule,
         CardModule,
         ButtonModule,
         ScrollPanelModule,
+        ProgressSpinnerModule,
         ToolbarModule,
         ConfirmDialogModule,
+        InputTextareaModule,
         ProgressBarModule,
-        NoopAnimationsModule,
+        BrowserAnimationsModule,
         NgSpinKitModule,
         RouterModule,
         FieldsetModule,
+        FileUploadModule,
         AccordionModule,
+        TabViewModule,
         CoreModule,
         ToolbarModule,
         ButtonModule

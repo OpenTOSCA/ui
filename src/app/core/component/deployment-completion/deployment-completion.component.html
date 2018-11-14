@@ -13,28 +13,11 @@
   -->
 
 <p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
-          [(visible)]="showCompleteConfirmationModal" modal="true">
-    <p-header>
-        Apply completion?
-    </p-header>
-    <div class="opentosca-modal-content">
-        Do you want to process with the completion for "{{appToComplete?.displayName}}"?
-    </div>
-    <p-footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="cancelCompleteConfirmationModal()">Cancel
-            </button>
-            <button type="button" class="btn btn-primary" [disabled]="false" (click)="startCompletion()">Complete
-            </button>
-        </div>
-    </p-footer>
-</p-dialog>
-
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
-          [(visible)]="showCompleteSelectionModal" modal="true">
+          [(visible)]="visible" modal="true">
     <p-header>
         Selection
     </p-header>
+    <!-- Todo Rework this with primeng instead of bootstrap -->
     <form #selectionForm="ngForm">
         <div class="modal-body">
             <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
@@ -78,7 +61,7 @@
     </form>
     <p-footer>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="cancelCompleteSelectionModal()">Cancel
+            <button type="button" class="btn btn-secondary mr-2" (click)="abortCompletion()">Cancel
             </button>
             <button type="button" class="btn btn-primary" [disabled]="!selectionForm.form.valid"
                     (click)="injectNewHosts()">Submit

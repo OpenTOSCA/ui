@@ -25,6 +25,7 @@ import { Csar } from '../../core/model/csar.model';
 import { Plan } from '../../core/model/plan.model';
 import { Observable } from 'rxjs';
 import { GrowlActions } from '../../core/growl/growl-actions';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -35,41 +36,44 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
     @select(['container', 'application', 'csar']) csar: Observable<Csar>;
     @select(['container', 'application', 'buildPlan']) buildPlan: Observable<Plan>;
+    @select(['container', 'application', 'terminationPlan']) terminationPlan: Observable<Plan>;
 
-    // dialogVisible: boolean = false;
+    public dialogVisible = false;
 
-    constructor(private route: ActivatedRoute, private router: Router, private ngRedux: NgRedux<AppState>,
-                private applicationService: ApplicationManagementService, private instanceService: ApplicationInstancesManagementService,
+    constructor(private route: ActivatedRoute,
+                private router: Router,
+                private ngRedux: NgRedux<AppState>,
+                private appService: ApplicationManagementService,
+                private instancesService: ApplicationInstancesManagementService,
                 private logger: LoggerService) {
     }
 
     ngOnInit(): void {
-        this.route.data.subscribe((data: { csar: Csar }) => {
+        this.route.data.subscribe((data: { application: { csar: Csar, buildPlan: Plan, terminationPlan: Plan } }) => {
             // Prepare breadcrumb
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-                { label: 'Applications', routerLink: 'applications' },
-                { label: data.csar.id, routerLink: ['applications', data.csar.id] }
+                {label: 'Applications', routerLink: 'applications'},
+                {label: data.application.csar.id, routerLink: ['applications', data.application.csar.id]}
             ]));
-
-            this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationCsar(data.csar));
-
-
-            // this.appService.getBuildPlan(data.csar.id).subscribe(buildPlan => {
-            //     this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(buildPlan));
-            // });
-            // this.appService.getTerminationPlan(data.csar.id).subscribe(terminationPlan => {
-            //     this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(terminationPlan));
-            // });
-            // // Load also application instances for list
-            // this.updateAppInstancesList(data.csar);
-
-
+            this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationCsar(data.application.csar));
+            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(data.application.buildPlan));
+            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(data.application.terminationPlan));
+            if (data.application.buildPlan === null) {
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'info',
+                        summary: 'No Build Plan Available',
+                        detail: 'There is no Build Plan associated with this app. No instances can be provisioned.'
+                    }
+                ));
+            }
+            this.triggerReloadAppInstances();
         }, error => {
             this.ngRedux.dispatch(GrowlActions.addGrowl(
                 {
                     severity: 'warn',
                     summary: 'Loading of Data failed',
-                    detail: `'Loading of data for the selected application failed.
+                    detail: `Loading of data for the selected application failed.
                      Please try to load it again. Server returned: ${error.message}`
                 }
             ));
@@ -82,50 +86,31 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationCsar());
     }
 
+    triggerReloadAppInstances(): void {
+        this.reloadInstances(this.ngRedux.getState().container.application.csar);
+    }
 
-    // /**
-    //  * Checks if given param should be shown in the start privisioning dialog
-    //  * @param name
-    //  * @returns {boolean}
-    //  */
-    // public showParam(name: string): boolean {
-    //     return (!(name === 'CorrelationID' ||
-    //         name === 'csarID' ||
-    //         name === 'serviceTemplateID' ||
-    //         name === 'containerApiAddress' ||
-    //         name === 'instanceDataAPIUrl' ||
-    //         name === 'planCallbackAddress_invoker' ||
-    //         name === 'csarEntrypoint'));
-    // }
-    //
-    //
-    //
-    // emitTerminationPlan(terminationEvent: string): void {
-    //     const terminationPlan = Object.assign({}, this.ngRedux.getState().container.currentTerminationPlan);
-    //     terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent);
-    //     console.log(terminationPlan);
-    //     this.appService.triggerTerminationPlan(terminationPlan)
-    //         .subscribe(result => {
-    //             // TODO Location header is filled with correct plan instance url but is not accessible in a http 201 response
-    //             this.logger.log('[application-detail.component][emitTerminationPlan]', result);
-    //             this.ngRedux.dispatch(GrowlActions.addGrowl(
-    //                 {
-    //                     severity: 'info',
-    //                     summary: 'Termination started',
-    //                     detail: 'The termination plan has been started.'
-    //                 }
-    //             ));
-    //         });
-    // }
-    //
-    // triggerUpdateAppInstancesList(): void {
-    //     this.updateAppInstancesList(this.ngRedux.getState().container.currentApp);
-    // }
-    //
-    // updateAppInstancesList(app: Csar): void {
-    //     this.appInstancesService.getServiceTemplateInstancesOfCsar(app)
-    //         .subscribe(result => {
-    //             this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result));
-    //         });
-    // }
+    reloadInstances(app: Csar): void {
+        this.instancesService.getServiceTemplateInstancesOfCsar(app)
+            .subscribe(result => {
+                this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result));
+            });
+    }
+
+    emitTerminationPlan(terminationEvent: string): void {
+        const terminationPlan = Object.assign({}, this.ngRedux.getState().container.application.terminationPlan);
+        terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent);
+        console.log(terminationPlan);
+        this.appService.triggerManagementPlan(terminationPlan)
+            .subscribe(result => {
+                this.logger.log('[application-detail.component][emitTerminationPlan]', result);
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'info',
+                        summary: 'Termination started',
+                        detail: 'The termination plan has been started.'
+                    }
+                ));
+            });
+    }
 }

@@ -12,31 +12,28 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ServiceTemplateInstanceListEntry } from '../../core/model/service-template-instance-list-entry.model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
 
 @Component({
     selector: 'opentosca-application-instance-list',
     templateUrl: './application-instance-list.component.html',
     styleUrls: ['./application-instance-list.component.scss']
 })
-export class ApplicationInstanceListComponent {
+export class ApplicationInstanceListComponent  {
 
-    @select(['container', 'currentAppInstances']) currentAppInstances: Observable<Array<ServiceTemplateInstanceListEntry>>;
+    @Input() terminationPlanAvailable: boolean = false;
     @Output() public onTerminateInstance: EventEmitter<string> = new EventEmitter();
-    @Output() public onReloadInstances: EventEmitter<null> = new EventEmitter();
+
+    @select(['container', 'application', 'instances']) currentAppInstances: Observable<Array<ServiceTemplateInstance>>;
 
     constructor() {
     }
 
     terminateInstance(instanceID: string): void {
         this.onTerminateInstance.emit(instanceID);
-    }
-
-    reloadInstances(): void {
-        this.onReloadInstances.emit();
     }
 
 }

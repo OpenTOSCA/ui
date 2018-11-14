@@ -30,35 +30,26 @@ export class ApplicationInstancesManagementService {
                 private http: HttpClient) {
     }
 
-    getServiceTemplateInstancesOfCsar(app: Csar): Observable<ServiceTemplateInstance[]> {
+    getServiceTemplateInstancesOfCsar(app: Csar): Observable<Array<ServiceTemplateInstance>> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Accept': 'application/json'
             })
         };
-        return this.http.get(app._links['servicetemplates'].href)
+        return this.http.get<ServiceTemplateList>(app._links['servicetemplates'].href)
             .pipe(
-                mergeMap((response: ServiceTemplateList) => {
-                    return this.http.get(response.service_templates[0]._links['self'].href, httpOptions)
+                mergeMap(response => {
+                    return this.http.get<ServiceTemplate>(response.service_templates[0]._links['self'].href, httpOptions)
                         .pipe(
-                            mergeMap((serviceTemplate: ServiceTemplate) => {
-                                return this.http.get(serviceTemplate._links['instances'].href, httpOptions)
+                            mergeMap(serviceTemplate => {
+                                return this.http.get<ServiceTemplateInstanceList>(serviceTemplate._links['instances'].href, httpOptions)
                                     .pipe(
-                                        mergeMap((instanceList: ServiceTemplateInstanceList) => {
-                                            const obs: Array<Observable<any>> = [];
+                                        mergeMap(instanceList => {
+                                            const obs: Array<Observable<ServiceTemplateInstance>> = [];
                                             for (const entry of instanceList.service_template_instances) {
-                                                obs.push(this.http.get(entry._links['self'].href, httpOptions));
+                                                obs.push(this.http.get<ServiceTemplateInstance>(entry._links['self'].href, httpOptions));
                                             }
                                             return forkJoin(obs);
-                                            /*.pipe(
-                                                mergeMap((rawFullInstances: Array<HttpResponse<any>>) => {
-                                                    const resultAry: Array<ServiceTemplateInstance> = [];
-                                                    for (const r of rawFullInstances) {
-                                                        resultAry.push(r.json());
-                                                    }
-                                                    return of(resultAry);
-                                                })
-                                            );*/
                                         }),
                                         catchError(reason => this.logger.handleError(
                                             '[application-instances.service][getServiceTemplateInstances][fetching instances]',

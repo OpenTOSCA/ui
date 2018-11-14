@@ -12,16 +12,73 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<h3>{{ (csar | async).display_name }}</h3>
-<p>{{ (csar | async).description }}</p>
-
-<p-toolbar>
-    <div class="ui-toolbar-group-left">
-        <button pButton type="button" icon="fas fa-plus"
-                pTooltip="Provision new instance..." showDelay="300" tooltipPosition="top"></button>
+<div *ngIf="(csar | async); let csar; else loading">
+    <div class="p-grid">
+        <div class="p-col-8">
+            <div class="p-grid">
+                <div class="p-col-2">
+                    <!-- Here goes the image -->
+                    <img [src]="csar.icon_url" style="width: 100%; height: auto"
+                         onerror="this.src='/assets/Default_Application_Icon.png'">
+                </div>
+                <div class="p-col">
+                    <h3>{{ csar.display_name }}</h3>
+                    <p>{{ csar.description }}</p>
+                </div>
+            </div>
+            <div class="p-grid">
+                <div class="p-col">
+                    <p-fieldset>
+                        <p-header><strong>Instances</strong></p-header>
+                        <p-toolbar>
+                            <div class="ui-toolbar-group-left">
+                                <button pButton type="button" icon="fas fa-plus"
+                                        pTooltip="Provision new instance..." showDelay="300" tooltipPosition="right"
+                                        [disabled]="(buildPlan | async) === null"
+                                        (click)="dialogVisible = true"></button>
+                                &nbsp;
+                                <button pButton type="button" icon="fas fa-sync-alt"
+                                        pTooltip="Reload instances" showDelay="300" tooltipPosition="top"
+                                        (click)="triggerReloadAppInstances()"></button>
+                            </div>
+                        </p-toolbar>
+                        <opentosca-application-instance-list
+                                [terminationPlanAvailable]="(terminationPlan | async) !== null"
+                                (onTerminateInstance)="emitTerminationPlan($event)">
+                        </opentosca-application-instance-list>
+                    </p-fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="p-col-4">
+            <div class="p-grid">
+                <div class="p-col">
+                    <p-fieldset>
+                        <p-header><strong>Info</strong></p-header>
+                        <p>Version: {{csar.version}}</p>
+                        <p>Authors: {{csar.authors}}</p>
+                    </p-fieldset>
+                </div>
+            </div>
+            <div class="p-grid" *ngIf="csar.image_url && '' !== csar.image_url">
+                <div class="p-col">
+                    <p-fieldset>
+                        <p-header><strong>Topology Preview</strong></p-header>
+                        <img [src]="csar.image_url" style="width: 100%; height: auto">
+                    </p-fieldset>
+                </div>
+            </div>
+        </div>
     </div>
-</p-toolbar>
-
+</div>
+<ng-template #loading>
+    <p>Loading app info...</p>
+</ng-template>
+<opentosca-management-plan-execution-dialog
+        [(visible)]="dialogVisible"
+        [plan]="buildPlan | async"
+        [inputValidation]="true">
+</opentosca-management-plan-execution-dialog>
 <!--<div class="container-fluid">-->
 <!--<div class="row">-->
 <!--<div class="col-5">-->

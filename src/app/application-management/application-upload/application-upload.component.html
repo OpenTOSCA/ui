@@ -12,114 +12,88 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog (onHide)="adaptRoute()" [(visible)]="showModal" modal="true" draggable="false" resizable="false" width="800">
+<p-dialog [(visible)]="showModal" (onHide)="closeModal()" modal="true" draggable="false" resizable="false" width="800">
     <p-header>
-        Upload new Application
+        Upload New Application
     </p-header>
-    <div class="row">
-        <div class="col-sm-3">
-            <span class="btn btn-primary btn-file">
-                Select local File
-                <!--<input
-                        type="file"
-                        class="btn btn-primary"
-                        name="myFile"
-                        ngFileSelect
-                        [options]="options"
-                        [events]="inputUploadEvents"
-                        (beforeUpload)="beforeUpload($event)"
-                        (onUpload)="handleUpload($event)"
-                        (click)="resetUploadStats()"
-                        (change)="onChange($event)">-->
-                <input
-                    type="file"
-                    class="btn btn-primary"
-                    ngFileSelect
-                    [options]="options"
-                    (uploadOutput)="onUploadOutput($event)"
-                    [uploadInput]="uploadInput">
-  or choose file(s)
-            </span>
-        </div>
-        <div class="col-sm-9">
-            <div *ngIf="uploadingFile; else noFileSelected">
-                <h6 class="mt-2">Selected File</h6>
-                <p>Name: {{ uploadingFile?.name }}</p>
-                <p>Size: {{ uploadingFile?.size | humanizeBytes}}</p>
-                <p>Last Modified: {{ uploadingFile?.lastModifiedDate}}</p>
+    <p-tabView>
+        <p-tabPanel header="Upload local File">
+            <p-fileUpload name="file" [url]="postURL" chooseLabel="Select File"
+                          (onSelect)="onSelect()"
+                          (onProgress)="onUploadProgress($event.originalEvent)"
+                          (onUpload)="onUploadFinished($event)"
+                          (onError)="onUploadError($event)"
+                          (onClear)="onClear()">
+                <ng-template let-file pTemplate="file">
+                    <div>
+                        <p>Name: {{ file.name }}</p>
+                        <p>Size: {{file.size | humanizeBytes}}</p>
+                        <p>Last Modified: {{file.lastModifiedDate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <div *ngIf="!fileSelected">Please select a file</div>
+                    <p *ngIf="showUploadProgressLabel">Uploaded {{bytesUploaded | humanizeBytes}} of {{bytesTotal |
+                        humanizeBytes}}</p>
+                    <div *ngIf="deploymentInProgress">
+                        <div class="p-grid">
+                            <div class="p-col-2">
+                                <p-progressSpinner></p-progressSpinner>
+                            </div>
+                            <div class="p-col p-col-align-center">
+                                Archive Deployment in Progress
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-fileUpload>
+        </p-tabPanel>
+
+        <p-tabPanel header="Upload from URL">
+            <div class="p-grid">
+                <div class="p-col-3 ot-input-label">
+                    <label for="urlToArchive">URL to Archive:</label>
+                </div>
+                <div class="p-col-9">
+                    <opentosca-debounced-validated-input
+                            id="urlToArchive"
+                            placeholder="URL to archive file"
+                            [validator]="urlValidator"
+                            (valueChange)="urlChange($event)"
+                            (validityChange)="urlValidityChange($event)">
+                    </opentosca-debounced-validated-input>
+                </div>
             </div>
-            <ng-template #noFileSelected>
-                <form>
+            <div class="p-grid">
+                <div class="p-col-3 ot-input-label">
+                    <label for="nameForArchive">Name for the archive file:</label>
+                </div>
+                <div class="p-col-9">
                     <opentosca-debounced-validated-input
-                        placeholder='URL to archive file'
-                        [validator]='urlValidator'
-                        (valueChange)='urlChange($event)'
-                        (validityChange)='urlValidityChange($event)'>
+                            id="nameForArchive"
+                            placeholder='Name for the archive file'
+                            [validator]='nameValidator'
+                            (valueChange)='nameChange($event)'
+                            (validityChange)='nameValidityChange($event)'>
                     </opentosca-debounced-validated-input>
-                    <opentosca-debounced-validated-input
-                        placeholder='Name for the archive file'
-                        [validator]='nameValidator'
-                        (valueChange)='nameChange($event)'
-                        (validityChange)='nameValidityChange($event)'>
-                    </opentosca-debounced-validated-input>
-                </form>
-            </ng-template>
-        </div>
-    </div>
-    <div class="row" *ngIf="uploadingFile?.progress.data.percentage > 0">
-        <div class="col-sm-4 offset-md-3">
-            <h6>File Upload in Progress</h6>
-        </div>
-        <div class="col-sm-5">
-            <p-progressBar [value]="uploadingFile?.data.progress.percentage"></p-progressBar>
-            <small><em>current upload speed: {{ uploadingFile.progress.data.speedHuman }}</em></small>
-        </div>
-    </div>
-    <div class="row mt-1" *ngIf="deploymentInProgress && !(uploadingFile?.responseStatus === 500)">
-        <div class="col-sm-4 offset-md-3">
-            <h6>Archive Deployment in Progress</h6>
-        </div>
-        <div class="col-sm-5 spinner">
-            <sk-fading-circle></sk-fading-circle>
-        </div>
-    </div>
+                </div>
+            </div>
+            <button type="button"
+                    pButton
+                    (click)="startURLUpload()"
+                    [disabled]="!(this.tempData.validURL && this.tempData.validName)"
+                    label="Upload"
+                    icon="fa fa-upload">
+            </button>
+        </p-tabPanel>
+    </p-tabView>
+
     <p-footer>
-        <div class="d-flex justify-content-end">
-            <button
-                *ngIf="this.tempData.cur.url && this.tempData.cur.name"
+        <button
                 type="button"
-                class="btn btn-success mr-2"
-                (click)="startURLUpload()"
-                [disabled]="!(this.tempData.validURL && this.tempData.validName)">
-                Upload from URL
-            </button>
-            <button
-                *ngIf="uploadingFile"
-                type="button"
-                class="btn btn-success mr-2"
-                (click)="startUpload()"
-                [disabled]="uploadingFile?.progress.status === 1">
-                Start Upload
-            </button>
-            <button
-                *ngIf="uploadingFile?.progress.status === 1"
-                type="button"
-                class="btn btn-danger mr-2"
-                (click)="abortUpload()">
-                Abort Upload
-            </button>
-            <button
-                type="button"
-                class="btn btn-secondary"
-                (click)="closeModal()">
-                Close
-            </button>
-        </div>
+                pButton
+                (click)="closeModal()"
+                label="Close">
+        </button>
     </p-footer>
 </p-dialog>
-<opentosca-deployment-completion
-    *ngIf="startCompletionProcess"
-    [appToComplete]="appToComplete"
-    [linkToWineryResource]="linkToWineryResourceForCompletion"
-    (completionSuccessful)="installInContainer($event)">
-</opentosca-deployment-completion>

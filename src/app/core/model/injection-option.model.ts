@@ -15,7 +15,6 @@
 import { TopologyTemplate } from './topology-template.model';
 
 export class InjectionOption {
-
     nodeID: string;
     injectionOptionTopologyFragments: Array<TopologyTemplate>;
 }

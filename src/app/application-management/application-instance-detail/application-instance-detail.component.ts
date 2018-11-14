@@ -30,8 +30,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 })
 export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
 
-    @select(['container', 'currentInstance'])
-    instance: Observable<ServiceTemplateInstance>;
+    @select(['container', 'application', 'instance']) instance: Observable<ServiceTemplateInstance>;
 
     deploymentTests: Observable<Array<DeploymentTest>>;
     serviceTemplateInstance: ServiceTemplateInstance;
@@ -62,25 +61,25 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.route.data
             .subscribe((data: { serviceTemplateInstance: ServiceTemplateInstance }) => {
-                    this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstance(data.serviceTemplateInstance));
-                    this.serviceTemplateInstance = data.serviceTemplateInstance;
-                    this.deploymentTests = this.deploymentTestService.getDeploymentTests(data.serviceTemplateInstance);
-                    const breadCrumbs = [];
-                    breadCrumbs.push({ label: 'Applications', routerLink: '/applications' });
-                    breadCrumbs.push(
-                        {
-                            label: data.serviceTemplateInstance.csar_id,
-                            routerLink: ['/applications', data.serviceTemplateInstance.csar_id]
-                        });
-                    breadCrumbs.push(
-                        {
-                            label: 'Instance: '
-                                + data.serviceTemplateInstance.id
-                        }
-                    );
-                    this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
-                },
-                reason => console.log('WRONG'));
+                this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstance(data.serviceTemplateInstance));
+                this.serviceTemplateInstance = data.serviceTemplateInstance;
+                this.deploymentTests = this.deploymentTestService.getDeploymentTests(data.serviceTemplateInstance);
+                const breadCrumbs = [];
+                breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
+                breadCrumbs.push(
+                    {
+                        label: data.serviceTemplateInstance.csar_id,
+                        routerLink: ['/applications', data.serviceTemplateInstance.csar_id]
+                    });
+                breadCrumbs.push(
+                    {
+                        label: 'Instance: '
+                            + data.serviceTemplateInstance.id
+                    }
+                );
+                this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb(breadCrumbs));
+            },
+            reason => console.log('WRONG'));
     }
 
     ngOnDestroy(): void {

@@ -13,5 +13,8 @@
  */
 import { ResourceSupport } from './resource-support.model';
 
+/**
+ * Class that reflects ServiceTemplate ressource provided by API. We do not use it currently.
+ */
 export class ServiceTemplate extends ResourceSupport {
 }

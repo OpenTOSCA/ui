@@ -18,22 +18,17 @@ import { HttpClient } from '@angular/common/http';
 @Component({
     selector: 'opentosca-debounced-validated-input',
     template: `
-        <div
-            class="form-group has-feedback"
-            [ngClass]="{
-                    'has-success': inputValidated && inputValid,
-                    'has-danger': inputValidated && !inputValid
-                }">
-            <input
-                type="text"
-                class="form-control"
-                [placeholder]="placeholder"
-                opentoscaDebounce
-                (debouncedValue)="updateAndValidate($event)"
-                [ngClass]="{
-                        'form-control-success': inputValidated && inputValid,
-                        'form-control-danger': inputValidated && !inputValid
-                    }">
+        <div class="ui-inputgroup">
+            <input type="text" 
+                   pInputText
+                   opentoscaDebounce
+                   style="width: 100%"
+                   (debouncedValue)="updateAndValidate($event)"
+                   [placeholder]="placeholder"
+                   [ngClass]="{'ot-has-success': inputValidated && inputValid, 'ot-has-error': inputValidated && !inputValid}">
+            <span *ngIf="iconClass" class="ui-inputgroup-addon">
+                    <span><i [class]="iconClass"></i></span>
+            </span>
         </div>
     `
 })
@@ -44,6 +39,9 @@ export class DebouncedValidatedInputComponent {
 
     @Input()
     validator: (value: string) => Observable<boolean>;
+
+    @Input()
+    iconClass: string;
 
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
