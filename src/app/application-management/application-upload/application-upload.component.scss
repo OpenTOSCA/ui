@@ -12,11 +12,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-.ui-widget button {
-    font-size: 1rem;
+:host ::ng-deep .ui-progress-spinner {
+    margin-top: 10px;
+    height: 40px;
+    width: 40px;
 }
-
-//div.p-col p-progressSpinner div.ui-progress-spinner {
-//  height: 50px;
-//  width: 50px;
-//}
