@@ -3981,12 +3981,6 @@ ng-spin-kit@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/ng-spin-kit/-/ng-spin-kit-5.1.1.tgz#ecad9709c77ff4dde79eb532ba0db4650a8800a8"
 
-ngx-uploader@~7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-uploader/-/ngx-uploader-7.0.0.tgz#725d745e1938182b4d63d2bcd797a856a16e622a"
-  dependencies:
-    tslib "^1.9.0"
-
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
