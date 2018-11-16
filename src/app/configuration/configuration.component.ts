@@ -20,7 +20,6 @@ import { AppState } from '../store/app-state.model';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
-import { ConfigurationActions } from './configuration-actions';
 
 @Component({
     templateUrl: './configuration.component.html',
@@ -45,12 +44,8 @@ export class ConfigurationComponent implements OnInit {
 
     ngOnInit(): void {
         this.containerUrl.subscribe(value => {
-            if (value.length === 0) {
-                this.applyDefaultLocation();
-            } else {
-                this.checkAvailabilityOfContainer();
-                this.containerUrlControl.setValue(value);
-            }
+            this.checkAvailabilityOfContainer();
+            this.containerUrlControl.setValue(value);
         });
         this.planLifecycleInterface.subscribe(value => this.planLifecycleInterfaceControl.setValue(value));
         this.planOperationInitiate.subscribe(value => this.planOperationInitiateControl.setValue(value));
@@ -111,9 +106,5 @@ export class ConfigurationComponent implements OnInit {
     differentLocation(): boolean {
         const url = `http://${this.document.location.hostname}:1337`;
         return url !== this.containerUrlControl.value;
-    }
-
-    applyDefaultLocation() {
-        this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(`http://${this.document.location.hostname}:1337`));
     }
 }

@@ -63,16 +63,7 @@ export class RepositoryConfigurationComponent implements OnInit {
             { field: 'url', header: 'URL' },
         ];
         this.repositoryItems.subscribe(items => {
-            if (items.length === 0) {
-                this.isNewItem = true;
-                this.newItem = {
-                    name: 'OpenTOSCA',
-                    url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
-                };
-                this.save();
-            } else {
-                this.items = items;
-            }
+            this.items = items;
         });
     }
 

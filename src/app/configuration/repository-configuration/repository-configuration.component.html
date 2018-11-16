@@ -48,7 +48,7 @@
                 <div class="ui-g-10">
                     <div class="ui-inputgroup">
                         <input id="name" name="name" type="text" pInputText placeholder="Enter a name"
-                               [(ngModel)]="newItem.name" #name="ngModel" required minlength="3" opentoscaForbiddenName
+                               [(ngModel)]="newItem.name" #name="ngModel" required opentoscaForbiddenName
                                [class.ot-has-success]="name.valid" [class.ot-has-error]="name.invalid"
                                [opentoscaForbiddenNameDisable]="isNewItem">
                         <span class="ui-inputgroup-addon">
