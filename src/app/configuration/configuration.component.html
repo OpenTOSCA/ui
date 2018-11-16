@@ -13,10 +13,15 @@
   -->
 
 <p-panel>
-    <p-header>Connections</p-header>
+    <p-header>Repository Configuration</p-header>
+    <opentosca-repository-configuration></opentosca-repository-configuration>
+</p-panel>
+
+<p-panel>
+    <p-header>OpenTOSCA Runtime</p-header>
     <div class="p-grid">
         <div class="p-col-2 ot-input-label">
-            <label for="containerUrl" class="ui-inp">Container API:</label>
+            <label for="containerUrl" class="ui-inp">API Endpoint:</label>
         </div>
         <div class="p-col-6">
             <div class="ui-inputgroup">
@@ -26,22 +31,6 @@
                 <span class="ui-inputgroup-addon">
                     <span *ngIf="containerUrlAvailable"><i class="fa fa-check"></i></span>
                     <span *ngIf="!containerUrlAvailable"><i class="fa fa-times"></i></span>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="p-grid">
-        <div class="p-col-2 ot-input-label">
-            <label for="repositoryUrl">Repository API:</label>
-        </div>
-        <div class="p-col-6">
-            <div class="ui-inputgroup">
-                <input id="repositoryUrl" type="text" pInputText placeholder="Enter Repository API URL here"
-                       [formControl]="repositoryUrlControl"
-                       [ngClass]="{'ot-has-success': repositoryUrlAvailable, 'ot-has-error': !repositoryUrlAvailable}">
-                <span class="ui-inputgroup-addon">
-                    <span *ngIf="repositoryUrlAvailable"><i class="fa fa-check"></i></span>
-                    <span *ngIf="!repositoryUrlAvailable"><i class="fa fa-times"></i></span>
                 </span>
             </div>
         </div>

@@ -17,8 +17,9 @@ import { AppState } from '../store/app-state.model';
 import { ConfigurationActions } from './configuration-actions';
 import { RepositoryActions } from '../repository/repository-actions.service';
 import { ApplicationManagementActions } from '../application-management/application-management-actions';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class ConfigurationService {
@@ -36,13 +37,16 @@ export class ConfigurationService {
         this.ngRedux.dispatch(RepositoryActions.clearRepositoryApplications());
     }
 
-    isRepositoryAvailable(): Observable<Object> {
+    isRepositoryAvailable(url: string): Observable<boolean> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Accept': 'application/json'
             })
         };
-        return this.http.get(this.ngRedux.getState().administration.repositoryUrl, httpOptions);
+        return this.http.get(url, { ...httpOptions, responseType: 'text', observe: 'response' }).pipe(
+            map((response: HttpResponse<Object>) => (response.status >= 200 && response.status < 400)),
+            catchError(() => of(false))
+        );
     }
 
     getContainerUrl(): string {

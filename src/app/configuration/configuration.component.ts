@@ -22,7 +22,6 @@ import { debounceTime } from 'rxjs/operators';
 import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
 
 @Component({
-    selector: 'opentosca-configuration-management',
     templateUrl: './configuration.component.html',
     styleUrls: ['./configuration.component.scss']
 })
@@ -31,10 +30,6 @@ export class ConfigurationComponent implements OnInit {
     @select(['administration', 'containerUrl']) containerUrl: Observable<string>;
     public containerUrlControl: FormControl = new FormControl();
     public containerUrlAvailable: boolean;
-
-    @select(['administration', 'repositoryUrl']) repositoryUrl: Observable<string>;
-    public repositoryUrlControl: FormControl = new FormControl();
-    public repositoryUrlAvailable: boolean;
 
     @select(['administration', 'planLifecycleInterface']) planLifecycleInterface: Observable<string>;
     public planLifecycleInterfaceControl: FormControl = new FormControl();
@@ -56,11 +51,6 @@ export class ConfigurationComponent implements OnInit {
             this.checkAvailabilityOfContainer();
             this.containerUrlControl.setValue(value);
         });
-        this.repositoryUrl.subscribe(value => {
-                this.checkAvailabilityOfRepository();
-                this.repositoryUrlControl.setValue(value);
-            }
-        );
         this.planLifecycleInterface.subscribe(value => this.planLifecycleInterfaceControl.setValue(value));
         this.planOperationInitiate.subscribe(value => this.planOperationInitiateControl.setValue(value));
         this.planOperationTerminate.subscribe(value => this.planOperationTerminateControl.setValue(value));
@@ -70,12 +60,6 @@ export class ConfigurationComponent implements OnInit {
                 debounceTime(500)
             )
             .subscribe(newValue => this.updateContainerUrl(newValue));
-        this.repositoryUrlControl.valueChanges
-            .pipe(
-                debounceTime(500)
-            )
-            .subscribe(newValue => this.updateRepositoryUrl(newValue));
-
         this.planLifecycleInterfaceControl.valueChanges
             .pipe(
                 debounceTime(500)
@@ -99,22 +83,10 @@ export class ConfigurationComponent implements OnInit {
                 () => this.containerUrlAvailable = false);
     }
 
-    checkAvailabilityOfRepository(): void {
-        this.configService.isRepositoryAvailable()
-            .subscribe(() => this.repositoryUrlAvailable = true,
-                () => this.repositoryUrlAvailable = false);
-    }
-
     updateContainerUrl(newValue: string): void {
         this.configService.setContainerUrl(newValue);
         this.logger.log('[administration.component][updateRepositoryUrl] Updated container URL to: ',
             this.configService.getContainerUrl());
-    }
-
-    updateRepositoryUrl(newValue: string): void {
-        this.configService.setRepositoryUrl(newValue);
-        this.logger.log('[administration.component][updateRepositoryUrl] Updated repository URL to: ',
-            this.configService.getRepositoryUrl());
     }
 
     updatePlanLifecycleInterface(newValue: string): void {

@@ -19,7 +19,11 @@ import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './configuration.service';
 import { RouterModule } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
-import { InputTextModule } from 'primeng/primeng';
+import { ButtonModule, DialogModule, InputTextModule } from 'primeng/primeng';
+import { RepositoryConfigurationComponent } from './repository-configuration/repository-configuration.component';
+import { TableModule } from 'primeng/table';
+import { RepositoryValidatorDirective } from './repository-configuration/repository-validator.directive';
+import { ControlOptionsDirective } from './repository-configuration/control-options.directive';
 
 @NgModule({
     imports: [
@@ -28,6 +32,9 @@ import { InputTextModule } from 'primeng/primeng';
         ReactiveFormsModule,
         PanelModule,
         InputTextModule,
+        ButtonModule,
+        TableModule,
+        DialogModule,
         RouterModule,
         ConfigurationRoutingModule
     ],
@@ -35,7 +42,10 @@ import { InputTextModule } from 'primeng/primeng';
         ConfigurationService
     ],
     declarations: [
-        ConfigurationComponent
+        ConfigurationComponent,
+        RepositoryConfigurationComponent,
+        RepositoryValidatorDirective,
+        ControlOptionsDirective
     ]
 })
 export class ConfigurationModule {

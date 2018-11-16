@@ -20,6 +20,8 @@ import { AppState } from './app-state.model';
 import { rootReducer } from './store.reducer';
 import { INITIAL_STATE as ApplicationManagementInitialState } from '../application-management/application-management.reducer';
 import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/configuration.reducer';
+import * as storage from 'redux-storage';
+import createEngine from 'redux-storage-engine-localstorage';
 
 @NgModule({
     imports: [
@@ -30,14 +32,19 @@ import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/con
     declarations: []
 })
 export class StoreModule {
+
     constructor(public store: NgRedux<AppState>, devTools: DevToolsExtension, ngReduxRouter: NgReduxRouter) {
+
+        const engine = createEngine('opentosca');
+        const storageMiddleware = storage.createMiddleware(engine);
+
         store.configureStore(
             rootReducer,
             {
                 container: ApplicationManagementInitialState,
                 administration: ConfigurationInitialState
             },
-            [createLogger()],
+            [storageMiddleware, createLogger()],
             devTools.isEnabled() ? [devTools.enhancer()] : []);
         // Enable syncing of Angular router state with our Redux store.
         ngReduxRouter.initialize();

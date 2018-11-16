@@ -19,6 +19,10 @@ import { GrowlActions } from './core/growl/growl-actions';
 import { Observable } from 'rxjs';
 import { ConfigurationActions } from './configuration/configuration-actions';
 import { DOCUMENT } from '@angular/common';
+import { rootReducer } from './store/store.reducer';
+import * as storage from 'redux-storage';
+import { applyMiddleware, createStore } from 'redux';
+import createEngine from 'redux-storage-engine-localstorage';
 
 @Component({
     selector: 'opentosca-root',
@@ -69,5 +73,14 @@ export class AppComponent implements OnInit {
         this.ngRedux.dispatch(ConfigurationActions.updateRepositoryUrl(
             `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
         ));
+
+        // TODO
+        // const engine = createEngine('opentosca');
+        // const middleware = storage.createMiddleware(engine);
+        // const createStoreWithMiddleware = applyMiddleware(middleware)(createStore);
+        // const loader = storage.createLoader(engine);
+        // loader(createStoreWithMiddleware(rootReducer))
+        //     .then((newState) => console.log('Loaded state:', newState));
+        // //     .catch(() => console.log('Failed to load previous state'));
     }
 }
