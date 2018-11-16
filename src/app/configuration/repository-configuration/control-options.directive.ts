@@ -3,18 +3,16 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fromEvent, merge, Observable, Subscription, timer } from 'rxjs';
 import { debounce, map, mergeMap } from 'rxjs/operators';
 
-const DEFAULT_VALUE_ACCESSOR: any = {
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => ControlOptionsDirective),
-    multi: true
-};
-
 @Directive({
     selector: '' +
         'input[type=text][formControlName][opentoscaControlOptions],' +
         'input[type=text][formControl][opentoscaControlOptions],' +
         'input[type=text][ngModel][opentoscaControlOptions]',
-    providers: [DEFAULT_VALUE_ACCESSOR]
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => ControlOptionsDirective),
+        multi: true
+    }]
 })
 export class ControlOptionsDirective implements ControlValueAccessor, OnInit, OnDestroy {
 

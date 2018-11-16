@@ -19,6 +19,7 @@ import { DOCUMENT } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ConfigurationActions } from '../configuration-actions';
 import { ConfirmationService } from 'primeng/api';
+import { RepositoryActions } from '../../repository/repository-actions.service';
 
 export interface Item {
     name: string;
@@ -100,6 +101,7 @@ export class RepositoryConfigurationComponent implements OnInit {
                 const index = this.items.indexOf(this.selectedItem);
                 const items = this.items.filter((val, i) => i !== index);
                 this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
+                this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(null));
                 this.newItem = null;
                 this.displayDialog = false;
             }

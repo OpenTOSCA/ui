@@ -23,6 +23,9 @@ import { LoggerService } from '../core/service/logger.service';
 import { Item } from '../configuration/repository-configuration/repository-configuration.component';
 import { RepositoryActions } from './repository-actions.service';
 import { MarketplaceApplication } from '../core/model/marketplace-application.model';
+import { CsarUploadReference } from '../core/model/csar-upload-request.model';
+import { Path } from '../core/path';
+import { GrowlActions } from '../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-repository',
@@ -31,11 +34,11 @@ import { MarketplaceApplication } from '../core/model/marketplace-application.mo
 })
 export class RepositoryComponent implements OnInit {
 
-    @select(['administration', 'repositoryItems']) repositoryItems: Observable<Array<Item>>;
-    @select(['repository', 'selectedRepository']) selectedRepository: Observable<Item>;
+    @select(['administration', 'repositoryItems']) repositoryItems$: Observable<Array<Item>>;
+    @select(['repository', 'selectedRepository']) selectedRepository$: Observable<Item>;
 
-    repositoryItems$: Array<Item> = [];
-    selectedRepository$: Item;
+    repositoryItems: Array<Item> = [];
+    selectedRepository: Item;
 
     apps: Array<MarketplaceApplication> = [];
 
@@ -47,20 +50,16 @@ export class RepositoryComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-            { label: 'Repository', routerLink: ['/repository'] },
-            // { label: 'OpenTOSCA', routerLink: ['/repository'] }
-        ]));
-        this.repositoryItems.subscribe(items => this.repositoryItems$ = items);
-        this.selectedRepository.subscribe(item => {
-            this.selectedRepository$ = item;
-            if (this.selectedRepository$ === null) {
-                this.selectedRepository$ = this.repositoryItems$[0];
+        this.repositoryItems$.subscribe(items => this.repositoryItems = items);
+        this.selectedRepository$.subscribe(item => {
+            this.selectedRepository = item;
+            if (this.selectedRepository === null) {
+                this.selectedRepository = this.repositoryItems[0];
                 this.selectRepository();
             }
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
                 { label: 'Repository', routerLink: ['/repository'] },
-                { label: this.selectedRepository$.name, routerLink: ['/repository'] }
+                { label: this.selectedRepository.name, routerLink: ['/repository'] }
             ]));
             this.refresh();
         });
@@ -68,7 +67,7 @@ export class RepositoryComponent implements OnInit {
 
     selectRepository() {
         this.apps = [];
-        this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(this.selectedRepository$));
+        this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(this.selectedRepository));
     }
 
     trackFn(index: number, app: MarketplaceApplication) {
@@ -76,11 +75,12 @@ export class RepositoryComponent implements OnInit {
     }
 
     refresh(): void {
-        this.repositoryService.getApplications(this.selectedRepository$.url)
+        this.apps = [];
+        this.repositoryService.getApplications(this.selectedRepository.url)
             .subscribe(refs => {
                 const o = [] as Array<Observable<MarketplaceApplication>>;
                 for (const reference of refs) {
-                    o.push(this.repositoryService.getApplication(reference, this.selectedRepository$.url));
+                    o.push(this.repositoryService.getApplication(reference, this.selectedRepository.url));
                 }
                 forkJoin(o)
                     .subscribe(apps => {
@@ -108,37 +108,34 @@ export class RepositoryComponent implements OnInit {
         this.searchTerm = searchTerm;
     }
 
-// install(app: MarketplaceApplication): void {
-//     app.isInstalling = true;
-//     const postURL = new Path(this.configurationService.getContainerUrl())
-//         .append('csars')
-//         .toString();
-//     const tmpApp = new CsarUploadReference(app.csarURL, app.id);
-//     this.repositoryService.installApplication(tmpApp, postURL)
-//         .subscribe(() => {
-//             app.isInstalling = false;
-//             this.applicationService.isApplicationInstalled(app.id)
-//                 .then(result => app.inContainer = result);
-//         }, err => {
-//             app.isInstalling = false;
-//             // Injector
-//             if (err.status === 406) {
-//                 // TODO
-//                 // this.appToComplete = app;
-//                 // this.linkToWineryResource = err.json()['Location'] as string;
-//                 // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
-//                 // this.showCompletionDialog = true;
-//             } else {
-//                 this.ngRedux.dispatch(GrowlActions.addGrowl({
-//                     severity: 'error',
-//                     summary: 'Error installing application in OpenTOSCA Container',
-//                     detail: err.message
-//                 }));
-//                 this.applicationService.isApplicationInstalled(app.id)
-//                     .then(result => {
-//                         app.inContainer = result;
-//                     });
-//             }
-//         });
-// }
+    install(app: MarketplaceApplication): void {
+        app.isInstalling = true;
+        const url = new Path(this.configurationService.getContainerUrl()).append('csars').toString();
+        const app$ = new CsarUploadReference(app.csarURL, app.id);
+        this.repositoryService.installApplication(app$, url)
+            .subscribe(() => {
+                app.isInstalling = false;
+                this.applicationService.isApplicationInstalled(app.id)
+                    .then(result => app.inContainer = result);
+            }, err => {
+                app.isInstalling = false;
+                if (err.status === 406) {
+                    // TODO
+                    // this.appToComplete = app;
+                    // this.linkToWineryResource = err.json()['Location'] as string;
+                    // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
+                    // this.showCompletionDialog = true;
+                } else {
+                    this.ngRedux.dispatch(GrowlActions.addGrowl({
+                        severity: 'error',
+                        summary: 'Error installing application in OpenTOSCA Container',
+                        detail: err.message
+                    }));
+                    this.applicationService.isApplicationInstalled(app.id)
+                        .then(result => {
+                            app.inContainer = result;
+                        });
+                }
+            });
+    }
 }

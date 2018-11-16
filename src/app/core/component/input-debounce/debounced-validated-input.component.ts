@@ -19,7 +19,7 @@ import { HttpClient } from '@angular/common/http';
     selector: 'opentosca-debounced-validated-input',
     template: `
         <div class="ui-inputgroup">
-            <input type="text" 
+            <input type="text"
                    pInputText
                    opentoscaDebounce
                    style="width: 100%"
