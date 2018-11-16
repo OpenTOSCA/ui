@@ -18,15 +18,14 @@ import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 })
 export class ForbiddenNameDisableDirective implements OnInit {
 
-    @Input('opentoscaForbiddenNameDisable') isNewItem: boolean;
-
     @Input() ngModel;
+    @Input() opentoscaForbiddenNameDisable: boolean;
 
     constructor(private element: ElementRef) {
     }
 
     ngOnInit(): void {
-        if (!this.isNewItem && this.ngModel === 'OpenTOSCA') {
+        if (!this.opentoscaForbiddenNameDisable && this.ngModel === 'OpenTOSCA') {
             this.element.nativeElement.disabled = 'disabled';
         }
     }

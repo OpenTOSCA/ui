@@ -135,7 +135,8 @@ export class DeploymentCompletionService {
                 if (!app.displayName || app.displayName === '') {
                     app.displayName = appId;
                 }
-                this.logger.log('[deployment-completion.service][getAppFromCompletionHandlerWinery] Received app from repo: ', JSON.stringify(app));
+                this.logger.log('[deployment-completion.service][getAppFromCompletionHandlerWinery] Received app from repo: ',
+                    JSON.stringify(app));
                 return app;
             })
             .catch(err => this.logger.handleError('[deployment-completion.service][getAppFromCompletionHandlerWinery]', err));

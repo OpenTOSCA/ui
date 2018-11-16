@@ -69,13 +69,15 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 } else {
                     this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
                     this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
-                    this.logger.log('[deployment-completion.component][getInjectionOptions]', 'Got host completion options: ' + this.hostCompletionOptions);
+                    this.logger.log('[deployment-completion.component][getInjectionOptions]', 'Got host completion options: '
+                        + this.hostCompletionOptions);
                 }
             });
     }
 
     injectNewHosts(): void {
-        this.logger.log('[deployment-completion.component][injectNewHosts]', 'Injecting new hosts: ' + JSON.stringify(this.completionSelection));
+        this.logger.log('[deployment-completion.component][injectNewHosts]', 'Injecting new hosts: '
+            + JSON.stringify(this.completionSelection));
         this.completionService.injectNewHosts(this.linkToWineryResource, this.completionSelection)
             .then(injectedServiceTemplateURL => {
                 this.appToComplete.csarURL = injectedServiceTemplateURL.substr(0, injectedServiceTemplateURL.lastIndexOf('/')) + '?csar';
