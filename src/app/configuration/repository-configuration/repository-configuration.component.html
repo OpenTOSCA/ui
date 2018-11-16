@@ -13,10 +13,11 @@
   -->
 
 <p-table [columns]="cols" [value]="items" selectionMode="single" [(selection)]="selectedItem"
-         (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+         (onRowSelect)="onRowSelect($event)">
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [width]="col.width"
+                style="text-align: left">
                 {{col.header}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
@@ -77,11 +78,13 @@
             </div>
         </div>
         <p-footer>
-            <div class="ui-dialog-buttonpane ui-helper-clearfix">
-                <button type="button" pButton (click)="cancel()" label="Cancel"></button>
-                <button *ngIf="itemForm.valid" type="button" pButton (click)="save()" label="Save"></button>
-                <button *ngIf="itemForm.invalid" disabled type="button" pButton label="Save"></button>
-            </div>
+            <button type="button" pButton (click)="cancel()" label="Cancel"></button>
+            <button *ngIf="itemForm.valid" type="button" pButton (click)="save()" label="Save"></button>
+            <button *ngIf="itemForm.invalid" disabled type="button" pButton label="Save"></button>
+            <button *ngIf="!isNewItem" type="button" pButton (click)="delete()" label="Delete"
+                    class="ui-button-danger"></button>
+
         </p-footer>
     </p-dialog>
 </form>
+<p-confirmDialog></p-confirmDialog>

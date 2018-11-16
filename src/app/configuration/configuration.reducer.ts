@@ -14,18 +14,19 @@
 
 import { Action } from '../store/store.action';
 import { ConfigurationActions } from './configuration-actions';
+import { Item } from './repository-configuration/repository-configuration.component';
 
 export interface ConfigurationState {
     containerUrl?: string;
-    repositoryUrl?: string;
+    repositoryItems?: Array<Item>;
     planLifecycleInterface?: string;
     planOperationInitiate?: string;
     planOperationTerminate?: string;
 }
 
 export const INITIAL_STATE: ConfigurationState = {
-    containerUrl: 'http://localhost:1337',
-    repositoryUrl: 'http://localhost:8080/winery/servicetemplates',
+    containerUrl: '',
+    repositoryItems: [],
     planLifecycleInterface: 'OpenTOSCA-Lifecycle-Interface',
     planOperationInitiate: 'initiate',
     planOperationTerminate: 'terminate',
@@ -34,13 +35,15 @@ export const INITIAL_STATE: ConfigurationState = {
 export function configurationReducer(state: ConfigurationState = INITIAL_STATE,
                                      action: Action): ConfigurationState {
     switch (action.type) {
-        case ConfigurationActions.UPDATE_REPOSITORY_URL:
-            let url = action.payload;
-            if (!url.endsWith('/')) {
-                url = url + '/';
+        case ConfigurationActions.UPDATE_REPOSITORY_ITEMS:
+            const items = <Array<Item>> action.payload;
+            for (const item of items) {
+                if (!item.url.endsWith('/')) {
+                    item.url = item.url + '/';
+                }
             }
             return Object.assign({}, state, {
-                repositoryUrl: url
+                repositoryItems: items
             });
         case ConfigurationActions.UPDATE_CONTAINER_URL:
             return Object.assign({}, state, {

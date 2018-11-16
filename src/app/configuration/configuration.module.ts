@@ -19,7 +19,7 @@ import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './configuration.service';
 import { RouterModule } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
-import { ButtonModule, DialogModule, InputTextModule } from 'primeng/primeng';
+import { ButtonModule, ConfirmDialogModule, DialogModule, InputTextModule } from 'primeng/primeng';
 import { RepositoryConfigurationComponent } from './repository-configuration/repository-configuration.component';
 import { TableModule } from 'primeng/table';
 import { RepositoryValidatorDirective } from './repository-configuration/repository-validator.directive';
@@ -35,6 +35,7 @@ import { ControlOptionsDirective } from './repository-configuration/control-opti
         ButtonModule,
         TableModule,
         DialogModule,
+        ConfirmDialogModule,
         RouterModule,
         ConfigurationRoutingModule
     ],

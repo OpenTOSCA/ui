@@ -12,8 +12,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, OnInit } from '@angular/core';
-import { ConfigurationService } from '../configuration.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { AppState } from '../../store/app-state.model';
+import { DOCUMENT } from '@angular/common';
+import { Observable } from 'rxjs';
+import { ConfigurationActions } from '../configuration-actions';
+import { ConfirmationService } from 'primeng/api';
 
 export interface Item {
     name: string;
@@ -31,17 +36,17 @@ export class RepositoryConfigurationComponent implements OnInit {
         url: ''
     };
 
+    @select(['administration', 'repositoryItems']) repositoryItems: Observable<Array<Item>>;
+    items: Item[] = [];
+
     displayDialog: boolean;
     isNewItem: boolean;
     newItem: Item;
     selectedItem: Item;
-    items: Item[];
     cols: any[];
 
-    // public nameControl: FormControl = new FormControl();
-    // public urlControl: FormControl = new FormControl();
-
-    constructor(private configService: ConfigurationService) {
+    constructor(private ngRedux: NgRedux<AppState>, @Inject(DOCUMENT) private document: any,
+                private confirmationService: ConfirmationService) {
     }
 
     static cloneItem(item: Item): Item {
@@ -54,21 +59,22 @@ export class RepositoryConfigurationComponent implements OnInit {
 
     ngOnInit() {
         this.cols = [
-            { field: 'name', header: 'Name' },
+            { field: 'name', header: 'Name', width: '25%' },
             { field: 'url', header: 'URL' },
         ];
+        this.repositoryItems.subscribe(items => {
+            if (items.length === 0) {
+                this.isNewItem = true;
+                this.newItem = {
+                    name: 'Default',
+                    url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
+                };
+                this.save();
+            } else {
+                this.items = items;
+            }
+        });
     }
-
-    // validRepository(url: string): void {
-    //     this.configService.isRepositoryAvailable(url)
-    //         .subscribe(() => this.urlControl.set = true,
-    //             () => this.repositoryUrlAvailable = false);
-    // }
-    // updateRepositoryUrl(newValue: string): void {
-    //     this.configService.setRepositoryUrl(newValue);
-    //     this.logger.log('[administration.component][updateRepositoryUrl] Updated repository URL to: ',
-    //         this.configService.getRepositoryUrl());
-    // }
 
     showDialogToAdd() {
         this.isNewItem = true;
@@ -83,7 +89,7 @@ export class RepositoryConfigurationComponent implements OnInit {
         } else {
             items[this.items.indexOf(this.selectedItem)] = this.newItem;
         }
-        this.items = items;
+        this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
         this.newItem = null;
         this.displayDialog = false;
     }
@@ -91,14 +97,21 @@ export class RepositoryConfigurationComponent implements OnInit {
     cancel() {
         this.isNewItem = false;
         this.newItem = null;
-        this.displayDialog = false
+        this.displayDialog = false;
     }
 
     delete() {
-        const index = this.items.indexOf(this.selectedItem);
-        this.items = this.items.filter((val, i) => i !== index);
-        this.newItem = null;
-        this.displayDialog = false;
+        this.confirmationService.confirm({
+            message: 'Do you want to delete this record?',
+            header: 'Delete Confirmation',
+            accept: () => {
+                const index = this.items.indexOf(this.selectedItem);
+                const items = this.items.filter((val, i) => i !== index);
+                this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
+                this.newItem = null;
+                this.displayDialog = false;
+            }
+        });
     }
 
     onRowSelect(event) {

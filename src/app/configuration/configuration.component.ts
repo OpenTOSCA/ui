@@ -11,7 +11,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { FormControl } from '@angular/forms';
 import { ConfigurationService } from './configuration.service';
@@ -19,7 +19,8 @@ import { LoggerService } from '../core/service/logger.service';
 import { AppState } from '../store/app-state.model';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
+import { DOCUMENT } from '@angular/common';
+import { ConfigurationActions } from './configuration-actions';
 
 @Component({
     templateUrl: './configuration.component.html',
@@ -38,18 +39,18 @@ export class ConfigurationComponent implements OnInit {
     @select(['administration', 'planOperationTerminate']) planOperationTerminate: Observable<string>;
     public planOperationTerminateControl: FormControl = new FormControl();
 
-    constructor(private configService: ConfigurationService,
-                private ngRedux: NgRedux<AppState>,
-                private logger: LoggerService) {
+    constructor(private configService: ConfigurationService, private ngRedux: NgRedux<AppState>,
+                private logger: LoggerService, @Inject(DOCUMENT) private document: any) {
     }
 
     ngOnInit(): void {
-
-        this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([{ label: 'Administration', routerLink: ['/administration'] }]));
-
         this.containerUrl.subscribe(value => {
-            this.checkAvailabilityOfContainer();
-            this.containerUrlControl.setValue(value);
+            if (value.length === 0) {
+                this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(`http://${this.document.location.hostname}:1337`));
+            } else {
+                this.checkAvailabilityOfContainer();
+                this.containerUrlControl.setValue(value);
+            }
         });
         this.planLifecycleInterface.subscribe(value => this.planLifecycleInterfaceControl.setValue(value));
         this.planOperationInitiate.subscribe(value => this.planOperationInitiateControl.setValue(value));
@@ -85,7 +86,7 @@ export class ConfigurationComponent implements OnInit {
 
     updateContainerUrl(newValue: string): void {
         this.configService.setContainerUrl(newValue);
-        this.logger.log('[administration.component][updateRepositoryUrl] Updated container URL to: ',
+        this.logger.log('[administration.component][updateRepositoryItems] Updated container URL to: ',
             this.configService.getContainerUrl());
     }
 
