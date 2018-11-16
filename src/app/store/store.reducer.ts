@@ -35,5 +35,5 @@ export const rootReducer = composeReducers(
 );
 
 export const rootEnhancers = [
-    persistState('administration', { key: 'opentosca' })
+    persistState(['administration', 'repository'], { key: 'opentosca' })
 ];

@@ -19,17 +19,20 @@ import { RepositoryComponent } from './repository.component';
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '../core/core.module';
 import { NgSpinKitModule } from 'ng-spin-kit';
-import { ButtonModule, CardModule, ScrollPanelModule, ToolbarModule, TooltipModule } from 'primeng/primeng';
+import { ButtonModule, CardModule, DropdownModule, ScrollPanelModule, ToolbarModule, TooltipModule } from 'primeng/primeng';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
         RouterModule,
         TooltipModule,
         CardModule,
         ButtonModule,
         ScrollPanelModule,
         ToolbarModule,
+        DropdownModule,
         NgSpinKitModule,
         CoreModule,
         RepositoryRoutingModule

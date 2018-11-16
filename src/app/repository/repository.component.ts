@@ -15,16 +15,14 @@ import { Component, OnInit } from '@angular/core';
 import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../store/app-state.model';
-import { MarketplaceApplication } from '../core/model/marketplace-application.model';
 import { forkJoin, Observable } from 'rxjs';
-import { RepositoryActions } from './repository-actions.service';
 import { RepositoryService } from '../core/service/repository.service';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { ApplicationManagementService } from '../core/service/application-management.service';
 import { LoggerService } from '../core/service/logger.service';
-import { Path } from '../core/path';
-import { CsarUploadReference } from '../core/model/csar-upload-request.model';
-import { GrowlActions } from '../core/growl/growl-actions';
+import { Item } from '../configuration/repository-configuration/repository-configuration.component';
+import { RepositoryActions } from './repository-actions.service';
+import { MarketplaceApplication } from '../core/model/marketplace-application.model';
 
 @Component({
     selector: 'opentosca-repository',
@@ -33,10 +31,15 @@ import { GrowlActions } from '../core/growl/growl-actions';
 })
 export class RepositoryComponent implements OnInit {
 
-    @select(['repository', 'applications']) apps: Observable<Array<MarketplaceApplication>>;
-    @select(['administration', 'repositoryUrl']) repositoryUrl: Observable<string>;
+    @select(['administration', 'repositoryItems']) repositoryItems: Observable<Array<Item>>;
+    @select(['repository', 'selectedRepository']) selectedRepository: Observable<Item>;
 
-    public searchTerm: string;
+    repositoryItems$: Array<Item> = [];
+    selectedRepository$: Item;
+
+    apps: Array<MarketplaceApplication> = [];
+
+    searchTerm: string;
 
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
@@ -46,17 +49,38 @@ export class RepositoryComponent implements OnInit {
     ngOnInit() {
         this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
             { label: 'Repository', routerLink: ['/repository'] },
-            { label: 'OpenTOSCA', routerLink: ['/repository'] }
+            // { label: 'OpenTOSCA', routerLink: ['/repository'] }
         ]));
-        this.refresh();
+        this.repositoryItems.subscribe(items => this.repositoryItems$ = items);
+        this.selectedRepository.subscribe(item => {
+            this.selectedRepository$ = item;
+            if (this.selectedRepository$ === null) {
+                this.selectedRepository$ = this.repositoryItems$[0];
+                this.selectRepository();
+            }
+            this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
+                { label: 'Repository', routerLink: ['/repository'] },
+                { label: this.selectedRepository$.name, routerLink: ['/repository'] }
+            ]));
+            this.refresh();
+        });
+    }
+
+    selectRepository() {
+        this.apps = [];
+        this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(this.selectedRepository$));
+    }
+
+    trackFn(index: number, app: MarketplaceApplication) {
+        return app.id;
     }
 
     refresh(): void {
-        this.repositoryService.getApplications()
+        this.repositoryService.getApplications(this.selectedRepository$.url)
             .subscribe(refs => {
                 const o = [] as Array<Observable<MarketplaceApplication>>;
                 for (const reference of refs) {
-                    o.push(this.repositoryService.getApplication(reference, this.configurationService.getRepositoryUrl()));
+                    o.push(this.repositoryService.getApplication(reference, this.selectedRepository$.url));
                 }
                 forkJoin(o)
                     .subscribe(apps => {
@@ -64,61 +88,57 @@ export class RepositoryComponent implements OnInit {
                                 this.applicationService.isApplicationInstalled(app.id)
                                     .then(result => app.inContainer = result);
                             }
-                            this.ngRedux.dispatch(RepositoryActions.addRepositoryApplications(apps));
+                            this.apps = apps;
                         },
                         reason => this.logger.handleError('[repository.component][refresh]', reason)
                     );
             });
     }
 
-    openRepository(): void {
-        const url: URL = new URL(this.configurationService.getRepositoryUrl());
-        window.open(url.protocol + '//' + url.host + '/', '_blank');
+    openRepository(url: string): void {
+        const _url: URL = new URL(url);
+        window.open(_url.protocol + '//' + _url.host + '/', '_blank');
     }
 
-    open(url): void {
+    openApplication(url: string): void {
         window.open(url, '_blank');
-    }
-
-    trackFn(index: number, app: MarketplaceApplication) {
-        return app.id;
     }
 
     searchTermChanged(searchTerm: string) {
         this.searchTerm = searchTerm;
     }
 
-    install(app: MarketplaceApplication): void {
-        app.isInstalling = true;
-        const postURL = new Path(this.configurationService.getContainerUrl())
-            .append('csars')
-            .toString();
-        const tmpApp = new CsarUploadReference(app.csarURL, app.id);
-        this.repositoryService.installApplication(tmpApp, postURL)
-            .subscribe(() => {
-                app.isInstalling = false;
-                this.applicationService.isApplicationInstalled(app.id)
-                    .then(result => app.inContainer = result);
-            }, err => {
-                app.isInstalling = false;
-                // Injector
-                if (err.status === 406) {
-                    // TODO
-                    // this.appToComplete = app;
-                    // this.linkToWineryResource = err.json()['Location'] as string;
-                    // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
-                    // this.showCompletionDialog = true;
-                } else {
-                    this.ngRedux.dispatch(GrowlActions.addGrowl({
-                        severity: 'error',
-                        summary: 'Error installing application in OpenTOSCA Container',
-                        detail: err.message
-                    }));
-                    this.applicationService.isApplicationInstalled(app.id)
-                        .then(result => {
-                            app.inContainer = result;
-                        });
-                }
-            });
-    }
+// install(app: MarketplaceApplication): void {
+//     app.isInstalling = true;
+//     const postURL = new Path(this.configurationService.getContainerUrl())
+//         .append('csars')
+//         .toString();
+//     const tmpApp = new CsarUploadReference(app.csarURL, app.id);
+//     this.repositoryService.installApplication(tmpApp, postURL)
+//         .subscribe(() => {
+//             app.isInstalling = false;
+//             this.applicationService.isApplicationInstalled(app.id)
+//                 .then(result => app.inContainer = result);
+//         }, err => {
+//             app.isInstalling = false;
+//             // Injector
+//             if (err.status === 406) {
+//                 // TODO
+//                 // this.appToComplete = app;
+//                 // this.linkToWineryResource = err.json()['Location'] as string;
+//                 // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
+//                 // this.showCompletionDialog = true;
+//             } else {
+//                 this.ngRedux.dispatch(GrowlActions.addGrowl({
+//                     severity: 'error',
+//                     summary: 'Error installing application in OpenTOSCA Container',
+//                     detail: err.message
+//                 }));
+//                 this.applicationService.isApplicationInstalled(app.id)
+//                     .then(result => {
+//                         app.inContainer = result;
+//                     });
+//             }
+//         });
+// }
 }

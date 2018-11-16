@@ -14,33 +14,17 @@
 
 import { Injectable } from '@angular/core';
 import { Action } from '../store/store.action';
-import { MarketplaceApplication } from '../core/model/marketplace-application.model';
+import { Item } from '../configuration/repository-configuration/repository-configuration.component';
 
 @Injectable()
 export class RepositoryActions {
 
-    static ADD_REPOSITORY_APPLICATIONS = 'ADD_REPOSITORY_APPLICATIONS';
-    static REMOVE_REPOSITORY_APPLICATION = 'REMOVE_REPOSITORY_APPLICATION';
-    static CLEAR_REPOSITORY_APPLICATIONS = 'CLEAR_REPOSITORY_APPLICATIONS';
+    static SELECTED_REPOSITORY = 'SELECTED_REPOSITORY';
 
-    static addRepositoryApplications(apps: Array<MarketplaceApplication>): Action {
+    static setSelectedRepository(item: Item): Action {
         return {
-            type: RepositoryActions.ADD_REPOSITORY_APPLICATIONS,
-            payload: apps
-        };
-    }
-
-    static clearRepositoryApplications(): Action {
-        return {
-            type: RepositoryActions.CLEAR_REPOSITORY_APPLICATIONS,
-            payload: null
-        };
-    }
-
-    static removeRepositoryApplication(app: MarketplaceApplication): Action {
-        return {
-            type: RepositoryActions.REMOVE_REPOSITORY_APPLICATION,
-            payload: app
+            type: RepositoryActions.SELECTED_REPOSITORY,
+            payload: item
         };
     }
 }

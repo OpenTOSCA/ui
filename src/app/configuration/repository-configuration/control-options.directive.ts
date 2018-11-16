@@ -1,7 +1,7 @@
 import { Directive, ElementRef, forwardRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fromEvent, merge, Observable, Subscription, timer } from 'rxjs';
-import { debounce, flatMap, map } from 'rxjs/operators';
+import { debounce, map, mergeMap } from 'rxjs/operators';
 
 const DEFAULT_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -46,7 +46,7 @@ export class ControlOptionsDirective implements ControlValueAccessor, OnInit, On
         const events: Array<Observable<Event>> = this._controlOptions.updateOn.split(' ')
             .map(event => fromEvent(this.element.nativeElement, event));
         this.events = merge(events).pipe(
-            flatMap(flat => flat),
+            mergeMap(flat => flat),
             map((e: Event) => ({ type: e.type, value: e.target['value'] })),
             debounce(event => {
                 const debounceValue = this._controlOptions.debounce;

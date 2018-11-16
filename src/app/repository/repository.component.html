@@ -18,17 +18,23 @@
                 class="ui-button-info" icon="fas fa-sync-alt"
                 pTooltip="Refresh" showDelay="500" tooltipPosition="top"></button>
         &nbsp;
-        <button pButton type="button" (click)="openRepository()"
+        <button pButton type="button" (click)="openRepository(selectedRepository$.url)"
                 class="ui-button-info" icon="fas fa-external-link-alt" label="Open Repository">
         </button>
         &nbsp;
         <opentosca-filter [placeholder]="'Filter applications...'" (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
     </div>
+    <div class="ui-toolbar-group-right">
+        Selected Repository:
+        &nbsp;
+        <p-dropdown [options]="repositoryItems$" [(ngModel)]="selectedRepository$" optionLabel="name"
+                    [autoWidth]="true" [style]="{'min-width':'200px'}" (onChange)="selectRepository($event)"></p-dropdown>
+    </div>
 </p-toolbar>
 
 <div class="ot-container">
     <div class="ot-item"
-         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','csarName']; trackBy: trackFn">
+         *ngFor="let app of apps | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','csarName']; trackBy: trackFn">
         <p-card>
             <p-header>
                 <img class="img-fluid" [src]="app.iconUrl"
@@ -41,7 +47,7 @@
                 {{ app.description }}
             </p-scrollPanel>
             <p-footer>
-                <button pButton type="button" (click)="open(app.repositoryURL)"
+                <button pButton type="button" (click)="openApplication(app.repositoryURL)"
                         class="ui-button-info" icon="fas fa-external-link-alt"
                         pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
                 &nbsp;

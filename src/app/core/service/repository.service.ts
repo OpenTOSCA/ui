@@ -12,7 +12,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Injectable } from '@angular/core';
-import { ConfigurationService } from '../../configuration/configuration.service';
 import { LoggerService } from './logger.service';
 import { CsarUploadReference } from '../model/csar-upload-request.model';
 import { MarketplaceApplication } from '../model/marketplace-application.model';
@@ -24,13 +23,10 @@ import { catchError, map } from 'rxjs/operators';
 @Injectable()
 export class RepositoryService {
 
-    constructor(private http: HttpClient,
-                private adminService: ConfigurationService,
-                private logger: LoggerService) {
+    constructor(private http: HttpClient, private logger: LoggerService) {
     }
 
-    getApplications(): Observable<Array<MarketplaceApplicationReference>> {
-        const url = this.adminService.getRepositoryUrl();
+    getApplications(url: string): Observable<Array<MarketplaceApplicationReference>> {
         this.logger.log('[marketplace.service][getApplications] Loading Apps from repo: ', url);
         const httpOptions = {
             headers: new HttpHeaders({
