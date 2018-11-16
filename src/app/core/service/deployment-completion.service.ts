@@ -102,7 +102,7 @@ export class DeploymentCompletionService {
         };
         this.logger.log('[deployment-completion.service][injectNewHosts][request-url]', JSON.stringify(postURL));
 
-        // Todo Check if observe: 'response' works to get the whole response including headers (https://angular.io/guide/http)
+        // Todo See how to implement observe: 'response' application-management.service line 166
         // @ts-ignore
         return this.http.post<HttpResponse<any>>(postURL, completionSelection, httpOptions)
             .toPromise()

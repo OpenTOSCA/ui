@@ -12,7 +12,7 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dataTable [value]="(currentAppInstances | async)" [responsive]="true">
+<p-dataTable [value]="currentAppInstances" [responsive]="true">
     <p-column field="id" header="Instance ID" [sortable]="true" styleClass="p-2 text-center"></p-column>
     <p-column field="state" header="State" [sortable]="true" styleClass="p-2 text-center"></p-column>
     <p-column field="created_at" header="Creation Date" [sortable]="true" styleClass="p-2 text-center">
@@ -32,7 +32,7 @@
                         [routerLink]="['/applications', inst.csar_id, 'instances', inst.id]">
                 </button>
                 &nbsp;
-                <button *ngIf="terminationPlanAvailable"
+                <button *ngIf="terminationPlanAvailable && inst.state !== 'DELETED'"
                         pButton
                         icon="far fa-trash-alt"
                         type="button"
@@ -43,12 +43,6 @@
                         (click)="terminateInstance(inst.id)">
                 </button>
             </div>
-            <!--<button-->
-            <!--class="btn btn-danger btn-sm" type="button"-->
-            <!--*ngIf="inst.state !== 'DELETED'" (click)="terminateInstance(inst.id)"-->
-            <!--pTooltip="Delete Instance" tooltipPosition="top" showDelay="300">-->
-            <!--<i class="fa fa-remove"></i>-->
-            <!--</button>-->
         </ng-template>
     </p-column>
 </p-dataTable>

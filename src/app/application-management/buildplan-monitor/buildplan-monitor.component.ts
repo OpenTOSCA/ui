@@ -67,7 +67,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
     }
 
     getSelfServiceApplicationUrlFromOutput(): string {
-        for (const out of this.bpInstance.output) {
+        for (const out of this.bpInstance.outputs) {
             if (out.name === 'selfserviceApplicationUrl') {
                 return out.value;
             }

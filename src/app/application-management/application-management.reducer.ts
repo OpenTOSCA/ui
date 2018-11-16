@@ -24,8 +24,7 @@ export interface ApplicationManagementState {
         csar?: Csar;
         buildPlan?: Plan;
         terminationPlan?: Plan;
-        instances: Array<ServiceTemplateInstance>;
-        instance: ServiceTemplateInstance;
+        instances: Map<string, ServiceTemplateInstance>;
     };
 }
 
@@ -35,8 +34,7 @@ export const INITIAL_STATE: ApplicationManagementState = {
         csar: null,
         buildPlan: null,
         terminationPlan: null,
-        instances: [],
-        instance: null
+        instances: new Map<string, ServiceTemplateInstance>()
     },
     // currentApp: null,
     // currentAppInstances: [],
@@ -84,18 +82,6 @@ export function applicationManagementReducer(state: ApplicationManagementState =
             return Object.assign({}, state, {
                 application: {
                     ...state.application, instances: []
-                }
-            });
-        case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCE:
-            return Object.assign({}, state, {
-                application: {
-                    ...state.application, instance: action.payload
-                }
-            });
-        case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCE:
-            return Object.assign({}, state, {
-                application: {
-                    ...state.application, instance: null
                 }
             });
         default:

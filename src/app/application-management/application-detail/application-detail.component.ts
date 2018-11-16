@@ -17,7 +17,6 @@ import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { LoggerService } from '../../core/service/logger.service';
-import { ApplicationInstancesManagementService } from '../../core/service/application-instances-management.service';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
@@ -26,6 +25,7 @@ import { Plan } from '../../core/model/plan.model';
 import { Observable } from 'rxjs';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import * as _ from 'lodash';
+import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -44,7 +44,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private ngRedux: NgRedux<AppState>,
                 private appService: ApplicationManagementService,
-                private instancesService: ApplicationInstancesManagementService,
+                private instancesService: ApplicationInstanceManagementService,
                 private logger: LoggerService) {
     }
 

@@ -12,7 +12,7 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()" [contentStyle]="{'overflow': 'auto', 'height': '468px', 'width': '500px'}" [(visible)]="visible"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ plan?.id }}
@@ -20,27 +20,20 @@
 
     <div *ngFor="let param of plan?.input_parameters">
         <div class="p-grid" *ngIf="hiddenElements.indexOf(param.name) === -1">
-            <div class="p-col-5 ot-input-label">
+            <div class="p-col-5 ot-input-label" style="word-break: break-all">
                 <label [for]="param.name">{{ param.name }}:</label>
             </div>
             <div class="p-col">
-                <textarea [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
+                <textarea [id]="param.name" pInputTextarea
+                          [autoResize]="false"
+                          type="text"
+                          style="width: 100%"
                           [rows]="2"
                           [placeholder]="param.required ? '' : '<optional>'"
                           [(ngModel)]="param.value" (ngModelChange)="checkInputs()"></textarea>
             </div>
         </div>
     </div>
-
-    <!--<div *ngFor="let param of plan?.input_parameters">-->
-        <!--<div class="card mb-2" *ngIf='hiddenElements.indexOf(param.name) === -1'>-->
-            <!--<h6 class="card-header">{{ param.name }}</h6>-->
-            <!--<div class="card-block">-->
-                <!--<textarea class="form-control" placeholder="{{ param.required ? '' : '<optional>' }}"-->
-                          <!--[(ngModel)]="param.value" (ngModelChange)="checkInputs();"></textarea>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
     <p-footer>
         <button type="button" pButton [disabled]="!runnable" (click)="runPlan()" label="Run Management Plan">
         </button>

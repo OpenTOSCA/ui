@@ -55,23 +55,16 @@ export class ApplicationManagementActions {
         return { type: ApplicationManagementActions.CLEAR_APPLICATION_CSAR };
     }
 
-    static updateApplicationInstances(instances: Array<ServiceTemplateInstance>): Action {
+    static updateApplicationInstances(instances: Map<string, ServiceTemplateInstance>): Action {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES,
             payload: instances
         };
     }
 
-    static updateApplicationInstance(instance: ServiceTemplateInstance): Action {
+    static clearApplicationInstances(): Action {
         return {
-            type: ApplicationManagementActions.UPDATE_APPLICATION_INSTANCE,
-            payload: instance
-        };
-    }
-
-    static clearApplicationInstance(): Action {
-        return {
-            type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCE,
+            type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES,
             payload: null
         };
     }
@@ -87,13 +80,6 @@ export class ApplicationManagementActions {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_TERMINATIONPLAN,
             payload: plan
-        };
-    }
-
-    static clearApplicationInstances(): Action {
-        return {
-            type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES,
-            payload: null
         };
     }
 }

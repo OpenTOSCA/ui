@@ -20,7 +20,6 @@ import { LoggerService } from './service/logger.service';
 import { ApplicationManagementService } from './service/application-management.service';
 import { ApplicationInstanceManagementService } from './service/application-instance-management.service';
 import { ConfigurationModule } from '../configuration/configuration.module';
-import { ApplicationInstancesManagementService } from './service/application-instances-management.service';
 import { RepositoryService } from './service/repository.service';
 import { RouterModule } from '@angular/router';
 import { ActionBarComponent } from './component/action-bar/action-bar.component';
@@ -80,7 +79,6 @@ import { DeploymentTestService } from './service/deployment-test.service';
         ApplicationManagementService,
         LoggerService,
         DatePipe,
-        ApplicationInstancesManagementService,
         RepositoryService,
         DeploymentCompletionService,
         BuildplanMonitoringService,

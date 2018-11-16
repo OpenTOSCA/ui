@@ -27,9 +27,14 @@ export class ApplicationInstanceListComponent  {
     @Input() terminationPlanAvailable: boolean = false;
     @Output() public onTerminateInstance: EventEmitter<string> = new EventEmitter();
 
-    @select(['container', 'application', 'instances']) currentAppInstances: Observable<Array<ServiceTemplateInstance>>;
+    @select(['container', 'application', 'instances']) currentAppInstancesMap: Observable<Map<string, ServiceTemplateInstance>>;
+
+    public currentAppInstances: Array<ServiceTemplateInstance>;
 
     constructor() {
+        this.currentAppInstancesMap.subscribe(instanceMap => {
+            this.currentAppInstances = Array.from(instanceMap.values());
+        });
     }
 
     terminateInstance(instanceID: string): void {

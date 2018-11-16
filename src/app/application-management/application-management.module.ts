@@ -39,7 +39,7 @@ import {
     TabViewModule,
     ScrollPanelModule,
     ToolbarModule,
-    TooltipModule, ProgressSpinnerModule, InputTextareaModule
+    TooltipModule, ProgressSpinnerModule, InputTextareaModule, PanelModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { NgSpinKitModule } from 'ng-spin-kit';
@@ -48,6 +48,8 @@ import { BuildplanMonitorComponent } from './buildplan-monitor/buildplan-monitor
 import { ManagementPlanListComponent } from './management-plan-list/management-plan-list.component';
 import { ManagementPlanExecutionDialogComponent } from './management-plan-execution-dialog/management-plan-execution-dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ManagementPlanInstanceListComponent } from './management-plan-instance-list/management-plan-instance-list.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
     imports: [
@@ -56,10 +58,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         FormsModule,
         DialogModule,
         DataTableModule,
+        TableModule,
         SharedModule,
         TooltipModule,
         CardModule,
         ButtonModule,
+        PanelModule,
         ScrollPanelModule,
         ProgressSpinnerModule,
         ToolbarModule,
@@ -85,7 +89,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         ApplicationOverviewComponent,
         BuildplanMonitorComponent,
         ManagementPlanListComponent,
-        ManagementPlanExecutionDialogComponent
+        ManagementPlanExecutionDialogComponent,
+        ManagementPlanInstanceListComponent
     ],
     providers: [
         ConfigurationService,

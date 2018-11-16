@@ -13,69 +13,73 @@
  */
 
 :host ::ng-deep .ui-panel {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 :host ::ng-deep #ot-topbar-menu {
-    .ui-tabmenu-nav {
-        border-bottom: 0 !important;
-        .ui-tabmenuitem {
-            border-bottom: 0 !important;
-        }
+  .ui-tabmenu-nav {
+    border-bottom: 0 !important;
+    .ui-tabmenuitem {
+      border-bottom: 0 !important;
     }
+  }
+}
+
+p-growl div.ui-growl div.ui-growl-item-container div.ui-growl-item span div.ui-growl-message p {
+  word-break: break-all;
 }
 
 #ot-layout-wrapper {
-    margin-bottom: 40px; // Margin bottom by footer height
+  margin-bottom: 40px; // Margin bottom by footer height
 }
 
 #ot-topbar {
-    background: #20272a url('../assets/img/Background.jpg');
-    display: block;
-    padding: 0;
-    height: 110px;
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+  background: #20272a url('../assets/img/Background.jpg');
+  display: block;
+  padding: 0;
+  height: 110px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
 
-    .logo {
-        display: inline-block;
-        margin-right: 40px;
-    }
+  .logo {
+    display: inline-block;
+    margin-right: 40px;
+  }
 }
 
 #ot-content {
-    padding-top: 110px;
-    background-color: #fff;
+  padding-top: 110px;
+  background-color: #fff;
 
-    #ot-content-wrapper {
-        padding: 15px;
-    }
+  #ot-content-wrapper {
+    padding: 15px;
+  }
 }
 
 #ot-topbar-menu {
-    display: inline-block;
-    position: fixed;
-    top: 72px;
-    width: 100%;
+  display: inline-block;
+  position: fixed;
+  top: 72px;
+  width: 100%;
 }
 
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40px; // Set the fixed height of the footer here
-    line-height: 40px; // Vertically center the text there
-    background-color: #363c3f;
-    border-top: 1px solid #20272a;
-    text-align: center;
-    color: #f1f1f1;
-    font-size: 12px;
-    a {
-        color: #fff;
-    }
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px; // Set the fixed height of the footer here
+  line-height: 40px; // Vertically center the text there
+  background-color: #363c3f;
+  border-top: 1px solid #20272a;
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 12px;
+  a {
+    color: #fff;
+  }
 }

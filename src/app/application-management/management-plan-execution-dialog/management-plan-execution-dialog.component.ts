@@ -19,6 +19,7 @@ import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { LoggerService } from '../../core/service/logger.service';
+import { globals } from '../../globals';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -47,16 +48,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit{
     }
 
     get hiddenElements(): Array<String> {
-        return [
-            'CorrelationID',
-            'csarID',
-            'serviceTemplateID',
-            'containerApiAddress',
-            'instanceDataAPIUrl',
-            'planCallbackAddress_invoker',
-            'csarEntrypoint',
-            'OpenTOSCAContainerAPIServiceInstanceID'
-        ];
+        return globals.hiddenElements;
     }
 
     /**
@@ -93,9 +85,9 @@ export class ManagementPlanExecutionDialogComponent implements OnInit{
             );
             this.ngRedux.dispatch(GrowlActions.addGrowl(
                 {
-                    severity: 'warning',
-                    summary: 'Management Plan executed',
-                    detail: 'The management plan ' + this.plan.id + ' was executed.'
+                    severity: 'info',
+                    summary: 'Plan Execution Started',
+                    detail: 'The management plan ' + this.plan.id + ' is executing.'
                 }
             ));
         }, err => {

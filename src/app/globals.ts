@@ -12,15 +12,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { ResourceSupport } from './resource-support.model';
-import { PlanParameter } from './plan-parameter.model';
-import { PlanLogEntry } from './plan-log-entry.model';
-
-export class PlanInstance extends ResourceSupport {
-    service_template_instance_id: string;
-    correlation_id: string;
-    state: string;
-    type: 'BUILD' | 'MANAGEMENT' | 'TERMINATION' | 'OTHER';
-    outputs: Array<PlanParameter>;
-    logs: Array<PlanLogEntry>;
-}
+export const globals = {
+    hiddenElements: [
+        'CorrelationID',
+        'csarID',
+        'serviceTemplateID',
+        'containerApiAddress',
+        'instanceDataAPIUrl',
+        'planCallbackAddress_invoker',
+        'csarEntrypoint',
+        'OpenTOSCAContainerAPIServiceInstanceID'
+    ]
+};
