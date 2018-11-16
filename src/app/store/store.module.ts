@@ -17,11 +17,9 @@ import { DevToolsExtension, NgRedux, NgReduxModule } from '@angular-redux/store'
 import { NgReduxRouter, NgReduxRouterModule } from '@angular-redux/router';
 import { createLogger } from 'redux-logger';
 import { AppState } from './app-state.model';
-import { rootReducer } from './store.reducer';
+import { rootEnhancers, rootReducer } from './store.reducer';
 import { INITIAL_STATE as ApplicationManagementInitialState } from '../application-management/application-management.reducer';
 import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/configuration.reducer';
-import * as storage from 'redux-storage';
-import createEngine from 'redux-storage-engine-localstorage';
 
 @NgModule({
     imports: [
@@ -34,18 +32,16 @@ import createEngine from 'redux-storage-engine-localstorage';
 export class StoreModule {
 
     constructor(public store: NgRedux<AppState>, devTools: DevToolsExtension, ngReduxRouter: NgReduxRouter) {
-
-        const engine = createEngine('opentosca');
-        const storageMiddleware = storage.createMiddleware(engine);
-
+        const storeEnhancers = devTools.isEnabled() ? [...rootEnhancers, devTools.enhancer()] : [...rootEnhancers];
         store.configureStore(
             rootReducer,
             {
                 container: ApplicationManagementInitialState,
                 administration: ConfigurationInitialState
             },
-            [storageMiddleware, createLogger()],
-            devTools.isEnabled() ? [devTools.enhancer()] : []);
+            [createLogger()],
+            storeEnhancers,
+        );
         // Enable syncing of Angular router state with our Redux store.
         ngReduxRouter.initialize();
     }

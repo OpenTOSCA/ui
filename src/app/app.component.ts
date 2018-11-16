@@ -11,7 +11,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MenuItem, Message } from 'primeng/primeng';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from './store/app-state.model';
@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
     public messages: Array<Message> = [];
     @select(['growl', 'messages']) growls: Observable<Array<Message>>;
@@ -60,16 +60,5 @@ export class AppComponent implements OnInit {
 
     public updateGrowls(messages: Array<Message>): void {
         this.ngRedux.dispatch(GrowlActions.updateGrowls(messages));
-    }
-
-    ngOnInit(): void {
-        // TODO
-        // const engine = createEngine('opentosca');
-        // const middleware = storage.createMiddleware(engine);
-        // const createStoreWithMiddleware = applyMiddleware(middleware)(createStore);
-        // const loader = storage.createLoader(engine);
-        // loader(createStoreWithMiddleware(rootReducer))
-        //     .then((newState) => console.log('Loaded state:', newState));
-        // //     .catch(() => console.log('Failed to load previous state'));
     }
 }

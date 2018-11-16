@@ -97,6 +97,7 @@ export class RepositoryConfigurationComponent implements OnInit {
     cancel() {
         this.isNewItem = false;
         this.newItem = null;
+        this.selectedItem = null;
         this.displayDialog = false;
     }
 

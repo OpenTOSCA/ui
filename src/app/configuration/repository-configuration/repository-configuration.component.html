@@ -39,7 +39,7 @@
 
 <form name="itemForm" #itemForm="ngForm">
     <p-dialog header="Repository" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true"
-              [width]="600">
+              [width]="600" (onHide)="cancel()">
         <div class="ui-g ui-fluid" *ngIf="newItem">
             <div class="ui-g-12">
                 <div class="ui-g-2 ot-input-label">
