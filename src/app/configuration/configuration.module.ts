@@ -19,7 +19,13 @@ import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './configuration.service';
 import { RouterModule } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
-import { InputTextModule } from 'primeng/primeng';
+import { ButtonModule, ConfirmDialogModule, DialogModule, InputTextModule, TooltipModule } from 'primeng/primeng';
+import { RepositoryConfigurationComponent } from './repository-configuration/repository-configuration.component';
+import { TableModule } from 'primeng/table';
+import { RepositoryValidatorDirective } from './repository-configuration/repository-validator.directive';
+import { ControlOptionsDirective } from './repository-configuration/control-options.directive';
+import { ForbiddenNameValidatorDirective } from './repository-configuration/forbidden-name.directive';
+import { ForbiddenNameDisableDirective } from './repository-configuration/forbidden-name-disable.directive';
 
 @NgModule({
     imports: [
@@ -28,6 +34,11 @@ import { InputTextModule } from 'primeng/primeng';
         ReactiveFormsModule,
         PanelModule,
         InputTextModule,
+        ButtonModule,
+        TableModule,
+        DialogModule,
+        ConfirmDialogModule,
+        TooltipModule,
         RouterModule,
         ConfigurationRoutingModule
     ],
@@ -35,7 +46,12 @@ import { InputTextModule } from 'primeng/primeng';
         ConfigurationService
     ],
     declarations: [
-        ConfigurationComponent
+        ConfigurationComponent,
+        RepositoryConfigurationComponent,
+        RepositoryValidatorDirective,
+        ControlOptionsDirective,
+        ForbiddenNameValidatorDirective,
+        ForbiddenNameDisableDirective,
     ]
 })
 export class ConfigurationModule {

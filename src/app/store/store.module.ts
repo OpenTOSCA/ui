@@ -11,15 +11,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Inject, NgModule } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { DevToolsExtension, NgRedux, NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouter, NgReduxRouterModule } from '@angular-redux/router';
 import { createLogger } from 'redux-logger';
 import { AppState } from './app-state.model';
-import { rootReducer } from './store.reducer';
-import { INITIAL_STATE as ApplicationManagementInitialState } from '../application-management/application-management.reducer';
-import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/configuration.reducer';
+import { rootEnhancers, rootReducer } from './store.reducer';
 
 @NgModule({
     imports: [
@@ -30,15 +28,33 @@ import { INITIAL_STATE as ConfigurationInitialState } from '../configuration/con
     declarations: []
 })
 export class StoreModule {
-    constructor(public store: NgRedux<AppState>, devTools: DevToolsExtension, ngReduxRouter: NgReduxRouter) {
+
+    constructor(public store: NgRedux<AppState>, devTools: DevToolsExtension, ngReduxRouter: NgReduxRouter,
+                @Inject(DOCUMENT) private document: any) {
+        const storeEnhancers = devTools.isEnabled() ? [...rootEnhancers, devTools.enhancer()] : [...rootEnhancers];
         store.configureStore(
             rootReducer,
             {
-                container: ApplicationManagementInitialState,
-                administration: ConfigurationInitialState
+                administration: {
+                    containerUrl: `http://${this.document.location.hostname}:1337`,
+                    repositoryItems: [{
+                        name: 'OpenTOSCA',
+                        url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
+                    }],
+                    planLifecycleInterface: 'OpenTOSCA-Lifecycle-Interface',
+                    planOperationInitiate: 'initiate',
+                    planOperationTerminate: 'terminate',
+                },
+                repository: {
+                    selectedRepository: {
+                        name: 'OpenTOSCA',
+                        url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
+                    }
+                },
             },
             [createLogger()],
-            devTools.isEnabled() ? [devTools.enhancer()] : []);
+            storeEnhancers,
+        );
         // Enable syncing of Angular router state with our Redux store.
         ngReduxRouter.initialize();
     }

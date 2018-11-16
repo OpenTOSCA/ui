@@ -1,0 +1,91 @@
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
+<p-table [columns]="cols" [value]="items" selectionMode="single" [(selection)]="selectedItem"
+         (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [width]="col.width"
+                style="text-align: left">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary" let-rowData>
+        <div style="text-align:left">
+            <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
+        </div>
+    </ng-template>
+</p-table>
+
+<form name="itemForm" #itemForm="ngForm">
+    <p-dialog header="Repository" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true"
+              [width]="600" (onHide)="cancel()">
+        <div class="ui-g ui-fluid" *ngIf="newItem">
+            <div class="ui-g-12">
+                <div class="ui-g-2 ot-input-label">
+                    <label for="name">Name:</label>
+                </div>
+                <div class="ui-g-10">
+                    <div class="ui-inputgroup">
+                        <input id="name" name="name" type="text" pInputText placeholder="Enter a name"
+                               [(ngModel)]="newItem.name" #name="ngModel" required opentoscaForbiddenName
+                               [class.ot-has-success]="name.valid" [class.ot-has-error]="name.invalid"
+                               [opentoscaForbiddenNameDisable]="isNewItem">
+                        <span class="ui-inputgroup-addon">
+                            <span *ngIf="name.valid"><i class="fa fa-check"></i></span>
+                            <span *ngIf="name.invalid"><i class="fa fa-times"></i></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-2 ot-input-label">
+                    <label for="url">URL:</label>
+                </div>
+                <div class="ui-g-10">
+                    <div class="ui-inputgroup">
+                        <input id="url" name="url" type="text" pInputText placeholder="Enter repository URL"
+                               [(ngModel)]="newItem.url" #url="ngModel" required opentoscaRepositoryValid
+                               [class.ot-has-success]="url.valid"
+                               [class.ot-has-error]="url.invalid"
+                               [opentoscaControlOptions]="{ debounce: 500 }">
+                        <span class="ui-inputgroup-addon">
+                            <span *ngIf="url.valid"><i class="fa fa-check"></i></span>
+                            <span *ngIf="url.invalid"><i class="fa fa-times"></i></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <button type="button" pButton (click)="cancel()" label="Cancel"></button>
+            <button [attr.disabled]="itemForm.invalid ? '' : null" type="button" pButton
+                    (click)="save()"
+                    label="Save"></button>
+            <button *ngIf="!isNewItem" [attr.disabled]="newItem?.name==='OpenTOSCA' ? '' : null" type="button" pButton
+                    (click)="delete()"
+                    label="Delete" class="ui-button-danger"></button>
+        </p-footer>
+    </p-dialog>
+</form>
+<p-confirmDialog></p-confirmDialog>

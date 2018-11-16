@@ -20,6 +20,7 @@ import { configurationReducer } from '../configuration/configuration.reducer';
 import { repositoryReducer } from '../repository/repository.reducer';
 import { breadcrumbReducer } from '../core/component/breadcrumb/breadcrumb.reducer';
 import { growlReducer } from '../core/growl/growl.reducer';
+import persistState from 'redux-localstorage';
 
 export const rootReducer = composeReducers(
     defaultFormReducer(),
@@ -32,3 +33,7 @@ export const rootReducer = composeReducers(
         router: routerReducer,
     })
 );
+
+export const rootEnhancers = [
+    persistState(['administration', 'repository'], { key: 'opentosca' })
+];

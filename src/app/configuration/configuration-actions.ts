@@ -11,23 +11,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Injectable } from '@angular/core';
 import { Action } from '../store/store.action';
+import { Item } from './repository-configuration/repository-configuration.component';
 
 @Injectable()
 export class ConfigurationActions {
 
-    static UPDATE_REPOSITORY_URL = 'UPDATE_REPOSITORY_URL';
+    static UPDATE_REPOSITORY_ITEMS = 'UPDATE_REPOSITORY_ITEMS';
     static UPDATE_CONTAINER_URL = 'UPDATE_CONTAINER_URL';
     static UPDATE_PLAN_LIFECYCLE_INTERFACE_NAME = 'UPDATE_PLAN_LIFECYCLE_INTERFACE_NAME';
     static UPDATE_PLAN_OPERATION_INITIATE_NAME = 'UPDATE_PLAN_OPERATION_INITIATE_NAME';
     static UPDATE_PLAN_OPERATION_TERMINATION_NAME = 'UPDATE_PLAN_OPERATION_TERMINATION_NAME';
 
-    static updateRepositoryUrl(url: string): Action {
+    static updateRepositoryItems(items: Array<Item>): Action {
         return {
-            type: ConfigurationActions.UPDATE_REPOSITORY_URL,
-            payload: url
+            type: ConfigurationActions.UPDATE_REPOSITORY_ITEMS,
+            payload: items
         };
     }
 

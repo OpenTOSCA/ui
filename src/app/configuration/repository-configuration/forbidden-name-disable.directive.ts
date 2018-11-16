@@ -11,20 +11,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 
-import { Injectable } from '@angular/core';
-import { Action } from '../store/store.action';
-import { Item } from '../configuration/repository-configuration/repository-configuration.component';
+@Directive({
+    selector: 'input[type=text][ngModel][opentoscaForbiddenNameDisable]',
+})
+export class ForbiddenNameDisableDirective implements OnInit {
 
-@Injectable()
-export class RepositoryActions {
+    @Input('opentoscaForbiddenNameDisable') isNewItem: boolean;
 
-    static SELECTED_REPOSITORY = 'SELECTED_REPOSITORY';
+    @Input() ngModel;
 
-    static setSelectedRepository(item: Item): Action {
-        return {
-            type: RepositoryActions.SELECTED_REPOSITORY,
-            payload: item
-        };
+    constructor(private element: ElementRef) {
+    }
+
+    ngOnInit(): void {
+        if (!this.isNewItem && this.ngModel === 'OpenTOSCA') {
+            this.element.nativeElement.disabled = 'disabled';
+        }
     }
 }
