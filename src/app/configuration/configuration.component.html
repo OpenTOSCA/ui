@@ -32,6 +32,8 @@
                     <span *ngIf="containerUrlAvailable"><i class="fa fa-check"></i></span>
                     <span *ngIf="!containerUrlAvailable"><i class="fa fa-times"></i></span>
                 </span>
+                <button *ngIf="differentLocation()" type="button" pButton (click)="applyDefaultLocation()"
+                        icon="fas fa-undo" pTooltip="Apply default endpoint" showDelay="300" tooltipPosition="top"></button>
             </div>
         </div>
     </div>

@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fromEvent, merge, Observable, Subscription, timer } from 'rxjs';
 import { debounce, flatMap, map } from 'rxjs/operators';
 
-export const DEFAULT_VALUE_ACCESSOR: any = {
+const DEFAULT_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => ControlOptionsDirective),
     multi: true

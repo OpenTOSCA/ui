@@ -46,7 +46,7 @@ export class ConfigurationComponent implements OnInit {
     ngOnInit(): void {
         this.containerUrl.subscribe(value => {
             if (value.length === 0) {
-                this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(`http://${this.document.location.hostname}:1337`));
+                this.applyDefaultLocation();
             } else {
                 this.checkAvailabilityOfContainer();
                 this.containerUrlControl.setValue(value);
@@ -106,5 +106,14 @@ export class ConfigurationComponent implements OnInit {
         this.configService.setPlanOperationTerminate(newValue);
         this.logger.log('[administration.component][updatePlanOperationTerminate] Updated termination plan name to: ',
             this.configService.getPlanOperationTerminate());
+    }
+
+    differentLocation(): boolean {
+        const url = `http://${this.document.location.hostname}:1337`;
+        return url !== this.containerUrlControl.value;
+    }
+
+    applyDefaultLocation() {
+        this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(`http://${this.document.location.hostname}:1337`));
     }
 }

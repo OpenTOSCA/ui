@@ -48,13 +48,13 @@
                 <div class="ui-g-10">
                     <div class="ui-inputgroup">
                         <input id="name" name="name" type="text" pInputText placeholder="Enter a name"
-                               [(ngModel)]="newItem.name" #name="ngModel" required minlength="3"
-                               [class.ot-has-success]="name.valid"
-                               [class.ot-has-error]="name.invalid">
+                               [(ngModel)]="newItem.name" #name="ngModel" required minlength="3" opentoscaForbiddenName
+                               [class.ot-has-success]="name.valid" [class.ot-has-error]="name.invalid"
+                               [opentoscaForbiddenNameDisable]="isNewItem">
                         <span class="ui-inputgroup-addon">
-                        <span *ngIf="name.valid"><i class="fa fa-check"></i></span>
-                        <span *ngIf="name.invalid"><i class="fa fa-times"></i></span>
-                    </span>
+                            <span *ngIf="name.valid"><i class="fa fa-check"></i></span>
+                            <span *ngIf="name.invalid"><i class="fa fa-times"></i></span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -70,20 +70,21 @@
                                [class.ot-has-error]="url.invalid"
                                [opentoscaControlOptions]="{ debounce: 500 }">
                         <span class="ui-inputgroup-addon">
-                        <span *ngIf="url.valid"><i class="fa fa-check"></i></span>
-                        <span *ngIf="url.invalid"><i class="fa fa-times"></i></span>
-                    </span>
+                            <span *ngIf="url.valid"><i class="fa fa-check"></i></span>
+                            <span *ngIf="url.invalid"><i class="fa fa-times"></i></span>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
         <p-footer>
             <button type="button" pButton (click)="cancel()" label="Cancel"></button>
-            <button *ngIf="itemForm.valid" type="button" pButton (click)="save()" label="Save"></button>
-            <button *ngIf="itemForm.invalid" disabled type="button" pButton label="Save"></button>
-            <button *ngIf="!isNewItem" type="button" pButton (click)="delete()" label="Delete"
-                    class="ui-button-danger"></button>
-
+            <button [attr.disabled]="itemForm.invalid ? '' : null" type="button" pButton
+                    (click)="save()"
+                    label="Save"></button>
+            <button *ngIf="!isNewItem" [attr.disabled]="newItem?.name==='OpenTOSCA' ? '' : null" type="button" pButton
+                    (click)="delete()"
+                    label="Delete" class="ui-button-danger"></button>
         </p-footer>
     </p-dialog>
 </form>

@@ -66,7 +66,7 @@ export class RepositoryConfigurationComponent implements OnInit {
             if (items.length === 0) {
                 this.isNewItem = true;
                 this.newItem = {
-                    name: 'Default',
+                    name: 'OpenTOSCA',
                     url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
                 };
                 this.save();
