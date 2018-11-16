@@ -12,10 +12,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
-import { DOCUMENT } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ConfigurationActions } from '../configuration-actions';
 import { ConfirmationService } from 'primeng/api';
@@ -32,11 +31,6 @@ export interface Item {
 })
 export class RepositoryConfigurationComponent implements OnInit {
 
-    dialog = {
-        name: '',
-        url: ''
-    };
-
     @select(['administration', 'repositoryItems']) repositoryItems: Observable<Array<Item>>;
     items: Item[] = [];
 
@@ -46,8 +40,7 @@ export class RepositoryConfigurationComponent implements OnInit {
     selectedItem: Item;
     cols: any[];
 
-    constructor(private ngRedux: NgRedux<AppState>, @Inject(DOCUMENT) private document: any,
-                private confirmationService: ConfirmationService) {
+    constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService) {
     }
 
     static cloneItem(item: Item): Item {

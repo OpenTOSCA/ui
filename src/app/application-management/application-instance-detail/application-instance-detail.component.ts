@@ -11,17 +11,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgRedux, select } from '@angular-redux/store';
+import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
-import { ApplicationManagementActions } from '../application-management-actions';
 import { Observable } from 'rxjs';
 import { DeploymentTestService } from '../../core/service/deployment-test.service';
 import { DeploymentTest } from '../../core/model/deployment-test';
-import { GrowlActions } from '../../core/growl/growl-actions';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
 import { PlanInstance } from '../../core/model/plan-instance.model';
 import { Csar } from '../../core/model/csar.model';
@@ -46,7 +44,8 @@ export class ApplicationInstanceDetailComponent implements OnInit {
     }
 
     reloadAppInstance(): void {
-        this.instanceService.getServiceTemplateInstance(this.route.snapshot.paramMap.get('id'), this.route.snapshot.paramMap.get('instanceId'))
+        this.instanceService.getServiceTemplateInstance(this.route.snapshot.paramMap.get('id'),
+            this.route.snapshot.paramMap.get('instanceId'))
             .subscribe(result => this.serviceTemplateInstance = result);
     }
 
@@ -97,7 +96,7 @@ export class ApplicationInstanceDetailComponent implements OnInit {
                     this.updatePlanInstances(this.ngRedux.getState().container.application.csar, this.serviceTemplateInstance);
                     this.deploymentTests = this.deploymentTestService.getDeploymentTests(data.serviceTemplateInstance);
                     const breadCrumbs = [];
-                    breadCrumbs.push({label: 'Applications', routerLink: '/applications'});
+                    breadCrumbs.push({ label: 'Applications', routerLink: '/applications' });
                     breadCrumbs.push(
                         {
                             label: data.serviceTemplateInstance.csar_id,

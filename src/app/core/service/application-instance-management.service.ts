@@ -79,7 +79,7 @@ export class ApplicationInstanceManagementService {
                     console.error(err);
                     return throwError(err);
                 })
-            )
+            );
 
     }
 
@@ -97,7 +97,8 @@ export class ApplicationInstanceManagementService {
             );
     }
 
-    getPlanInstancesOfServiceTemplateInstance(app: Csar, serviceTemplateInstance: ServiceTemplateInstance): Observable<Array<PlanInstance>> {
+    getPlanInstancesOfServiceTemplateInstance(app: Csar,
+                                              serviceTemplateInstance: ServiceTemplateInstance): Observable<Array<PlanInstance>> {
         return forkJoin(
             this.getBuildPlanInstanceFromServiceTemplateInstance(serviceTemplateInstance),
             this.getManagementPlans(serviceTemplateInstance)
@@ -120,7 +121,8 @@ export class ApplicationInstanceManagementService {
                                 })
                             );
                     }),
-                    catchError(err => this.logger.handleObservableError('[application-instance-management.service][getManagementPlans]', err))
+                    catchError(err => this.logger.handleObservableError(
+                        '[application-instance-management.service][getManagementPlans]', err))
                 )
         ).pipe(
             map(result => new Array(result[0]).concat(result[1]))

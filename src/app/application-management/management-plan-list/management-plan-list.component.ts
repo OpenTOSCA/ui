@@ -31,7 +31,7 @@ export class ManagementPlanListComponent implements OnInit {
     plans: Observable<PlanList>;
 
     plan: Plan;
-    dialogVisible: boolean = false;
+    dialogVisible = false;
 
     constructor(private mplanService: ManagementPlanService) {
     }

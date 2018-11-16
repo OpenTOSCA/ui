@@ -16,9 +16,9 @@
     <div class="p-grid">
         <div class="p-col-8">
             <div class="p-grid">
-                <div class="p-col-2">
+                <div class="p-col-1" style="padding-top: 25px">
                     <!-- Here goes the image -->
-                    <img [src]="csar.icon_url" style="width: 100%; height: auto"
+                    <img [src]="csar.icon_url" class="img-fluid" style="width: 100%"
                          onerror="this.src='/assets/Default_Application_Icon.png'">
                 </div>
                 <div class="p-col">
@@ -43,8 +43,8 @@
                             </div>
                         </p-toolbar>
                         <opentosca-application-instance-list
-                                [terminationPlanAvailable]="(terminationPlan | async) !== null"
-                                (onTerminateInstance)="emitTerminationPlan($event)">
+                            [terminationPlanAvailable]="(terminationPlan | async) !== null"
+                            (onTerminateInstance)="emitTerminationPlan($event)">
                         </opentosca-application-instance-list>
                     </p-fieldset>
                 </div>
@@ -55,8 +55,8 @@
                 <div class="p-col">
                     <p-fieldset>
                         <p-header><strong>Info</strong></p-header>
-                        <p>Version: {{csar.version}}</p>
-                        <p>Authors: {{csar.authors}}</p>
+                        <p><strong>Version:</strong> {{csar.version}}</p>
+                        <p><strong>Authors:</strong> {{csar.authors}}</p>
                     </p-fieldset>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                 <div class="p-col">
                     <p-fieldset>
                         <p-header><strong>Topology Preview</strong></p-header>
-                        <img [src]="csar.image_url" style="width: 100%; height: auto">
+                        <img [src]="csar.image_url" class="img-fluid">
                     </p-fieldset>
                 </div>
             </div>
@@ -74,72 +74,6 @@
 <ng-template #loading>
     <p>Loading app info...</p>
 </ng-template>
-<opentosca-management-plan-execution-dialog
-        [(visible)]="dialogVisible"
-        [plan]="buildPlan | async"
-        [inputValidation]="true">
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="buildPlan | async"
+                                            [inputValidation]="true">
 </opentosca-management-plan-execution-dialog>
-<!--<div class="container-fluid">-->
-<!--<div class="row">-->
-<!--<div class="col-5">-->
-<!--<p-fieldset>-->
-<!--<p-header><strong>Application Information</strong></p-header>-->
-<!--<div *ngIf="(app | async); let app; else loading">-->
-<!--<div>-->
-<!--<h2>Description</h2>-->
-<!--<p *ngIf="app.description && app.description !== ''; else noDescription">-->
-<!--{{app.description}}-->
-<!--</p>-->
-<!--<ng-template #noDescription><p>No description provided.</p></ng-template>-->
-<!--</div>-->
-<!--<div>-->
-<!--<h2>Version</h2>-->
-<!--<p *ngIf="app?.version && app?.version !==''; else noVersion">-->
-<!--{{app.version}}-->
-<!--</p>-->
-<!--<ng-template #noVersion><p>No version provided.</p></ng-template>-->
-<!--</div>-->
-<!--<div>-->
-<!--<h2>Authors</h2>-->
-<!--<ul *ngIf="app?.authors?.length > 0; else noAuthors">-->
-<!--<li *ngFor="let author of app.authors">-->
-<!--{{author}}-->
-<!--</li>-->
-<!--</ul>-->
-<!--<ng-template #noAuthors><p>No authors provided.</p></ng-template>-->
-<!--</div>-->
-<!--<div>-->
-<!--<h2>Topology Template</h2>-->
-<!--<div>-->
-<!--<a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage"-->
-<!--[href]="app.image_url"-->
-<!--target="_blank">-->
-<!--<img class="img-responsive" style="max-width: 100%" [src]="app.image_url"/>-->
-<!--</a>-->
-<!--</div>-->
-<!--<ng-template #noTemplateImage><p>No Template Image provided.</p></ng-template>-->
-<!--</div>-->
-<!--</div>-->
-<!--<ng-template #loading>-->
-<!--<p>Loading app info...</p>-->
-<!--</ng-template>-->
-<!--</p-fieldset>-->
-<!--</div>-->
-<!--<div class="col-7">-->
-<!--<p-fieldset>-->
-<!--<p-header>Instances</p-header>-->
-<!--<div class="row">-->
-<!--<div class="col-lg-12">-->
-<!--<opentosca-application-instance-list-->
-<!--(onTerminateInstance)="emitTerminationPlan($event)"-->
-<!--(onReloadInstances)="triggerUpdateAppInstancesList()">-->
-<!--</opentosca-application-instance-list>-->
-<!--</div>-->
-<!--</div>-->
-<!--</p-fieldset>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="buildPlan | async"-->
-<!--[inputValidation]="false"></opentosca-management-plan-execution-dialog>-->

@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,8 +28,7 @@ import { ApplicationInstanceManagementService } from '../../core/service/applica
 
 @Component({
     selector: 'opentosca-application-detail',
-    templateUrl: './application-detail.component.html',
-    styleUrls: ['./application-detail.component.scss']
+    templateUrl: './application-detail.component.html'
 })
 export class ApplicationDetailComponent implements OnInit, OnDestroy {
 

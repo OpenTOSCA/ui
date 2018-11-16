@@ -44,13 +44,6 @@ export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, b
             }),
             catchError(reason => {
                 return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
-            }))
-
-        // return this.applicationService.getCsar(route.params['id'])
-        //     .pipe(
-        //         catchError(reason => {
-        //             return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
-        //         })
-        //     );
+            }));
     }
 }

@@ -11,34 +11,46 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
     selector: 'opentosca-application-instance-list',
-    templateUrl: './application-instance-list.component.html',
-    styleUrls: ['./application-instance-list.component.scss']
+    templateUrl: './application-instance-list.component.html'
 })
-export class ApplicationInstanceListComponent  {
+export class ApplicationInstanceListComponent implements OnInit {
 
-    @Input() terminationPlanAvailable: boolean = false;
+    @Input() terminationPlanAvailable = false;
     @Output() public onTerminateInstance: EventEmitter<string> = new EventEmitter();
 
-    @select(['container', 'application', 'instances']) currentAppInstancesMap: Observable<Map<string, ServiceTemplateInstance>>;
+    @select(['container', 'application', 'instances']) instances$: Observable<Map<string, ServiceTemplateInstance>>;
+    instances: Array<ServiceTemplateInstance>;
 
-    public currentAppInstances: Array<ServiceTemplateInstance>;
+    cols;
 
-    constructor() {
-        this.currentAppInstancesMap.subscribe(instanceMap => {
-            this.currentAppInstances = Array.from(instanceMap.values());
+    constructor(private confirmationService: ConfirmationService) {
+        this.instances$.subscribe(i => this.instances = Array.from(i.values()));
+    }
+
+    ngOnInit(): void {
+        this.cols = [
+            { field: 'id', header: 'Instance ID', sortable: true },
+            { field: 'state', header: 'State', sortable: true },
+            { field: 'created_at', header: 'Creation Date', sortable: true },
+            { field: 'actions', header: '', sortable: false }
+        ];
+    }
+
+    terminate(id: string): void {
+        this.confirmationService.confirm({
+            message: 'Do you want to terminate this instance?',
+            header: 'Confirm Termination',
+            accept: () => {
+                this.onTerminateInstance.emit(id);
+            }
         });
     }
-
-    terminateInstance(instanceID: string): void {
-        this.onTerminateInstance.emit(instanceID);
-    }
-
 }

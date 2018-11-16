@@ -40,7 +40,7 @@ export class ApplicationOverviewComponent implements OnInit {
     public showModal = false;
     public linkToWineryResourceForCompletion: string;
     public appToComplete: MarketplaceApplication;
-    public showCompletionDialog: boolean = false;
+    public showCompletionDialog = false;
 
     constructor(private applicationService: ApplicationManagementService,
                 private confirmationService: ConfirmationService,
@@ -64,8 +64,6 @@ export class ApplicationOverviewComponent implements OnInit {
 
     /**
      * Triggers confirmation dialog for app deletion.
-     *
-     * @param csar
      */
     confirmDeletion(csar: Csar): void {
         this.confirmationService.confirm({
@@ -80,7 +78,6 @@ export class ApplicationOverviewComponent implements OnInit {
 
     /**
      * Handler for successful completion of completion component.
-     * @param app
      */
     onCompletionSuccess(app: MarketplaceApplication): void {
         this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -95,7 +92,7 @@ export class ApplicationOverviewComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        this.repoService.installApplication({url: app.csarURL, name: app.id}, postURL)
+        this.repoService.installApplication({ url: app.csarURL, name: app.id }, postURL)
             .subscribe(() => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
@@ -118,8 +115,6 @@ export class ApplicationOverviewComponent implements OnInit {
 
     /**
      * Handler for emitted errors of completion component
-     *
-     * @param errorMessage
      */
     onCompletionError(errorMessage: string): void {
         this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -132,9 +127,6 @@ export class ApplicationOverviewComponent implements OnInit {
         this.stopCompletionProcess();
     }
 
-    /**
-     * Handler for user triggert aborts of completion.
-     */
     onCompletionAbort(): void {
         this.ngRedux.dispatch(GrowlActions.addGrowl(
             {
@@ -157,8 +149,6 @@ export class ApplicationOverviewComponent implements OnInit {
 
     /**
      * Sends delete request to container.
-     *
-     * @param csar
      */
     deleteApplication(csar: Csar): void {
         csar.deleting$ = true;
@@ -185,9 +175,6 @@ export class ApplicationOverviewComponent implements OnInit {
             });
     }
 
-    /**
-     * Updates applications list.
-     */
     refresh(): void {
         this.applicationService.getResolvedApplications()
             .subscribe(apps => {

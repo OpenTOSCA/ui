@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Plan } from '../../core/model/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
@@ -25,13 +24,12 @@ import { globals } from '../../globals';
     selector: 'opentosca-management-plan-execution-dialog',
     templateUrl: './management-plan-execution-dialog.component.html'
 })
-export class ManagementPlanExecutionDialogComponent implements OnInit{
+export class ManagementPlanExecutionDialogComponent implements OnInit {
 
-
-    @Input() visible: boolean = false;
+    @Input() visible = false;
     @Output() visibleChange = new EventEmitter<boolean>();
     @Input() plan: Plan;
-    @Input() inputValidation: boolean = true;
+    @Input() inputValidation = true;
 
     public runnable: boolean;
 
@@ -41,14 +39,14 @@ export class ManagementPlanExecutionDialogComponent implements OnInit{
         private logger: LoggerService) {
     }
 
-    ngOnInit(): void {
-        if(this.plan) {
-            this.checkInputs();
-        }
-    }
-
     get hiddenElements(): Array<String> {
         return globals.hiddenElements;
+    }
+
+    ngOnInit(): void {
+        if (this.plan) {
+            this.checkInputs();
+        }
     }
 
     /**
@@ -66,7 +64,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit{
             return;
         }
         for (const parameter of this.plan.input_parameters) {
-            if((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
+            if ((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
                 if (parameter.value == null || parameter.value === '') {
                     this.runnable = false;
                     return;

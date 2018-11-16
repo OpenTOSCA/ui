@@ -80,14 +80,13 @@ export class ApplicationUploadComponent implements OnInit {
     /**
      * Handler for file selection.
      */
-    onSelect():void {
+    onSelect(): void {
         this.fileSelected = true;
         this.deploymentInProgress = false;
     }
 
     /**
      * Handler for clear in file selection component.
-     *
      */
     onClear(): void {
         this.fileSelected = false;
@@ -96,8 +95,6 @@ export class ApplicationUploadComponent implements OnInit {
 
     /**
      * Handler for upload progress of file upload component.
-     *
-     * @param event
      */
     onUploadProgress(event: ProgressEvent): void {
         this.bytesUploaded = event.loaded;
@@ -108,8 +105,6 @@ export class ApplicationUploadComponent implements OnInit {
     /**
      * Handler for upload finished event of file upload component.
      * This handler is called when the XHR request returns, i.e., when deployment in container is done.
-     *
-     * @param event
      */
     onUploadFinished(event): void {
         // This is called when XHR request returns
@@ -128,8 +123,6 @@ export class ApplicationUploadComponent implements OnInit {
     /**
      * Handler for emited errors of file upload component.
      * If topology completion is required this is catched within this handler.
-     *
-     * @param event
      */
     onUploadError(event): void {
         switch (event.xhr.status) {
