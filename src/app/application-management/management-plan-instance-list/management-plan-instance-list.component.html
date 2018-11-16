@@ -1,0 +1,83 @@
+<p-table [value]="planInstances" dataKey="correlation_id">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 3em"></th>
+            <th>
+                ID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                State
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+        <tr>
+            <td>
+                <a href="#" [pRowToggler]="rowData">
+                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a>
+            </td>
+            <td>
+                {{rowData.correlation_id}}
+            </td>
+            <td>
+                {{rowData.type}}
+            </td>
+            <td>
+                {{rowData.state}}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData>
+        <tr>
+            <td [attr.colspan]="4">
+                <p-tabView>
+                    <p-tabPanel header="Outputs">
+                        <p-table [value]="rowData.outputs" [columns]="outputParamCols">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 20%" [pSortableColumn]="'name'">
+                                        Name
+                                        <p-sortIcon [field]="'name'"></p-sortIcon>
+                                    </th>
+                                    <th [pSortableColumn]="'value'">
+                                        Value
+                                        <p-sortIcon [field]="'value'"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                    <td style="word-break: break-all" *ngFor="let col of columns">{{rowData[col.field]}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-tabPanel>
+                    <p-tabPanel header="Logs">
+                        <p-table [value]="rowData.logs" [columns]="logColumns">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{rowData[col.field]}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                    <td style="word-break: break-all" *ngFor="let col of columns">
+                                        <span *ngIf="col.field === 'timestamp'">{{rowData[col.field] | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                        <span *ngIf="col.field !== 'timestamp'">{{rowData[col.field]}}</span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-tabPanel>
+                </p-tabView>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
