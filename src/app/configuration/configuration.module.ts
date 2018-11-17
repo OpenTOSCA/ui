@@ -26,6 +26,7 @@ import { RepositoryValidatorDirective } from './repository-configuration/reposit
 import { ControlOptionsDirective } from './repository-configuration/control-options.directive';
 import { ForbiddenNameValidatorDirective } from './repository-configuration/forbidden-name.directive';
 import { ForbiddenNameDisableDirective } from './repository-configuration/forbidden-name-disable.directive';
+import { NgSpinKitModule } from 'ng-spin-kit';
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import { ForbiddenNameDisableDirective } from './repository-configuration/forbid
         TableModule,
         DialogModule,
         ConfirmDialogModule,
+        NgSpinKitModule,
         TooltipModule,
         RouterModule,
         ConfigurationRoutingModule
