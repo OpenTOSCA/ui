@@ -51,18 +51,18 @@ export class ApplicationInstanceBoundaryDefinitionInterfacesListComponent implem
         this.rowGroupMetadata = {};
         if (this.interfaces) {
             for (let i = 0; i < this.interfaces.length; i++) {
-                let rowData = this.interfaces[i];
-                let name = rowData.name;
-                if (i == 0) {
+                const rowData = this.interfaces[i];
+                const name = rowData.name;
+                if (i === 0) {
                     this.rowGroupMetadata[name] = { index: 0, size: 1 };
-                }
-                else {
-                    let previousRowData = this.interfaces[i - 1];
-                    let previousRowGroup = previousRowData.name;
-                    if (name === previousRowGroup)
+                } else {
+                    const previousRowData = this.interfaces[i - 1];
+                    const previousRowGroup = previousRowData.name;
+                    if (name === previousRowGroup) {
                         this.rowGroupMetadata[name].size++;
-                    else
-                        this.rowGroupMetadata[name] = { index: i, size: 1 };
+                    } else {
+                        this.rowGroupMetadata[name] = {index: i, size: 1};
+                    }
                 }
             }
         }

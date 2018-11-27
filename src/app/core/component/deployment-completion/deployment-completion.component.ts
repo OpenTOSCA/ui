@@ -31,9 +31,9 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     @Input() linkToWineryResource: string;
     @Input() visible: boolean;
     @Output() visibleChange = new EventEmitter<boolean>();
-    @Output() onCompletionSuccess = new EventEmitter<MarketplaceApplication>();
-    @Output() onCompletionAbort = new EventEmitter<void>();
-    @Output() onCompletionError = new EventEmitter<string>();
+    @Output() completionSuccess = new EventEmitter<MarketplaceApplication>();
+    @Output() completionAbort = new EventEmitter<void>();
+    @Output() completionError = new EventEmitter<string>();
 
     public completeApp = false;
     public hostCompletionOptions: Array<InjectionOption> = null;
@@ -57,14 +57,14 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
     abortCompletion(): void {
         this.visible = false;
-        this.onCompletionAbort.emit();
+        this.completionAbort.emit();
     }
 
     getInjectionOptions(linkToWineryResource: string): void {
         this.completionService.getInjectionOptions(linkToWineryResource)
             .then(injectionOptions => {
                 if (injectionOptions == null) {
-                    this.onCompletionSuccess.emit(this.appToComplete);
+                    this.completionSuccess.emit(this.appToComplete);
                     this.visible = false;
                 } else {
                     this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
@@ -82,12 +82,12 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
             .then(injectedServiceTemplateURL => {
                 this.appToComplete.csarURL = injectedServiceTemplateURL.substr(0, injectedServiceTemplateURL.lastIndexOf('/')) + '?csar';
                 this.logger.log('[deployment-completion.component][newCSARURLForInstallation]', this.appToComplete.csarURL);
-                this.onCompletionSuccess.emit(this.appToComplete);
+                this.completionSuccess.emit(this.appToComplete);
                 this.visible = false;
             })
             .catch(err => {
                 this.logger.handleError('[deployment-completion.component][injectNewHosts]', err);
-                this.onCompletionError.emit(err);
+                this.completionError.emit(err);
             });
     }
 

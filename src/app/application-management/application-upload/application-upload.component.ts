@@ -37,8 +37,8 @@ import { Observable, of } from 'rxjs';
 export class ApplicationUploadComponent implements OnInit {
     @Input() showModal: boolean;
     @Output() showModalChange = new EventEmitter<boolean>();
-    @Output() onUploadComplete = new EventEmitter<void>();
-    @Output() onCompletionRequest = new EventEmitter();
+    @Output() uploadComplete = new EventEmitter<void>();
+    @Output() completionRequest = new EventEmitter();
     public deploymentInProgress = false;
     public fileSelected = false;
     public showUploadProgressLabel = false;
@@ -115,8 +115,8 @@ export class ApplicationUploadComponent implements OnInit {
                 detail: 'New application was successfully uploaded and deployed to container!'
             }
         ));
-        this.onUploadComplete.emit();
-        this.onUploadComplete.emit();
+        this.uploadComplete.emit();
+        this.uploadComplete.emit();
         this.closeModal();
     }
 
@@ -128,7 +128,7 @@ export class ApplicationUploadComponent implements OnInit {
         switch (event.xhr.status) {
             case 406:
                 const response = JSON.parse(event.xhr.response);
-                this.onCompletionRequest.emit(response['Location']);
+                this.completionRequest.emit(response['Location']);
                 this.closeModal();
                 break;
             case 409:
@@ -171,7 +171,7 @@ export class ApplicationUploadComponent implements OnInit {
                         detail: 'New Application was successfully uploaded and deployed to container'
                     }
                 ));
-                this.onUploadComplete.emit();
+                this.uploadComplete.emit();
             })
             .catch(err => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(

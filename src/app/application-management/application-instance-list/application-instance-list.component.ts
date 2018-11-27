@@ -24,7 +24,7 @@ import { ConfirmationService } from 'primeng/api';
 export class ApplicationInstanceListComponent implements OnInit {
 
     @Input() terminationPlanAvailable = false;
-    @Output() public onTerminateInstance: EventEmitter<string> = new EventEmitter();
+    @Output() public terminateInstance: EventEmitter<string> = new EventEmitter();
 
     @select(['container', 'application', 'instances']) instances$: Observable<Map<string, ServiceTemplateInstance>>;
     instances: Array<ServiceTemplateInstance>;
@@ -49,7 +49,7 @@ export class ApplicationInstanceListComponent implements OnInit {
             message: 'Do you want to terminate this instance?',
             header: 'Confirm Termination',
             accept: () => {
-                this.onTerminateInstance.emit(id);
+                this.terminateInstance.emit(id);
             }
         });
     }

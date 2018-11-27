@@ -87,8 +87,8 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
 
     /**
      * Get new instance information about a plan instance
-     * @param csar
-     * @param serviceTemplateInstance
+     * @param csar Csar
+     * @param serviceTemplateInstance ServiceTemplateInstance
      */
     updatePlanInstances(csar: Csar, serviceTemplateInstance: ServiceTemplateInstance): void {
         this.instanceService.getPlanInstancesOfServiceTemplateInstance(csar, serviceTemplateInstance)

@@ -24,8 +24,7 @@ import { PlanInstance } from '../../core/model/plan-instance.model';
 })
 export class BuildplanMonitorComponent implements OnInit, OnDestroy {
 
-    @Input('service-template-instance')
-    stInstance: ServiceTemplateInstance;
+    @Input() serviceTemplateInstance: ServiceTemplateInstance;
 
     public bpInstance: PlanInstance;
     selfserviceApplicationUrl: string;
@@ -39,7 +38,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.bpMonitor.getBuildPlan(this.stInstance._links['build_plan_instance'].href)
+        this.bpMonitor.getBuildPlan(this.serviceTemplateInstance._links['build_plan_instance'].href)
             .subscribe(result => {
                 this.bpInstance = result;
                 // this.setSelfServiceApplicationUrl(this.getSelfServiceApplicationUrlFromOutput());
@@ -50,7 +49,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
     }
 
     pollForPlanFinish(): void {
-        this.bpMonitor.getBuildPlan(this.stInstance._links['build_plan_instance'].href)
+        this.bpMonitor.getBuildPlan(this.serviceTemplateInstance._links['build_plan_instance'].href)
             .subscribe(result => {
                 this.bpInstance = result;
                 if (result.state !== 'FINISHED') {

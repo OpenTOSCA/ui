@@ -102,7 +102,7 @@ export class ApplicationOverviewComponent implements OnInit {
                     }
                 ));
             }, err => {
-                this.logger.error('[application-overview.component][onCompletionSuccess]', err);
+                this.logger.error('[application-overview.component][completionSuccess]', err);
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'error',
