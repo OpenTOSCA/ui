@@ -26,16 +26,20 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "scss/toolbar";
 
 html {
-    position: relative;
-    min-height: 100%;
+  position: relative;
+  min-height: 100%;
 }
 
 body {
-    margin: 0;
-    min-height: 100%;
-    padding: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    font-family: "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 14px;
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+}
+
+.ui-growl-message {
+  word-break: break-all;
 }
