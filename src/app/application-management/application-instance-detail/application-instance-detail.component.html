@@ -19,7 +19,9 @@
                 (click)="triggerUpdate()"></button>
     </div>
 </p-toolbar>
-<p-fieldset *ngIf="serviceTemplateInstance; let serviceTemplateInstance; else loading" [style]="{'margin-bottom': '10px'}">
+
+<p-fieldset *ngIf="serviceTemplateInstance; let serviceTemplateInstance; else loading"
+            [style]="{'margin-bottom': '10px'}">
     <p-header><strong>Instance Information</strong></p-header>
     <div class="p-grid">
         <div class="p-col-3">
@@ -56,119 +58,125 @@
     <opentosca-management-plan-instance-list [planInstances]="planInstances"></opentosca-management-plan-instance-list>
 </p-fieldset>
 
-<!--<p-fieldset [toggleable]="true" [collapsed]="true" [style]="{'margin-bottom': '10px'}">-->
-    <!--<p-header><strong>Build Plan Monitor</strong></p-header>-->
-    <!--<span *ngIf="serviceTemplateInstance; let serviceTemplateInstance;">-->
-            <!--<opentosca-buildplan-monitor *ngIf="serviceTemplateInstance._links['build_plan_instance']"-->
-                                         <!--[service-template-instance]="serviceTemplateInstance"></opentosca-buildplan-monitor>-->
-        <!--</span>-->
-<!--</p-fieldset>-->
-
-<p-fieldset [toggleable]="true" [style]="{'margin-bottom': '10px'}">
-    <p-header><strong>Management Plans</strong></p-header>
-    <opentosca-management-plan-list [instance]="serviceTemplateInstance"></opentosca-management-plan-list>
+<p-fieldset [style]="{'margin-bottom': '10px'}">
+    <p-header><strong>Interfaces</strong></p-header>
+    <opentosca-application-instance-boundary-definition-interfaces-list
+            [instance]="serviceTemplateInstance"></opentosca-application-instance-boundary-definition-interfaces-list>
 </p-fieldset>
 
 <!--<p-fieldset [toggleable]="true" [collapsed]="true" [style]="{'margin-bottom': '10px'}">-->
-    <!--<p-header><strong>Deployment Tests</strong></p-header>-->
-    <!--<button pButton type="button"-->
-            <!--(click)="runDeploymentTests()"-->
-            <!--pTooltip="Run Tests"-->
-            <!--tooltipPosition="top"-->
-            <!--showDelay="300"-->
-            <!--icon="fa fa-play">-->
-    <!--</button>-->
-    <!--&nbsp;-->
-    <!--<button pButton type="button"-->
-            <!--(click)="refresh()"-->
-            <!--pTooltip="Refresh"-->
-            <!--tooltipPosition="top"-->
-            <!--showDelay="300"-->
-            <!--icon="fas fa-sync-alt">-->
-    <!--</button>-->
-    <!--<p-dataTable [value]="deploymentTests | async" [expandableRows]="true"-->
-                 <!--rowExpandMode="single" styleClass="ui-datatable-data-p-0" [style]="{'margin-top': '10px'}">-->
-        <!--<p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>-->
-        <!--<p-column field="timestamp" header="Executed at" [sortable]="true" styleClass="p-2 text-center"-->
-                  <!--[style]="{'width':'150px'}">-->
-            <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                <!--{{ inst.timestamp | date:'yyyy-MM-dd HH:mm' }}-->
-            <!--</ng-template>-->
-        <!--</p-column>-->
-        <!--<p-column field="state" header="Overall State" styleClass="p-2 text-center">-->
-            <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                    <!--<span *ngIf="inst.state === 'FINISHED'">-->
-                        <!--<span *ngIf="inst.statistics.total === inst.statistics.success">-->
-                            <!--<i class="fa fa-check text-success"></i>-->
-                        <!--</span>-->
-                        <!--<span *ngIf="inst.statistics.failed > 0 || inst.statistics.unknown > 0">-->
-                            <!--<i class="fa fa-exclamation text-danger"></i>-->
-                        <!--</span>-->
-                    <!--</span>-->
-                <!--<span *ngIf="inst.state !== 'FINISHED'" pTooltip="Running" tooltipPosition="top">-->
-                        <!--<i class="fa fa-refresh"></i>-->
-                    <!--</span>-->
-            <!--</ng-template>-->
-        <!--</p-column>-->
-        <!--<p-column field="statistics.success" header="Success" styleClass="p-1 text-center">-->
-            <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                <!--<h5 class="m-0"><span class="badge badge-success">{{ inst.statistics.success }}</span></h5>-->
-            <!--</ng-template>-->
-        <!--</p-column>-->
-        <!--<p-column field="statistics.failed" header="Failed" styleClass="p-1 text-center">-->
-            <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                <!--<h5 class="m-0"><span class="badge badge-danger">{{ inst.statistics.failed }}</span></h5>-->
-            <!--</ng-template>-->
-        <!--</p-column>-->
-        <!--<p-column field="statistics.unknown" header="Unknown" styleClass="p-1 text-center">-->
-            <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                <!--<h5 class="m-0"><span class="badge badge-warning">{{ inst.statistics.unknown }}</span></h5>-->
-            <!--</ng-template>-->
-        <!--</p-column>-->
-        <!--<ng-template let-inst pTemplate="rowexpansion">-->
-            <!--<p-dataTable [value]="inst.deployment_test_results" [expandableRows]="true"-->
-                         <!--rowExpandMode="single">-->
-                <!--<p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>-->
-                <!--<p-column field="node_template_instance.name" header="Node Template" styleClass="p-2"-->
-                          <!--[style]="{'width':'230px'}">-->
-                    <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                        <!--<code>{{ inst.node_template_instance.name }}</code>-->
-                    <!--</ng-template>-->
-                <!--</p-column>-->
-                <!--<p-column field="state" header="State" styleClass="p-2 text-center"-->
-                          <!--[style]="{'width':'60px'}">-->
-                    <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                            <!--<span *ngIf="inst.state === 'SUCCESS'" pTooltip="Success" tooltipPosition="top">-->
-                                <!--<i class="fa fa-check text-success"></i>-->
-                            <!--</span>-->
-                        <!--<span *ngIf="inst.state === 'FAILED'" pTooltip="Failed" tooltipPosition="top">-->
-                                <!--<i class="fa fa-exclamation text-danger"></i>-->
-                            <!--</span>-->
-                        <!--<span *ngIf="inst.state === 'STARTED'" pTooltip="Running" tooltipPosition="top">-->
-                                <!--<i class="fa fa-refresh text-info"></i>-->
-                            <!--</span>-->
-                        <!--<span *ngIf="inst.state === 'UNKNOWN'" pTooltip="Unknown" tooltipPosition="top">-->
-                                <!--<i class="fa fa-question text-warning"></i>-->
-                            <!--</span>-->
-                    <!--</ng-template>-->
-                <!--</p-column>-->
-                <!--<p-column field="name" header="Test Name" styleClass="p-2"></p-column>-->
-                <!--<p-column field="duration" header="Duration (sec)" styleClass="p-2 text-center"-->
-                          <!--[style]="{'width':'150px'}">-->
-                    <!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
-                        <!--{{ (inst.end - inst.start) / 1000 }}-->
-                    <!--</ng-template>-->
-                <!--</p-column>-->
-                <!--<ng-template let-inst pTemplate="rowexpansion">-->
-                        <!--<span *ngIf="inst.output !== undefined">-->
-                            <!--<pre class="m-2"><code>{{ inst.output }}</code></pre>-->
-                        <!--</span>-->
-                    <!--<span *ngIf="inst.output === undefined">-->
-                            <!--<pre class="m-2"><code>No output</code></pre>-->
-                        <!--</span>-->
-                <!--</ng-template>-->
-            <!--</p-dataTable>-->
-        <!--</ng-template>-->
-    <!--</p-dataTable>-->
+<!--<p-header><strong>Build Plan Monitor</strong></p-header>-->
+<!--<span *ngIf="serviceTemplateInstance; let serviceTemplateInstance;">-->
+<!--<opentosca-buildplan-monitor *ngIf="serviceTemplateInstance._links['build_plan_instance']"-->
+<!--[service-template-instance]="serviceTemplateInstance"></opentosca-buildplan-monitor>-->
+<!--</span>-->
+<!--</p-fieldset>-->
+
+<!--<p-fieldset [toggleable]="true" [style]="{'margin-bottom': '10px'}">-->
+    <!--<p-header><strong>Management Plans</strong></p-header>-->
+    <!--<opentosca-management-plan-list [instance]="serviceTemplateInstance"></opentosca-management-plan-list>-->
+<!--</p-fieldset>-->
+
+<!--<p-fieldset [toggleable]="true" [collapsed]="true" [style]="{'margin-bottom': '10px'}">-->
+<!--<p-header><strong>Deployment Tests</strong></p-header>-->
+<!--<button pButton type="button"-->
+<!--(click)="runDeploymentTests()"-->
+<!--pTooltip="Run Tests"-->
+<!--tooltipPosition="top"-->
+<!--showDelay="300"-->
+<!--icon="fa fa-play">-->
+<!--</button>-->
+<!--&nbsp;-->
+<!--<button pButton type="button"-->
+<!--(click)="refresh()"-->
+<!--pTooltip="Refresh"-->
+<!--tooltipPosition="top"-->
+<!--showDelay="300"-->
+<!--icon="fas fa-sync-alt">-->
+<!--</button>-->
+<!--<p-dataTable [value]="deploymentTests | async" [expandableRows]="true"-->
+<!--rowExpandMode="single" styleClass="ui-datatable-data-p-0" [style]="{'margin-top': '10px'}">-->
+<!--<p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>-->
+<!--<p-column field="timestamp" header="Executed at" [sortable]="true" styleClass="p-2 text-center"-->
+<!--[style]="{'width':'150px'}">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--{{ inst.timestamp | date:'yyyy-MM-dd HH:mm' }}-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<p-column field="state" header="Overall State" styleClass="p-2 text-center">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--<span *ngIf="inst.state === 'FINISHED'">-->
+<!--<span *ngIf="inst.statistics.total === inst.statistics.success">-->
+<!--<i class="fa fa-check text-success"></i>-->
+<!--</span>-->
+<!--<span *ngIf="inst.statistics.failed > 0 || inst.statistics.unknown > 0">-->
+<!--<i class="fa fa-exclamation text-danger"></i>-->
+<!--</span>-->
+<!--</span>-->
+<!--<span *ngIf="inst.state !== 'FINISHED'" pTooltip="Running" tooltipPosition="top">-->
+<!--<i class="fa fa-refresh"></i>-->
+<!--</span>-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<p-column field="statistics.success" header="Success" styleClass="p-1 text-center">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--<h5 class="m-0"><span class="badge badge-success">{{ inst.statistics.success }}</span></h5>-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<p-column field="statistics.failed" header="Failed" styleClass="p-1 text-center">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--<h5 class="m-0"><span class="badge badge-danger">{{ inst.statistics.failed }}</span></h5>-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<p-column field="statistics.unknown" header="Unknown" styleClass="p-1 text-center">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--<h5 class="m-0"><span class="badge badge-warning">{{ inst.statistics.unknown }}</span></h5>-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<ng-template let-inst pTemplate="rowexpansion">-->
+<!--<p-dataTable [value]="inst.deployment_test_results" [expandableRows]="true"-->
+<!--rowExpandMode="single">-->
+<!--<p-column expander="true" [style]="{'width':'40px'}" styleClass="p-2 text-center"></p-column>-->
+<!--<p-column field="node_template_instance.name" header="Node Template" styleClass="p-2"-->
+<!--[style]="{'width':'230px'}">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--<code>{{ inst.node_template_instance.name }}</code>-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<p-column field="state" header="State" styleClass="p-2 text-center"-->
+<!--[style]="{'width':'60px'}">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--<span *ngIf="inst.state === 'SUCCESS'" pTooltip="Success" tooltipPosition="top">-->
+<!--<i class="fa fa-check text-success"></i>-->
+<!--</span>-->
+<!--<span *ngIf="inst.state === 'FAILED'" pTooltip="Failed" tooltipPosition="top">-->
+<!--<i class="fa fa-exclamation text-danger"></i>-->
+<!--</span>-->
+<!--<span *ngIf="inst.state === 'STARTED'" pTooltip="Running" tooltipPosition="top">-->
+<!--<i class="fa fa-refresh text-info"></i>-->
+<!--</span>-->
+<!--<span *ngIf="inst.state === 'UNKNOWN'" pTooltip="Unknown" tooltipPosition="top">-->
+<!--<i class="fa fa-question text-warning"></i>-->
+<!--</span>-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<p-column field="name" header="Test Name" styleClass="p-2"></p-column>-->
+<!--<p-column field="duration" header="Duration (sec)" styleClass="p-2 text-center"-->
+<!--[style]="{'width':'150px'}">-->
+<!--<ng-template let-col let-inst="rowData" pTemplate="body">-->
+<!--{{ (inst.end - inst.start) / 1000 }}-->
+<!--</ng-template>-->
+<!--</p-column>-->
+<!--<ng-template let-inst pTemplate="rowexpansion">-->
+<!--<span *ngIf="inst.output !== undefined">-->
+<!--<pre class="m-2"><code>{{ inst.output }}</code></pre>-->
+<!--</span>-->
+<!--<span *ngIf="inst.output === undefined">-->
+<!--<pre class="m-2"><code>No output</code></pre>-->
+<!--</span>-->
+<!--</ng-template>-->
+<!--</p-dataTable>-->
+<!--</ng-template>-->
+<!--</p-dataTable>-->
 <!--</p-fieldset>-->
 

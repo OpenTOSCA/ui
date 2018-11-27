@@ -25,6 +25,8 @@ import { ServiceTemplate } from '../model/service-template.model';
 import { ServiceTemplateInstanceList } from '../model/service-template-instance-list.model';
 import { PlanInstance } from '../model/plan-instance.model';
 import { Plan } from '../model/plan.model';
+import { Interface } from '../model/interface.model';
+import { Operation } from '../model/operation.model';
 
 @Injectable()
 export class ApplicationInstanceManagementService {
@@ -59,6 +61,37 @@ export class ApplicationInstanceManagementService {
         };
         return this.http.get<PlanInstance>(serviceTemplateInstance._links['build_plan_instance'].href, httpOptions)
             .pipe(
+                catchError(err => {
+                    console.error(err);
+                    return throwError(err);
+                })
+            );
+    }
+
+    getInterfaces(serviceTemplateInstance: ServiceTemplateInstance): Observable<Array<Interface>> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        // TODO we have to create a proper model for interface ressources delivered by the backend
+        return this.http.get<{ interfaces: Array<any> }>(serviceTemplateInstance._links['boundarydefinitions/interfaces'].href, httpOptions)
+            .pipe(
+                map((result) => {
+                    const interfaces: Array<Interface> = [];
+                    for (const i of result.interfaces) {
+                        const iface = new Interface();
+                        iface.name = i.name;
+                        for (const key of Object.keys(i.operations)) {
+                            const opp = new Operation();
+                            opp.name = key;
+                            opp._embedded = i.operations[key]._embedded;
+                            iface.operations.push(opp);
+                        }
+                        interfaces.push(iface);
+                    }
+                    return interfaces;
+                }),
                 catchError(err => {
                     console.error(err);
                     return throwError(err);

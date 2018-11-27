@@ -11,14 +11,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { ResourceSupport } from './resource-support.model';
-import { Plan } from './plan.model';
 
-export class Operation extends ResourceSupport {
-    name: string;
-    _embedded: EmbeddedPlan;
-}
-
-export class EmbeddedPlan extends ResourceSupport {
-    plan: Plan;
+export enum ServiceTemplateInstanceState {
+    INITIAL = 'INITIAL',
+    CREATING = 'CREATING',
+    CREATED = 'CREATED',
+    DELETING = 'DELETING',
+    DELETED = 'DELETED',
+    ERROR = 'ERROR'
 }

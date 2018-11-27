@@ -16,5 +16,5 @@ import { Operation } from './operation.model';
 
 export class Interface extends ResourceSupport {
     name: string;
-    operations: Map<string, Operation>;
+    operations: Array<Operation> = [];
 }

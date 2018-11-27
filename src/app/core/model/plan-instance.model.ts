@@ -15,11 +15,12 @@
 import { ResourceSupport } from './resource-support.model';
 import { PlanParameter } from './plan-parameter.model';
 import { PlanLogEntry } from './plan-log-entry.model';
+import { PlanInstanceState } from './plan-instance-state.model';
 
 export class PlanInstance extends ResourceSupport {
     service_template_instance_id: string;
     correlation_id: string;
-    state: string;
+    state: PlanInstanceState;
     type: 'BUILD' | 'MANAGEMENT' | 'TERMINATION' | 'OTHER';
     outputs: Array<PlanParameter>;
     logs: Array<PlanLogEntry>;

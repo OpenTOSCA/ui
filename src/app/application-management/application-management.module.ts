@@ -50,6 +50,7 @@ import { ManagementPlanExecutionDialogComponent } from './management-plan-execut
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagementPlanInstanceListComponent } from './management-plan-instance-list/management-plan-instance-list.component';
 import { TableModule } from 'primeng/table';
+import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component';
 
 @NgModule({
     imports: [
@@ -90,7 +91,8 @@ import { TableModule } from 'primeng/table';
         BuildplanMonitorComponent,
         ManagementPlanListComponent,
         ManagementPlanExecutionDialogComponent,
-        ManagementPlanInstanceListComponent
+        ManagementPlanInstanceListComponent,
+        ApplicationInstanceBoundaryDefinitionInterfacesListComponent
     ],
     providers: [
         ConfigurationService,
