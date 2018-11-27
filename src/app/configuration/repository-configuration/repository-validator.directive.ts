@@ -13,8 +13,8 @@
  */
 import { AbstractControl, NG_ASYNC_VALIDATORS, ValidationErrors } from '@angular/forms';
 import { Directive, forwardRef } from '@angular/core';
-import { catchError, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { catchError, map, timeout } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { ConfigurationService } from '../configuration.service';
 
 @Directive({
@@ -32,8 +32,9 @@ export class RepositoryValidatorDirective {
 
     validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
         return this.configService.isRepositoryAvailable(control.value).pipe(
+            timeout(10000),
             map((valid) => (valid ? null : { repository: true })),
-            catchError(() => null)
+            catchError(() => of(null))
         );
     }
 }

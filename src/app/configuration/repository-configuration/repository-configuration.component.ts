@@ -27,7 +27,8 @@ export interface Item {
 
 @Component({
     selector: 'opentosca-repository-configuration',
-    templateUrl: './repository-configuration.component.html'
+    templateUrl: './repository-configuration.component.html',
+    styleUrls: ['./repository-configuration.component.scss']
 })
 export class RepositoryConfigurationComponent implements OnInit {
 

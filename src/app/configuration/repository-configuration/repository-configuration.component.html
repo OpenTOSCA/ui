@@ -68,18 +68,22 @@
                                [(ngModel)]="newItem.url" #url="ngModel" required opentoscaRepositoryValid
                                [class.ot-has-success]="url.valid"
                                [class.ot-has-error]="url.invalid"
-                               [opentoscaControlOptions]="{ debounce: 500 }">
-                        <span class="ui-inputgroup-addon">
+                               [opentoscaControlOptions]="{ debounce: 500 }"
+                               [attr.disabled]="url.pending ? '' : null">
+                        <span *ngIf="url.valid || url.invalid" class="ui-inputgroup-addon">
                             <span *ngIf="url.valid"><i class="fa fa-check"></i></span>
                             <span *ngIf="url.invalid"><i class="fa fa-times"></i></span>
                         </span>
+                        <button *ngIf="url.pending" type="button" pButton class="ui-button-secondary spinner" disabled>
+                            <sk-three-bounce class="ui-button-icon"></sk-three-bounce>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <p-footer>
             <button type="button" pButton (click)="cancel()" label="Cancel"></button>
-            <button [attr.disabled]="itemForm.invalid ? '' : null" type="button" pButton
+            <button [attr.disabled]="itemForm.pending || itemForm.invalid ? '' : null" type="button" pButton
                     (click)="save()"
                     label="Save"></button>
             <button *ngIf="!isNewItem" [attr.disabled]="newItem?.name==='OpenTOSCA' ? '' : null" type="button" pButton
