@@ -1,11 +1,41 @@
-<nav class="menu" id="mainMenu">
-    <div class="openTOSCALogoContainer"></div>
-    <a id="applicationsButton" routerLink="/applications" routerLinkActive="selected">Applications</a>
-    <a id="marketplaceButton" routerLink="/repositories" routerLinkActive="selected">Repository</a>
-    <a id="administrationButton" routerLink="/administration" routerLinkActive="selected">Administration</a>
-    <a id="aboutButton" routerLink="/about" routerLinkActive="selected">About</a>
-</nav>
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
 
-<opentosca-breadcrumb></opentosca-breadcrumb>
-<p-growl [value]="messages" sticky="sticky" (valueChange)="growlsChange($event)"></p-growl>
-<router-outlet></router-outlet>
+<div id="ot-layout-wrapper">
+    <div id="ot-topbar">
+        <a class="logo" href="/"><img alt="logo" [src]="'../assets/img/OpenTOSCA.png'"></a>
+        <p-tabMenu id="ot-topbar-menu" [model]="menuItems"></p-tabMenu>
+    </div>
+    <div id="ot-content">
+
+        <opentosca-breadcrumb></opentosca-breadcrumb>
+        <div id="ot-content-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    Copyright (c) 2012-2018 University of Stuttgart
+    &nbsp;
+    <a href="https://github.com/OpenTOSCA" target="_blank">
+        <i class="fab fa-github"></i>
+    </a>
+    &nbsp;
+    <a href="http://www.opentosca.org/" target="_blank">
+        <i class="fas fa-external-link-alt"></i>
+    </a>
+</div>
+
+<p-growl [(value)]="messages" [life]="10000" (valueChange)="updateGrowls($event)"></p-growl>

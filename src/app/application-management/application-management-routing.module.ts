@@ -1,59 +1,48 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { ApplicationUploadComponent } from './application-upload/application-upload.component';
+import { RouterModule, Routes } from '@angular/router';
 import { ApplicationDetailResolverService } from './application-detail/application-detail-resolver.service';
 import { ApplicationInstanceDetailResolverService } from './application-instance-detail/application-instance-detail-resolver.service';
-import { ApplicationInstanceDetailComponent } from 'app/application-management/application-instance-detail/application-instance-detail.component'; // tslint:disable-line
 import { ApplicationDetailComponent } from './application-detail/application-detail.component';
-import { ApplicationComponent } from './application/application.component';
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
+import { ApplicationInstanceDetailComponent } from './application-instance-detail/application-instance-detail.component';
 
 const routes: Routes = [
     {
         path: 'applications',
-        component: ApplicationComponent,
-        children: [
-            {
-                path: '',
-                component: ApplicationOverviewComponent,
-            },
-            {
-                path: ':id',
-                component: ApplicationDetailComponent,
-                resolve: {
-                    csar: ApplicationDetailResolverService
-                }
-            },
-            {
-                path: ':id/instances/:instID',
-                component: ApplicationInstanceDetailComponent,
-                resolve: {
-                    serviceTemplateInstance: ApplicationInstanceDetailResolverService
-                }
-            },
-            {
-                path: 'upload',
-                component: ApplicationUploadComponent,
-                outlet: 'modal'
-            }
-        ]
+        component: ApplicationOverviewComponent
+    },
+    {
+        path: 'applications/:id',
+        component: ApplicationDetailComponent,
+        resolve: {
+            application: ApplicationDetailResolverService
+        }
+    },
+    {
+        path: 'applications/:id/instances/:instanceId',
+        component: ApplicationInstanceDetailComponent,
+        resolve: {
+            serviceTemplateInstance: ApplicationInstanceDetailResolverService
+        }
     },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
-export class ApplicationManagementRoutingModule { }
+export class ApplicationManagementRoutingModule {
+}

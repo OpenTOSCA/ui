@@ -42,6 +42,7 @@ build/src/main/resources/static/**/*
 /libpeerconnection.log
 testem.log
 /typings
+yarn-error.log
 
 # e2e
 /e2e/*.js

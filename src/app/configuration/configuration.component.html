@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
+<p-panel>
+    <p-header>Repository Configuration</p-header>
+    <opentosca-repository-configuration></opentosca-repository-configuration>
+</p-panel>
+
+<p-panel>
+    <p-header>OpenTOSCA Runtime</p-header>
+    <div class="p-grid">
+        <div class="p-col-2 ot-input-label">
+            <label for="containerUrl" class="ui-inp">API Endpoint:</label>
+        </div>
+        <div class="p-col-6">
+            <div class="ui-inputgroup">
+                <input id="containerUrl" type="text" pInputText placeholder="Enter Container API URL here"
+                       [formControl]="containerUrlControl"
+                       [ngClass]="{'ot-has-success': containerUrlAvailable, 'ot-has-error': !containerUrlAvailable}">
+                <span class="ui-inputgroup-addon">
+                    <span *ngIf="containerUrlAvailable"><i class="fa fa-check"></i></span>
+                    <span *ngIf="!containerUrlAvailable"><i class="fa fa-times"></i></span>
+                </span>
+                <button *ngIf="differentLocation()" type="button" pButton (click)="applyDefaultLocation()"
+                        icon="fas fa-undo" pTooltip="Apply default endpoint" showDelay="300" tooltipPosition="top"></button>
+            </div>
+        </div>
+    </div>
+</p-panel>
+
+<p-panel>
+    <p-header>Smart Service Archive Parameter</p-header>
+    <div class="p-grid">
+        <div class="p-col-2 ot-input-label">
+            <label for="planLifecycleInterface">Lifecycle Interface Name:</label>
+        </div>
+        <div class="p-col-6">
+            <input id="planLifecycleInterface" type="text" pInputText placeholder="Enter name here"
+                   [formControl]="planLifecycleInterfaceControl">
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-2 ot-input-label">
+            <label for="planOperationInitiate">Initiate Operation Name:</label>
+        </div>
+        <div class="p-col-6">
+            <input id="planOperationInitiate" type="text" pInputText placeholder="Enter name here"
+                   [formControl]="planOperationInitiateControl">
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-2 ot-input-label">
+            <label for="planOperationTerminate">Terminate Operation Name:</label>
+        </div>
+        <div class="p-col-6">
+            <input id="planOperationTerminate" type="text" pInputText pInputText placeholder="Enter name here"
+                   [formControl]="planOperationTerminateControl">
+        </div>
+    </div>
+</p-panel>

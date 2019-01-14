@@ -1,92 +1,74 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Plan } from '../../core/model/plan.model';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
+import { globals } from '../../globals';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
     templateUrl: './management-plan-execution-dialog.component.html'
 })
-export class ManagementPlanExecutionDialogComponent {
+export class ManagementPlanExecutionDialogComponent implements OnInit {
 
-    private _visible: boolean = true;
-    private _plan: Plan;
+    @Input() visible = false;
+    @Output() visibleChange = new EventEmitter<boolean>();
+    @Input() plan: Plan;
+    @Input() inputValidation = true;
 
-    @Input()
-    get visible(): boolean {
-        return this._visible;
+    public runnable: boolean;
+
+    constructor(
+        private appService: ApplicationManagementService,
+        private ngRedux: NgRedux<AppState>,
+        private logger: LoggerService) {
     }
-    set visible(value: boolean) {
-        this._visible = value;
-        this.visibleChange.emit(value);
+
+    get hiddenElements(): Array<String> {
+        return globals.hiddenElements;
     }
 
-    @Output()
-    visibleChange = new EventEmitter<boolean>();
-
-
-    @Input()
-    get plan(): Plan {
-        return this._plan;
-    }
-    set plan(value: Plan) {
-        this._plan = value;
-
-        if (value) {
+    ngOnInit(): void {
+        if (this.plan) {
             this.checkInputs();
         }
     }
 
-    @Input()
-    inputValidation: boolean = true;
-
-    runnable: boolean;
-
-    get hiddenElements(): Array<String> {
-        return [
-            'CorrelationID',
-            'csarID',
-            'serviceTemplateID',
-            'containerApiAddress',
-            'instanceDataAPIUrl',
-            'planCallbackAddress_invoker',
-            'csarEntrypoint',
-            'OpenTOSCAContainerAPIServiceInstanceID'
-        ]
-    }
-
-    constructor(
-            private appService: ApplicationManagementService,
-            private ngRedux: NgRedux<AppState>,
-            private logger: OpenToscaLoggerService) {
+    /**
+     * Closes the modal and emits change event.
+     */
+    closeModal(): void {
+        this.visible = false;
+        this.visibleChange.emit(false);
     }
 
     checkInputs(): void {
-        if (!this.inputValidation) {
+        if (false === this.inputValidation) {
+            this.logger.log('[management-plan-execution-dialog.component][checkInputs]:', 'Input Validation deactivated');
             this.runnable = true;
             return;
         }
-
         for (const parameter of this.plan.input_parameters) {
-            if (parameter.required !== 'YES' || this.hiddenElements.indexOf(parameter.name) !== -1) {
-                continue;
-            }
-
-            if (parameter.value == null || parameter.value === '') {
-                this.runnable = false;
-                return;
+            if ((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
+                if (parameter.value == null || parameter.value === '') {
+                    this.runnable = false;
+                    return;
+                }
             }
         }
         this.runnable = true;
@@ -101,9 +83,9 @@ export class ManagementPlanExecutionDialogComponent {
             );
             this.ngRedux.dispatch(GrowlActions.addGrowl(
                 {
-                    severity: 'warning',
-                    summary: 'Management Plan executed',
-                    detail: 'The management plan ' + this.plan.id + ' was executed.'
+                    severity: 'info',
+                    summary: 'Plan Execution Started',
+                    detail: 'The management plan ' + this.plan.id + ' is executing.'
                 }
             ));
         }, err => {
@@ -111,7 +93,7 @@ export class ManagementPlanExecutionDialogComponent {
             this.ngRedux.dispatch(GrowlActions.addGrowl(
                 {
                     severity: 'error',
-                    summary: 'Failure to execute the Management Plan',
+                    summary: 'Failure at Management Plan Execution',
                     detail: 'The management plan ' + this.plan.id + ' was NOT propperly executed.'
                 }
             ));

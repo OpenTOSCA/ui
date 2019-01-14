@@ -1,7 +1,21 @@
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ServiceTemplateInstance} from '../../core/model/service-template-instance.model';
-import {BuildplanMonitoringService} from '../../core/service/buildplan-monitoring.service';
-import {PlanInstance} from '../../core/model/plan-instance.model';
+/*
+ * Copyright (c) 2018 University of Stuttgart.
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+ */
+
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ServiceTemplateInstance } from '../../core/model/service-template-instance.model';
+import { BuildplanMonitoringService } from '../../core/service/buildplan-monitoring.service';
+import { PlanInstance } from '../../core/model/plan-instance.model';
 
 @Component({
     selector: 'opentosca-buildplan-monitor',
@@ -10,8 +24,7 @@ import {PlanInstance} from '../../core/model/plan-instance.model';
 })
 export class BuildplanMonitorComponent implements OnInit, OnDestroy {
 
-    @Input('service-template-instance')
-    stInstance: ServiceTemplateInstance;
+    @Input() serviceTemplateInstance: ServiceTemplateInstance;
 
     public bpInstance: PlanInstance;
     selfserviceApplicationUrl: string;
@@ -25,7 +38,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.bpMonitor.getBuildPlan(this.stInstance._links['build_plan_instance'].href)
+        this.bpMonitor.getBuildPlan(this.serviceTemplateInstance._links['build_plan_instance'].href)
             .subscribe(result => {
                 this.bpInstance = result;
                 // this.setSelfServiceApplicationUrl(this.getSelfServiceApplicationUrlFromOutput());
@@ -36,7 +49,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
     }
 
     pollForPlanFinish(): void {
-        this.bpMonitor.getBuildPlan(this.stInstance._links['build_plan_instance'].href)
+        this.bpMonitor.getBuildPlan(this.serviceTemplateInstance._links['build_plan_instance'].href)
             .subscribe(result => {
                 this.bpInstance = result;
                 if (result.state !== 'FINISHED') {
@@ -53,7 +66,7 @@ export class BuildplanMonitorComponent implements OnInit, OnDestroy {
     }
 
     getSelfServiceApplicationUrlFromOutput(): string {
-        for (const out of this.bpInstance.output) {
+        for (const out of this.bpInstance.outputs) {
             if (out.name === 'selfserviceApplicationUrl') {
                 return out.value;
             }

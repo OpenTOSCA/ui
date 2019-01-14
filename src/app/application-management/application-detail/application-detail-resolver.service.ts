@@ -1,33 +1,49 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
+import { LoggerService } from '../../core/service/logger.service';
 import { Csar } from '../../core/model/csar.model';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { Plan } from '../../core/model/plan.model';
 
 @Injectable()
-export class ApplicationDetailResolverService {
+export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Csar> {
-        return this.appService.getCsarDescriptionByCsarID(route.params['id']).catch(reason => {
-            return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
-        });
+    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
     }
 
-    constructor(private appService: ApplicationManagementService, private logger: OpenToscaLoggerService) {
+    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+        return forkJoin(
+            this.applicationService.getCsar(route.params['id']),
+            this.applicationService.getBuildPlan(route.params['id'])
+                .pipe(
+                    catchError(() => of(null))
+                ),
+            this.applicationService.getTerminationPlan(route.params['id'])
+                .pipe(
+                    catchError(() => of(null))
+                )
+        )
+        .pipe(
+            mergeMap(result => {
+                return of({csar: result[0], buildPlan: result[1], terminationPlan: result[2]});
+            }),
+            catchError(reason => {
+                return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+            }));
     }
 }

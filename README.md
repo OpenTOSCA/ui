@@ -9,7 +9,7 @@ Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
 ## Prerequisites
 
 1. Install [Git](https://git-scm.com)
-2. Install and setup [Node.js](https://nodejs.org/en/) > 6.9.0 and [NPM](https://www.npmjs.com) > 3 for [Angular.io](https://angular.io/docs/ts/latest/quickstart.html)
+2. Install and setup [Node.js](https://nodejs.org/en/) > 8.9 and [NPM](https://www.npmjs.com) > 5.6 for [Angular.io](https://angular.io/docs/ts/latest/quickstart.html)
 3. Install angular-cli `npm install -g @angular/cli`
 4. Install proper [node-gyp](https://github.com/nodejs/node-gyp) dependencies for your OS (e.g. for Windows: `npm install --global --production windows-build-tools`)
 
@@ -59,7 +59,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## License
 
-Copyright (c) 2016-2017 University of Stuttgart.
+Copyright (c) 2016-2018 University of Stuttgart.
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the [Eclipse Public License v1.0]

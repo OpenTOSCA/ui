@@ -1,27 +1,23 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Tobias Wältken
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { debounce } from 'rxjs/operator/debounce';
-import { Http } from '@angular/http';
-import { async } from '@angular/core/testing/src/testing';
-
-import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-
+import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Directive({
-    selector: '[opentoscaDebounce]',
-    host: {
-        '(input)': 'inputValue = $event.target.value'
-    }
+    selector: '[opentoscaDebounce]'
 })
 export class DebounceDirective {
 
@@ -35,14 +31,19 @@ export class DebounceDirective {
 
     inputValue: string;
 
-    constructor(private elementRef: ElementRef, private http: Http) {
-        Observable
-            .fromEvent(elementRef.nativeElement, 'keyup')
-            .map(() => this.inputValue)
-            .debounceTime(this.delay ? this.delay : DebounceDirective.DEFAULT_DELAY)
-            .distinctUntilChanged()
+    constructor(private elementRef: ElementRef) {
+        fromEvent(elementRef.nativeElement, 'keyup')
+            .pipe(
+                map(() => this.inputValue),
+                debounceTime(this.delay ? this.delay : DebounceDirective.DEFAULT_DELAY),
+                distinctUntilChanged()
+            )
             .subscribe(input => {
                 this.debouncedValue.emit(input);
             });
+    }
+
+    @HostListener('input', ['$event']) onInput($event) {
+        this.inputValue = $event.target.value;
     }
 }
