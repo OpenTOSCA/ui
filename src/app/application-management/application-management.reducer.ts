@@ -17,13 +17,14 @@ import { ApplicationManagementActions } from './application-management-actions';
 import { Csar } from '../core/model/csar.model';
 import { Plan } from '../core/model/plan.model';
 import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import {BoundaryOperation} from '../core/model/boundaryoperation.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;
     application?: {
         csar?: Csar;
-        buildPlan?: Plan;
-        terminationPlan?: Plan;
+        buildPlan?: BoundaryOperation;
+        terminationPlan?: BoundaryOperation;
         instances: Map<string, ServiceTemplateInstance>;
     };
 }

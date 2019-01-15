@@ -17,6 +17,7 @@ import { Action } from '../store/store.action';
 import { Csar } from '../core/model/csar.model';
 import { Plan } from '../core/model/plan.model';
 import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import {BoundaryOperation} from '../core/model/boundaryoperation.model';
 
 @Injectable()
 export class ApplicationManagementActions {
@@ -69,14 +70,14 @@ export class ApplicationManagementActions {
         };
     }
 
-    static updateBuildPlan(plan: Plan): Action {
+    static updateBuildPlan(plan: BoundaryOperation): Action {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_BUILDPLAN,
             payload: plan
         };
     }
 
-    static updateTerminationPlan(plan: Plan): Action {
+    static updateTerminationPlan(plan: BoundaryOperation): Action {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_TERMINATIONPLAN,
             payload: plan

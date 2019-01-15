@@ -5,6 +5,8 @@ import { Interface } from '../../core/model/interface.model';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
 import { Operation } from '../../core/model/operation.model';
 import { Observable } from 'rxjs';
+import {BoundaryOperation} from '../../core/model/boundaryoperation.model';
+import {LoggerService} from '../../core/service/logger.service';
 
 @Component({
     selector: 'opentosca-application-instance-boundary-definition-interfaces-list',
@@ -18,7 +20,7 @@ export class ApplicationInstanceBoundaryDefinitionInterfacesListComponent implem
 
     interfaces: Array<Interface>;
 
-    plan: Plan;
+    plan: BoundaryOperation;
     dialogVisible = false;
 
     rowGroupMetadata: any;
@@ -31,7 +33,7 @@ export class ApplicationInstanceBoundaryDefinitionInterfacesListComponent implem
         {field: '', header: ''},
     ];
 
-    constructor(private appInstanceService: ApplicationInstanceManagementService) {
+    constructor(private appInstanceService: ApplicationInstanceManagementService, private logger: LoggerService) {
     }
 
     ngOnInit() {
@@ -42,7 +44,9 @@ export class ApplicationInstanceBoundaryDefinitionInterfacesListComponent implem
             });
     }
 
-    showDialog(plan: Plan): void {
+    showDialog(plan: BoundaryOperation): void {
+        this.logger.log('[application-instance-boundary-definition-interfaces-list.component][showDialog]:',
+            'Creating Dialog for operation: ' + JSON.stringify(plan));
         this.plan = plan;
         this.dialogVisible = true;
     }

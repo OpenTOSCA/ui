@@ -18,6 +18,7 @@ import { ManagementPlanService } from '../../core/service/management-plan.servic
 import { PlanList } from '../../core/model/plan-list.model';
 import { Plan } from '../../core/model/plan.model';
 import { Observable } from 'rxjs';
+import {BoundaryOperation} from '../../core/model/boundaryoperation.model';
 
 @Component({
     selector: 'opentosca-management-plan-list',
@@ -30,7 +31,7 @@ export class ManagementPlanListComponent implements OnInit {
 
     plans: Observable<PlanList>;
 
-    plan: Plan;
+    plan: BoundaryOperation;
     dialogVisible = false;
 
     constructor(private mplanService: ManagementPlanService) {
@@ -40,7 +41,7 @@ export class ManagementPlanListComponent implements OnInit {
         this.plans = this.mplanService.getManagementPlans(this.instance);
     }
 
-    showDialog(plan: Plan): void {
+    showDialog(plan: BoundaryOperation): void {
         if (this.dialogVisible) {
             alert('Error');
         }

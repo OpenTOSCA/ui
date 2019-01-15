@@ -25,10 +25,10 @@
         <tr *ngFor="let o of rowData.operations">
             <td>{{rowData.name}}</td>
             <td>{{o.name}}</td>
-            <td><a target="_blank" [href]="o._embedded.plan.plan_type">{{o._embedded.plan.plan_type.match('[^/]*$')[0]}}</a></td>
+            <td><a target="_blank" [href]="o.type">{{o.type.match('[^/]*$')[0]}}</a></td>
             <td style="word-break: break-all">{{o._embedded.plan.plan_model_reference}}</td>
             <td>
-                <button pButton icon="fa fa-play" type="button" (click)="showDialog(o._embedded.plan);"></button>
+                <button pButton icon="fa fa-play" type="button" (click)="showDialog(o);"></button>
             </td>
         </tr>
     </ng-template>

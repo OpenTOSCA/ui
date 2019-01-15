@@ -19,6 +19,7 @@ import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { LoggerService } from '../../core/service/logger.service';
 import { globals } from '../../globals';
+import {BoundaryOperation} from '../../core/model/boundaryoperation.model';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -28,7 +29,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit {
 
     @Input() visible = false;
     @Output() visibleChange = new EventEmitter<boolean>();
-    @Input() plan: Plan;
+    @Input() plan: BoundaryOperation;
     @Input() inputValidation = true;
 
     public runnable: boolean;

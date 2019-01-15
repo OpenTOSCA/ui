@@ -25,6 +25,9 @@ import { Interface } from '../model/interface.model';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
+import {BoundaryInterface} from '../model/boundaryinterface.model';
+import {BoundaryOperation} from '../model/boundaryoperation.model';
+import {LinkReference} from '../model/link-reference';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -73,7 +76,9 @@ export class ApplicationManagementService {
             .pipe(
                 flatMap(serviceTemplatePath => {
                     const url = new Path(serviceTemplatePath)
-                        .append('buildplans')
+                        .append('boundarydefinitions')
+                        .append('interfaces')
+                        .append(this.ngRedux.getState().administration.planLifecycleInterface)
                         .toString();
                     const httpOptions = {
                         headers: new HttpHeaders({
@@ -81,9 +86,11 @@ export class ApplicationManagementService {
                         })
                     };
                     // Todo For now it is okay to fetch the first build plan but we have to keep this in mind
-                    return this.http.get(url, httpOptions)
+                    return this.http.get<BoundaryInterface>(url, httpOptions)
                         .pipe(
-                            map(response => response['plans'][0] as Plan),
+                            map(i => {
+                                return i.operations[this.ngRedux.getState().administration.planOperationInitiate];
+                            }),
                             catchError(err => {
                                 this.logger.handleObservableError('[application.service][getBuildPlan]', err);
                                 return throwError(err);
@@ -111,11 +118,10 @@ export class ApplicationManagementService {
                             'Accept': 'application/json'
                         })
                     };
-                    return this.http.get<Interface>(url, httpOptions)
+                    return this.http.get<BoundaryInterface>(url, httpOptions)
                         .pipe(
                             map(i => {
-                                return i.operations[this.ngRedux.getState().administration.planOperationTerminate]
-                                    ._embedded.plan;
+                                return i.operations[this.ngRedux.getState().administration.planOperationTerminate];
                             }),
                             catchError(err => {
                                 this.logger.handleObservableError('[application.service][getTerminationPlan]', err);
@@ -150,20 +156,20 @@ export class ApplicationManagementService {
             );
     }
 
-    triggerManagementPlan(plan: Plan): Observable<string> {
+    triggerManagementPlan(op: BoundaryOperation): Observable<string> {
         this.logger.log('[application-management.service][triggerManagementPlan]',
-            'Starting Management Plan <' + plan.id + '>');
+            'Starting Management Plan <' + op.id + '>');
         this.logger.log('[application-management.service][triggerManagementPlan]',
-            'Build Plan Operation Meta Data are: ' + JSON.stringify(plan));
-        const url = new Path(plan._links['self'].href)
-            .append('instances')
-            .toString();
+            'Build Plan Operation Meta Data are: ' + JSON.stringify(op));
+        const url = new Path(op._links.op.href).toString();
         const httpOptions = {
             headers: new HttpHeaders({
                 'Accept': 'text/plain'
             }),
         };
-        return this.http.post(url, plan.input_parameters, {...httpOptions, responseType: 'text', observe: 'response'})
+        // op._links = new Map<string, LinkReference>();
+
+        return this.http.post(url, op, {...httpOptions, responseType: 'text', observe: 'response'})
             .pipe(
                 map(response => {
                     return response.headers.get('Location');

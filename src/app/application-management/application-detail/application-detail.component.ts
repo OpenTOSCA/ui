@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import * as _ from 'lodash';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
+import {BoundaryOperation} from '../../core/model/boundaryoperation.model';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -33,8 +34,8 @@ import { ApplicationInstanceManagementService } from '../../core/service/applica
 export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
     @select(['container', 'application', 'csar']) csar: Observable<Csar>;
-    @select(['container', 'application', 'buildPlan']) buildPlan: Observable<Plan>;
-    @select(['container', 'application', 'terminationPlan']) terminationPlan: Observable<Plan>;
+    @select(['container', 'application', 'buildPlan']) buildPlan: Observable<BoundaryOperation>;
+    @select(['container', 'application', 'terminationPlan']) terminationPlan: Observable<BoundaryOperation>;
 
     public dialogVisible = false;
 
@@ -47,7 +48,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.route.data.subscribe((data: { application: { csar: Csar, buildPlan: Plan, terminationPlan: Plan } }) => {
+        this.route.data.subscribe((data: { application: { csar: Csar, buildPlan: BoundaryOperation, terminationPlan: BoundaryOperation } }) => {
             // Prepare breadcrumb
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
                 {label: 'Applications', routerLink: 'applications'},

@@ -19,14 +19,16 @@ import { Csar } from '../../core/model/csar.model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { Plan } from '../../core/model/plan.model';
+import {BoundaryOperation} from '../../core/model/boundaryoperation.model';
 
 @Injectable()
-export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+export class ApplicationDetailResolverService implements
+    Resolve<{ csar: Csar, buildPlan: BoundaryOperation, terminationPlan: BoundaryOperation }> {
 
     constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
     }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: BoundaryOperation, terminationPlan: BoundaryOperation }> {
         return forkJoin(
             this.applicationService.getCsar(route.params['id']),
             this.applicationService.getBuildPlan(route.params['id'])
