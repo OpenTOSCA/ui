@@ -1,0 +1,80 @@
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
+<p-toolbar>
+    <div class="ui-toolbar-group-left">
+        <button pButton type="button" (click)="refresh()"
+                class="ui-button-info" icon="fas fa-sync-alt"
+                pTooltip="Refresh" showDelay="500" tooltipPosition="top"></button>
+        &nbsp;
+        <button pButton type="button" (click)="openRepository(selectedRepository.url)"
+                class="ui-button-info" icon="fas fa-external-link-alt" label="Open Repository">
+        </button>
+        &nbsp;
+        <opentosca-filter [placeholder]="'Filter applications...'"
+                          (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
+    </div>
+    <div class="ui-toolbar-group-right">
+        Selected Repository:
+        &nbsp;
+        <p-dropdown [options]="repositoryItems" [(ngModel)]="selectedRepository" optionLabel="name"
+                    [autoWidth]="true" [style]="{'min-width':'200px'}" (onChange)="selectRepository()"></p-dropdown>
+    </div>
+</p-toolbar>
+
+<div class="ot-container">
+    <div class="ot-item"
+         *ngFor="let app of apps | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','csarName']; trackBy: trackFn">
+        <p-card>
+            <p-header>
+                <img class="img-fluid" [src]="app.iconUrl"
+                     onerror="this.src='/assets/Default_Application_Icon.png'">
+            </p-header>
+            <div class="ui-card-title truncate">
+                {{ app.displayName }}
+            </div>
+            <p-scrollPanel [style]="{width: '100%', height: '80px'}">
+                {{ app.description }}
+            </p-scrollPanel>
+            <p-footer>
+                <button pButton type="button" (click)="openApplication(app.repositoryURL)"
+                        class="ui-button-info" icon="fas fa-external-link-alt"
+                        pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="openApplication(app.csarURL)"
+                        class="ui-button-info" icon="fas fa-download"
+                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="install(app)"
+                        class="ui-button-info" icon="fas fa-plus-circle"
+                        pTooltip="Install in OpenTOSCA Container" showDelay="500" tooltipPosition="top"
+                        *ngIf="!app.inContainer && !app.isInstalling"></button>
+                <button type="button"
+                        class="ui-button-secondary ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only spinner"
+                        pTooltip="Installing application in OpenTOSCA Container" tooltipPosition="top"
+                        *ngIf="!app.inContainer && app.isInstalling">
+                    <sk-three-bounce class="ui-button-icon"></sk-three-bounce>
+                </button>
+                <button pButton type="button" class="ui-button-success" icon="fas fa-check"
+                        pTooltip="Already installed in OpenTOSCA Container" tooltipPosition="top"
+                        *ngIf="app.inContainer && !app.isInstalling"></button>
+            </p-footer>
+        </p-card>
+    </div>
+</div>
+
+<!--TODO-->
+<!--<opentosca-deployment-completion *ngIf="showCompletionDialog" [appToComplete]="appToComplete"-->
+<!--[linkToWineryResource]="linkToWineryResource" (completionSuccess)="installInContainer($event)">-->
+<!--</opentosca-deployment-completion>-->

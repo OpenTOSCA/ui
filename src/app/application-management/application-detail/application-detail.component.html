@@ -1,147 +1,79 @@
-<opentosca-ui-action-bar>
-    <opentosca-ui-action-item (click)="showProvisioningModal()" styles="btn-primary">
-        <i class="glyphicon glyphicon-plus"></i> Provision New Instance
-    </opentosca-ui-action-item>
-</opentosca-ui-action-bar>
-<div class="container-fluid">
-    <p-fieldset legend="Application Information" [toggleable]="true">
-        <div class="row" *ngIf="(app | async); let app; else loading">
-            <div class="col-lg-6">
-                <div>
-                    <h2>Description</h2>
-                    <p *ngIf="app.description && app.description !== ''; else noDescription">
-                        {{app.description}}
-                        <br/>
-                    </p>
-                    <ng-template #noDescription>
-                        <p>
-                            No description provided.
-                        </p>
-                    </ng-template>
-                </div>
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
 
-                <!-- Buttons -->
-                <!-- Todo Move Open Application Button to ServiceInstanceListEntryView -->
-                <div style="margin-bottom: 10px;">
-                    <a class="btn btn-success" *ngIf="provisioningDone && selfserviceApplicationUrl !== ''"
-                       [href]="selfserviceApplicationUrl" role="button" target="_blank">Open Application</a>
-
-                    <div id="loaderContainer">
-                        <div id="loader" *ngIf="provisioningInProgress"></div>
-                    </div>
+<div *ngIf="(csar | async); let csar; else loading">
+    <div class="p-grid">
+        <div class="p-col-8">
+            <div class="p-grid">
+                <div class="p-col-1" style="padding-top: 25px">
+                    <!-- Here goes the image -->
+                    <img [src]="csar.icon_url" class="img-fluid" style="width: 100%"
+                         onerror="this.src='/assets/Default_Application_Icon.png'">
                 </div>
-
-                <!-- Todo Move PlanOutput to ServiceInstanceListEntryView -->
-                <div class="panel panel-success" *ngIf="planOutputParameters">
-                    <div class="panel-heading">Results of the last provisioning task</div>
-                    <div class="panel-body">
-                        <p>The provisioning of the instance was successful. The output parameters are listed
-                            bellow:</p>
-                    </div>
-
-                    <!-- Table -->
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Parameter</th>
-                            <th>Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let param of planOutputParameters; let i = index">
-                            <td *ngIf="showOutputParameter(param)">{{i + 1}}</td>
-                            <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Name}}</td>
-                            <td *ngIf="showOutputParameter(param)">{{param.OutputParameter.Value}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <h2>Version</h2>
-                    <p *ngIf="app?.version && app?.version !==''; else noVersion">
-                        {{app.version}}
-                    </p>
-                    <ng-template #noVersion>
-                        <p>
-                            No version provided.
-                        </p>
-                    </ng-template>
-                </div>
-                <div>
-                    <h2>Authors</h2>
-                    <ul *ngIf="app?.authors?.length > 0; else noAuthors">
-                        <li *ngFor="let author of app.authors">
-                            {{author}}
-                        </li>
-                    </ul>
-                    <ng-template #noAuthors>
-                        <p>
-                            No authors provided.
-                        </p>
-                    </ng-template>
+                <div class="p-col">
+                    <h3>{{ csar.display_name }}</h3>
+                    <p>{{ csar.description }}</p>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <h2>Topology Template</h2>
-                <div>
-                    <a *ngIf="app?.image_url && app?.image_url !== ''; else noTemplateImage" [href]="app.image_url"
-                       target="_blank">
-                        <img class="img-responsive" [src]="app.image_url"/>
-                    </a>
+            <div class="p-grid">
+                <div class="p-col">
+                    <p-fieldset>
+                        <p-header><strong>Instances</strong></p-header>
+                        <p-toolbar>
+                            <div class="ui-toolbar-group-left">
+                                <button pButton type="button" icon="fas fa-plus"
+                                        pTooltip="Provision new instance..." showDelay="300" tooltipPosition="right"
+                                        [disabled]="(buildPlan | async) === null"
+                                        (click)="dialogVisible = true"></button>
+                                &nbsp;
+                                <button pButton type="button" icon="fas fa-sync-alt"
+                                        pTooltip="Reload instances" showDelay="300" tooltipPosition="top"
+                                        (click)="triggerReloadAppInstances()"></button>
+                            </div>
+                        </p-toolbar>
+                        <opentosca-application-instance-list
+                            [terminationPlanAvailable]="(terminationPlan | async) !== null"
+                            (terminateInstance)="emitTerminationPlan($event)">
+                        </opentosca-application-instance-list>
+                    </p-fieldset>
                 </div>
-                <ng-template #noTemplateImage>
-                    <p>
-                        No Template Image provided.
-                    </p>
-                </ng-template>
             </div>
         </div>
-        <ng-template #loading>
-            <div class="row">
-                <div class="col-lg-12">
-                    Loading App Infos...
+        <div class="p-col-4">
+            <div class="p-grid">
+                <div class="p-col">
+                    <p-fieldset>
+                        <p-header><strong>Info</strong></p-header>
+                        <p><strong>Version:</strong> {{csar.version}}</p>
+                        <p><strong>Authors:</strong> {{csar.authors}}</p>
+                    </p-fieldset>
                 </div>
             </div>
-        </ng-template>
-    </p-fieldset>
-    <p-fieldset legend="Application Instances" [toggleable]="true">
-        <div class="row">
-            <div class="col-lg-12">
-                <opentosca-ui-application-instance-list
-                        (onTerminateInstance)="emitTerminationPlan($event)"></opentosca-ui-application-instance-list>
-            </div>
-        </div>
-    </p-fieldset>
-</div>
-
-<p-dialog [(visible)]="showStartProvisioningModal" [width]="400" modal="true">
-    <p-header>
-        Please fill in following parameters
-    </p-header>
-    <div *ngFor="let param of buildPlanOperationMetaData?.Plan.InputParameters">
-        <div class="card mb-2" *ngIf="showParam(param.InputParameter)">
-            <h6 class="card-header">{{ param.InputParameter.Name }}</h6>
-            <div class="card-block">
-                <textarea *ngIf="param.InputParameter.Name.indexOf('Key') > 0" type="text"
-                          class="form-control" placeholder="{{param.InputParameter.Name}}"
-                          [(ngModel)]="param.InputParameter.Value"
-                          (ngModelChange)="checkAllInputsFilled()"></textarea>
-                <input *ngIf="param.InputParameter.Name.indexOf('Password') > 0" type="password"
-                       class="form-control" placeholder="{{param.InputParameter.Name}}"
-                       [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
-                <input *ngIf="(param.InputParameter.Name.indexOf('Password') == -1) && (param.InputParameter.Name.indexOf('Key') == -1)"
-                       type="text" class="form-control" placeholder="{{param.InputParameter.Name}}"
-                       [(ngModel)]="param.InputParameter.Value" (ngModelChange)="checkAllInputsFilled()">
+            <div class="p-grid" *ngIf="csar.image_url && '' !== csar.image_url">
+                <div class="p-col">
+                    <p-fieldset>
+                        <p-header><strong>Topology Preview</strong></p-header>
+                        <img [src]="csar.image_url" class="img-fluid">
+                    </p-fieldset>
+                </div>
             </div>
         </div>
     </div>
-    <p-footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="hideProvisioningModal()">Close</button>
-            <button type="button" class="btn btn-primary" [disabled]="false" (click)="startProvisioning()">Start
-                Provisioning
-            </button>
-        </div>
-    </p-footer>
-</p-dialog>
+</div>
+<ng-template #loading>
+    <p>Loading app info...</p>
+</ng-template>
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="buildPlan | async"
+                                            [inputValidation]="true">
+</opentosca-management-plan-execution-dialog>

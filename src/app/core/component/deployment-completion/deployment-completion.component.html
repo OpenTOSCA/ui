@@ -1,24 +1,23 @@
-<p-dialog [(visible)]="showCompleteConfirmationModal" [width]="400" modal="true">
-    <p-header>
-        Apply completion?
-    </p-header>
-    <div class="opentosca-modal-content">
-        Do you want to process with the completion for "{{appToComplete?.displayName}}"?
-    </div>
-    <p-footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="cancelCompleteConfirmationModal()">Cancel
-            </button>
-            <button type="button" class="btn btn-primary" [disabled]="false" (click)="startCompletion()">Complete
-            </button>
-        </div>
-    </p-footer>
-</p-dialog>
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
 
-<p-dialog [(visible)]="showCompleteSelectionModal" [width]="400" modal="true">
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
+          [(visible)]="visible" modal="true">
     <p-header>
         Selection
     </p-header>
+    <!-- Todo Rework this with primeng instead of bootstrap -->
     <form #selectionForm="ngForm">
         <div class="modal-body">
             <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
@@ -50,8 +49,9 @@
                         <select class="form-control" id="sel2" name="selectOption"
                                 [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
                                 required>
-                            <option *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
-                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                            <option
+                                *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
+                                [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
                             </option>
                         </select>
                     </div>
@@ -61,7 +61,7 @@
     </form>
     <p-footer>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="cancelCompleteSelectionModal()">Cancel
+            <button type="button" class="btn btn-secondary mr-2" (click)="abortCompletion()">Cancel
             </button>
             <button type="button" class="btn btn-primary" [disabled]="!selectionForm.form.valid"
                     (click)="injectNewHosts()">Submit

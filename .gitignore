@@ -9,6 +9,7 @@ target/
 /src/**/*.js
 /src/**/*.js.map
 npm-debug.log
+/node
 
 # compiled output
 /dist
@@ -33,10 +34,6 @@ build/src/main/resources/static/**/*
 
 # IDE - VSCode
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 # misc
 /.sass-cache
@@ -45,6 +42,7 @@ build/src/main/resources/static/**/*
 /libpeerconnection.log
 testem.log
 /typings
+yarn-error.log
 
 # e2e
 /e2e/*.js

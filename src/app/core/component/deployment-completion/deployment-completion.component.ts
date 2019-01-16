@@ -1,106 +1,93 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Karoline Saatkamp - initial implementation
- *     Michael Falkenthal - adaptation to primeng
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
-import {Router} from '@angular/router';
-import {MarketplaceApplication} from '../../model/marketplace-application.model';
-import {OpenToscaLoggerService} from '../../service/open-tosca-logger.service';
-import {InjectionOption} from '../../model/injection-option.model';
-import {DeploymentCompletionService} from '../../service/deployment-completion.service';
+
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { MarketplaceApplication } from '../../model/marketplace-application.model';
+import { LoggerService } from '../../service/logger.service';
+import { InjectionOption } from '../../model/injection-option.model';
+import { DeploymentCompletionService } from '../../service/deployment-completion.service';
+import { InjectionOptionsResponse } from '../../model/injection-options-response.model';
+
+// Todo: Finish refactoring of deployment-completion.component and test it
 
 @Component({
-    selector: 'opentosca-ui-deployment-completion',
+    selector: 'opentosca-deployment-completion',
     templateUrl: 'deployment-completion.component.html',
 })
 export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
-    @Input('appToComplete') appToComplete: MarketplaceApplication;
-    @Input('linkToWineryResource') linkToWineryResource: string;
-    @Output('completionSuccessful') completionSuccessful = new EventEmitter<MarketplaceApplication>();
-
-    public showCompleteConfirmationModal = true;
-    public showCompleteSelectionModal = false;
+    @Input() appToComplete: MarketplaceApplication;
+    @Input() linkToWineryResource: string;
+    @Input() visible: boolean;
+    @Output() visibleChange = new EventEmitter<boolean>();
+    @Output() completionSuccess = new EventEmitter<MarketplaceApplication>();
+    @Output() completionAbort = new EventEmitter<void>();
+    @Output() completionError = new EventEmitter<string>();
 
     public completeApp = false;
     public hostCompletionOptions: Array<InjectionOption> = null;
     public connectionCompletionOptions: Array<InjectionOption> = null;
-    public completionSelection: any = {
+    public completionSelection: InjectionOptionsResponse = {
         'hostInjections': {},
         'connectionInjections': {}
     };
 
     constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
-                private logger: OpenToscaLoggerService) {
+                private logger: LoggerService) {
     }
 
     ngOnInit() {
+        this.getInjectionOptions(this.linkToWineryResource);
     }
 
     ngAfterViewInit(): void {
-        this.showCompleteConfirmationModal = true;
-        console.log(this.appToComplete);
     }
 
-    adaptRouteBackToMarketPlace(): void {
-        this.router.navigate(['../repository']);
-    }
-
-
-    cancelCompleteConfirmationModal(): void {
-        this.showCompleteConfirmationModal = false;
-    }
-
-    showCompleteSelectionModel(): void {
-        this.showCompleteConfirmationModal = false;
-        this.showCompleteSelectionModal = true;
-    }
-
-    cancelCompleteSelectionModal(): void {
-        this.showCompleteSelectionModal = false;
-    }
-
-    startCompletion(): void {
-        this.completeApp = true;
-        this.getInjectionOptions(this.linkToWineryResource);
-        this.showCompleteSelectionModel();
+    abortCompletion(): void {
+        this.visible = false;
+        this.completionAbort.emit();
     }
 
     getInjectionOptions(linkToWineryResource: string): void {
         this.completionService.getInjectionOptions(linkToWineryResource)
             .then(injectionOptions => {
-
                 if (injectionOptions == null) {
-                    this.completionSuccessful.emit(this.appToComplete);
-                    this.showCompleteSelectionModal = false;
+                    this.completionSuccess.emit(this.appToComplete);
+                    this.visible = false;
                 } else {
                     this.hostCompletionOptions = injectionOptions.hostInjectionOptions;
                     this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
-                    console.log('Das sind die Host Completion Options');
-                    console.log(this.hostCompletionOptions);
+                    this.logger.log('[deployment-completion.component][getInjectionOptions]', 'Got host completion options: '
+                        + this.hostCompletionOptions);
                 }
             });
     }
 
     injectNewHosts(): void {
-        console.log(JSON.stringify(this.completionSelection));
+        this.logger.log('[deployment-completion.component][injectNewHosts]', 'Injecting new hosts: '
+            + JSON.stringify(this.completionSelection));
         this.completionService.injectNewHosts(this.linkToWineryResource, this.completionSelection)
             .then(injectedServiceTemplateURL => {
                 this.appToComplete.csarURL = injectedServiceTemplateURL.substr(0, injectedServiceTemplateURL.lastIndexOf('/')) + '?csar';
                 this.logger.log('[deployment-completion.component][newCSARURLForInstallation]', this.appToComplete.csarURL);
-                this.completionSuccessful.emit(this.appToComplete);
-                this.showCompleteSelectionModal = false;
+                this.completionSuccess.emit(this.appToComplete);
+                this.visible = false;
             })
             .catch(err => {
                 this.logger.handleError('[deployment-completion.component][injectNewHosts]', err);
+                this.completionError.emit(err);
             });
     }
 

@@ -1,54 +1,72 @@
-<opentosca-ui-action-bar>
-    <form class="form-inline">
-        <opentosca-ui-search [placeholder]="'Filter applications...'"
-                             (searchTermChanged)="searchTermChanged($event)"></opentosca-ui-search>
-        <opentosca-ui-action-item (click)="reloadApplications()" styles="btn-primary">
-            <i class="fa fa-refresh"></i>
-        </opentosca-ui-action-item>
-    </form>
-    <form class="form-inline">
-        <opentosca-ui-action-item [routerLink]="[{ outlets: { modal: ['upload'] } }]" styles="btn-primary">
-            <i class="fa fa-upload"></i> Upload New Application
-        </opentosca-ui-action-item>
-    </form>
-</opentosca-ui-action-bar>
-<div class="d-flex flex-row flex-wrap">
-    <div class="card m-2 card-glowing" style="width: 250px"
-         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackAppsFn">
-        <div class="card-block text-center pb-0">
-            <img class="mx-auto d-block mb-3" style="height: 80px;" [src]="app.icon_url"
-                 onerror="this.src='/assets/Default_Application_Icon.png'">
-            <h6 class="card-title" pTooltip="{{ app.display_name }}" tooltipPosition="top" showDelay="2000">{{ app.display_name }}</h6>
-        </div>
-        <div class="card-block pt-0">
-            <div class="card-text">{{ app.description }}</div>
-        </div>
-        <div class="card-footer text-muted text-center">
-            <button pTooltip="Show Details" tooltipPosition="top" type="button" [routerLink]="['/applications', app.id]"
-                    class="btn btn-secondary btn-sm">
-                <i class="fa fa-list"></i>
-            </button>
-            <button pTooltip="Delete App" tooltipPosition="top" type="button"
-                    class="btn btn-danger btn-sm"
-                    (click)="showDeleteConfirmationModal(app)">
-                <i class="fa fa-remove"></i>
-            </button>
-        </div>
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
+<p-toolbar>
+    <div class="ui-toolbar-group-left">
+        <button pButton type="button" (click)="refresh()" icon="fas fa-sync-alt"
+                pTooltip="Refresh" showDelay="500" tooltipPosition="top"></button>
+        &nbsp;
+        <button pButton type="button" style="display: inline-block"
+                class="ui-button-info" icon="fa fa-upload"
+                (click)="showModal = true"
+                pTooltip="Upload new Application" showDelay="500"></button>
+        &nbsp;
+        <opentosca-filter [placeholder]="'Filter applications...'"
+                          (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
+    </div>
+</p-toolbar>
+<div class="ot-container">
+    <div class="ot-item"
+         *ngFor="let app of apps | async | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['display_name','description','name']; trackBy: trackFn">
+        <p-card>
+            <p-header>
+                <img class="img-fluid" [src]="app.icon_url"
+                     onerror="this.src='/assets/Default_Application_Icon.png'">
+            </p-header>
+            <div class="ui-card-title truncate">
+                {{ app.display_name }}
+            </div>
+            <p-scrollPanel [style]="{width: '100%', height: '80px'}">
+                {{ app.description }}
+            </p-scrollPanel>
+            <p-footer>
+                <button pButton type="button" [routerLink]="['/applications', app.id]"
+                        class="ui-button-info" icon="fas fa-list"
+                        pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="confirmDeletion(app)"
+                        class="ui-button-danger" icon="far fa-trash-alt"
+                        pTooltip="Remove application..." showDelay="500" tooltipPosition="top"
+                        *ngIf="!app.deleting$"></button>
+                <button type="button"
+                        class="ui-button-danger ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only spinner"
+                        pTooltip="Removing application" tooltipPosition="top"
+                        *ngIf="app.deleting$">
+                    <sk-three-bounce [color]="'#fff'" class="ui-button-icon"></sk-three-bounce>
+                </button>
+            </p-footer>
+        </p-card>
     </div>
 </div>
-<p-dialog [(visible)]="showChildModal" [width]="300" modal="true">
-    <p-header>
-        Really delete App?
-    </p-header>
-    Do you really want to delete the App "{{ appToDelete?.display_name }}"?
-    <div *ngIf="removingApp">
-        <sk-fading-circle></sk-fading-circle>
-    </div>
-    <p-footer>
-        <button type="button" class="btn btn-secondary" (click)="hideDeleteConfirmationModal()">Close</button>
-        <button *ngIf="!removingApp" type="button" class="btn btn-danger" [disabled]="false"
-                (click)="deleteFromContainer(appToDelete)">Delete
-        </button>
-        <button *ngIf="removingApp" type="button" class="btn btn-danger" [disabled]="true">Removing...</button>
-    </p-footer>
-</p-dialog>
+<p-confirmDialog width="425"></p-confirmDialog>
+<opentosca-application-upload [(showModal)]="showModal" (uploadComplete)="refresh()"></opentosca-application-upload>
+<!-- Todo deployment-completion component is currently disabled until it is aligned with new style and refactored -->
+<opentosca-deployment-completion *ngIf="false"
+        [(visible)]="showCompletionDialog"
+        [appToComplete]="appToComplete"
+        [linkToWineryResource]="linkToWineryResourceForCompletion"
+                                 (completionSuccess)="onCompletionSuccess($event)"
+                                 (completionAbort)="onCompletionAbort()"
+                                 (completionError)="onCompletionError($event)">
+</opentosca-deployment-completion>

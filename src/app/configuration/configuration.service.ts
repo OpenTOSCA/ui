@@ -1,115 +1,83 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { NgRedux } from '@angular-redux/store';
-import 'rxjs/add/operator/toPromise';
 import { AppState } from '../store/app-state.model';
 import { ConfigurationActions } from './configuration-actions';
-import { RepositoryManagementActions } from '../repository-management/repository-management-actions';
 import { ApplicationManagementActions } from '../application-management/application-management-actions';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class ConfigurationService {
 
-    constructor(private http: Http,
+    constructor(private http: HttpClient,
                 private ngRedux: NgRedux<AppState>) {
     }
 
-    /**
-     * Returns wineryAPI
-     * @returns {string}
-     */
-    getWineryAPIURL(): string {
-        return this.ngRedux.getState().administration.repositoryAPI;
+    isRepositoryAvailable(url: string): Observable<boolean> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        return this.http.get(url, { ...httpOptions, responseType: 'text', observe: 'response' }).pipe(
+            map((response: HttpResponse<Object>) => (response.status >= 200 && response.status < 400)),
+            catchError(() => of(false))
+        );
     }
 
-    /**
-     * Sets wineryAPI to new value
-     * @param url
-     */
-    setWineryAPIURL(url: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateRepositoryURL(url));
-        this.ngRedux.dispatch(RepositoryManagementActions.clearRepositoryApplications());
+    getContainerUrl(): string {
+        return this.ngRedux.getState().administration.containerUrl;
     }
 
-    /**
-     * Returns containerAPIURL
-     * @returns {string}
-     */
-    getContainerAPIURL(): string {
-        return this.ngRedux.getState().administration.containerAPI;
+    setContainerUrl(url: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updateContainerUrl(url));
+        this.ngRedux.dispatch(ApplicationManagementActions.clearApplications());
     }
 
-    /**
-     * Sets containerAPIURL to new value
-     * @param url
-     */
-    setContainerAPIURL(url: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateContainerURL(url));
-        this.ngRedux.dispatch(ApplicationManagementActions.clearContainerApplication());
+    isContainerAvailable(): Observable<Object> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        return this.http.get(this.ngRedux.getState().administration.containerUrl, httpOptions);
     }
 
-    /**
-     * Returns buildPlanPath
-     * @returns {string}
-     */
-    getBuildPlanPath(): string {
-        return this.ngRedux.getState().administration.buildPlanPath;
+    setPlanLifecycleInterface(name: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updatePlanLifecycleInterface(name));
     }
 
-    /**
-     * Returns buildPlanPath
-     * @returns {string}
-     */
-    getTerminationPlanPath(): string {
-        return this.ngRedux.getState().administration.terminationPlanPath;
+    getPlanLifecycleInterface(): string {
+        return this.ngRedux.getState().administration.planLifecycleInterface;
     }
 
-    /**
-     * Sets buildPlanPath to new value
-     * @param path
-     */
-    setBuildPlanPath(path: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateBuildPlanPath(path));
+    setPlanOperationInitiate(name: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updatePlanOperationInitiate(name));
     }
 
-    /**
-     * Sets terminationPlanPath to new value
-     * @param path
-     */
-    setTerminationPlanPath(path: string) {
-        this.ngRedux.dispatch(ConfigurationActions.updateTerminationPlanPath(path));
+    getPlanOperationInitiate(): string {
+        return this.ngRedux.getState().administration.planOperationInitiate;
     }
 
-    /**
-     * Checks if container API responds
-     * @returns {Promise<Response>}
-     */
-    isContainerAvailable(): Promise<Response> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(this.ngRedux.getState().administration.containerAPI, reqOpts)
-            .toPromise();
+    setPlanOperationTerminate(name: string) {
+        this.ngRedux.dispatch(ConfigurationActions.updatePlanOperationTerminate(name));
     }
 
-    /**
-     * Checks if repository API responds
-     * @returns {Promise<Response>}
-     */
-    isRepositoryAvailable(): Promise<Response> {
-        const reqOpts = new RequestOptions({headers: new Headers({'Accept': 'application/json'})});
-        return this.http.get(this.ngRedux.getState().administration.repositoryAPI, reqOpts)
-            .toPromise();
+    getPlanOperationTerminate(): string {
+        return this.ngRedux.getState().administration.planOperationTerminate;
     }
-
 }

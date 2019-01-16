@@ -1,13 +1,22 @@
-body a.ui-state-active, body a.ui-state-highlight {
-  //background-color: #ffffff;
-  span.ui-menuitem-text {
-    background-color: #ffffff;
-  }
-}
+/*!
+ * Copyright (c) 2018 University of Stuttgart.
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+ */
 
-.ui-breadcrumb.ui-corner-all {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  border-radius: 0;
+:host ::ng-deep .ui-breadcrumb {
+    background-color: #f5f5f5 !important;
+    border: 0 !important;
+    border-bottom: 1px solid #c8c8c8 !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
 }

@@ -1,32 +1,33 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
-import { AboutComponent } from './about/about.component';
+import { AboutComponent } from './about.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { ApplicationManagementModule } from './application-management/application-management.module';
-import { RepositoryManagementModule } from './repository-management/repository-management.module';
+import { RepositoryModule } from './repository/repository.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { CoreModule } from './core/core.module';
-import { AccordionModule, GrowlModule } from 'primeng/primeng';
-
+import { AccordionModule, CardModule, ConfirmDialogModule, GrowlModule, PanelModule } from 'primeng/primeng';
 import { NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
+import { HttpClientModule } from '@angular/common/http';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
     declarations: [
@@ -36,18 +37,24 @@ import { StoreModule } from './store/store.module';
     ],
     imports: [
         AccordionModule,
+        PanelModule,
         BrowserModule,
         FormsModule,
-        HttpModule,
-        GrowlModule,
+        HttpClientModule,
         NgReduxModule,
         NgReduxRouterModule,
+        GrowlModule,
+        TabMenuModule,
+        CardModule,
         ApplicationManagementModule,
-        RepositoryManagementModule,
+        RepositoryModule,
         ConfigurationModule,
         CoreModule,
         StoreModule,
-        AppRoutingModule, // this must be the last routing module, because it contains '' and ** routing
+        ConfirmDialogModule,
+
+        // AppRoutingModule must be the last routing module
+        AppRoutingModule
     ],
     providers: [],
     bootstrap: [

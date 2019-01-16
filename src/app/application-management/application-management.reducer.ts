@@ -1,74 +1,88 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import * as _ from 'lodash';
-import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model';
 import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
-import { Csar } from '../core/model/new-api/csar.model';
-import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
+import { Csar } from '../core/model/csar.model';
+import { Plan } from '../core/model/plan.model';
+import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;
-    currentApp?: Csar;
-    currentAppInstances?: Array<ServiceTemplateInstance>;
-    currentBuildPlanOperationMetaData?: PlanOperationMetaData;
+    application?: {
+        csar?: Csar;
+        buildPlan?: Plan;
+        terminationPlan?: Plan;
+        instances: Map<string, ServiceTemplateInstance>;
+    };
 }
 
 export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
-    currentApp: null,
-    currentAppInstances: [],
-    currentBuildPlanOperationMetaData: null
+    application: {
+        csar: null,
+        buildPlan: null,
+        terminationPlan: null,
+        instances: new Map<string, ServiceTemplateInstance>()
+    },
+    // currentApp: null,
+    // currentAppInstances: [],
+    // currentInstance: null,
+    // buildPlan: null,
+    // currentTerminationPlan: null
 };
 
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,
                                              action: Action): ApplicationManagementState {
     switch (action.type) {
-        case ApplicationManagementActions.ADD_CONTAINER_APPLICATIONS:
-            return Object.assign({}, state, {
-                applications: action.payload
-            });
-        case ApplicationManagementActions.REMOVE_CONTAINER_APPLICATION:
-            return Object.assign({}, state, {
-                // Todo can we do this without lodash?
-                applications: _.filter(state.applications, function (a) {
-                    return !(a.id === action.payload.id);
-                })
-            });
-        case ApplicationManagementActions.CLEAR_CONTAINER_APPLICATIONS:
+        case ApplicationManagementActions.CLEAR_APPLICATIONS:
             return Object.assign({}, state, {
                 applications: []
             });
-        case ApplicationManagementActions.UPDATE_CURRENT_APPLICATION:
+        case ApplicationManagementActions.UPDATE_APPLICATIONS:
             return Object.assign({}, state, {
-                currentApp : action.payload
+                applications: action.payload
             });
-        case ApplicationManagementActions.CLEAR_CURRENT_APPLICATION:
+        case ApplicationManagementActions.UPDATE_APPLICATION_CSAR:
             return Object.assign({}, state, {
-                currentApp: null
+                application: {
+                    ...state.application, csar: action.payload
+                }
+            });
+        case ApplicationManagementActions.UPDATE_APPLICATION_BUILDPLAN:
+            return Object.assign({}, state, {
+                application: {
+                    ...state.application, buildPlan: action.payload
+                }
+            });
+        case ApplicationManagementActions.UPDATE_APPLICATION_TERMINATIONPLAN:
+            return Object.assign({}, state, {
+                application: {
+                    ...state.application, terminationPlan: action.payload
+                }
             });
         case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES:
             return Object.assign({}, state, {
-                currentAppInstances: action.payload
+                application: {
+                    ...state.application, instances: action.payload
+                }
             });
         case ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES:
             return Object.assign({}, state, {
-                currentAppInstances: []
-            });
-        case ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA:
-            return Object.assign({}, state, {
-                currentBuildPlanOperationMetaData: action.payload
+                application: {
+                    ...state.application, instances: []
+                }
             });
         default:
             return state;

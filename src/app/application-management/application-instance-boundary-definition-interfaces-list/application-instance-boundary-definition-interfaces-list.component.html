@@ -1,0 +1,36 @@
+<p-table [value]="interfaces" dataKey="name">
+    <ng-template pTemplate="header" let-columns="columns">
+        <!--<tr *ngFor="let column of columns">-->
+            <!--<th>{{column.header}}</th>-->
+        <!--</tr>-->
+        <tr>
+            <th>Interface</th>
+            <th>Operation</th>
+            <th>Type</th>
+            <th>Reference</th>
+            <th style="width: 55px"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+        <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.name].index === rowIndex">
+            <td colspan="5">
+                <a href="#" [pRowToggler]="rowData">
+                    <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                    <span>{{rowData.name}}</span>
+                </a>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+        <tr *ngFor="let o of rowData.operations">
+            <td>{{rowData.name}}</td>
+            <td>{{o.name}}</td>
+            <td><a target="_blank" [href]="o._embedded.plan.plan_type">{{o._embedded.plan.plan_type.match('[^/]*$')[0]}}</a></td>
+            <td style="word-break: break-all">{{o._embedded.plan.plan_model_reference}}</td>
+            <td>
+                <button pButton icon="fa fa-play" type="button" (click)="showDialog(o._embedded.plan);"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="plan"></opentosca-management-plan-execution-dialog>

@@ -1,47 +1,49 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { ApplicationDetail } from '../../core/model/application-detail.model';
-import { PlanOperationMetaData } from '../../core/model/planOperationMetaData.model';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { OpenToscaLoggerService } from '../../core/service/open-tosca-logger.service';
-import { Csar } from '../../core/model/new-api/csar.model';
-import { Plan } from '../../core/model/new-api/plan.model';
+import { LoggerService } from '../../core/service/logger.service';
+import { Csar } from '../../core/model/csar.model';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
+import { Plan } from '../../core/model/plan.model';
 
 @Injectable()
-export class ApplicationDetailResolverService {
+export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ApplicationDetail> {
-        return Observable.forkJoin(
-            [
-                this.appService.getCsarDescriptionByCsarID(route.params['id']).retry(3),
-                this.appService.getBuildPlan(route.params['id']).retry(3),
-                this.appService.getTerminationPlan(route.params['id']).retry(3)
-            ]
-        )
-            .map((result: Array<any>) => new ApplicationDetail(
-                <Csar>result[0],
-                <Plan>result[1],
-                <PlanOperationMetaData>result[2]
-                )
-            )
-            .catch(reason => {
-                return this.logger.handleError('[application-details-resolver.service][resolve]', reason);
-            });
+    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
     }
 
-    constructor(private appService: ApplicationManagementService, private logger: OpenToscaLoggerService) {
+    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+        return forkJoin(
+            this.applicationService.getCsar(route.params['id']),
+            this.applicationService.getBuildPlan(route.params['id'])
+                .pipe(
+                    catchError(() => of(null))
+                ),
+            this.applicationService.getTerminationPlan(route.params['id'])
+                .pipe(
+                    catchError(() => of(null))
+                )
+        )
+        .pipe(
+            mergeMap(result => {
+                return of({csar: result[0], buildPlan: result[1], terminationPlan: result[2]});
+            }),
+            catchError(reason => {
+                return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+            }));
     }
 }

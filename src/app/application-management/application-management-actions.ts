@@ -1,81 +1,64 @@
-/**
- * Copyright (c) 2017 University of Stuttgart.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and the Apache License 2.0 which both accompany this distribution,
- * and are available at http://www.eclipse.org/legal/epl-v10.html
- * and http://www.apache.org/licenses/LICENSE-2.0
+/*
+ * Copyright (c) 2018 University of Stuttgart.
  *
- * Contributors:
- *     Michael Falkenthal - initial implementation
- *     Michael Wurster - initial implementation
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+ * which is available at https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
 import { Injectable } from '@angular/core';
-import { PlanOperationMetaData } from '../core/model/planOperationMetaData.model';
 import { Action } from '../store/store.action';
-import { Csar } from '../core/model/new-api/csar.model';
-import { ServiceTemplateInstance } from '../core/model/new-api/service-template-instance.model';
+import { Csar } from '../core/model/csar.model';
+import { Plan } from '../core/model/plan.model';
+import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
 
 @Injectable()
 export class ApplicationManagementActions {
-    static ADD_CONTAINER_APPLICATIONS = 'ADD_CONTAINER_APPLICATIONS';
-    static REMOVE_CONTAINER_APPLICATION = 'REMOVE_CONTAINER_APPLICATION';
-    static CLEAR_CONTAINER_APPLICATIONS = 'CLEAR_CONTAINER_APPLICATIONS';
 
-    static UPDATE_CURRENT_APPLICATION = 'UPDATE_CURRENT_APPLICATION';
-    static CLEAR_CURRENT_APPLICATION = 'CLEAR_CURRENT_APPLICATION';
+    static UPDATE_APPLICATIONS = 'UPDATE_APPLICATIONS';
+    static CLEAR_APPLICATIONS = 'CLEAR_APPLICATIONS';
+
+    static UPDATE_APPLICATION_CSAR = 'UPDATE_APPLICATION_CSAR';
+    static CLEAR_APPLICATION_CSAR = 'CLEAR_APPLICATION_CSAR';
     static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
+    static UPDATE_APPLICATION_INSTANCE = 'UPDATE_APPLICATION_INSTANCE';
+    static CLEAR_APPLICATION_INSTANCE = 'CLEAR_APPLICATION_INSTANCE';
+    static UPDATE_APPLICATION_BUILDPLAN = 'UPDATE_APPLICATION_BUILDPLAN';
+    static UPDATE_APPLICATION_TERMINATIONPLAN = 'UPDATE_APPLICATION_TERMINATIONPLAN';
 
-    static UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA = 'UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA';
-
-    static addContainerApplications(apps: Array<Csar>): Action {
+    static updateApplications(csars: Array<Csar>): Action {
         return {
-            type: ApplicationManagementActions.ADD_CONTAINER_APPLICATIONS,
-            payload: apps
+            type: ApplicationManagementActions.UPDATE_APPLICATIONS,
+            payload: csars
         };
     }
 
-    static removeContainerApplication(app: Csar): Action {
+    static clearApplications(): Action {
+        return { type: ApplicationManagementActions.CLEAR_APPLICATIONS };
+    }
+
+    static updateApplicationCsar(csar: Csar): Action {
         return {
-            type: ApplicationManagementActions.REMOVE_CONTAINER_APPLICATION,
-            payload: app
+            type: ApplicationManagementActions.UPDATE_APPLICATION_CSAR,
+            payload: csar
         };
     }
 
-    static clearContainerApplication(): Action {
-        return {
-            type: ApplicationManagementActions.CLEAR_CONTAINER_APPLICATIONS,
-            payload: null
-        };
+    static clearApplicationCsar(): Action {
+        return { type: ApplicationManagementActions.CLEAR_APPLICATION_CSAR };
     }
 
-    static updateCurrentApplication(app: Csar): Action {
-        return {
-            type: ApplicationManagementActions.UPDATE_CURRENT_APPLICATION,
-            payload: app
-        };
-    }
-
-    static clearCurrentApplication(): Action {
-        return {
-            type: ApplicationManagementActions.CLEAR_CURRENT_APPLICATION,
-            payload: null
-        };
-    }
-
-    static updateApplicationInstances(instances: Array<ServiceTemplateInstance>): Action {
+    static updateApplicationInstances(instances: Map<string, ServiceTemplateInstance>): Action {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES,
             payload: instances
-        };
-    }
-
-    static updateBuildPlanOperationMetaData(metaData: PlanOperationMetaData): Action {
-        return {
-            type: ApplicationManagementActions.UPDATE_CURRENT_BUILD_PLAN_OPERATION_META_DATA,
-            payload: metaData
         };
     }
 
@@ -83,6 +66,20 @@ export class ApplicationManagementActions {
         return {
             type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES,
             payload: null
+        };
+    }
+
+    static updateBuildPlan(plan: Plan): Action {
+        return {
+            type: ApplicationManagementActions.UPDATE_APPLICATION_BUILDPLAN,
+            payload: plan
+        };
+    }
+
+    static updateTerminationPlan(plan: Plan): Action {
+        return {
+            type: ApplicationManagementActions.UPDATE_APPLICATION_TERMINATIONPLAN,
+            payload: plan
         };
     }
 }

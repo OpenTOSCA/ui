@@ -1,27 +1,46 @@
-<!-- TODO we need a reload button to update instances list -->
-<p-dataTable [value]="(currentAppInstances | async)" expandableRows="true" [responsive]="true">
-    <p-column expander="true" [style]="{'width':'45px'}"></p-column>
-    <p-column field="id" header="InstanceID" [sortable]="true"></p-column>
-    <p-column field="state" header="State" [sortable]="true"></p-column>
-    <p-column field="created_at" header="Date Created" [sortable]="true">
-        <ng-template let-col let-inst="rowData" pTemplate="body">
-            {{ inst.created_at | date:'medium' }}
-        </ng-template>
-    </p-column>
-    <ng-template let-inst pTemplate="rowexpansion">
-        <div class="row">
-            <div class="col-sm-3">
-                <p>Initialized: {{ inst.created_at | date:'medium' }}</p>
-                <p>State: {{ inst.state }}</p>
-                <p *ngIf="inst.state !== 'DELETED'">
-                    <button class="btn btn-danger" (click)="terminateInstance(inst.id)">
-                        <i class="fa fa-remove"></i> Delete Instance
-                    </button>
-                </p>
-            </div>
-            <div class="col-sm-9">
-                <opentosca-ui-buildplan-monitor *ngIf="inst._links['build_plan_instance']" [service-template-instance]="inst"></opentosca-ui-buildplan-monitor>
-            </div>
-        </div>
+<!--
+  ~ Copyright (c) 2018 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
+<p-table [columns]="cols" [value]="instances" [resizableColumns]="true">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: left">
+                {{col.header}}
+                <span *ngIf="col.sortable"><p-sortIcon [field]="col.field"></p-sortIcon></span>
+            </th>
+        </tr>
     </ng-template>
-</p-dataTable>
+    <ng-template pTemplate="body" let-instance let-columns="columns">
+        <tr>
+            <td *ngFor="let col of columns" class="ui-resizable-column">
+                <span
+                    *ngIf="col.field === 'created_at'; else default">{{instance[col.field] | date:'yyyy-MM-dd HH:mm'}}</span>
+                <span *ngIf="col.field === 'actions'">
+                    <button type="button" pButton icon="fas fa-list"
+                            pTooltip="Show Details" tooltipPosition="top" showDelay="300"
+                            [routerLink]="['/applications', instance.csar_id, 'instances', instance.id]">
+                    </button>
+                    &nbsp;
+                    <button *ngIf="instance.state !== 'DELETED' && terminationPlanAvailable"
+                            type="button" pButton icon="far fa-trash-alt" class="ui-button-danger"
+                            pTooltip="Terminate Instance" tooltipPosition="top" showDelay="300"
+                            (click)="terminate(instance.id)">
+                    </button>
+                </span>
+                <ng-template #default>{{instance[col.field]}}</ng-template>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-confirmDialog></p-confirmDialog>

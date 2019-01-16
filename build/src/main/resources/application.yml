@@ -1,7 +1,0 @@
-spring:
-  main:
-    banner-mode: 'off'
-  application:
-    name: OpenTOSCA User Interface
-server:
-  port: 8088
