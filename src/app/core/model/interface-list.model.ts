@@ -1,5 +1,5 @@
-/*!
- * Copyright (c) 2018 University of Stuttgart.
+/*
+ * Copyright (c) 2019 University of Stuttgart.
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -12,10 +12,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-.ot-input-label {
-    margin-top: 0.5em;
-}
+import { ResourceSupport } from './resource-support.model';
+import { Interface } from './interface.model';
 
-.ot-select-plan {
-    margin-bottom: 1em;
+export class InterfaceList extends ResourceSupport {
+    interfaces: Interface[]
 }

@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import * as _ from 'lodash';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
+import { Interface } from '../../core/model/interface.model';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -37,6 +38,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     @select(['container', 'application', 'terminationPlan']) terminationPlan: Observable<Plan>;
 
     public dialogVisible = false;
+    public selectedPlan: Plan;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -47,15 +49,16 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.route.data.subscribe((data: { application: { csar: Csar, buildPlan: Plan, terminationPlan: Plan } }) => {
+        this.route.data.subscribe((data: { application: { csar: Csar, buildPlan: Plan, terminationPlan: Plan, interfaces: Interface[] } }) => {
             // Prepare breadcrumb
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-                {label: 'Applications', routerLink: 'applications'},
-                {label: data.application.csar.id, routerLink: ['applications', data.application.csar.id]}
+                { label: 'Applications', routerLink: 'applications' },
+                { label: data.application.csar.id, routerLink: ['applications', data.application.csar.id] }
             ]));
             this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationCsar(data.application.csar));
             this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(data.application.buildPlan));
             this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(data.application.terminationPlan));
+            this.ngRedux.dispatch(ApplicationManagementActions.updateInterfaces(data.application.interfaces));
             if (data.application.buildPlan === null) {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
@@ -93,6 +96,20 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result));
             });
+    }
+
+    selectPlanBuildPlan() {
+        this.buildPlan.subscribe(plan => {
+            this.dialogVisible = true;
+            this.selectedPlan = plan;
+        })
+    }
+
+    selectTerminationPlan() {
+        this.terminationPlan.subscribe(plan => {
+            this.dialogVisible = true;
+            this.selectedPlan = plan;
+        });
     }
 
     emitTerminationPlan(terminationEvent: string): void {

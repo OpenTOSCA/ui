@@ -19,31 +19,57 @@ import { Csar } from '../../core/model/csar.model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { Plan } from '../../core/model/plan.model';
+import { Interface } from '../../core/model/interface.model';
+import { PlanTypes } from '../../core/model/plan-types.model';
+import { select } from '@angular-redux/store';
 
 @Injectable()
-export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan, interfaces: Interface[] }> {
 
-    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
+    @select(['administration', 'planLifecycleInterface']) planLifecycleInterface: Observable<string>;
+    private planInterface: string;
+    @select(['administration', 'planOperationInitiate']) planOperationInitiate: Observable<string>;
+    private planInitiate: string;
+    @select(['administration', 'planOperationTerminate']) planOperationTerminate: Observable<string>;
+    private planTerminate: string;
+
+    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService,) {
+        this.planLifecycleInterface.subscribe(value => this.planInterface = value);
+        this.planOperationInitiate.subscribe(value => this.planInitiate = value);
+        this.planOperationTerminate.subscribe(value => this.planTerminate = value);
     }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan, interfaces: Interface[] }> {
         return forkJoin(
             this.applicationService.getCsar(route.params['id']),
-            this.applicationService.getBuildPlan(route.params['id'])
+            this.applicationService.getInterfaces(route.params['id'])
                 .pipe(
                     catchError(() => of(null))
                 ),
-            this.applicationService.getTerminationPlan(route.params['id'])
-                .pipe(
-                    catchError(() => of(null))
-                )
         )
-        .pipe(
-            mergeMap(result => {
-                return of({csar: result[0], buildPlan: result[1], terminationPlan: result[2]});
-            }),
-            catchError(reason => {
-                return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
-            }));
+            .pipe(
+                mergeMap(result => {
+                    const interfaces = <Interface[]>result[1];
+                    let buildPlan: Plan = null;
+                    let terminationPlan: Plan = null;
+
+                    const defaultInterface = interfaces.find(value => value.name === this.planInterface);
+                    defaultInterface.operations.forEach(operation => {
+                        const plan = operation._embedded.plan;
+                        if (operation.name === this.planInitiate && plan.plan_type === PlanTypes.BuildPlan && !buildPlan) {
+                            buildPlan = plan;
+                        } else if (operation.name === this.planTerminate && plan.plan_type === PlanTypes.TerminationPlan && !terminationPlan) {
+                            terminationPlan = plan;
+                        }
+                    });
+
+                    return of({
+                        csar: result[0], buildPlan: buildPlan, terminationPlan: terminationPlan, interfaces: interfaces
+                    });
+                }),
+                catchError(reason => {
+                    return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+                })
+            );
     }
 }

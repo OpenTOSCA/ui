@@ -1,5 +1,5 @@
-/*!
- * Copyright (c) 2018 University of Stuttgart.
+/*
+ * Copyright (c) 2019 University of Stuttgart.
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -12,10 +12,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-.ot-input-label {
-    margin-top: 0.5em;
-}
-
-.ot-select-plan {
-    margin-bottom: 1em;
+export enum PlanTypes {
+    BuildPlan = 'http://docs.oasis-open.org/tosca/ns/2011/12/PlanTypes/BuildPlan',
+    TerminationPlan = 'http://docs.oasis-open.org/tosca/ns/2011/12/PlanTypes/TerminationPlan',
+    ManagementPlan = 'http://docs.oasis-open.org/tosca/ns/2011/12/PlanTypes/ManagementPlan'
 }

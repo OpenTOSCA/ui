@@ -12,7 +12,28 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
+          [(visible)]="visible"
+          [draggable]="false" [resizable]="false" modal="true">
+    <p-header>
+        Select Plan
+    </p-header>
+
+    <p-dropdown pladeholder="Select an Operation" [options]="interfacesList" [style]="{ 'min-width': '300px'}"
+                [group]="true" (onChange)="operationSelected($event.value)">
+    </p-dropdown>
+
+    <p-footer>
+        <button type="button" pButton [disabled]="!selectedPlan" (click)="showInputs = true;" label="Next">
+        </button>
+        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
+          [(visible)]="visible && showInputs"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ plan?.id }}
