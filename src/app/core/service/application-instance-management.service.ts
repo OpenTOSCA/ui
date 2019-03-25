@@ -75,9 +75,24 @@ export class ApplicationInstanceManagementService {
                 'Accept': 'application/json'
             })
         };
+        // TODO we have to create a proper model for interface ressources delivered by the backend
         return this.http.get<InterfaceList>(serviceTemplateInstance._links['boundarydefinitions/interfaces'].href, httpOptions)
             .pipe(
-                map((result) => result.interfaces),
+                map((result) => {
+                    const interfaces: Array<Interface> = [];
+                    for (const i of result.interfaces) {
+                        const iface = new Interface();
+                        iface.name = i.name;
+                        for (const key of Object.keys(i.operations)) {
+                            const opp = new Operation();
+                            opp.name = key;
+                            opp._embedded = i.operations[key]._embedded;
+                            iface.operations.push(opp);
+                        }
+                        interfaces.push(iface);
+                    }
+                    return interfaces;
+                }),
                 catchError(err => {
                     console.error(err);
                     return throwError(err);

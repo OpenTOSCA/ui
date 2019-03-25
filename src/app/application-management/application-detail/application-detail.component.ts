@@ -105,11 +105,11 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         })
     }
 
-    selectTerminationPlan() {
-        this.terminationPlan.subscribe(plan => {
-            this.dialogVisible = true;
-            this.selectedPlan = plan;
-        });
+    selectTerminationPlan(terminationEvent: string) {
+        this.selectedPlan = Object.assign({}, this.ngRedux.getState().container.application.terminationPlan);
+        this.selectedPlan._links['self'].href = _.replace(this.selectedPlan._links['self'].href, ':id', terminationEvent);
+        console.log(this.selectedPlan);
+        this.dialogVisible = true;
     }
 
     emitTerminationPlan(terminationEvent: string): void {

@@ -26,6 +26,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { InterfaceList } from '../model/interface-list.model';
+import { Operation } from '../model/operation.model';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -87,7 +88,24 @@ export class ApplicationManagementService {
                                         .toString();
                                     interfacesList.push(this.http.get<Interface>(operationsUrl, this.httpOptionsAcceptJson));
                                 }
-                                return forkJoin(...interfacesList);
+                                return forkJoin(...interfacesList)
+                                    .pipe(
+                                        map((result) => {
+                                            const interfaces: Array<Interface> = [];
+                                            for (const i of result) {
+                                                const iface = new Interface();
+                                                iface.name = i.name;
+                                                for (const key of Object.keys(i.operations)) {
+                                                    const opp = new Operation();
+                                                    opp.name = key;
+                                                    opp._embedded = i.operations[key]._embedded;
+                                                    iface.operations.push(opp);
+                                                }
+                                                interfaces.push(iface);
+                                            }
+                                            return interfaces;
+                                        })
+                                    );
                             }),
                             catchError(err => {
                                 this.logger.handleObservableError('[application.service][getInterfaces]', err);

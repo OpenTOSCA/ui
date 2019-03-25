@@ -44,7 +44,7 @@
                         </p-toolbar>
                         <opentosca-application-instance-list
                             [terminationPlanAvailable]="(terminationPlan | async) !== null"
-                            (terminateInstance)="selectTerminationPlan()">
+                            (terminateInstance)="selectTerminationPlan($event)">
                         </opentosca-application-instance-list>
                     </p-fieldset>
                 </div>
