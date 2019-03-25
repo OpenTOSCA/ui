@@ -19,7 +19,6 @@ import { AppState } from '../../store/app-state.model';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { LoggerService } from '../../core/service/logger.service';
 import { globals } from '../../globals';
-import { ApplicationManagementActions } from '../application-management-actions';
 import { Observable } from 'rxjs';
 import { Interface } from '../../core/model/interface.model';
 import { SelectItemGroup } from 'primeng/api';
@@ -33,8 +32,10 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     @Input() visible = false;
     @Output() visibleChange = new EventEmitter<boolean>();
+    @Input() plan_type: PlanTypes;
     @Input() plan: Plan;
     @Input() inputValidation = true;
+    @Input() instanceId: string;
 
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
@@ -60,11 +61,17 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes && changes['plan']) {
-            this.updateInterfaceList();
-        }
-        if (changes && changes['visible']) {
-            this.showInputs = false;
+        if (changes) {
+            if (changes['plan_type']) {
+                this.updateInterfaceList();
+            }
+            if (changes['visible']) {
+                this.showInputs = false;
+            }
+            if (this.plan) {
+                this.showInputs = true;
+                this.selectedPlan = this.plan
+            }
         }
     }
 
@@ -84,11 +91,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
         this.selectedPlan = selectedOperation._embedded.plan;
 
-        if (this.selectedPlan.plan_type === PlanTypes.BuildPlan) {
-            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(this.selectedPlan));
-        } else if (this.selectedPlan.plan_type === PlanTypes.TerminationPlan) {
-            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(this.selectedPlan))
-        }
         this.checkInputs();
     }
 
@@ -98,7 +100,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             this.runnable = true;
             return;
         }
-        for (const parameter of this.plan.input_parameters) {
+        for (const parameter of this.selectedPlan.input_parameters) {
             if ((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
                 if (parameter.value == null || parameter.value === '') {
                     this.runnable = false;
@@ -111,7 +113,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     runPlan(): void {
         this.visible = false;
-        this.appService.triggerManagementPlan(this.plan).subscribe(() => {
+        this.appService.triggerManagementPlan(this.selectedPlan, this.instanceId).subscribe(() => {
             this.logger.log(
                 '[management-plan-execution-dialog][run management plan]',
                 'Received result after post ' + JSON.stringify(location)
@@ -120,7 +122,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 {
                     severity: 'info',
                     summary: 'Plan Execution Started',
-                    detail: 'The management plan ' + this.plan.id + ' is executing.'
+                    detail: 'The management plan ' + this.selectedPlan.id + ' is executing.'
                 }
             ));
         }, err => {
@@ -129,7 +131,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 {
                     severity: 'error',
                     summary: 'Failure at Management Plan Execution',
-                    detail: 'The management plan ' + this.plan.id + ' was NOT propperly executed.'
+                    detail: 'The management plan ' + this.selectedPlan.id + ' was NOT propperly executed.'
                 }
             ));
         });
@@ -139,12 +141,12 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         if (value) {
             this.allInterfaces = value;
         }
-        if (this.plan && this.allInterfaces) {
+        if (this.plan_type && this.allInterfaces) {
             this.interfacesList = [];
             this.allInterfaces.forEach(iface => {
                 const copy: SelectItemGroup = { label: iface.name, items: [] };
                 iface.operations.forEach(op => {
-                    if (op._embedded.plan.plan_type === this.plan.plan_type) {
+                    if (op._embedded.plan.plan_type === this.plan_type) {
                         copy.items.push({
                             label: op.name, value: iface.name + this.interfaceFromOperationDelimiter + op.name
                         });

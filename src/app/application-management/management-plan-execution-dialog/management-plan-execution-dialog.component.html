@@ -36,10 +36,10 @@
           [(visible)]="visible && showInputs"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
-        Current Plan: {{ plan?.id }}
+        Current Plan: {{ selectedPlan?.id }}
     </p-header>
 
-    <div *ngFor="let param of plan?.input_parameters">
+    <div *ngFor="let param of selectedPlan?.input_parameters">
         <div class="p-grid" *ngIf="hiddenElements.indexOf(param.name) === -1">
             <div class="p-col-5 ot-input-label" style="word-break: break-all">
                 <label [for]="param.name">{{ param.name }}:</label>

@@ -29,10 +29,6 @@ export class ApplicationManagementActions {
     static CLEAR_APPLICATION_CSAR = 'CLEAR_APPLICATION_CSAR';
     static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
-    static UPDATE_APPLICATION_INSTANCE = 'UPDATE_APPLICATION_INSTANCE';
-    static CLEAR_APPLICATION_INSTANCE = 'CLEAR_APPLICATION_INSTANCE';
-    static UPDATE_APPLICATION_BUILDPLAN = 'UPDATE_APPLICATION_BUILDPLAN';
-    static UPDATE_APPLICATION_TERMINATIONPLAN = 'UPDATE_APPLICATION_TERMINATIONPLAN';
     static UPDATE_APPLICATION_INTERFACES ='UPDATE_APPLICATION_INTERFACES';
     static CLEAR_APPLICATION_INTERFACES ='CLEAR_APPLICATION_INTERFACES';
 
@@ -69,20 +65,6 @@ export class ApplicationManagementActions {
         return {
             type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES,
             payload: null
-        };
-    }
-
-    static updateBuildPlan(plan: Plan): Action {
-        return {
-            type: ApplicationManagementActions.UPDATE_APPLICATION_BUILDPLAN,
-            payload: plan
-        };
-    }
-
-    static updateTerminationPlan(plan: Plan): Action {
-        return {
-            type: ApplicationManagementActions.UPDATE_APPLICATION_TERMINATIONPLAN,
-            payload: plan
         };
     }
 

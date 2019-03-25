@@ -135,14 +135,19 @@ export class ApplicationManagementService {
             );
     }
 
-    triggerManagementPlan(plan: Plan): Observable<string> {
+    triggerManagementPlan(plan: Plan, instanceId: string): Observable<string> {
         this.logger.log('[application-management.service][triggerManagementPlan]',
             'Starting Management Plan <' + plan.id + '>');
         this.logger.log('[application-management.service][triggerManagementPlan]',
             'Build Plan Operation Meta Data are: ' + JSON.stringify(plan));
-        const url = new Path(plan._links['self'].href)
+        let url = new Path(plan._links['self'].href)
             .append('instances')
             .toString();
+
+        if (instanceId) {
+            url = _.replace(url, ':id', instanceId);
+        }
+
         const httpOptions = {
             headers: new HttpHeaders({
                 'Accept': 'text/plain'
