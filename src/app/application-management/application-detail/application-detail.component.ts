@@ -111,21 +111,4 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         console.log(this.selectedPlan);
         this.dialogVisible = true;
     }
-
-    emitTerminationPlan(terminationEvent: string): void {
-        const terminationPlan = Object.assign({}, this.ngRedux.getState().container.application.terminationPlan);
-        terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent);
-        console.log(terminationPlan);
-        this.appService.triggerManagementPlan(terminationPlan)
-            .subscribe(result => {
-                this.logger.log('[application-detail.component][emitTerminationPlan]', result);
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'info',
-                        summary: 'Termination started',
-                        detail: 'The termination plan has been started.'
-                    }
-                ));
-            });
-    }
 }
