@@ -97,3 +97,11 @@
         </button>
     </p-footer>
 </p-dialog>
+<opentosca-deployment-completion *ngIf="false"
+                                 [(visible)]="showCompletionDialog"
+                                 [appToComplete]="appToComplete"
+                                 [linkToWineryResource]="linkToWineryResourceForCompletion"
+                                 (completionSuccess)="onCompletionSuccess($event)"
+                                 (completionAbort)="onCompletionAbort()"
+                                 (completionError)="onCompletionError($event)">
+</opentosca-deployment-completion>
