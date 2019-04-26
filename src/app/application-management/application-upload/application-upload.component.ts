@@ -27,7 +27,6 @@ import { CsarUploadReference } from '../../core/model/csar-upload-request.model'
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {MarketplaceApplication} from "../../core/model/marketplace-application.model";
-import {DynamicDialogModule} from "primeng/dynamicdialog";
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -51,6 +50,7 @@ export class ApplicationUploadComponent implements OnInit {
     public linkToWineryResourceForCompletion: string;
     public appToComplete: MarketplaceApplication;
     public showCompletionDialog = false;
+    public initializeCompletionComponent = false;
 
     // temporary data derived from the user input for the url upload
     public tempData = {
@@ -134,7 +134,9 @@ export class ApplicationUploadComponent implements OnInit {
         switch (event.xhr.status) {
             case 406:
                 const response = JSON.parse(event.xhr.response);
-                this.completionRequest.emit(response['Location']);
+                this.linkToWineryResourceForCompletion = response['Location'];
+                this.initializeCompletionComponent = true;
+                this.showCompletionDialog = true;
                 this.closeModal();
                 break;
             case 409:

@@ -15,57 +15,7 @@
 <p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
           [(visible)]="visible" modal="true">
     <p-header>
-        Selection
+        Completion Dialog
     </p-header>
-    <!-- Todo Rework this with primeng instead of bootstrap -->
-    <form #selectionForm="ngForm">
-        <div class="modal-body">
-            <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
-            <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="sel1">Select new host:</label>
-                        <select class="form-control" id="sel1" name="selectOption"
-                                [(ngModel)]="completionSelection['hostInjections'][hostCompletionOption.nodeID]"
-                                required>
-                            <option *ngFor="let selection of hostCompletionOption.injectionOptionTopologyFragments"
-                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
-            <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Open Requirement: {{connectionCompletionOption?.nodeID}}</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="sel1">Select connection completion option:</label>
-                        <select class="form-control" id="sel2" name="selectOption"
-                                [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
-                                required>
-                            <option
-                                *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
-                                [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-    <p-footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="abortCompletion()">Cancel
-            </button>
-            <button type="button" class="btn btn-primary" [disabled]="!selectionForm.form.valid"
-                    (click)="injectNewHosts()">Submit
-            </button>
-        </div>
-    </p-footer>
+    <p-steps [model]="items"></p-steps>
 </p-dialog>

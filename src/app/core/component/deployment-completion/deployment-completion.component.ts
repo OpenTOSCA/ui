@@ -19,6 +19,7 @@ import { LoggerService } from '../../service/logger.service';
 import { InjectionOption } from '../../model/injection-option.model';
 import { DeploymentCompletionService } from '../../service/deployment-completion.service';
 import { InjectionOptionsResponse } from '../../model/injection-options-response.model';
+import {MenuItem} from "primeng/api";
 
 // Todo: Finish refactoring of deployment-completion.component and test it
 
@@ -35,21 +36,29 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     @Output() completionAbort = new EventEmitter<void>();
     @Output() completionError = new EventEmitter<string>();
 
-    public completeApp = false;
     public hostCompletionOptions: Array<InjectionOption> = null;
     public connectionCompletionOptions: Array<InjectionOption> = null;
     public completionSelection: InjectionOptionsResponse = {
         'hostInjections': {},
         'connectionInjections': {}
     };
+    protected items: MenuItem[];
 
     constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
                 private logger: LoggerService) {
     }
 
+
+
     ngOnInit() {
         this.getInjectionOptions(this.linkToWineryResource);
+        this.items = [
+            {label: 'Step 1 - Disclaimer'},
+            {label: 'Step 2 - Select Components'},
+            {label: 'Step 3 - Select Edges'},
+            {label: 'Step 4 - Confirm Upload'}
+        ];
     }
 
     ngAfterViewInit(): void {

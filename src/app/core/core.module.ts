@@ -29,7 +29,7 @@ import { FilterComponent } from './component/filter.component';
 import { DeploymentCompletionComponent } from './component/deployment-completion/deployment-completion.component';
 import { DeploymentCompletionService } from './service/deployment-completion.service';
 import { HumanizeBytesPipe } from './pipe/humanize-bytes.pipe';
-import { BreadcrumbModule, ConfirmDialogModule, DialogModule, InputTextModule } from 'primeng/primeng';
+import {BreadcrumbModule, ConfirmDialogModule, DialogModule, InputTextModule, StepsModule} from 'primeng/primeng';
 import { BuildplanMonitoringService } from './service/buildplan-monitoring.service';
 import { FilterOutputParams } from './pipe/filter-output-params.pipe';
 import { DebouncedValidatedInputComponent } from './component/input-debounce/debounced-validated-input.component';
@@ -46,7 +46,8 @@ import { DeploymentTestService } from './service/deployment-test.service';
         RouterModule,
         InputTextModule,
         ConfigurationModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        StepsModule
     ],
     declarations: [
         ActionBarComponent,

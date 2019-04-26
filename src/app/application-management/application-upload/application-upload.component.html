@@ -87,7 +87,6 @@
             </button>
         </p-tabPanel>
     </p-tabView>
-
     <p-footer>
         <button
                 type="button"
@@ -97,7 +96,7 @@
         </button>
     </p-footer>
 </p-dialog>
-<opentosca-deployment-completion *ngIf="false"
+<opentosca-deployment-completion *ngIf="initializeCompletionComponent"
                                  [(visible)]="showCompletionDialog"
                                  [appToComplete]="appToComplete"
                                  [linkToWineryResource]="linkToWineryResourceForCompletion"
