@@ -17,5 +17,111 @@
     <p-header>
         Completion Dialog
     </p-header>
-    <p-steps [model]="items"></p-steps>
+    <p-steps [model]="items" [(activeIndex)]="activeIndex">
+    </p-steps>
+    <div *ngIf="activeIndex === 0">
+        <p-header>
+            Apply completion?
+        </p-header>
+        <div class="opentosca-modal-content">
+            Do you want to process with the completion for "{{appToComplete?.displayName}}"?
+        </div>
+        <p-footer class="d-flex justify-content-between">
+                <button type="button"
+                        pButton
+                        (click)="abortCompletion()"
+                        label="Cancel Completion"
+                        icon="fa fa-times-circle">
+                </button>
+                <button type="button"
+                        pButton
+                        (click)="startCompletion()"
+                        label="Start Completion"
+                        icon="fa fa-play-circle">
+                </button>
+        </p-footer>
+    </div>
+    <div *ngIf="activeIndex === 1">
+        <p-header>
+            Selection
+        </p-header>
+        <form #selectionForm="ngForm">
+            <div class="modal-body">
+                <h4 *ngIf="connectionCompletionOptions">Node Selection</h4>
+                <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="sel1">Select new host:</label>
+                            <select class="form-control" id="sel1" name="selectOption"
+                                    [(ngModel)]="completionSelection['hostInjections'][hostCompletionOption.nodeID]"
+                                    required>
+                                <option *ngFor="let selection of hostCompletionOption.injectionOptionTopologyFragments"
+                                        [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
+                <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Open Requirement: {{connectionCompletionOption?.nodeID}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="sel1">Select connection completion option:</label>
+                            <select class="form-control" id="sel2" name="selectOption"
+                                    [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
+                                    required>
+                                <option *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
+                                        [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <p-footer>
+            <div class="d-flex justify-content-end">
+                <button type="button"
+                        pButton
+                        (click)="abortCompletion()"
+                        label="Cancel Completion"
+                        icon="fa fa-times-circle">
+                </button>
+                <button type="button"
+                        pButton
+                        (click)="goToFinalStep()"
+                        [disabled]="!selectionForm.form.valid"
+                        label="Submit Node Completion"
+                        icon="fa fa-play-circle">
+                </button>
+            </div>
+        </p-footer>
+    </div>
+    <div *ngIf="activeIndex === 2">
+        <p-header>
+            Confirmation
+        </p-header>
+        <p-footer>
+            <div class="d-flex justify-content-end">
+                <button type="button"
+                        pButton
+                        (click)="abortCompletion()"
+                        label="Cancel Completion"
+                        icon="fa fa-times-circle">
+                </button>
+                <button type="button"
+                        pButton
+                        (click)="injectNewHosts()"
+                        label="Upload completed Application"
+                        icon="fa fa-play-circle">
+                </button>
+            </div>
+        </p-footer>
+    </div>
 </p-dialog>

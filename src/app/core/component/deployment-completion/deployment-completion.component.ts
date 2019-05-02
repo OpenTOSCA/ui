@@ -43,6 +43,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         'connectionInjections': {}
     };
     protected items: MenuItem[];
+    protected activeIndex = 0;
 
     constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
@@ -55,9 +56,8 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         this.getInjectionOptions(this.linkToWineryResource);
         this.items = [
             {label: 'Step 1 - Disclaimer'},
-            {label: 'Step 2 - Select Components'},
-            {label: 'Step 3 - Select Edges'},
-            {label: 'Step 4 - Confirm Upload'}
+            {label: 'Step 2 - Selection'},
+            {label: 'Step 3 - Confirmation'}
         ];
     }
 
@@ -67,6 +67,15 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     abortCompletion(): void {
         this.visible = false;
         this.completionAbort.emit();
+    }
+
+    startCompletion(): void {
+        this.activeIndex = 1;
+    }
+
+    finishCompletion(): void {
+        this.visible = false;
+        this.completionSuccess.emit(this.appToComplete);
     }
 
     getInjectionOptions(linkToWineryResource: string): void {
@@ -82,6 +91,10 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                         + this.hostCompletionOptions);
                 }
             });
+    }
+
+    goToFinalStep(): void {
+        this.activeIndex += 1;
     }
 
     injectNewHosts(): void {

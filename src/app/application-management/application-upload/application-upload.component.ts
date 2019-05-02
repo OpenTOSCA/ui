@@ -122,7 +122,6 @@ export class ApplicationUploadComponent implements OnInit {
             }
         ));
         this.uploadComplete.emit();
-        this.uploadComplete.emit();
         this.closeModal();
     }
 
