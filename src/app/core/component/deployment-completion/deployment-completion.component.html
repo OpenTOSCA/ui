@@ -17,7 +17,7 @@
     <p-header>
         Completion Dialog
     </p-header>
-    <p-steps [model]="items" [(activeIndex)]="activeIndex">
+    <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="false">
     </p-steps>
     <div *ngIf="activeIndex === 0">
         <p-header>
@@ -26,20 +26,6 @@
         <div class="opentosca-modal-content">
             Do you want to process with the completion for "{{appToComplete?.displayName}}"?
         </div>
-        <p-footer class="d-flex justify-content-between">
-                <button type="button"
-                        pButton
-                        (click)="abortCompletion()"
-                        label="Cancel Completion"
-                        icon="fa fa-times-circle">
-                </button>
-                <button type="button"
-                        pButton
-                        (click)="startCompletion()"
-                        label="Start Completion"
-                        icon="fa fa-play-circle">
-                </button>
-        </p-footer>
     </div>
     <div *ngIf="activeIndex === 1">
         <p-header>
@@ -65,6 +51,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="activeIndex === 2">
+        <p-header>
+            Selection
+        </p-header>
+        <form #selectionForm="ngForm">
+            <div class="modal-body">
                 <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
                 <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
                     <div class="panel-heading">
@@ -85,43 +80,25 @@
                 </div>
             </div>
         </form>
-        <p-footer>
-            <div class="d-flex justify-content-end">
-                <button type="button"
-                        pButton
-                        (click)="abortCompletion()"
-                        label="Cancel Completion"
-                        icon="fa fa-times-circle">
-                </button>
-                <button type="button"
-                        pButton
-                        (click)="goToFinalStep()"
-                        [disabled]="!selectionForm.form.valid"
-                        label="Submit Node Completion"
-                        icon="fa fa-play-circle">
-                </button>
-            </div>
-        </p-footer>
     </div>
-    <div *ngIf="activeIndex === 2">
+    <div *ngIf="activeIndex === 3">
         <p-header>
             Confirmation
         </p-header>
-        <p-footer>
-            <div class="d-flex justify-content-end">
-                <button type="button"
-                        pButton
-                        (click)="abortCompletion()"
-                        label="Cancel Completion"
-                        icon="fa fa-times-circle">
-                </button>
-                <button type="button"
-                        pButton
-                        (click)="injectNewHosts()"
-                        label="Upload completed Application"
-                        icon="fa fa-play-circle">
-                </button>
-            </div>
-        </p-footer>
     </div>
+    <p-footer>
+        <button type="button"
+                pButton
+                (click)="abortCompletion()"
+                label="Cancel Completion"
+                icon="fa fa-times-circle"
+                style="">
+        </button>
+        <button type="button"
+                pButton
+                (click)="goToNextStep()"
+                [label]="stepsTextArray[activeIndex]"
+                icon="fa fa-play-circle">
+        </button>
+    </p-footer>
 </p-dialog>
