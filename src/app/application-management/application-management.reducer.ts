@@ -17,12 +17,14 @@ import { ApplicationManagementActions } from './application-management-actions';
 import { Csar } from '../core/model/csar.model';
 import { Plan } from '../core/model/plan.model';
 import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import { PlacementStatus } from '../core/model/placement.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;
     application?: {
         csar?: Csar;
         buildPlan?: Plan;
+        placementStatus?: PlacementStatus;
         terminationPlan?: Plan;
         instances: Map<string, ServiceTemplateInstance>;
     };
@@ -32,6 +34,7 @@ export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
     application: {
         csar: null,
+        placementStatus: null,
         buildPlan: null,
         terminationPlan: null,
         instances: new Map<string, ServiceTemplateInstance>()
@@ -46,6 +49,18 @@ export const INITIAL_STATE: ApplicationManagementState = {
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,
                                              action: Action): ApplicationManagementState {
     switch (action.type) {
+        case ApplicationManagementActions.UPDATE_APPLICATION_PLACEMENT_STATUS:
+            return Object.assign({}, state, {
+                application: {
+                    ...state.application, placementStatus: action.payload
+                }
+            });
+        case ApplicationManagementActions.CLEAR_APPLICATION_PLACEMENT_STATUS:
+            return Object.assign({}, state, {
+                application: {
+                    ...state.application, placementStatus: action.payload
+                }
+            });
         case ApplicationManagementActions.CLEAR_APPLICATIONS:
             return Object.assign({}, state, {
                 applications: []

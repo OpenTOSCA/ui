@@ -28,12 +28,13 @@ import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { PlacementDialogComponent } from './application-management/placement-dialog/placement-dialog.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         AboutComponent,
-        PageNotFoundComponent,
+        PageNotFoundComponent
     ],
     imports: [
         AccordionModule,

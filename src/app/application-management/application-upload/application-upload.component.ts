@@ -27,6 +27,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { PlacementStatus } from '../../core/model/placement.model';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -128,7 +129,33 @@ export class ApplicationUploadComponent implements OnInit {
         switch (event.xhr.status) {
             case 406:
                 const response = JSON.parse(event.xhr.response);
-                this.completionRequest.emit(response['Location']);
+                const location: string = response['Location'];
+                const csarId: string = response['CsarId'];
+                this.completionRequest.emit(location);
+                const placementStatus: PlacementStatus = {possible: true, location: location, csarId: csarId};
+
+                // GET FROM LOCAL STORAGE
+                let localStorageData: any = JSON.parse(localStorage.getItem('opentosca-applicationsWithOpenReqs'));
+                let applicationsWithOpenRequirements = [];
+                if (localStorageData) {
+                    applicationsWithOpenRequirements = localStorageData['applicationsWithOpenRequirements'];
+                }
+
+                // CASE 1: Csar got uploaded in this session so the placementStatus is still in Redux and we can write it to localStorage
+                applicationsWithOpenRequirements.push(
+                    placementStatus
+                );
+                const applicationsWithOpenRequirementsObject = {applicationsWithOpenRequirements};
+                localStorage.setItem('opentosca-applicationsWithOpenReqs', JSON.stringify(applicationsWithOpenRequirementsObject));
+
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'info',
+                        summary: 'Open Requirements',
+                        detail: 'Application uploaded but can\'t be deployed since it has open requirements. Placement possible.'
+                    }
+                ));
+                this.uploadComplete.emit();
                 this.closeModal();
                 break;
             case 409:

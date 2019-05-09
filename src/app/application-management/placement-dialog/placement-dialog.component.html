@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright (c) 2019 University of Stuttgart.
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0, or the Apache Software License 2.0
+  ~ which is available at https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+  -->
+
+<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible"
+          [draggable]="false" [resizable]="false" modal="true">
+    <p-header>
+        Placement of Application Components
+    </p-header>
+
+    <p>
+        This application has open requirements and can't be instantiated in its current state.<br>
+        If you have running instances with capabilities that satisfy the open requirements of this application,<br>
+        you can initiate a placement operation.
+    </p>
+    <p>{{csar.id}}</p>
+    <p-footer>
+        <button type="button" pButton (click)="runPlacementOperation()" label="Run Placement Operation">
+        </button>
+        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+    </p-footer>
+</p-dialog>

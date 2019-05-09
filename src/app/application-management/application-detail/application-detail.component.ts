@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import * as _ from 'lodash';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
+import { PlacementStatus } from '../../core/model/placement.model';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -32,11 +33,15 @@ import { ApplicationInstanceManagementService } from '../../core/service/applica
 })
 export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
+    @select(['container', 'application']) application: Observable<Csar>;
     @select(['container', 'application', 'csar']) csar: Observable<Csar>;
     @select(['container', 'application', 'buildPlan']) buildPlan: Observable<Plan>;
+    @select(['container', 'application', 'placementStatus', 'possible']) placementPossible: Observable<PlacementStatus>;
+    @select(['container', 'application', 'placementStatus', 'location']) placementLocation: Observable<PlacementStatus>;
     @select(['container', 'application', 'terminationPlan']) terminationPlan: Observable<Plan>;
 
     public dialogVisible = false;
+    public placementDialogVisible = false;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -77,11 +82,20 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
             ));
             this.router.navigate(['/applications']);
         });
+
+        /**
+         * We need to manage the state of applications with open requirements in localStorage for now so that
+         * it survives page reloads, which is not the case with redux only,
+         * since the open requirements flag only gets set onUpload
+         */
+        const csar = Object.assign({}, this.ngRedux.getState().container.application.csar);
+        this.syncOpenReqApplicationsFromLocalStorage(csar);
     }
 
     ngOnDestroy(): void {
         this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationInstances());
         this.ngRedux.dispatch(ApplicationManagementActions.clearApplicationCsar());
+        this.ngRedux.dispatch(ApplicationManagementActions.clearPlacementStatus());
     }
 
     triggerReloadAppInstances(): void {
@@ -93,6 +107,27 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationInstances(result));
             });
+    }
+
+    syncOpenReqApplicationsFromLocalStorage(csar: Csar): void {
+        // GET FROM LOCAL STORAGE
+        let localStorageData: any = JSON.parse(localStorage.getItem('opentosca-applicationsWithOpenReqs'));
+        let applicationsWithOpenRequirements: any[] = localStorageData['applicationsWithOpenRequirements'] || [];
+        console.log(csar.id);
+        const appInLocalStorage = applicationsWithOpenRequirements.find(app => {
+            console.log(app.csarId);
+            return app.csarId === csar.id;
+        });
+
+        if (appInLocalStorage) {
+            console.log("is in local storage");
+            // CASE 2: Csar got uploaded in a previous session so the placementStatus is not in Redux and we have to update it there
+            this.ngRedux.dispatch(ApplicationManagementActions.updatePlacementStatus({
+                possible: true,
+                location: appInLocalStorage.location,
+                csarId: appInLocalStorage.csarId
+            }));
+        }
     }
 
     emitTerminationPlan(terminationEvent: string): void {

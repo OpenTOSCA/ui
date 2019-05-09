@@ -17,6 +17,7 @@ import { Action } from '../store/store.action';
 import { Csar } from '../core/model/csar.model';
 import { Plan } from '../core/model/plan.model';
 import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import { PlacementStatus } from '../core/model/placement.model';
 
 @Injectable()
 export class ApplicationManagementActions {
@@ -32,6 +33,8 @@ export class ApplicationManagementActions {
     static CLEAR_APPLICATION_INSTANCE = 'CLEAR_APPLICATION_INSTANCE';
     static UPDATE_APPLICATION_BUILDPLAN = 'UPDATE_APPLICATION_BUILDPLAN';
     static UPDATE_APPLICATION_TERMINATIONPLAN = 'UPDATE_APPLICATION_TERMINATIONPLAN';
+    static UPDATE_APPLICATION_PLACEMENT_STATUS = 'UPDATE_APPLICATION_PLACEMENT_STATUS';
+    static CLEAR_APPLICATION_PLACEMENT_STATUS = 'CLEAR_APPLICATION_PLACEMENT_STATUS';
 
     static updateApplications(csars: Array<Csar>): Action {
         return {
@@ -65,6 +68,20 @@ export class ApplicationManagementActions {
     static clearApplicationInstances(): Action {
         return {
             type: ApplicationManagementActions.CLEAR_APPLICATION_INSTANCES,
+            payload: null
+        };
+    }
+
+    static updatePlacementStatus(obj: PlacementStatus): Action {
+        return {
+            type: ApplicationManagementActions.UPDATE_APPLICATION_PLACEMENT_STATUS,
+            payload: obj
+        };
+    }
+
+    static clearPlacementStatus(): Action {
+        return {
+            type: ApplicationManagementActions.CLEAR_APPLICATION_PLACEMENT_STATUS,
             payload: null
         };
     }

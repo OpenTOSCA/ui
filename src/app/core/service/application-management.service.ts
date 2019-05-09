@@ -172,6 +172,28 @@ export class ApplicationManagementService {
             );
     }
 
+    initiatePlacementOperation(something: any): Observable<string> {
+        this.logger.log('[application-management.service][initiatePlacementOperation]',
+            'Starting Placement Operation for application');
+
+        const url = new Path("") // plan._links['self'].href)
+            .append('instances')
+            .toString();
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'text/plain'
+            }),
+        };
+
+        return this.http.post(url, something.input_parameters, {...httpOptions, responseType: 'text', observe: 'response'})
+            .pipe(
+                map(response => {
+                    return response.headers.get('Location');
+                }),
+                catchError(err => this.logger.handleError('[application.service][initiatePlacementOperation]', err))
+            );
+    }
+
     isApplicationInstalled(id: string): Promise<boolean> {
         id = this.normalizeApplicationId(id);
         const csarUrl = new Path(this.ngRedux.getState().administration.containerUrl)
