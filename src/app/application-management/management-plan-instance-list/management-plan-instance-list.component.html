@@ -69,8 +69,8 @@
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr>
                                     <td style="word-break: break-all" *ngFor="let col of columns">
-                                        <span *ngIf="col.field === 'timestamp'">{{rowData[col.field] | date:'yyyy-MM-dd HH:mm:ss'}}</span>
-                                        <span *ngIf="col.field !== 'timestamp'">{{rowData[col.field]}}</span>
+                                        <span *ngIf="col.field === 'start_timestamp' || col.field === 'end_timestamp'">{{rowData[col.field] | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                        <span *ngIf="col.field !== 'start_timestamp' && col.field !== 'end_timestamp'">{{rowData[col.field]}}</span>
                                     </td>
                                 </tr>
                             </ng-template>

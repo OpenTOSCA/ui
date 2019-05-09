@@ -17,7 +17,8 @@ export class ManagementPlanInstanceListComponent implements OnInit {
     ];
 
     logColumns = [
-        {field: 'timestamp', header: 'Timestamp'},
+        {field: 'start_timestamp', header: 'Start Timestamp'},
+        {field: 'end_timestamp', header: 'End Timestamp'},
         {field: 'status', header: 'Type'},
         {field: 'message', header: 'Message'}
     ];
