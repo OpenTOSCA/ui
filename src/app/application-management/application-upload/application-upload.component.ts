@@ -132,8 +132,19 @@ export class ApplicationUploadComponent implements OnInit {
     onUploadError(event): void {
         switch (event.xhr.status) {
             case 406:
+                console.log(event);
                 const response = JSON.parse(event.xhr.response);
                 this.linkToWineryResourceForCompletion = response['Location'];
+                console.log(event.files[0].name.lastIndexOf('.csar'));
+                console.log(event.files[0]);
+                this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion,
+                    event.files[0].name.lastIndexOf('.csar')).then(app => {
+                        console.log(app);
+                        this.appToComplete = app;
+                        this.appToComplete.csarName = event.files[0].name;
+                        this.appToComplete.displayName = this.appToComplete.csarName;
+                });
+
                 this.initializeCompletionComponent = true;
                 this.showCompletionDialog = true;
                 this.closeModal();

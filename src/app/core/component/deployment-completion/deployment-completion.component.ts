@@ -45,7 +45,6 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     protected items: MenuItem[];
     protected activeIndex: number = 0;
     protected stepsTextArray: string[] = ['Confirm Completion', 'Confirm Node selection', 'Confirm Connection Selection', 'Confirm Upload'];
-    protected completionStepText: string = 'Confirm Completion';
 
     constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
