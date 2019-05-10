@@ -44,7 +44,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     };
     protected items: MenuItem[];
     protected activeIndex: number = 0;
-    protected stepsTextArray: string[] = ['Confirm Completion', 'Confirm Node selection', 'Confirm Connection Selection', 'Confirm Upload'];
+    protected stepsTextArray: string[] = ['Proceed Completion', 'Confirm Host selection', 'Confirm Connection Selection', 'Confirm Upload'];
 
     constructor(private completionService: DeploymentCompletionService,
                 private router: Router,
@@ -57,8 +57,8 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         this.getInjectionOptions(this.linkToWineryResource);
         this.items = [
             {label: 'Step 1 - Disclaimer'},
-            {label: 'Step 2 - Selection - Nodes'},
-            {label: 'Step 3 - Selection - Edges'},
+            {label: 'Step 2 - Selection - Hosts'},
+            {label: 'Step 3 - Selection - Connections'},
             {label: 'Step 4 - Confirmation'}
         ];
     }

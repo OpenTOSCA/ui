@@ -20,20 +20,14 @@
     <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="false">
     </p-steps>
     <div *ngIf="activeIndex === 0">
-        <p-header>
-            Apply completion?
-        </p-header>
         <div class="opentosca-modal-content">
             Do you want to process with the completion for "{{appToComplete?.displayName}}"?
         </div>
     </div>
     <div *ngIf="activeIndex === 1">
-        <p-header>
-            Selection
-        </p-header>
         <form #selectionForm="ngForm">
             <div class="modal-body">
-                <h4 *ngIf="connectionCompletionOptions">Node Selection</h4>
+                <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
                 <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
                     <div class="panel-heading">
                         <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
@@ -55,9 +49,6 @@
         </form>
     </div>
     <div *ngIf="activeIndex === 2">
-        <p-header>
-            Selection
-        </p-header>
         <form #selectionForm="ngForm">
             <div class="modal-body">
                 <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
@@ -82,9 +73,9 @@
         </form>
     </div>
     <div *ngIf="activeIndex === 3">
-        <p-header>
-            Confirmation
-        </p-header>
+        <div class="opentosca-modal-content">
+            Do you want to confirm the upload of the completion for "{{appToComplete?.displayName}}"?
+        </div>
     </div>
     <p-footer>
         <button type="button"
