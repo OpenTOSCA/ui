@@ -24,8 +24,8 @@
             Do you want to process with the completion for "{{appToComplete?.displayName}}"?
         </div>
     </div>
-    <div *ngIf="activeIndex === 1">
-        <form #selectionForm="ngForm">
+    <form #hostForm="ngForm" id="hostForm">
+        <div *ngIf="activeIndex === 1">
             <div class="modal-body">
                 <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
                 <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
@@ -46,10 +46,10 @@
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
-    <div *ngIf="activeIndex === 2">
-        <form #selectionForm="ngForm">
+        </div>
+    </form>
+    <form #connectionForm="ngForm" id="connectionForm">
+        <div *ngIf="activeIndex === 2">
             <div class="modal-body">
                 <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
                 <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
@@ -62,16 +62,17 @@
                             <select class="form-control" id="sel2" name="selectOption"
                                     [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
                                     required>
-                                <option *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
-                                        [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
+                                <option
+                                    *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
+                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
                                 </option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
     <div *ngIf="activeIndex === 3">
         <div class="opentosca-modal-content">
             Do you want to confirm the upload of the completion for "{{appToComplete?.displayName}}"?
@@ -87,6 +88,7 @@
         </button>
         <button type="button"
                 pButton
+                [disabled]="(!hostForm.form.valid && activeIndex == 1) || (!connectionForm.form.valid && activeIndex == 2)"
                 (click)="goToNextStep()"
                 [label]="stepsTextArray[activeIndex]"
                 icon="fa fa-play-circle">

@@ -12,13 +12,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
-import { MarketplaceApplication } from '../../model/marketplace-application.model';
-import { LoggerService } from '../../service/logger.service';
-import { InjectionOption } from '../../model/injection-option.model';
-import { DeploymentCompletionService } from '../../service/deployment-completion.service';
-import { InjectionOptionsResponse } from '../../model/injection-options-response.model';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Router} from '@angular/router';
+import {MarketplaceApplication} from '../../model/marketplace-application.model';
+import {LoggerService} from '../../service/logger.service';
+import {InjectionOption} from '../../model/injection-option.model';
+import {DeploymentCompletionService} from '../../service/deployment-completion.service';
+import {InjectionOptionsResponse} from '../../model/injection-options-response.model';
 import {MenuItem} from "primeng/api";
 
 // Todo: Finish refactoring of deployment-completion.component and test it
@@ -50,7 +50,6 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 private router: Router,
                 private logger: LoggerService) {
     }
-
 
 
     ngOnInit() {
