@@ -134,7 +134,6 @@ export class ApplicationUploadComponent implements OnInit {
             case 406:
                 const response = JSON.parse(event.xhr.response);
                 this.linkToWineryResourceForCompletion = response['Location'];
-
                 const fileName = event.files[0].name;
                 const csarName = fileName.substr(0, fileName.length - 5);
                 const csarID = fileName.lastIndexOf('.csar');
@@ -142,7 +141,6 @@ export class ApplicationUploadComponent implements OnInit {
                     csarName).then(app => {
                         this.appToComplete = app;
                 });
-
                 this.initializeCompletionComponent = true;
                 this.showCompletionDialog = true;
                 this.closeModal();
@@ -277,7 +275,6 @@ export class ApplicationUploadComponent implements OnInit {
                 detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
             }
         ));
-
         // Todo: Container should check itself if the app already exists and respond appropriately
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
