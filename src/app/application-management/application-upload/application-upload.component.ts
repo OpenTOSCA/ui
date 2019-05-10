@@ -132,17 +132,15 @@ export class ApplicationUploadComponent implements OnInit {
     onUploadError(event): void {
         switch (event.xhr.status) {
             case 406:
-                console.log(event);
                 const response = JSON.parse(event.xhr.response);
                 this.linkToWineryResourceForCompletion = response['Location'];
-                console.log(event.files[0].name.lastIndexOf('.csar'));
-                console.log(event.files[0]);
-                this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion,
-                    event.files[0].name.lastIndexOf('.csar')).then(app => {
-                        console.log(app);
+
+                const fileName = event.files[0].name;
+                const csarName = fileName.substr(0, fileName.length - 5);
+                const csarID = fileName.lastIndexOf('.csar');
+                this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion, csarID,
+                    csarName).then(app => {
                         this.appToComplete = app;
-                        this.appToComplete.csarName = event.files[0].name;
-                        this.appToComplete.displayName = this.appToComplete.csarName;
                 });
 
                 this.initializeCompletionComponent = true;
@@ -284,7 +282,8 @@ export class ApplicationUploadComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        this.repoService.installApplication({ url: app.csarURL, name: app.id }, postURL)
+        const completedApp = new CsarUploadReference(app.csarURL, app.csarName);
+        this.repoService.installApplication(completedApp, postURL)
             .subscribe(() => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
