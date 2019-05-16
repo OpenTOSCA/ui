@@ -126,7 +126,7 @@ export class RepositoryComponent implements OnInit {
                 app.isInstalling = false;
                 if (err.status === 406) {
                     this.appToComplete = app;
-                    this.appToComplete.csarName = this.appToComplete.displayName;
+                    this.appToComplete.csarName = app$.name;
                     this.linkToWineryResourceForCompletion = err.error.Location;
                     this.logger.log('[marketplace.component][injection]', this.linkToWineryResourceForCompletion);
                     this.initializeCompletionComponent = true;
@@ -156,7 +156,6 @@ export class RepositoryComponent implements OnInit {
                 detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
             }
         ));
-
         // Todo: Container should check itself if the app already exists and respond appropriately
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')

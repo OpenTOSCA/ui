@@ -19,7 +19,10 @@ import {LoggerService} from '../../service/logger.service';
 import {InjectionOption} from '../../model/injection-option.model';
 import {DeploymentCompletionService} from '../../service/deployment-completion.service';
 import {InjectionOptionsResponse} from '../../model/injection-options-response.model';
-import {MenuItem} from "primeng/api";
+import {MenuItem, SelectItem} from "primeng/api";
+import {DropdownModule} from "primeng/primeng";
+import {promise} from "selenium-webdriver";
+import Promise = promise.Promise;
 
 // Todo: Finish refactoring of deployment-completion.component and test it
 
@@ -36,6 +39,9 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     @Output() completionAbort = new EventEmitter<void>();
     @Output() completionError = new EventEmitter<string>();
 
+
+    hostOptions: SelectItem[] = [];
+    connectOptions: SelectItem[] = [];
     public hostCompletionOptions: Array<InjectionOption> = null;
     public connectionCompletionOptions: Array<InjectionOption> = null;
     public completionSelection: InjectionOptionsResponse = {
@@ -90,7 +96,14 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                     this.logger.log('[deployment-completion.component][getInjectionOptions]', 'Got host completion options: '
                         + this.hostCompletionOptions);
                 }
-            });
+            }).then(() => {
+            for (let hostOption of this.hostCompletionOptions) {
+                this.hostOptions.push({label: hostOption.nodeID, value: hostOption.injectionOptionTopologyFragments});
+            }
+            for (let connectionOption of this.connectionCompletionOptions) {
+                this.connectOptions.push({label: connectionOption.nodeID, value: connectionOption.injectionOptionTopologyFragments});
+            }
+        });
     }
 
     injectNewHosts(): void {
