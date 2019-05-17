@@ -81,8 +81,8 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         // array with steps for completion dialog
         this.items = [
             {label: 'Step 1 - Disclaimer'},
-            {label: 'Step 2 - Selection - Hosts'},
-            {label: 'Step 3 - Selection - Connections'},
+            {label: 'Step 2 - Selection of Hosts'},
+            {label: 'Step 3 - Selection of Connections'},
             {label: 'Step 4 - Confirmation'}
         ];
     }
