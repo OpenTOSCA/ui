@@ -59,6 +59,8 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit() {
+        this.hostOptions.push({label:'', value: ''});
+        this.connectOptions.push({label: '', value: ''});
         this.getInjectionOptions(this.linkToWineryResource);
         this.items = [
             {label: 'Step 1 - Disclaimer'},
@@ -84,6 +86,16 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         }
     }
 
+    onUpdateHostSelection(event) {
+        const selectedValue = event.value;
+        this.completionSelection.hostInjections = selectedValue;
+    }
+
+    onUpdateConnectionSelection(event) {
+        const selectedValue = event.value;
+        this.completionSelection.connectionInjections = selectedValue;
+    }
+
     getInjectionOptions(linkToWineryResource: string): void {
         this.completionService.getInjectionOptions(linkToWineryResource)
             .then(injectionOptions => {
@@ -98,18 +110,21 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 }
             }).then(() => {
             for (let hostOption of this.hostCompletionOptions) {
-                for (let nodeTemplate of hostOption.injectionOptionTopologyFragments[0].nodeTemplates) {
-                    console.log(nodeTemplate);
+                for (let hOption of hostOption.injectionOptionTopologyFragments) {
+                    console.log(hOption);
                     this.hostOptions.push({
-                        label: nodeTemplate.id,
-                        value: nodeTemplate})
+                        label: hOption.documentation[0].content[0],
+                        value: hOption
+                    });
                 }
             }
             for (let connectionOption of this.connectionCompletionOptions) {
-                for (let relationshipTemplate of connectionOption.injectionOptionTopologyFragments[0].relationshipTemplates) {
+                console.log(connectionOption)
+                for (let cOption of connectionOption.injectionOptionTopologyFragments) {
+                    console.log(cOption);
                     this.connectOptions.push({
-                        label: relationshipTemplate.type.substring(relationshipTemplate.type.lastIndexOf('}') + 1),
-                        value: relationshipTemplate
+                        label: cOption.documentation[0].content[0],
+                        value: cOption
                     });
                 }
             }

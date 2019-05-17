@@ -33,7 +33,7 @@
                 </div>
                 <div class="panel-body">
                     <p-dropdown [options]="hostOptions"
-                                [(ngModel)]="completionSelection['hostInjections'][hostCompletionOption.nodeID]"
+                                (onChange)="onUpdateHostSelection($event)"
                                 autoWidth="false"
                                 [style]="{'width':'100%'}"
                                 required>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="panel-body">
                     <p-dropdown [options]="connectOptions"
-                                [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
+                                (onChange)="onUpdateConnectionSelection($event)"
                                 autoWidth="false"
                                 [style]="{'width':'100%'}"
                                 required>
