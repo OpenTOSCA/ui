@@ -98,10 +98,20 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 }
             }).then(() => {
             for (let hostOption of this.hostCompletionOptions) {
-                this.hostOptions.push({label: hostOption.nodeID, value: hostOption.injectionOptionTopologyFragments});
+                for (let nodeTemplate of hostOption.injectionOptionTopologyFragments[0].nodeTemplates) {
+                    console.log(nodeTemplate);
+                    this.hostOptions.push({
+                        label: nodeTemplate.id,
+                        value: nodeTemplate})
+                }
             }
             for (let connectionOption of this.connectionCompletionOptions) {
-                this.connectOptions.push({label: connectionOption.nodeID, value: connectionOption.injectionOptionTopologyFragments});
+                for (let relationshipTemplate of connectionOption.injectionOptionTopologyFragments[0].relationshipTemplates) {
+                    this.connectOptions.push({
+                        label: relationshipTemplate.type.substring(relationshipTemplate.type.lastIndexOf('}') + 1),
+                        value: relationshipTemplate
+                    });
+                }
             }
         });
     }
@@ -109,6 +119,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     injectNewHosts(): void {
         this.logger.log('[deployment-completion.component][injectNewHosts]', 'Injecting new hosts: '
             + JSON.stringify(this.completionSelection));
+        console.log(this.completionSelection);
         this.completionService.injectNewHosts(this.linkToWineryResource, this.completionSelection)
             .then(injectedServiceTemplateURL => {
                 this.appToComplete.csarURL = injectedServiceTemplateURL.substr(0, injectedServiceTemplateURL.lastIndexOf('/')) + '?csar';
