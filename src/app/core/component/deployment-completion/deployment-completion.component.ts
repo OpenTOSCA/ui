@@ -41,7 +41,11 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
 
     hostOptions: SelectItem[] = [];
+    amountOfHostOptions: number = 1;
+    validHostSelected: boolean = false;
     connectOptions: SelectItem[] = [];
+    amountOfConnectOptions: number = 1;
+    validConnectSelected: boolean = false;
     public hostCompletionOptions: Array<InjectionOption> = null;
     public connectionCompletionOptions: Array<InjectionOption> = null;
     public completionSelection: InjectionOptionsResponse = {
@@ -59,8 +63,8 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit() {
-        this.hostOptions.push({label:'', value: ''});
-        this.connectOptions.push({label: '', value: ''});
+        this.hostOptions.push({label:'', value: null});
+        this.connectOptions.push({label: '', value: null});
         this.getInjectionOptions(this.linkToWineryResource);
         this.items = [
             {label: 'Step 1 - Disclaimer'},
@@ -87,13 +91,23 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     }
 
     onUpdateHostSelection(completionOption, event) {
-        const selectedValue = event.value;
-        this.completionSelection['hostInjections'][completionOption.nodeID] = selectedValue;
+        if (event.value !== null) {
+            const selectedValue = event.value;
+            this.completionSelection['hostInjections'][completionOption.nodeID] = selectedValue;
+            this.validHostSelected = true;
+        } else {
+            this.validHostSelected = false;
+        }
     }
 
     onUpdateConnectionSelection(completionOption, event) {
-        const selectedValue = event.value;
-        this.completionSelection['connectionInjections'][completionOption.nodeID] = selectedValue;
+        if (event.value != null) {
+            const selectedValue = event.value;
+            this.completionSelection['connectionInjections'][completionOption.nodeID] = selectedValue;
+            this.validConnectSelected = true;
+        } else {
+            this.validConnectSelected = false;
+        }
     }
 
     getInjectionOptions(linkToWineryResource: string): void {
@@ -116,16 +130,16 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                         label: hOption.documentation[0].content[0],
                         value: hOption
                     });
+                    this.amountOfHostOptions += 1;
                 }
             }
             for (let connectionOption of this.connectionCompletionOptions) {
-                console.log(connectionOption)
                 for (let cOption of connectionOption.injectionOptionTopologyFragments) {
-                    console.log(cOption);
                     this.connectOptions.push({
                         label: cOption.documentation[0].content[0],
                         value: cOption
                     });
+                    this.amountOfConnectOptions += 1;
                 }
             }
         });

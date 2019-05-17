@@ -12,7 +12,7 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '600px'}"
+<p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '462'}"
           [(visible)]="visible" modal="true">
     <p-header>
         Completion Dialog
@@ -24,14 +24,14 @@
             Do you want to process with the completion for "{{appToComplete?.displayName}}"?
         </div>
     </div>
-    <div *ngIf="activeIndex === 1" style="height: 150px;">
+    <div *ngIf="activeIndex === 1">
         <div class="modal-body">
             <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
             <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" [style.height.px]="amountOfHostOptions * 50">
                     <p-dropdown [options]="hostOptions"
                                 (onChange)="onUpdateHostSelection(hostCompletionOption, $event)"
                                 autoWidth="false"
@@ -42,14 +42,14 @@
             </div>
         </div>
     </div>
-    <div *ngIf="activeIndex === 2" style="height: 150px">
+    <div *ngIf="activeIndex === 2">
         <div class="modal-body">
             <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
             <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Open Requirement: {{connectionCompletionOption?.nodeID}}</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" [style.height.px]="amountOfConnectOptions * 50">
                     <p-dropdown [options]="connectOptions"
                                 (onChange)="onUpdateConnectionSelection(connectionCompletionOption, $event)"
                                 autoWidth="false"
@@ -75,6 +75,7 @@
         </button>
         <button type="button"
                 pButton
+                [disabled]="(!validHostSelected && activeIndex === 1) || (!validConnectSelected && activeIndex == 2)"
                 (click)="goToNextStep()"
                 [label]="stepsTextArray[activeIndex]"
                 icon="fa fa-play-circle">
