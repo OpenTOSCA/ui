@@ -26,7 +26,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import {MarketplaceApplication} from "../../core/model/marketplace-application.model";
+import {MarketplaceApplication} from '../../core/model/marketplace-application.model';
 
 @Component({
     selector: 'opentosca-application-upload',

@@ -21,7 +21,7 @@ import { ApplicationManagementActions } from '../application-management-actions'
 import { Csar } from '../../core/model/csar.model';
 import { Observable } from 'rxjs';
 import { ConfirmationService } from 'primeng/api';
-import { GrowlActions } from '../../core/growl/growl-actions'
+import { GrowlActions } from '../../core/growl/growl-actions';
 
 @Component({
     selector: 'opentosca-application-overview',

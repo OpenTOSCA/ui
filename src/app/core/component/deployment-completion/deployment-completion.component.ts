@@ -19,7 +19,7 @@ import {LoggerService} from '../../service/logger.service';
 import {InjectionOption} from '../../model/injection-option.model';
 import {DeploymentCompletionService} from '../../service/deployment-completion.service';
 import {InjectionOptionsResponse} from '../../model/injection-options-response.model';
-import {MenuItem, SelectItem} from "primeng/api";
+import {MenuItem, SelectItem} from 'primeng/api';
 
 @Component({
     selector: 'opentosca-deployment-completion',
@@ -49,18 +49,18 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     // select item array for host selection value for dropdown
     protected hostOptions: SelectItem[] = [];
     // counter of values for host selection dropdown to dynamically set panel to correct height
-    protected amountOfHostOptions: number = 1;
+    protected amountOfHostOptions = 1;
     // boolean to check if a valid host was selected, button to proceed is disabled if this is false
-    protected validHostSelected: boolean = false;
+    protected validHostSelected = false;
     // select item array for connection selection value for dropdown
     protected connectOptions: SelectItem[] = [];
     // counter of values for connection selection dropdown to dynamically set panel to correct height
-    protected amountOfConnectOptions: number = 1;
+    protected amountOfConnectOptions = 1;
     // boolean to check if a valid connection was selected, button to proceed is disabled if this is false
-    protected validConnectSelected: boolean = false;
+    protected validConnectSelected = false;
 
     // active index of the step dialog
-    protected activeIndex: number = 0;
+    protected activeIndex = 0;
     // array of strings containing the text of the button to go a step forward
     protected stepsTextArray: string[] = ['Proceed Completion',
         'Confirm Host selection', 'Confirm Connection Selection', 'Confirm Upload'];
@@ -73,7 +73,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         // initialize dropdown for host options
-        this.hostOptions.push({label:'', value: null});
+        this.hostOptions.push({label: '', value: null});
         // initialize dropdown for connection options
         this.connectOptions.push({label: '', value: null});
         // fetch injection options with link to winery repo
@@ -186,9 +186,9 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
             // after getting the injection options, fill the dropdown with the fetched values
             }).then(() => {
             // iterate over node templates requiring a host
-            for (let hostOption of this.hostCompletionOptions) {
+            for (const hostOption of this.hostCompletionOptions) {
                 // iterate over possible values for completion of a host
-                for (let hOption of hostOption.injectionOptionTopologyFragments) {
+                for (const hOption of hostOption.injectionOptionTopologyFragments) {
                     // add possible value to host options array to display in dropdown
                     this.hostOptions.push({
                         label: hOption.documentation[0].content[0],
@@ -199,9 +199,9 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                 }
             }
             // iterate over rel templates with open requirement
-            for (let connectionOption of this.connectionCompletionOptions) {
+            for (const connectionOption of this.connectionCompletionOptions) {
                 // iterate over possible values for completion of connection
-                for (let cOption of connectionOption.injectionOptionTopologyFragments) {
+                for (const cOption of connectionOption.injectionOptionTopologyFragments) {
                     // add possible value to connect options array to display in dropdown
                     this.connectOptions.push({
                         label: cOption.documentation[0].content[0],
