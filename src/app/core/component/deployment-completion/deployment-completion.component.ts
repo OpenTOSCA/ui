@@ -86,14 +86,14 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onUpdateHostSelection(event) {
+    onUpdateHostSelection(completionOption, event) {
         const selectedValue = event.value;
-        this.completionSelection.hostInjections = selectedValue;
+        this.completionSelection['hostInjections'][completionOption.nodeID] = selectedValue;
     }
 
-    onUpdateConnectionSelection(event) {
+    onUpdateConnectionSelection(completionOption, event) {
         const selectedValue = event.value;
-        this.completionSelection.connectionInjections = selectedValue;
+        this.completionSelection['connectionInjections'][completionOption.nodeID] = selectedValue;
     }
 
     getInjectionOptions(linkToWineryResource: string): void {

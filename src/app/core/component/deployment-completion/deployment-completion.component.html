@@ -33,7 +33,7 @@
                 </div>
                 <div class="panel-body">
                     <p-dropdown [options]="hostOptions"
-                                (onChange)="onUpdateHostSelection($event)"
+                                (onChange)="onUpdateHostSelection(hostCompletionOption, $event)"
                                 autoWidth="false"
                                 [style]="{'width':'100%'}"
                                 required>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="panel-body">
                     <p-dropdown [options]="connectOptions"
-                                (onChange)="onUpdateConnectionSelection($event)"
+                                (onChange)="onUpdateConnectionSelection(connectionCompletionOption, $event)"
                                 autoWidth="false"
                                 [style]="{'width':'100%'}"
                                 required>
