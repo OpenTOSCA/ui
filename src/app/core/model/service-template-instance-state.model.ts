@@ -18,5 +18,6 @@ export enum ServiceTemplateInstanceState {
     CREATED = 'CREATED',
     DELETING = 'DELETING',
     DELETED = 'DELETED',
-    ERROR = 'ERROR'
+    ERROR = 'ERROR',
+    MIGRATED = 'MIGRATED'
 }
