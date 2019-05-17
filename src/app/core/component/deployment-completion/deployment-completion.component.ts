@@ -45,24 +45,24 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
     };
 
     // menu item array for storing the steps of the dialog
-    protected items: MenuItem[];
+    public items: MenuItem[];
     // select item array for host selection value for dropdown
-    protected hostOptions: SelectItem[] = [];
+    public hostOptions: SelectItem[] = [];
     // counter of values for host selection dropdown to dynamically set panel to correct height
-    protected amountOfHostOptions = 1;
+    public amountOfHostOptions = 1;
     // boolean to check if a valid host was selected, button to proceed is disabled if this is false
-    protected validHostSelected = false;
+    public validHostSelected = false;
     // select item array for connection selection value for dropdown
-    protected connectOptions: SelectItem[] = [];
+    public connectOptions: SelectItem[] = [];
     // counter of values for connection selection dropdown to dynamically set panel to correct height
-    protected amountOfConnectOptions = 1;
+    public amountOfConnectOptions = 1;
     // boolean to check if a valid connection was selected, button to proceed is disabled if this is false
-    protected validConnectSelected = false;
+    public validConnectSelected = false;
 
     // active index of the step dialog
-    protected activeIndex = 0;
+    public activeIndex = 0;
     // array of strings containing the text of the button to go a step forward
-    protected stepsTextArray: string[] = ['Proceed Completion',
+    public stepsTextArray: string[] = ['Proceed Completion',
         'Confirm Host selection', 'Confirm Connection Selection', 'Confirm Upload'];
 
     constructor(private completionService: DeploymentCompletionService,
