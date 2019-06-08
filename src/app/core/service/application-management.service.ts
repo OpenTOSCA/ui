@@ -21,6 +21,7 @@ import { Csar } from '../model/csar.model';
 import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
+import { PlacementCandidate } from './../model/placement.model';
 import { Interface } from '../model/interface.model';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
@@ -172,23 +173,25 @@ export class ApplicationManagementService {
             );
     }
 
-    initiatePlacementOperation(something: any): Observable<string> {
+    initiatePlacementOperation(csar: Csar): Observable<PlacementCandidate> {
         this.logger.log('[application-management.service][initiatePlacementOperation]',
             'Starting Placement Operation for application');
 
-        const url = new Path("") // plan._links['self'].href)
-            .append('instances')
-            .toString();
+        const url = new Path(csar._links['servicetemplate'].href).append('placement').toString();
         const httpOptions = {
             headers: new HttpHeaders({
-                'Accept': 'text/plain'
+                'Accept': 'application/json'
             }),
         };
 
-        return this.http.post(url, something.input_parameters, {...httpOptions, responseType: 'text', observe: 'response'})
+        return this.http.post(url, {'doesnt': 'matter'}, {...httpOptions, responseType: 'json', observe: 'response'})
             .pipe(
                 map(response => {
-                    return response.headers.get('Location');
+
+                    const placementCandidate: PlacementCandidate = response.body as PlacementCandidate;
+
+                    return placementCandidate;
+                    // return response.headers.get('Location');
                 }),
                 catchError(err => this.logger.handleError('[application.service][initiatePlacementOperation]', err))
             );

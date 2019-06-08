@@ -16,3 +16,44 @@ export class PlacementStatus {
     location: string;
     csarId: string;
 }
+
+export interface PlacementCandidate {
+    placement_matches: PlacementMatch[];
+    alternative_matches: AlternativeMatch[];
+}
+
+export interface PlacementMatch {
+    cpb_node: CpbNode;
+    tbp_node: TbpNode;
+    match_id: string;
+}
+
+export interface AlternativeMatch {
+    cpb_node: CpbNode;
+    tbp_node: TbpNode;
+    match_id: string;
+}
+
+export interface TbpNode {
+    to_be_placed_node: string;
+    node_type_of_to_be_placed_node: string;
+    service_template_of_to_be_placed_node: string;
+    csar_id_of_to_be_placed_node: string;
+    reqs_of_to_be_placed_node: string[];
+    property_map: PropertyMap;
+}
+
+export interface CpbNode {
+    os_node: string;
+    node_type_of_os_node: string;
+    service_template_of_os_node: string;
+    csar_id_of_os_node: string;
+    caps_of_osnode: string[];
+    instance_idof_osnode: number;
+    instance_idof_service_template_of_os_node: number;
+    property_map: PropertyMap;
+}
+
+export interface PropertyMap {
+    [key: string]: string;
+}

@@ -12,18 +12,49 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()" [contentStyle]="{'overflow': 'auto', 'height': '468px'}" [(visible)]="visible"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()" [contentStyle]="{'overflow': 'auto', 'height': 'auto'}" [(visible)]="visible"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Placement of Application Components
     </p-header>
-
     <p>
         This application has open requirements and can't be instantiated in its current state.<br>
         If you have running instances with capabilities that satisfy the open requirements of this application,<br>
         you can initiate a placement operation.
     </p>
-    <p>{{csar.id}}</p>
+
+    <div *ngIf="placementInProgress">
+        <div class="p-grid p-justify-center p-align-center">
+            <div class="p-col">
+                <p-progressBar strokeWidth="2" mode="indeterminate"></p-progressBar>
+                <h4>Placement Candidate Search in progress...</h4>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="placementCandidateExists">
+        <h4 class="first">The options are sorted by recommendation of the Placement Algorithm.<br>Selecting the first item in each dropdown represents the best choice, selecting alternatives is possible if they exist.</h4>
+        <h4 class="first">{{applicationName}}</h4>
+        <div *ngFor="let mapEntry of mapOfPossiblePlacements | keyvalue; let i = index">
+            <div style="display: flex; justify-content: center;">
+                <div style="width: 90%;">
+
+                    <div style="display: flex; justify-content: space-around;">
+                        <div style="width: 30%"><b>{{ mapEntry.key }}:</b></div>
+                        <div style="width: 70%">
+                            <select [(ngModel)]="selectedPlacement[i]" (change)="onChangeSelection($event.target.value)">
+                                <option [value]="option" *ngFor="let option of mapEntry.value">
+                                <b>Instance ID:</b> {{ option.cpbNode.instance_idof_osnode }} |
+                                <b>NodeTemplate ID:</b> {{option.cpbNode.os_node}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <p-footer>
         <button type="button" pButton (click)="runPlacementOperation()" label="Run Placement Operation">
         </button>
