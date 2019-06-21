@@ -118,6 +118,7 @@ export class RepositoryComponent implements OnInit {
     }
 
     install(app: MarketplaceApplication): void {
+        this.showEnrichmentDialog = false;
         app.isInstalling = true;
         const url = new Path(this.configurationService.getContainerUrl()).append('csars').toString();
         const app$ = new CsarUploadReference(app.csarURL, app.id, JSON.stringify(this.applyEnrichment));
