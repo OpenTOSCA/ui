@@ -25,7 +25,6 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { FileUpload} from 'primeng/primeng';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -50,7 +49,7 @@ export class ApplicationUploadComponent implements OnInit {
 
     // temporary data derived from the user input for the url upload
     public tempData = {
-        cur: new CsarUploadReference(null, null),
+        cur: new CsarUploadReference(null, null, null),
         validURL: false,
         validName: false
     };

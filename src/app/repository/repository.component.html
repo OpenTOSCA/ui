@@ -56,7 +56,7 @@
                         class="ui-button-info" icon="fas fa-download"
                         pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"></button>
                 &nbsp;
-                <button pButton type="button" (click)="install(app)"
+                <button pButton type="button" (click)="openEnrichmentDialog(app)"
                         class="ui-button-info" icon="fas fa-plus-circle"
                         pTooltip="Install in OpenTOSCA Container" showDelay="500" tooltipPosition="top"
                         *ngIf="!app.inContainer && !app.isInstalling"></button>
@@ -73,8 +73,27 @@
         </p-card>
     </div>
 </div>
-
+<div>
+    <p-dialog styleClass="modal-scrollable" modal="true" draggable="false" resizable="false" width="400"
+              [(visible)]="showEnrichmentDialog" modal="true">
+        <p-header>
+            Management Feature Enrichment Dialog
+        </p-header>
+        <p-checkbox [(ngModel)]="applyEnrichment" label="Apply Management Feature Enrichment"
+                    binary="true">
+        </p-checkbox>
+        <p-footer>
+            <button type="button"
+                    pButton
+                    (click)="install(this.currentlySelectedApp)"
+                    label="Install"
+                    icon="fa fa-upload">
+            </button>
+        </p-footer>
+    </p-dialog>
+</div>
 <!--TODO-->
 <!--<opentosca-deployment-completion *ngIf="showCompletionDialog" [appToComplete]="appToComplete"-->
 <!--[linkToWineryResource]="linkToWineryResource" (completionSuccess)="installInContainer($event)">-->
 <!--</opentosca-deployment-completion>-->
+

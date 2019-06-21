@@ -30,7 +30,7 @@
                         <p>Name: {{ file.name }}</p>
                         <p>Size: {{file.size | humanizeBytes}}</p>
                         <p>Last Modified: {{file.lastModifiedDate}}</p>
-                        <p-checkbox [(ngModel)]="applyEnrichment" label="Apply Management Enrichment"
+                        <p-checkbox [(ngModel)]="applyEnrichment" label="Apply Management Feature Enrichment"
                                     binary="true">
                         </p-checkbox>
                     </div>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="p-col-9">
                     <p-checkbox *ngIf="(this.tempData.validURL && this.tempData.validName)"
-                                [(ngModel)]="applyEnrichment" label="Apply Management Enrichment"
+                                [(ngModel)]="applyEnrichment" label="Apply Management Feature Enrichment"
                                 binary="true">
                     </p-checkbox>
                 </div>

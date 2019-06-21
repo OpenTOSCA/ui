@@ -41,8 +41,12 @@ export class RepositoryComponent implements OnInit {
     selectedRepository: Item;
 
     apps: Array<MarketplaceApplication> = [];
+    currentlySelectedApp: MarketplaceApplication;
 
     searchTerm: string;
+
+    public applyEnrichment = false;
+    public showEnrichmentDialog = false;
 
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
@@ -108,10 +112,15 @@ export class RepositoryComponent implements OnInit {
         this.searchTerm = searchTerm;
     }
 
+    openEnrichmentDialog(app): void {
+        this.showEnrichmentDialog = true;
+        this.currentlySelectedApp = app;
+    }
+
     install(app: MarketplaceApplication): void {
         app.isInstalling = true;
         const url = new Path(this.configurationService.getContainerUrl()).append('csars').toString();
-        const app$ = new CsarUploadReference(app.csarURL, app.id);
+        const app$ = new CsarUploadReference(app.csarURL, app.id, JSON.stringify(this.applyEnrichment));
         this.repositoryService.installApplication(app$, url)
             .subscribe(() => {
                 app.isInstalling = false;
