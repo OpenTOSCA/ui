@@ -18,7 +18,8 @@
     </p-header>
     <p-tabView>
         <p-tabPanel header="Upload local File">
-            <p-fileUpload name="file" [url]="postURL" chooseLabel="Select File"
+            <p-fileUpload name="file" [url]="postURL" customUpload="true" chooseLabel="Select File"
+                          (uploadHandler)="handleUpload($event)"
                           (onSelect)="onSelect()"
                           (onProgress)="onUploadProgress($event.originalEvent)"
                           (onUpload)="onUploadFinished($event)"
@@ -29,6 +30,9 @@
                         <p>Name: {{ file.name }}</p>
                         <p>Size: {{file.size | humanizeBytes}}</p>
                         <p>Last Modified: {{file.lastModifiedDate}}</p>
+                        <p-checkbox [(ngModel)]="applyEnrichment" label="Apply Management Enrichment"
+                                    binary="true">
+                        </p-checkbox>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="content">
@@ -76,6 +80,12 @@
                             (valueChange)='nameChange($event)'
                             (validityChange)='nameValidityChange($event)'>
                     </opentosca-debounced-validated-input>
+                </div>
+                <div class="p-col-9">
+                    <p-checkbox *ngIf="(this.tempData.validURL && this.tempData.validName)"
+                                [(ngModel)]="applyEnrichment" label="Apply Management Enrichment"
+                                binary="true">
+                    </p-checkbox>
                 </div>
             </div>
             <button type="button"

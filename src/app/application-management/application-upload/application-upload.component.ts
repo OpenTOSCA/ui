@@ -17,16 +17,15 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
 import { Router } from '@angular/router';
-import { LoggerService } from '../../core/service/logger.service';
 import { AppState } from '../../store/app-state.model';
-import { ApplicationManagementActions } from '../application-management-actions';
 import { DeploymentCompletionService } from '../../core/service/deployment-completion.service';
 import { RepositoryService } from '../../core/service/repository.service';
 import { Path } from '../../core/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { FileUpload} from 'primeng/primeng';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -47,6 +46,7 @@ export class ApplicationUploadComponent implements OnInit {
         .toString();
     public bytesUploaded = 0;
     public bytesTotal = 0;
+    public applyEnrichment = false;
 
     // temporary data derived from the user input for the url upload
     public tempData = {
@@ -91,6 +91,21 @@ export class ApplicationUploadComponent implements OnInit {
     onClear(): void {
         this.fileSelected = false;
         this.deploymentInProgress = false;
+    }
+
+    handleUpload(event: any): void {
+        const formData: FormData = new FormData();
+        formData.append('enrichment', JSON.stringify(this.applyEnrichment));
+        formData.append('file', event.files[0], event.files[0].name);
+        let headers = new HttpHeaders();
+        this.uploadCsar(formData, headers).subscribe(
+            data => console.log(data),
+            error => console.log(error)
+        );
+    }
+
+    uploadCsar(formData, headers): Observable<boolean> {
+        return this.http.post<boolean>(this.postURL, formData, { headers: headers });
     }
 
     /**
