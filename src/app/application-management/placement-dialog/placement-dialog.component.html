@@ -43,7 +43,7 @@
                         <div style="width: 30%"><b>{{ mapEntry.key }}:</b></div>
                         <div style="width: 70%">
                             <select [(ngModel)]="selectedPlacement[i]" (change)="onChangeSelection($event.target.value)">
-                                <option [value]="option" *ngFor="let option of mapEntry.value">
+                                <option [value]="option | json" *ngFor="let option of mapEntry.value">
                                 <b>Instance ID:</b> {{ option.cpbNode.instance_idof_osnode }} |
                                 <b>NodeTemplate ID:</b> {{option.cpbNode.os_node}}
                                 </option>
@@ -55,7 +55,26 @@
         </div>
     </div>
 
+    <div style="width=90%; margin-top: 1em;" *ngIf="waitingForCompletion">
+        <div class="p-grid p-justify-center p-align-center">
+            <div class="p-col">
+                <p-progressBar strokeWidth="2" mode="indeterminate"></p-progressBar>
+                <h4>Placement Candidate Completion in progress...</h4>
+            </div>
+        </div>
+    </div>
+
+    <div style="width=90%;" *ngIf="csarGotCompletedSuccessfully">
+        <br><p>The ServiceTemplate containing the placement candidate you chose was completed successfully. <br>Find the old and new servicetemplate</p>
+        <a target="_blank" href="{{completedCsarUrl}}">here.</a>
+        <br>
+        <p>Download the new CSAR</p>
+        <a target="_blank" href="{{csarDownloadUrl}}">here.</a>
+    </div>
+
     <p-footer>
+        <button *ngIf="placementCandidateIsSet" type="button" pButton (click)="createDeployableCSARfromCandidate()" label="Create Deployable CSAR from Candidate">
+        </button>
         <button type="button" pButton (click)="runPlacementOperation()" label="Run Placement Operation">
         </button>
         <button type="button" pButton (click)="closeModal()" label="Close"></button>

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
-import { PlacementCandidate } from '../../core/model/placement.model';
+import { PlacementCandidate, PlacementMatch } from '../../core/model/placement.model';
 import { LoggerService } from '../../core/service/logger.service';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { Csar } from '../../core/model/csar.model';
@@ -18,10 +18,15 @@ export class PlacementDialogComponent implements OnInit {
     @Input() csar: Csar;
     @Output() visibleChange = new EventEmitter<boolean>();
     placementInProgress = false;
+    waitingForCompletion = false;
     placementCandidateExists = false;
+    placementCandidateIsSet = false;
+    csarGotCompletedSuccessfully = false;
     mapOfPossiblePlacements = new Map<string, Array<any>>();
     applicationName: string;
-    selectedPlacement: any[] = [];
+    completedCsarUrl: string;
+    csarDownloadUrl: string;
+    selectedPlacement: Array<PlacementMatch> = [];
 
     constructor(private appService: ApplicationManagementService,
                 private ngRedux: NgRedux<AppState>,
@@ -37,7 +42,30 @@ export class PlacementDialogComponent implements OnInit {
     }
 
     onChangeSelection(selection) {
-        console.log(this.selectedPlacement);
+        if (this.selectedPlacement.length === this.mapOfPossiblePlacements.size) {
+            this.placementCandidateIsSet = true;
+        }
+    }
+
+    createDeployableCSARfromCandidate() {
+        this.waitingForCompletion = true;
+        this.appService.createDeployableCSARfromCandidate(this.selectedPlacement, this.csar).subscribe(res => {
+            console.log(res);
+            this.completedCsarUrl = res;
+            this.csarDownloadUrl = res + '/?csar';
+            this.waitingForCompletion = false;
+            this.csarGotCompletedSuccessfully = true;
+
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Placement Completion was successful',
+                    detail: 'Find links to the old/new ServiceTemplate and CSAR in the modal.'
+                }
+            ));
+        }, err => {
+            console.log(err);
+        });
     }
 
     /**
@@ -99,12 +127,6 @@ export class PlacementDialogComponent implements OnInit {
                 // add to array of possible placements
                 this.mapOfPossiblePlacements.set(match.tbp_node.to_be_placed_node, Array.from(possiblePlacements));
             });
-
-
-            console.log(this.mapOfPossiblePlacements);
-
-
-
         }, err => {
             this.logger.handleError('[placement-dialog][run placement operation]', err);
             this.ngRedux.dispatch(GrowlActions.addGrowl(

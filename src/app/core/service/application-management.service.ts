@@ -21,7 +21,7 @@ import { Csar } from '../model/csar.model';
 import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
-import { PlacementCandidate } from './../model/placement.model';
+import { PlacementCandidate, PlacementMatch } from './../model/placement.model';
 import { Interface } from '../model/interface.model';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
@@ -36,6 +36,10 @@ export class ApplicationManagementService {
 
     public normalizeApplicationId(csarId: string): string {
         return _.endsWith(csarId.toLowerCase(), '.csar') ? csarId : csarId + '.csar';
+    }
+
+    public removeDotCsarExtensionFromId(csarId: string): string {
+        return _.endsWith(csarId.toLowerCase(), '.csar') ? csarId.substr(0, csarId.length - 5) : csarId;
     }
 
     deleteApplication(csarId: string): Observable<any> {
@@ -195,6 +199,29 @@ export class ApplicationManagementService {
                 }),
                 catchError(err => this.logger.handleError('[application.service][initiatePlacementOperation]', err))
             );
+    }
+
+    createDeployableCSARfromCandidate(selectedPlacement: Array<PlacementMatch>, csar: Csar): Observable<string> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            }),
+        };
+
+        // TODO: something with double encoded ns is not working out during requests...
+        const wineryUrl = 'http://localhost:8080/winery/servicetemplates/http%253A%252F%252Fopentosca.org%252Fservicetemplates';
+
+        const url = new Path(wineryUrl).append(this.removeDotCsarExtensionFromId(csar.id)).append('placement/completion').toString();
+
+        return this.http.post(url, selectedPlacement, {...httpOptions, responseType: 'json', observe: 'response'}).pipe(
+            map(response => {
+                console.log(response.headers.get('Location'));
+                return response.headers.get('Location');
+            }),
+            catchError(err => {
+                return this.logger.handleError('[application.service][createDeployableCSARfromCandidate]', err);
+            })
+        );
     }
 
     isApplicationInstalled(id: string): Promise<boolean> {
