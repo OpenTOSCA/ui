@@ -18,10 +18,8 @@ import { LoggerService } from '../../core/service/logger.service';
 import { Csar } from '../../core/model/csar.model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
-import { Plan } from '../../core/model/plan.model';
 import { Interface } from '../../core/model/interface.model';
 import { PlanTypes } from '../../core/model/plan-types.model';
-import { select } from '@angular-redux/store';
 
 @Injectable()
 export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, interfaces: Interface[] }> {
@@ -46,7 +44,8 @@ export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, i
                     );
 
                     return of({
-                        csar: result[0], buildPlanAvailable: !!buildPlanExists, terminationPlanAvailable: !!terminationPlanExists, interfaces: interfaces
+                        csar: result[0], buildPlanAvailable: !!buildPlanExists,
+                        terminationPlanAvailable: !!terminationPlanExists, interfaces: interfaces
                     });
                 }),
                 catchError(reason => {

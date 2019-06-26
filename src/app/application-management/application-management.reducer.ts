@@ -33,12 +33,7 @@ export const INITIAL_STATE: ApplicationManagementState = {
         csar: null,
         instances: new Map<string, ServiceTemplateInstance>(),
         interfaces: null
-    },
-    // currentApp: null,
-    // currentAppInstances: [],
-    // currentInstance: null,
-    // buildPlan: null,
-    // currentTerminationPlan: null
+    }
 };
 
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,

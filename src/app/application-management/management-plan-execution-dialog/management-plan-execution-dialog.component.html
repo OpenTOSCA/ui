@@ -20,7 +20,7 @@
         Select Plan
     </p-header>
 
-    <p-dropdown pladeholder="Select an Operation" [options]="interfacesList" [style]="{ 'min-width': '300px'}"
+    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList" [style]="{ 'min-width': '300px'}" [showClear]="true"
                 [group]="true" (onChange)="operationSelected($event.value)">
     </p-dropdown>
 

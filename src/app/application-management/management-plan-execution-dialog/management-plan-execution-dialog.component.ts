@@ -85,13 +85,15 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     operationSelected(op: string): void {
-        const names = op.split(this.interfaceFromOperationDelimiter);
-        const selectedInterface = this.allInterfaces.find(iface => iface.name === names[0]);
-        const selectedOperation = selectedInterface.operations.find(operation => operation.name === names[1]);
+        if (op) {
+            const names = op.split(this.interfaceFromOperationDelimiter);
+            const selectedInterface = this.allInterfaces.find(iface => iface.name === names[0]);
+            const selectedOperation = selectedInterface.operations.find(operation => operation.name === names[1]);
 
-        this.selectedPlan = selectedOperation._embedded.plan;
+            this.selectedPlan = selectedOperation._embedded.plan;
 
-        this.checkInputs();
+            this.checkInputs();
+        }
     }
 
     checkInputs(): void {
