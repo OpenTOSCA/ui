@@ -22,10 +22,6 @@ import { Csar } from '../../core/model/csar.model';
 import { Observable } from 'rxjs';
 import { ConfirmationService } from 'primeng/api';
 import { GrowlActions } from '../../core/growl/growl-actions';
-import { MarketplaceApplication } from '../../core/model/marketplace-application.model';
-import { RepositoryService } from '../../core/service/repository.service';
-import { Path } from '../../core/path';
-import { ConfigurationService } from '../../configuration/configuration.service';
 
 @Component({
     selector: 'opentosca-application-overview',
@@ -38,16 +34,11 @@ export class ApplicationOverviewComponent implements OnInit {
 
     public searchTerm: string;
     public showModal = false;
-    public linkToWineryResourceForCompletion: string;
-    public appToComplete: MarketplaceApplication;
-    public showCompletionDialog = false;
 
     constructor(private applicationService: ApplicationManagementService,
                 private confirmationService: ConfirmationService,
                 private ngRedux: NgRedux<AppState>,
-                private logger: LoggerService,
-                private repoService: RepositoryService,
-                private adminService: ConfigurationService) {
+                private logger: LoggerService) {
     }
 
     ngOnInit(): void {
@@ -74,77 +65,6 @@ export class ApplicationOverviewComponent implements OnInit {
                 this.deleteApplication(csar);
             }
         });
-    }
-
-    /**
-     * Handler for successful completion of completion component.
-     */
-    onCompletionSuccess(app: MarketplaceApplication): void {
-        this.ngRedux.dispatch(GrowlActions.addGrowl(
-            {
-                severity: 'success',
-                summary: 'Completion Succeeded',
-                detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
-            }
-        ));
-
-        // Todo: Container should check itself if the app already exists and respond appropriately
-        const postURL = new Path(this.adminService.getContainerUrl())
-            .append('csars')
-            .toString();
-        this.repoService.installApplication({ url: app.csarURL, name: app.id }, postURL)
-            .subscribe(() => {
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'success',
-                        summary: 'Completed Application Installed',
-                        detail: `The completed app "${app.displayName}" was successfully installed in container.`
-                    }
-                ));
-            }, err => {
-                this.logger.error('[application-overview.component][completionSuccess]', err);
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: `The completed app "${app.displayName}" was not installed successfully in container: ${err}.`
-                    }
-                ));
-            });
-    }
-
-    /**
-     * Handler for emitted errors of completion component
-     */
-    onCompletionError(errorMessage: string): void {
-        this.ngRedux.dispatch(GrowlActions.addGrowl(
-            {
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Error at Topology Completion: ' + errorMessage
-            }
-        ));
-        this.stopCompletionProcess();
-    }
-
-    onCompletionAbort(): void {
-        this.ngRedux.dispatch(GrowlActions.addGrowl(
-            {
-                severity: 'info',
-                summary: 'Info',
-                detail: 'Topology Completion aborted.'
-            }
-        ));
-        this.stopCompletionProcess();
-    }
-
-    /**
-     * Hides the completion dialog
-     */
-    stopCompletionProcess(): void {
-        this.showCompletionDialog = false;
-        this.appToComplete = null;
-        this.linkToWineryResourceForCompletion = null;
     }
 
     /**

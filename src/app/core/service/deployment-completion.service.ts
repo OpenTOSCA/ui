@@ -50,9 +50,7 @@ export class DeploymentCompletionService {
                 let injectionOptionEntries: Array<InjectionOption> = [];
                 let options: Array<TopologyTemplate> = [];
                 _.forOwn(injectionOptionsResponse.hostInjections, function (injectionOptionsEntries, nodeID) {
-                    console.log(nodeID);
                     _.forOwn(injectionOptionsEntries, function (injectionOptionContent, injectionOptionKey) {
-                        console.log(injectionOptionKey);
                         options.push(injectionOptionContent);
                     });
                     const injectionEntry = new InjectionOption();
@@ -64,9 +62,7 @@ export class DeploymentCompletionService {
                 injectionOptions.hostInjectionOptions = injectionOptionEntries;
                 injectionOptionEntries = [];
                 _.forOwn(injectionOptionsResponse.connectionInjections, function (injectionOptionsEntries, nodeID) {
-                    console.log(nodeID);
                     _.forOwn(injectionOptionsEntries, function (injectionOptionContent, injectionOptionKey) {
-                        console.log(injectionOptionKey);
                         options.push(injectionOptionContent);
                     });
                     const injectionEntry = new InjectionOption();
@@ -76,7 +72,7 @@ export class DeploymentCompletionService {
                     options = [];
                 });
                 injectionOptions.connectionInjectionOptions = injectionOptionEntries;
-                this.logger.log('[deployment-completion.service][getInjectionOptions]', 'Received injection optioins: ' + injectionOptions);
+                this.logger.log('[deployment-completion.service][getInjectionOptions]', 'Received injection options: ' + injectionOptions);
                 return injectionOptions;
             })
             .catch(err => {
@@ -113,7 +109,7 @@ export class DeploymentCompletionService {
             });
     }
 
-    getAppFromCompletionHandlerWinery(serviceTemplateUrl: string, appId: string): Promise<MarketplaceApplication> {
+    getAppFromCompletionHandlerWinery(serviceTemplateUrl: string, appId: string, appName: string): Promise<MarketplaceApplication> {
         const selfServiceURL = new Path(serviceTemplateUrl)
             .append('selfserviceportal')
             .toString();
@@ -128,12 +124,13 @@ export class DeploymentCompletionService {
                 const app = response;
                 app.iconUrl = selfServiceURL + '/' + app.iconUrl;
                 app.imageUrl = selfServiceURL + '/' + app.imageUrl;
+                app.csarName = appName;
                 app.csarURL = selfServiceURL.substr(0, selfServiceURL.lastIndexOf('/selfserviceportal')) + '?csar';
                 app.repositoryURL = serviceTemplateUrl;
                 app.id = appId;
                 app.isInstalling = false;
                 if (!app.displayName || app.displayName === '') {
-                    app.displayName = appId;
+                    app.displayName = app.csarName;
                 }
                 this.logger.log('[deployment-completion.service][getAppFromCompletionHandlerWinery] Received app from repo: ',
                     JSON.stringify(app));
