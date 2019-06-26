@@ -22,12 +22,20 @@ import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { Interface } from '../model/interface.model';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
+import { InterfaceList } from '../model/interface-list.model';
+import { Operation } from '../model/operation.model';
 
 @Injectable()
 export class ApplicationManagementService {
+
+    private httpOptionsAcceptJson = {
+        headers: new HttpHeaders({
+            'Accept': 'application/json'
+        })
+    };
 
     constructor(private http: HttpClient, private ngRedux: NgRedux<AppState>,
                 private logger: LoggerService) {
@@ -50,17 +58,12 @@ export class ApplicationManagementService {
         const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
             .toString();
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
-        return this.http.get(url, httpOptions)
+        return this.http.get(url, this.httpOptionsAcceptJson)
             .pipe(
                 map((response: CsarList) => {
                     const observables: Array<Observable<Csar>> = [];
                     for (const entry of response.csars) {
-                        observables.push(this.http.get<Csar>(entry._links['self'].href, httpOptions));
+                        observables.push(this.http.get<Csar>(entry._links['self'].href, this.httpOptionsAcceptJson));
                     }
                     return observables.length > 0 ? forkJoin(observables) : of([]);
                 }),
@@ -68,63 +71,50 @@ export class ApplicationManagementService {
             );
     }
 
-    getBuildPlan(csarId: string): Observable<Plan> {
-        return this.getFirstServiceTemplateOfCsar(csarId)
-            .pipe(
-                flatMap(serviceTemplatePath => {
-                    const url = new Path(serviceTemplatePath)
-                        .append('buildplans')
-                        .toString();
-                    const httpOptions = {
-                        headers: new HttpHeaders({
-                            'Accept': 'application/json'
-                        })
-                    };
-                    // Todo For now it is okay to fetch the first build plan but we have to keep this in mind
-                    return this.http.get(url, httpOptions)
-                        .pipe(
-                            map(response => response['plans'][0] as Plan),
-                            catchError(err => {
-                                this.logger.handleObservableError('[application.service][getBuildPlan]', err);
-                                return throwError(err);
-                            })
-                        );
-                }),
-                catchError(err => {
-                    this.logger.handleObservableError('[application.service][getBuildPlan]', err);
-                    return throwError(err);
-                })
-            );
-    }
-
-    getTerminationPlan(csarId: string): Observable<Plan> {
+    getInterfaces(csarId: string): Observable<Interface[]> {
         return this.getFirstServiceTemplateOfCsar(csarId)
             .pipe(
                 flatMap(serviceTemplatePath => {
                     const url = new Path(serviceTemplatePath)
                         .append('boundarydefinitions')
                         .append('interfaces')
-                        .append(this.ngRedux.getState().administration.planLifecycleInterface)
                         .toString();
-                    const httpOptions = {
-                        headers: new HttpHeaders({
-                            'Accept': 'application/json'
-                        })
-                    };
-                    return this.http.get<Interface>(url, httpOptions)
+                    return this.http.get<InterfaceList>(url, this.httpOptionsAcceptJson)
                         .pipe(
-                            map(i => {
-                                return i.operations[this.ngRedux.getState().administration.planOperationTerminate]
-                                    ._embedded.plan;
+                            flatMap(element => {
+                                const interfacesList: Observable<Interface>[] = [];
+                                for (const iface of element.interfaces) {
+                                    const operationsUrl = new Path(iface._links['self'].href)
+                                        .toString();
+                                    interfacesList.push(this.http.get<Interface>(operationsUrl, this.httpOptionsAcceptJson));
+                                }
+                                return forkJoin(...interfacesList)
+                                    .pipe(
+                                        map((result) => {
+                                            const interfaces: Array<Interface> = [];
+                                            for (const i of result) {
+                                                const iface = new Interface();
+                                                iface.name = i.name;
+                                                for (const key of Object.keys(i.operations)) {
+                                                    const opp = new Operation();
+                                                    opp.name = key;
+                                                    opp._embedded = i.operations[key]._embedded;
+                                                    iface.operations.push(opp);
+                                                }
+                                                interfaces.push(iface);
+                                            }
+                                            return interfaces;
+                                        })
+                                    );
                             }),
                             catchError(err => {
-                                this.logger.handleObservableError('[application.service][getTerminationPlan]', err);
+                                this.logger.handleObservableError('[application.service][getInterfaces]', err);
                                 return throwError(err);
                             })
                         );
                 }),
                 catchError(err => {
-                    this.logger.handleObservableError('[application.service][getTerminationPlan]', err);
+                    this.logger.handleObservableError('[application.service][getInterfaces]', err);
                     return throwError(err);
                 })
             );
@@ -136,12 +126,7 @@ export class ApplicationManagementService {
             .append(this.normalizeApplicationId(csarId))
             .append('servicetemplates')
             .toString();
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
-        return this.http.get(url, httpOptions)
+        return this.http.get(url, this.httpOptionsAcceptJson)
             .pipe(
                 map(response => {
                     return response['service_templates'][0]._links['self'].href;
@@ -150,20 +135,25 @@ export class ApplicationManagementService {
             );
     }
 
-    triggerManagementPlan(plan: Plan): Observable<string> {
+    triggerManagementPlan(plan: Plan, instanceId: string): Observable<string> {
         this.logger.log('[application-management.service][triggerManagementPlan]',
             'Starting Management Plan <' + plan.id + '>');
         this.logger.log('[application-management.service][triggerManagementPlan]',
             'Build Plan Operation Meta Data are: ' + JSON.stringify(plan));
-        const url = new Path(plan._links['self'].href)
+        let url = new Path(plan._links['self'].href)
             .append('instances')
             .toString();
+
+        if (instanceId) {
+            url = _.replace(url, ':id', instanceId);
+        }
+
         const httpOptions = {
             headers: new HttpHeaders({
                 'Accept': 'text/plain'
             }),
         };
-        return this.http.post(url, plan.input_parameters, {...httpOptions, responseType: 'text', observe: 'response'})
+        return this.http.post(url, plan.input_parameters, { ...httpOptions, responseType: 'text', observe: 'response' })
             .pipe(
                 map(response => {
                     return response.headers.get('Location');
@@ -178,12 +168,7 @@ export class ApplicationManagementService {
             .append('csars')
             .append(id)
             .toString();
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
-        return this.http.get(csarUrl, httpOptions)
+        return this.http.get(csarUrl, this.httpOptionsAcceptJson)
             .toPromise()
             .then(() => true)
             .catch(() => false);
@@ -195,12 +180,7 @@ export class ApplicationManagementService {
             .append('csars')
             .append(csarId)
             .toString();
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
-        return this.http.get<Csar>(url, httpOptions)
+        return this.http.get<Csar>(url, this.httpOptionsAcceptJson)
             .pipe(
                 catchError((err: any) => {
                     this.logger

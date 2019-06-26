@@ -15,16 +15,15 @@
 import { Action } from '../store/store.action';
 import { ApplicationManagementActions } from './application-management-actions';
 import { Csar } from '../core/model/csar.model';
-import { Plan } from '../core/model/plan.model';
 import { ServiceTemplateInstance } from '../core/model/service-template-instance.model';
+import { Interface } from '../core/model/interface.model';
 
 export interface ApplicationManagementState {
     applications?: Array<Csar>;
     application?: {
         csar?: Csar;
-        buildPlan?: Plan;
-        terminationPlan?: Plan;
         instances: Map<string, ServiceTemplateInstance>;
+        interfaces: Interface[];
     };
 }
 
@@ -32,15 +31,9 @@ export const INITIAL_STATE: ApplicationManagementState = {
     applications: [],
     application: {
         csar: null,
-        buildPlan: null,
-        terminationPlan: null,
-        instances: new Map<string, ServiceTemplateInstance>()
-    },
-    // currentApp: null,
-    // currentAppInstances: [],
-    // currentInstance: null,
-    // buildPlan: null,
-    // currentTerminationPlan: null
+        instances: new Map<string, ServiceTemplateInstance>(),
+        interfaces: null
+    }
 };
 
 export function applicationManagementReducer(state: ApplicationManagementState = INITIAL_STATE,
@@ -60,18 +53,6 @@ export function applicationManagementReducer(state: ApplicationManagementState =
                     ...state.application, csar: action.payload
                 }
             });
-        case ApplicationManagementActions.UPDATE_APPLICATION_BUILDPLAN:
-            return Object.assign({}, state, {
-                application: {
-                    ...state.application, buildPlan: action.payload
-                }
-            });
-        case ApplicationManagementActions.UPDATE_APPLICATION_TERMINATIONPLAN:
-            return Object.assign({}, state, {
-                application: {
-                    ...state.application, terminationPlan: action.payload
-                }
-            });
         case ApplicationManagementActions.UPDATE_APPLICATION_INSTANCES:
             return Object.assign({}, state, {
                 application: {
@@ -82,6 +63,19 @@ export function applicationManagementReducer(state: ApplicationManagementState =
             return Object.assign({}, state, {
                 application: {
                     ...state.application, instances: []
+                }
+            });
+        case ApplicationManagementActions.UPDATE_APPLICATION_INTERFACES:
+            return Object.assign({}, state, {
+                application: {
+                    ...state.application, interfaces: action.payload
+                }
+            });
+        case ApplicationManagementActions.CLEAR_APPLICATION_INTERFACES:
+            return Object.assign({}, state, {
+                application: {
+                    ...state.application,
+                    interfaces: []
                 }
             });
         default:

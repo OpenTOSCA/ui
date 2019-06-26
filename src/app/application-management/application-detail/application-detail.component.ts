@@ -15,16 +15,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationManagementService } from '../../core/service/application-management.service';
-import { LoggerService } from '../../core/service/logger.service';
 import { AppState } from '../../store/app-state.model';
 import { BreadcrumbActions } from '../../core/component/breadcrumb/breadcrumb-actions';
 import { ApplicationManagementActions } from '../application-management-actions';
 import { Csar } from '../../core/model/csar.model';
-import { Plan } from '../../core/model/plan.model';
 import { Observable } from 'rxjs';
 import { GrowlActions } from '../../core/growl/growl-actions';
-import * as _ from 'lodash';
 import { ApplicationInstanceManagementService } from '../../core/service/application-instance-management.service';
+import { Interface } from '../../core/model/interface.model';
+import { PlanTypes } from '../../core/model/plan-types.model';
 
 @Component({
     selector: 'opentosca-application-detail',
@@ -33,30 +32,33 @@ import { ApplicationInstanceManagementService } from '../../core/service/applica
 export class ApplicationDetailComponent implements OnInit, OnDestroy {
 
     @select(['container', 'application', 'csar']) csar: Observable<Csar>;
-    @select(['container', 'application', 'buildPlan']) buildPlan: Observable<Plan>;
-    @select(['container', 'application', 'terminationPlan']) terminationPlan: Observable<Plan>;
 
     public dialogVisible = false;
+    public selectedPlanType: PlanTypes;
+    public buildPlanExists = false;
+    public terminationPlanExists = false;
+    public instanceId: string;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private ngRedux: NgRedux<AppState>,
                 private appService: ApplicationManagementService,
-                private instancesService: ApplicationInstanceManagementService,
-                private logger: LoggerService) {
+                private instancesService: ApplicationInstanceManagementService) {
     }
 
     ngOnInit(): void {
-        this.route.data.subscribe((data: { application: { csar: Csar, buildPlan: Plan, terminationPlan: Plan } }) => {
+        this.route.data.subscribe((data: { application: { csar: Csar, buildPlanAvailable: boolean, terminationPlanAvailable: boolean, interfaces: Interface[] } }) => {
             // Prepare breadcrumb
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-                {label: 'Applications', routerLink: 'applications'},
-                {label: data.application.csar.id, routerLink: ['applications', data.application.csar.id]}
+                { label: 'Applications', routerLink: 'applications' },
+                { label: data.application.csar.id, routerLink: ['applications', data.application.csar.id] }
             ]));
             this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationCsar(data.application.csar));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateBuildPlan(data.application.buildPlan));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateTerminationPlan(data.application.terminationPlan));
-            if (data.application.buildPlan === null) {
+            this.ngRedux.dispatch(ApplicationManagementActions.updateInterfaces(data.application.interfaces));
+
+            this.buildPlanExists = data.application.buildPlanAvailable;
+            this.terminationPlanExists = data.application.terminationPlanAvailable;
+            if (!this.buildPlanExists) {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'info',
@@ -95,20 +97,15 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
             });
     }
 
-    emitTerminationPlan(terminationEvent: string): void {
-        const terminationPlan = Object.assign({}, this.ngRedux.getState().container.application.terminationPlan);
-        terminationPlan._links['self'].href = _.replace(terminationPlan._links['self'].href, ':id', terminationEvent);
-        console.log(terminationPlan);
-        this.appService.triggerManagementPlan(terminationPlan)
-            .subscribe(result => {
-                this.logger.log('[application-detail.component][emitTerminationPlan]', result);
-                this.ngRedux.dispatch(GrowlActions.addGrowl(
-                    {
-                        severity: 'info',
-                        summary: 'Termination started',
-                        detail: 'The termination plan has been started.'
-                    }
-                ));
-            });
+    selectBuildPlan() {
+        this.selectedPlanType = PlanTypes.BuildPlan;
+        this.instanceId = null;
+        this.dialogVisible = true;
+    }
+
+    selectTerminationPlan(instanceId: string) {
+        this.selectedPlanType = PlanTypes.TerminationPlan;
+        this.instanceId = instanceId;
+        this.dialogVisible = true;
     }
 }
