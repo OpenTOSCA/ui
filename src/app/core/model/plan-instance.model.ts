@@ -21,7 +21,7 @@ export class PlanInstance extends ResourceSupport {
     service_template_instance_id: string;
     correlation_id: string;
     state: PlanInstanceState;
-    type: 'BUILD' | 'MANAGEMENT' | 'TERMINATION' | 'OTHER';
+    type: 'BUILD' | 'MANAGEMENT' | 'TERMINATION' | 'TRANSFORMATION' | 'OTHER';
     outputs: Array<PlanParameter>;
     logs: Array<PlanLogEntry>;
 }

@@ -73,8 +73,11 @@
         </p-card>
     </div>
 </div>
-
-<!--TODO-->
-<!--<opentosca-deployment-completion *ngIf="showCompletionDialog" [appToComplete]="appToComplete"-->
-<!--[linkToWineryResource]="linkToWineryResource" (completionSuccess)="installInContainer($event)">-->
-<!--</opentosca-deployment-completion>-->
+<opentosca-deployment-completion *ngIf="initializeCompletionComponent"
+                                 [(visible)]="showCompletionDialog"
+                                 [appToComplete]="appToComplete"
+                                 [linkToWineryResource]="linkToWineryResourceForCompletion"
+                                 (completionSuccess)="onCompletionSuccess($event)"
+                                 (completionAbort)="onCompletionAbort()"
+                                 (completionError)="onCompletionError($event)">
+</opentosca-deployment-completion>
