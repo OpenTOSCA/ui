@@ -90,21 +90,16 @@ export class ApplicationUploadComponent implements OnInit {
     onClear(): void {
         this.fileSelected = false;
         this.deploymentInProgress = false;
+        this.applyEnrichment = false;
     }
 
     handleUpload(event: any): void {
+        const fileToUpload = event.files[0];
         const formData: FormData = new FormData();
         formData.append('enrichment', JSON.stringify(this.applyEnrichment));
-        formData.append('file', event.files[0], event.files[0].name);
-        let headers = new HttpHeaders();
-        this.uploadCsar(formData, headers).subscribe(
-            data => console.log(data),
-            error => console.log(error)
-        );
-    }
-
-    uploadCsar(formData, headers): Observable<boolean> {
-        return this.http.post<boolean>(this.postURL, formData, { headers: headers });
+        formData.append('file', fileToUpload, fileToUpload.name);
+        const headers = new HttpHeaders();
+        this.http.post(this.postURL, formData, {headers: headers});
     }
 
     /**
@@ -175,6 +170,7 @@ export class ApplicationUploadComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
+        console.log(this.tempData.cur);
         this.repositoryManagementService.installApplication(this.tempData.cur, postURL)
             .toPromise()
             .then(() => {
@@ -216,6 +212,7 @@ export class ApplicationUploadComponent implements OnInit {
         this.tempData.cur.name = null;
         this.tempData.validURL = false;
         this.tempData.validName = false;
+        this.applyEnrichment = false;
     }
 
     urlChange(url: string): void {
@@ -224,6 +221,10 @@ export class ApplicationUploadComponent implements OnInit {
 
     nameChange(name: string): void {
         this.tempData.cur.name = name;
+    }
+
+    applyEnrichmentChange(): void {
+        this.tempData.cur.enrich = JSON.stringify(this.applyEnrichment);
     }
 
     urlValidityChange(validity: boolean): void {
