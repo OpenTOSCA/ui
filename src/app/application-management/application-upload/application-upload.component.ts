@@ -174,7 +174,7 @@ export class ApplicationUploadComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        console.log(this.tempData.cur);
+
         this.repositoryManagementService.installApplication(this.tempData.cur, postURL)
             .toPromise()
             .then(() => {
