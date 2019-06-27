@@ -93,6 +93,10 @@ export class ApplicationUploadComponent implements OnInit {
         this.applyEnrichment = false;
     }
 
+    /**
+     * Handler for file upload.
+     * @param event: triggered when upload button is clicked
+     */
     handleUpload(event: any): void {
         const fileToUpload = event.files[0];
         const formData: FormData = new FormData();
