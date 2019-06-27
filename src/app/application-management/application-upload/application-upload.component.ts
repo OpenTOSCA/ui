@@ -95,7 +95,7 @@ export class ApplicationUploadComponent implements OnInit {
 
     /**
      * Handler for file upload.
-     * @param event: triggered when upload button is clicked
+     * @param event: upload event triggered when upload button is clicked
      */
     handleUpload(event: any): void {
         const fileToUpload = event.files[0];

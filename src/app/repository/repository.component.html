@@ -74,11 +74,14 @@
     </div>
 </div>
 <div>
-    <p-dialog styleClass="modal-scrollable" modal="true" draggable="false" resizable="false" width="400"
-              [(visible)]="showEnrichmentDialog" modal="true">
+    <p-dialog styleClass="modal-scrollable" [modal]="true" [draggable]="false" [resizable]="false" [width]="450"
+              [(visible)]="showEnrichmentDialog">
         <p-header>
             Management Feature Enrichment Dialog
         </p-header>
+        <p style="height: 75px">
+            Do you want to enrich the CSAR with additional management features?
+        </p>
         <p-checkbox [(ngModel)]="applyEnrichment" label="Apply Management Feature Enrichment"
                     binary="true">
         </p-checkbox>
