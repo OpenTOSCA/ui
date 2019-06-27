@@ -21,7 +21,6 @@
             <p-fileUpload name="file" [url]="postURL" customUpload="true" chooseLabel="Select File"
                           (uploadHandler)="handleUpload($event)"
                           (onSelect)="onSelect()"
-                          (onClear)="onClear()"
                           (onProgress)="onUploadProgress($event.originalEvent)"
                           (onUpload)="onUploadFinished($event)"
                           (onError)="onUploadError($event)"
