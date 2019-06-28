@@ -28,6 +28,8 @@ import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { WineryModule } from 'topologyrenderer';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -52,9 +54,12 @@ import { TabMenuModule } from 'primeng/tabmenu';
         CoreModule,
         StoreModule,
         ConfirmDialogModule,
+        WineryModule,
 
         // AppRoutingModule must be the last routing module
-        AppRoutingModule
+        AppRoutingModule,
+
+        BrowserAnimationsModule
     ],
     providers: [],
     bootstrap: [

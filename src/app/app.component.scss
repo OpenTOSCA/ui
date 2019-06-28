@@ -30,7 +30,8 @@ p-growl div.ui-growl div.ui-growl-item-container div.ui-growl-item span div.ui-g
 }
 
 #ot-layout-wrapper {
-  margin-bottom: 40px; // Margin bottom by footer height
+    // COMMENTED OUT FOR TESTING ON TOPPOLOGYRENDERER
+  //margin-bottom: 40px; // Margin bottom by footer height
 }
 
 #ot-topbar {
@@ -53,7 +54,8 @@ p-growl div.ui-growl div.ui-growl-item-container div.ui-growl-item span div.ui-g
 }
 
 #ot-content {
-  padding-top: 110px;
+    // COMMENTED OUT FOR TESTING ON TOPPOLOGYRENDERER
+  //padding-top: 110px;
   background-color: #fff;
 
   #ot-content-wrapper {

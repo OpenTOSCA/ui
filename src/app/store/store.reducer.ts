@@ -22,6 +22,9 @@ import { breadcrumbReducer } from '../core/component/breadcrumb/breadcrumb.reduc
 import { growlReducer } from '../core/growl/growl.reducer';
 import persistState from 'redux-localstorage';
 
+import { TopologyRendererReducer } from '../topologyrenderer/topologyRenderer.reducer';
+import { WineryReducer } from '../topologyrenderer/winery.reducer';
+
 export const rootReducer = composeReducers(
     defaultFormReducer(),
     combineReducers({
@@ -31,6 +34,8 @@ export const rootReducer = composeReducers(
         breadcrumb: breadcrumbReducer,
         growl: growlReducer,
         router: routerReducer,
+        topologyRendererState: TopologyRendererReducer,
+        wineryState: WineryReducer
     })
 );
 
