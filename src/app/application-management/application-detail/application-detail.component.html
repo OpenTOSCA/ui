@@ -34,8 +34,8 @@
                             <div class="ui-toolbar-group-left">
                                 <button pButton type="button" icon="fas fa-plus"
                                         pTooltip="Provision new instance..." showDelay="300" tooltipPosition="right"
-                                        [disabled]="(buildPlan | async) === null"
-                                        (click)="dialogVisible = true"></button>
+                                        [disabled]="!buildPlanExists"
+                                        (click)="selectBuildPlan()"></button>
                                 &nbsp;
                                 <button pButton type="button" icon="fas fa-sync-alt"
                                         pTooltip="Reload instances" showDelay="300" tooltipPosition="top"
@@ -43,8 +43,8 @@
                             </div>
                         </p-toolbar>
                         <opentosca-application-instance-list
-                            [terminationPlanAvailable]="(terminationPlan | async) !== null"
-                            (terminateInstance)="emitTerminationPlan($event)">
+                            [terminationPlanAvailable]="terminationPlanExists"
+                            (terminateInstance)="selectTerminationPlan($event)">
                         </opentosca-application-instance-list>
                     </p-fieldset>
                 </div>
@@ -74,6 +74,7 @@
 <ng-template #loading>
     <p>Loading app info...</p>
 </ng-template>
-<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan]="buildPlan | async"
+<opentosca-management-plan-execution-dialog [(visible)]="dialogVisible" [plan_type]="selectedPlanType"
+                                            [instanceId]="instanceId"
                                             [inputValidation]="true">
 </opentosca-management-plan-execution-dialog>

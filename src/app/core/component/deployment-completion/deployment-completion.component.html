@@ -15,57 +15,70 @@
 <p-dialog styleClass="modal-scrollable" [contentStyle]="{'overflow': 'auto', 'height': '468px'}"
           [(visible)]="visible" modal="true">
     <p-header>
-        Selection
+        Completion Dialog
     </p-header>
-    <!-- Todo Rework this with primeng instead of bootstrap -->
-    <form #selectionForm="ngForm">
+    <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="false">
+    </p-steps>
+    <div *ngIf="activeIndex === 0">
+        <div class="opentosca-modal-content">
+            Do you want to process with the completion for "{{appToComplete?.displayName}}"?
+        </div>
+    </div>
+    <div *ngIf="activeIndex === 1">
         <div class="modal-body">
             <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
             <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="sel1">Select new host:</label>
-                        <select class="form-control" id="sel1" name="selectOption"
-                                [(ngModel)]="completionSelection['hostInjections'][hostCompletionOption.nodeID]"
+                <div class="panel-body" [style.height.px]="amountOfHostOptions * 50">
+                    <p-dropdown [options]="hostOptions"
+                                (onChange)="onUpdateHostSelection(hostCompletionOption, $event)"
+                                autoWidth="false"
+                                [style]="{'width':'100%'}"
                                 required>
-                            <option *ngFor="let selection of hostCompletionOption.injectionOptionTopologyFragments"
-                                    [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
-                            </option>
-                        </select>
-                    </div>
+                    </p-dropdown>
                 </div>
             </div>
+        </div>
+    </div>
+    <div *ngIf="activeIndex === 2">
+        <div class="modal-body">
             <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
             <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Open Requirement: {{connectionCompletionOption?.nodeID}}</h3>
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="sel1">Select connection completion option:</label>
-                        <select class="form-control" id="sel2" name="selectOption"
-                                [(ngModel)]="completionSelection['connectionInjections'][connectionCompletionOption.nodeID]"
+                <div class="panel-body" [style.height.px]="amountOfConnectOptions * 50">
+                    <p-dropdown [options]="connectOptions"
+                                (onChange)="onUpdateConnectionSelection(connectionCompletionOption, $event)"
+                                autoWidth="false"
+                                [style]="{'width':'100%'}"
                                 required>
-                            <option
-                                *ngFor="let selection of connectionCompletionOption.injectionOptionTopologyFragments"
-                                [ngValue]="selection">{{selection?.documentation[0]?.content[0]}}
-                            </option>
-                        </select>
-                    </div>
+                    </p-dropdown>
                 </div>
             </div>
         </div>
-    </form>
-    <p-footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" (click)="abortCompletion()">Cancel
-            </button>
-            <button type="button" class="btn btn-primary" [disabled]="!selectionForm.form.valid"
-                    (click)="injectNewHosts()">Submit
-            </button>
+    </div>
+    <div *ngIf="activeIndex === 3">
+        <div class="opentosca-modal-content">
+            Do you want to confirm the upload of the completion for "{{appToComplete?.displayName}}"?
         </div>
+    </div>
+    <p-footer>
+        <button type="button"
+                pButton
+                (click)="abortCompletion()"
+                label="Cancel Completion"
+                icon="fa fa-times-circle"
+                style="">
+        </button>
+        <button type="button"
+                pButton
+                [disabled]="(!validHostSelected && activeIndex === 1) || (!validConnectSelected && activeIndex == 2)"
+                (click)="goToNextStep()"
+                [label]="stepsTextArray[activeIndex]"
+                icon="fa fa-play-circle">
+        </button>
     </p-footer>
 </p-dialog>

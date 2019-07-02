@@ -23,7 +23,6 @@
                           (onSelect)="onSelect()"
                           (onProgress)="onUploadProgress($event.originalEvent)"
                           (onUpload)="onUploadFinished($event)"
-                          (onError)="onUploadError($event)"
                           (onClear)="onClear()">
                 <ng-template let-file pTemplate="file">
                     <div>
@@ -98,7 +97,6 @@
             </button>
         </p-tabPanel>
     </p-tabView>
-
     <p-footer>
         <button
                 type="button"
@@ -108,3 +106,11 @@
         </button>
     </p-footer>
 </p-dialog>
+<opentosca-deployment-completion *ngIf="initializeCompletionComponent"
+                                 [(visible)]="showCompletionDialog"
+                                 [appToComplete]="appToComplete"
+                                 [linkToWineryResource]="linkToWineryResourceForCompletion"
+                                 (completionSuccess)="onCompletionSuccess($event)"
+                                 (completionAbort)="onCompletionAbort()"
+                                 (completionError)="onCompletionError($event)">
+</opentosca-deployment-completion>

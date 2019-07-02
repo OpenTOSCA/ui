@@ -18,32 +18,39 @@ import { LoggerService } from '../../core/service/logger.service';
 import { Csar } from '../../core/model/csar.model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
-import { Plan } from '../../core/model/plan.model';
+import { Interface } from '../../core/model/interface.model';
+import { PlanTypes } from '../../core/model/plan-types.model';
 
 @Injectable()
-export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, interfaces: Interface[] }> {
 
-    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService) {
+    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService,) {
     }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlan: Plan, terminationPlan: Plan }> {
+    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlanAvailable: boolean, terminationPlanAvailable: boolean, interfaces: Interface[] }> {
         return forkJoin(
             this.applicationService.getCsar(route.params['id']),
-            this.applicationService.getBuildPlan(route.params['id'])
-                .pipe(
-                    catchError(() => of(null))
-                ),
-            this.applicationService.getTerminationPlan(route.params['id'])
-                .pipe(
-                    catchError(() => of(null))
-                )
+            this.applicationService.getInterfaces(route.params['id']),
         )
-        .pipe(
-            mergeMap(result => {
-                return of({csar: result[0], buildPlan: result[1], terminationPlan: result[2]});
-            }),
-            catchError(reason => {
-                return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
-            }));
+            .pipe(
+                mergeMap(result => {
+                    const interfaces = <Interface[]>result[1];
+
+                    const buildPlanExists = interfaces.find(value =>
+                        !!value.operations.find(operation => operation._embedded.plan.plan_type === PlanTypes.BuildPlan)
+                    );
+                    const terminationPlanExists = interfaces.find(value =>
+                        !!value.operations.find(operation => operation._embedded.plan.plan_type === PlanTypes.TerminationPlan)
+                    );
+
+                    return of({
+                        csar: result[0], buildPlanAvailable: !!buildPlanExists,
+                        terminationPlanAvailable: !!terminationPlanExists, interfaces: interfaces
+                    });
+                }),
+                catchError(reason => {
+                    return this.logger.handleError('[application-detail-resolver.service][resolve]', reason);
+                })
+            );
     }
 }

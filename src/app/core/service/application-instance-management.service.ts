@@ -27,6 +27,7 @@ import { PlanInstance } from '../model/plan-instance.model';
 import { Plan } from '../model/plan.model';
 import { Interface } from '../model/interface.model';
 import { Operation } from '../model/operation.model';
+import { InterfaceList } from '../model/interface-list.model';
 
 @Injectable()
 export class ApplicationInstanceManagementService {
@@ -75,7 +76,7 @@ export class ApplicationInstanceManagementService {
             })
         };
         // TODO we have to create a proper model for interface ressources delivered by the backend
-        return this.http.get<{ interfaces: Array<any> }>(serviceTemplateInstance._links['boundarydefinitions/interfaces'].href, httpOptions)
+        return this.http.get<InterfaceList>(serviceTemplateInstance._links['boundarydefinitions/interfaces'].href, httpOptions)
             .pipe(
                 map((result) => {
                     const interfaces: Array<Interface> = [];

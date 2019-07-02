@@ -45,12 +45,19 @@ export class RepositoryComponent implements OnInit {
 
     searchTerm: string;
 
+
     public applyEnrichment = false;
     public showEnrichmentDialog = false;
 
+    public showCompletionDialog = false;
+    public initializeCompletionComponent = false;
+
+    public linkToWineryResourceForCompletion: string;
+    public appToComplete: MarketplaceApplication;
+
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
-                private logger: LoggerService) {
+                private logger: LoggerService, private adminService: ConfigurationService, private repoService: RepositoryService ) {
     }
 
     ngOnInit() {
@@ -130,11 +137,12 @@ export class RepositoryComponent implements OnInit {
             }, err => {
                 app.isInstalling = false;
                 if (err.status === 406) {
-                    // TODO
-                    // this.appToComplete = app;
-                    // this.linkToWineryResource = err.json()['Location'] as string;
-                    // this.logger.log('[marketplace.component][injection]', this.linkToWineryResource);
-                    // this.showCompletionDialog = true;
+                    this.appToComplete = app;
+                    this.appToComplete.csarName = app$.name;
+                    this.linkToWineryResourceForCompletion = err.error.Location;
+                    this.logger.log('[marketplace.component][injection]', this.linkToWineryResourceForCompletion);
+                    this.initializeCompletionComponent = true;
+                    this.showCompletionDialog = true;
                 } else {
                     this.ngRedux.dispatch(GrowlActions.addGrowl({
                         severity: 'error',
@@ -147,5 +155,76 @@ export class RepositoryComponent implements OnInit {
                         });
                 }
             });
+    }
+
+    /**
+     * Handler for successful completion of completion component.
+     */
+    onCompletionSuccess(app: MarketplaceApplication): void {
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'success',
+                summary: 'Completion Succeeded',
+                detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
+            }
+        ));
+        // Todo: Container should check itself if the app already exists and respond appropriately
+        const postURL = new Path(this.adminService.getContainerUrl())
+            .append('csars')
+            .toString();
+        const completedApp = new CsarUploadReference(app.csarURL, app.csarName, JSON.stringify(this.applyEnrichment));
+        this.repoService.installApplication(completedApp, postURL)
+            .subscribe(() => {
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'success',
+                        summary: 'Completed Application Installed',
+                        detail: `The completed app "${app.displayName}" was successfully installed in container.`
+                    }
+                ));
+            }, err => {
+                this.logger.error('[application-overview.component][completionSuccess]', err);
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: `The completed app "${app.displayName}" was not installed successfully in container: ${err}.`
+                    }
+                ));
+            });
+    }
+
+    /**
+     * Handler for emitted errors of completion component
+     */
+    onCompletionError(errorMessage: string): void {
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error at Topology Completion: ' + errorMessage
+            }
+        ));
+        this.stopCompletionProcess();
+    }
+
+    onCompletionAbort(): void {
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Topology Completion aborted.'
+            }
+        ));
+        this.stopCompletionProcess();
+    }
+
+    /**
+     * Hides the completion dialog
+     */
+    stopCompletionProcess(): void {
+        this.showCompletionDialog = false;
+        this.appToComplete = null;
+        this.linkToWineryResourceForCompletion = null;
     }
 }

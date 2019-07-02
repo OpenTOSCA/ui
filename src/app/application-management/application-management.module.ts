@@ -40,7 +40,10 @@ import {
     TabViewModule,
     ScrollPanelModule,
     ToolbarModule,
-    TooltipModule, ProgressSpinnerModule, InputTextareaModule, PanelModule
+    TooltipModule,
+    ProgressSpinnerModule,
+    InputTextareaModule,
+    PanelModule, DropdownModule,
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { NgSpinKitModule } from 'ng-spin-kit';
@@ -82,7 +85,8 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         TabViewModule,
         CoreModule,
         ToolbarModule,
-        ButtonModule
+        ButtonModule,
+        DropdownModule,
     ],
     declarations: [
         ApplicationDetailComponent,

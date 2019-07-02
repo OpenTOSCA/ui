@@ -35,7 +35,7 @@ export class BuildplanMonitoringService {
         };
         return this.http.get<PlanInstance>(url, httpOptions)
             .pipe(
-                catchError(err => this.logger.handleObservableError('[buildplan-monitor.service][getBuildPlan]', err))
+                catchError(err => this.logger.handleObservableError('[buildplan-monitor.service][getBuildPlans]', err))
             );
     }
 
