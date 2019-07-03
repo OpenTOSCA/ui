@@ -25,8 +25,8 @@
         </div>
     </div>
     <div *ngIf="activeIndex === 1">
-        <div class="modal-body">
-            <h4 *ngIf="hostCompletionOptions">Host Selection</h4>
+        <div class="modal-body" *ngIf="hostCompletionOptions; else noHostOptions">
+            <h4>Host Selection</h4>
             <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>
@@ -34,17 +34,21 @@
                 <div class="panel-body" [style.height.px]="amountOfHostOptions * 50">
                     <p-dropdown [options]="hostOptions"
                                 (onChange)="onUpdateHostSelection(hostCompletionOption, $event)"
-                                autoWidth="false"
                                 [style]="{'width':'100%'}"
                                 required>
                     </p-dropdown>
                 </div>
             </div>
         </div>
+        <ng-template #noHostOptions>
+            <div class="modal-body">
+                There are no host options to select!
+            </div>
+        </ng-template>
     </div>
     <div *ngIf="activeIndex === 2">
-        <div class="modal-body">
-            <h4 *ngIf="connectionCompletionOptions">Connection Selection</h4>
+        <div class="modal-body" *ngIf="connectionCompletionOptions; else noConnectionOptions">
+            <h4>Connection Selection</h4>
             <div class="panel panel-default" *ngFor="let connectionCompletionOption of connectionCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Open Requirement: {{connectionCompletionOption?.nodeID}}</h3>
@@ -52,13 +56,17 @@
                 <div class="panel-body" [style.height.px]="amountOfConnectOptions * 50">
                     <p-dropdown [options]="connectOptions"
                                 (onChange)="onUpdateConnectionSelection(connectionCompletionOption, $event)"
-                                autoWidth="false"
                                 [style]="{'width':'100%'}"
                                 required>
                     </p-dropdown>
                 </div>
             </div>
         </div>
+        <ng-template #noConnectionOptions>
+            <div class="modal-body">
+                There are no connection options to select!
+            </div>
+        </ng-template>
     </div>
     <div *ngIf="activeIndex === 3">
         <div class="opentosca-modal-content">
