@@ -130,9 +130,9 @@ export class ApplicationUploadComponent implements OnInit {
      * If topology completion is required this is caught within this handler.
      */
     onUploadError(event): void {
-        switch (event.xhr.status) {
+        switch (event.error.status) {
             case 406:
-                const response = JSON.parse(event.xhr.response);
+                const response = event.error.error;
                 this.linkToWineryResourceForCompletion = response['Location'];
                 const fileName = event.files[0].name;
                 const csarName = fileName.substr(0, fileName.length - 5);

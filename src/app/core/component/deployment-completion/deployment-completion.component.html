@@ -26,7 +26,7 @@
     </div>
     <div *ngIf="activeIndex === 1">
         <div class="modal-body">
-            <h4 *ngIf="connectionCompletionOptions">Host Selection</h4>
+            <h4 *ngIf="hostCompletionOptions">Host Selection</h4>
             <div class="panel panel-default" *ngFor="let hostCompletionOption of hostCompletionOptions">
                 <div class="panel-heading">
                     <h3 class="panel-title">Node template requiring host: {{hostCompletionOption?.nodeID}}</h3>

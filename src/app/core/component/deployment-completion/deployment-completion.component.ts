@@ -181,7 +181,7 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
                     // get connection injection options, i.e. rel templates with open requirement and possible values
                     this.connectionCompletionOptions = injectionOptions.connectionInjectionOptions;
                     this.logger.log('[deployment-completion.component][getInjectionOptions]', 'Got host completion options: '
-                        + this.hostCompletionOptions);
+                        + JSON.stringify(this.hostCompletionOptions));
                 }
             // after getting the injection options, fill the dropdown with the fetched values
             }).then(() => {
