@@ -62,11 +62,3 @@
 <p-confirmDialog width="425"></p-confirmDialog>
 <opentosca-application-upload [(showModal)]="showModal" (uploadComplete)="refresh()"></opentosca-application-upload>
 <!-- Todo deployment-completion component is currently disabled until it is aligned with new style and refactored -->
-<opentosca-deployment-completion *ngIf="false"
-        [(visible)]="showCompletionDialog"
-        [appToComplete]="appToComplete"
-        [linkToWineryResource]="linkToWineryResourceForCompletion"
-                                 (completionSuccess)="onCompletionSuccess($event)"
-                                 (completionAbort)="onCompletionAbort()"
-                                 (completionError)="onCompletionError($event)">
-</opentosca-deployment-completion>

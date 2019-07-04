@@ -29,7 +29,7 @@
         Selected Repository:
         &nbsp;
         <p-dropdown [options]="repositoryItems" [(ngModel)]="selectedRepository" optionLabel="name"
-                    [autoWidth]="true" [style]="{'min-width':'200px'}" (onChange)="selectRepository()"></p-dropdown>
+                    [style]="{'min-width':'200px'}" (onChange)="selectRepository()"></p-dropdown>
     </div>
 </p-toolbar>
 
@@ -73,8 +73,11 @@
         </p-card>
     </div>
 </div>
-
-<!--TODO-->
-<!--<opentosca-deployment-completion *ngIf="showCompletionDialog" [appToComplete]="appToComplete"-->
-<!--[linkToWineryResource]="linkToWineryResource" (completionSuccess)="installInContainer($event)">-->
-<!--</opentosca-deployment-completion>-->
+<opentosca-deployment-completion *ngIf="initializeCompletionComponent"
+                                 [(visible)]="showCompletionDialog"
+                                 [appToComplete]="appToComplete"
+                                 [linkToWineryResource]="linkToWineryResourceForCompletion"
+                                 (completionSuccess)="onCompletionSuccess($event)"
+                                 (completionAbort)="onCompletionAbort()"
+                                 (completionError)="onCompletionError($event)">
+</opentosca-deployment-completion>

@@ -19,7 +19,6 @@ import { NgRedux } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { LoggerService } from '../../core/service/logger.service';
 import { AppState } from '../../store/app-state.model';
-import { ApplicationManagementActions } from '../application-management-actions';
 import { DeploymentCompletionService } from '../../core/service/deployment-completion.service';
 import { RepositoryService } from '../../core/service/repository.service';
 import { Path } from '../../core/path';
@@ -27,6 +26,7 @@ import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import {MarketplaceApplication} from '../../core/model/marketplace-application.model';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -47,6 +47,10 @@ export class ApplicationUploadComponent implements OnInit {
         .toString();
     public bytesUploaded = 0;
     public bytesTotal = 0;
+    public linkToWineryResourceForCompletion: string;
+    public appToComplete: MarketplaceApplication;
+    public showCompletionDialog = false;
+    public initializeCompletionComponent = false;
 
     // temporary data derived from the user input for the url upload
     public tempData = {
@@ -62,7 +66,9 @@ export class ApplicationUploadComponent implements OnInit {
         private repositoryManagementService: RepositoryService,
         private ngRedux: NgRedux<AppState>,
         private router: Router,
-        private http: HttpClient) {
+        private http: HttpClient,
+        private repoService: RepositoryService,
+        private logger: LoggerService) {
 
     }
 
@@ -116,19 +122,27 @@ export class ApplicationUploadComponent implements OnInit {
             }
         ));
         this.uploadComplete.emit();
-        this.uploadComplete.emit();
         this.closeModal();
     }
 
     /**
-     * Handler for emited errors of file upload component.
-     * If topology completion is required this is catched within this handler.
+     * Handler for emitted errors of file upload component.
+     * If topology completion is required this is caught within this handler.
      */
     onUploadError(event): void {
-        switch (event.xhr.status) {
+        switch (event.error.status) {
             case 406:
-                const response = JSON.parse(event.xhr.response);
-                this.completionRequest.emit(response['Location']);
+                const response = event.error.error;
+                this.linkToWineryResourceForCompletion = response['Location'];
+                const fileName = event.files[0].name;
+                const csarName = fileName.substr(0, fileName.length - 5);
+                const csarID = fileName.lastIndexOf('.csar');
+                this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion, csarID,
+                    csarName).then(app => {
+                        this.appToComplete = app;
+                });
+                this.initializeCompletionComponent = true;
+                this.showCompletionDialog = true;
                 this.closeModal();
                 break;
             case 409:
@@ -248,5 +262,76 @@ export class ApplicationUploadComponent implements OnInit {
     nameValidator(name: string): Observable<boolean> {
         // TODO do actual validation!
         return of(true);
+    }
+
+    /**
+     * Handler for successful completion of completion component.
+     */
+    onCompletionSuccess(app: MarketplaceApplication): void {
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'success',
+                summary: 'Completion Succeeded',
+                detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
+            }
+        ));
+        // Todo: Container should check itself if the app already exists and respond appropriately
+        const postURL = new Path(this.adminService.getContainerUrl())
+            .append('csars')
+            .toString();
+        const completedApp = new CsarUploadReference(app.csarURL, app.csarName);
+        this.repoService.installApplication(completedApp, postURL)
+            .subscribe(() => {
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'success',
+                        summary: 'Completed Application Installed',
+                        detail: `The completed app "${app.displayName}" was successfully installed in container.`
+                    }
+                ));
+            }, err => {
+                this.logger.error('[application-overview.component][completionSuccess]', err);
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: `The completed app "${app.displayName}" was not installed successfully in container: ${err}.`
+                    }
+                ));
+            });
+    }
+
+    /**
+     * Handler for emitted errors of completion component
+     */
+    onCompletionError(errorMessage: string): void {
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error at Topology Completion: ' + errorMessage
+            }
+        ));
+        this.stopCompletionProcess();
+    }
+
+    onCompletionAbort(): void {
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Topology Completion aborted.'
+            }
+        ));
+        this.stopCompletionProcess();
+    }
+
+    /**
+     * Hides the completion dialog
+     */
+    stopCompletionProcess(): void {
+        this.showCompletionDialog = false;
+        this.appToComplete = null;
+        this.linkToWineryResourceForCompletion = null;
     }
 }
