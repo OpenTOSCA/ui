@@ -25,6 +25,17 @@ body {
     display: none;
 }
 
+winery-navbar {
+    top: 110px !important;
+}
+
+winery-canvas {
+    #grid {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+}
+
 .modal {
     color: #000 !important;
 }
