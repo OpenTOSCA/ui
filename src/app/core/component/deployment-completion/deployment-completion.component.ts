@@ -78,7 +78,6 @@ export class DeploymentCompletionComponent implements OnInit, AfterViewInit {
         this.connectOptions.push({label: '', value: null});
         // fetch injection options with link to winery repo
         this.getInjectionOptions(this.linkToWineryResource);
-        console.log(this.linkToWineryResource);
         // array with steps for completion dialog
         this.items = [
             {label: 'Step 1 - Disclaimer'},
