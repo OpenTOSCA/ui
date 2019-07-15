@@ -43,7 +43,6 @@ export class DeploymentCompletionService {
         return this.http.get<InjectionOptionsResponse>(url, httpOptions)
             .toPromise()
             .then(response => {
-                console.log(response);
                 this.logger.log('[deployment-completion.service][getInjectionOptions]', 'InjectionOption Winery Response:' + response);
                 const injectionOptionsResponse = response;
 
@@ -74,12 +73,9 @@ export class DeploymentCompletionService {
                 });
                 injectionOptions.connectionInjectionOptions = injectionOptionEntries;
                 this.logger.log('[deployment-completion.service][getInjectionOptions]', 'Received injection options: ' + injectionOptions);
-                console.log(injectionOptions);
                 return injectionOptions;
             })
             .catch(err => {
-                console.log("GET FAILED");
-                console.log(err);
                 if (err.status === 400) {
                     return null;
                 } else {
