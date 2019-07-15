@@ -41,12 +41,9 @@ export class ApplicationUploadComponent implements OnInit {
     @Output() completionRequest = new EventEmitter();
     public deploymentInProgress = false;
     public fileSelected = false;
-    public showUploadProgressLabel = false;
     public postURL = new Path(this.adminService.getContainerUrl())
         .append('csars')
         .toString();
-    public bytesUploaded = 0;
-    public bytesTotal = 0;
 
     public applyEnrichment = false;
 
@@ -107,15 +104,16 @@ export class ApplicationUploadComponent implements OnInit {
      * Handler for file upload.
      * @param event: upload event triggered when upload button is clicked
      */
-    handleUpload(event: any): void {
+    handleUpload(event: any, form: any): void {
+        this.deploymentInProgress = true;
         const fileToUpload = event.files[0];
         const formData: FormData = new FormData();
         formData.append('enrichment', JSON.stringify(this.applyEnrichment));
         formData.append('file', fileToUpload, fileToUpload.name);
         const headers = new HttpHeaders();
         this.handleCSARUpload(formData, headers).subscribe(
-            data => console.log(data),
-            error => this.onUploadError(event, error)
+            data => this.onUploadFinished(data),
+            error => this.onUploadError(event, error, form)
         );
     }
 
@@ -124,19 +122,12 @@ export class ApplicationUploadComponent implements OnInit {
     }
 
     /**
-     * Handler for upload progress of file upload component.
-     */
-    onUploadProgress(event: ProgressEvent): void {
-        this.bytesUploaded = event.loaded;
-        this.bytesTotal = event.total;
-        this.deploymentInProgress = this.bytesUploaded === this.bytesTotal;
-    }
-
-    /**
      * Handler for upload finished event of file upload component.
      * This handler is called when the XHR request returns, i.e., when deployment in container is done.
      */
     onUploadFinished(event): void {
+        this.deploymentInProgress = false;
+        console.log(event);
         // This is called when XHR request returns
         this.ngRedux.dispatch(GrowlActions.addGrowl(
             {
@@ -153,14 +144,16 @@ export class ApplicationUploadComponent implements OnInit {
      * Handler for emitted errors of file upload component.
      * If topology completion is required this is caught within this handler.
      */
-    onUploadError(event, error): void {
-        console.log(event, error);
+    onUploadError(event, error, form): void {
+        form.clear();
+        this.resetUploadStats();
+        const fileExtension = '.csar';
         switch (error.status) {
             case 406:
                 this.linkToWineryResourceForCompletion = error.error.Location;
                 const fileName = event.files[0].name;
-                const csarName = fileName.substr(0, fileName.length - 5);
-                const csarID = fileName.lastIndexOf('.csar');
+                const csarName = fileName.substr(0, fileName.length - fileExtension.length);
+                const csarID = fileName.lastIndexOf(fileExtension);
                 this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion, csarID,
                     csarName).then(app => {
                         this.appToComplete = app;
@@ -237,11 +230,11 @@ export class ApplicationUploadComponent implements OnInit {
      */
     resetUploadStats(): void {
         this.deploymentInProgress = false;
+        this.applyEnrichment = false;
         this.tempData.cur.url = null;
         this.tempData.cur.name = null;
         this.tempData.validURL = false;
         this.tempData.validName = false;
-        this.applyEnrichment = false;
     }
 
     urlChange(url: string): void {
@@ -305,7 +298,6 @@ export class ApplicationUploadComponent implements OnInit {
                 detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
             }
         ));
-        // Todo: Container should check itself if the app already exists and respond appropriately
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();

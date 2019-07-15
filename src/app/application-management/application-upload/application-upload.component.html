@@ -18,10 +18,9 @@
     </p-header>
     <p-tabView>
         <p-tabPanel header="Upload local File">
-            <p-fileUpload name="file" [url]="postURL" customUpload="true" chooseLabel="Select File"
-                          (uploadHandler)="handleUpload($event)"
+            <p-fileUpload #form name="file" [url]="postURL" customUpload="true" chooseLabel="Select File"
+                          (uploadHandler)="handleUpload($event, form)"
                           (onSelect)="onSelect()"
-                          (onProgress)="onUploadProgress($event.originalEvent)"
                           (onUpload)="onUploadFinished($event)"
                           (onClear)="onClear()">
                 <ng-template let-file pTemplate="file">
@@ -36,8 +35,6 @@
                 </ng-template>
                 <ng-template pTemplate="content">
                     <div *ngIf="!fileSelected">Please select a file</div>
-                    <p *ngIf="showUploadProgressLabel">Uploaded {{bytesUploaded | humanizeBytes}} of {{bytesTotal |
-                        humanizeBytes}}</p>
                     <div *ngIf="deploymentInProgress">
                         <div class="p-grid">
                             <div class="p-col-1">

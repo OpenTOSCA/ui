@@ -70,7 +70,6 @@ export class RepositoryService {
     }
 
     installApplication(app: CsarUploadReference, containerUrl: string): Observable<any> {
-        console.log(app);
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
