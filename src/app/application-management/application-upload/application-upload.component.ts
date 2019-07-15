@@ -127,7 +127,6 @@ export class ApplicationUploadComponent implements OnInit {
      */
     onUploadFinished(event): void {
         this.deploymentInProgress = false;
-        console.log(event);
         // This is called when XHR request returns
         this.ngRedux.dispatch(GrowlActions.addGrowl(
             {
