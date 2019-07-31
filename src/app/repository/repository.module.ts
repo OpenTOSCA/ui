@@ -19,12 +19,17 @@ import { RepositoryComponent } from './repository.component';
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '../core/core.module';
 import { NgSpinKitModule } from 'ng-spin-kit';
-import { ButtonModule, CardModule, DropdownModule, ScrollPanelModule, ToolbarModule, TooltipModule } from 'primeng/primeng';
+import {
+    ButtonModule, CardModule, CheckboxModule, ConfirmDialogModule, DialogModule,
+    DropdownModule, ScrollPanelModule, ToolbarModule,
+    TooltipModule
+} from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
         CommonModule,
+        CheckboxModule,
         FormsModule,
         RouterModule,
         TooltipModule,
@@ -33,9 +38,12 @@ import { FormsModule } from '@angular/forms';
         ScrollPanelModule,
         ToolbarModule,
         DropdownModule,
+        DialogModule,
         NgSpinKitModule,
         CoreModule,
-        RepositoryRoutingModule
+        RepositoryRoutingModule,
+        CheckboxModule,
+        ConfirmDialogModule
     ],
     declarations: [RepositoryComponent],
     providers: [ConfigurationService]

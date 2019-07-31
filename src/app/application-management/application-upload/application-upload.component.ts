@@ -17,16 +17,16 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { ApplicationManagementService } from '../../core/service/application-management.service';
 import { NgRedux } from '@angular-redux/store';
 import { Router } from '@angular/router';
-import { LoggerService } from '../../core/service/logger.service';
 import { AppState } from '../../store/app-state.model';
 import { DeploymentCompletionService } from '../../core/service/deployment-completion.service';
 import { RepositoryService } from '../../core/service/repository.service';
 import { Path } from '../../core/path';
 import { GrowlActions } from '../../core/growl/growl-actions';
 import { CsarUploadReference } from '../../core/model/csar-upload-request.model';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {MarketplaceApplication} from '../../core/model/marketplace-application.model';
+import { LoggerService } from '../../core/service/logger.service';
 
 @Component({
     selector: 'opentosca-application-upload',
@@ -41,12 +41,12 @@ export class ApplicationUploadComponent implements OnInit {
     @Output() completionRequest = new EventEmitter();
     public deploymentInProgress = false;
     public fileSelected = false;
-    public showUploadProgressLabel = false;
     public postURL = new Path(this.adminService.getContainerUrl())
         .append('csars')
         .toString();
-    public bytesUploaded = 0;
-    public bytesTotal = 0;
+
+    public applyEnrichment = false;
+
     public linkToWineryResourceForCompletion: string;
     public appToComplete: MarketplaceApplication;
     public showCompletionDialog = false;
@@ -54,7 +54,7 @@ export class ApplicationUploadComponent implements OnInit {
 
     // temporary data derived from the user input for the url upload
     public tempData = {
-        cur: new CsarUploadReference(null, null),
+        cur: new CsarUploadReference(null, null, null),
         validURL: false,
         validName: false
     };
@@ -97,15 +97,28 @@ export class ApplicationUploadComponent implements OnInit {
     onClear(): void {
         this.fileSelected = false;
         this.deploymentInProgress = false;
+        this.applyEnrichment = false;
     }
 
     /**
-     * Handler for upload progress of file upload component.
+     * Handler for file upload.
+     * @param event: upload event triggered when upload button is clicked
      */
-    onUploadProgress(event: ProgressEvent): void {
-        this.bytesUploaded = event.loaded;
-        this.bytesTotal = event.total;
-        this.deploymentInProgress = this.bytesUploaded === this.bytesTotal;
+    handleUpload(event: any, form: any): void {
+        this.deploymentInProgress = true;
+        const fileToUpload = event.files[0];
+        const formData: FormData = new FormData();
+        formData.append('enrichment', JSON.stringify(this.applyEnrichment));
+        formData.append('file', fileToUpload, fileToUpload.name);
+        const headers = new HttpHeaders();
+        this.handleCSARUpload(formData, headers).subscribe(
+            data => this.onUploadFinished(data),
+            error => this.onUploadError(event, error, form)
+        );
+    }
+
+    handleCSARUpload(formData, headers): Observable<Object> {
+        return this.http.post(this.postURL, formData, {headers: headers});
     }
 
     /**
@@ -113,6 +126,7 @@ export class ApplicationUploadComponent implements OnInit {
      * This handler is called when the XHR request returns, i.e., when deployment in container is done.
      */
     onUploadFinished(event): void {
+        this.deploymentInProgress = false;
         // This is called when XHR request returns
         this.ngRedux.dispatch(GrowlActions.addGrowl(
             {
@@ -129,14 +143,16 @@ export class ApplicationUploadComponent implements OnInit {
      * Handler for emitted errors of file upload component.
      * If topology completion is required this is caught within this handler.
      */
-    onUploadError(event): void {
-        switch (event.error.status) {
+    onUploadError(event, error, form): void {
+        form.clear();
+        this.resetUploadStats();
+        const fileExtension = '.csar';
+        switch (error.status) {
             case 406:
-                const response = event.error.error;
-                this.linkToWineryResourceForCompletion = response['Location'];
+                this.linkToWineryResourceForCompletion = error.error.Location;
                 const fileName = event.files[0].name;
-                const csarName = fileName.substr(0, fileName.length - 5);
-                const csarID = fileName.lastIndexOf('.csar');
+                const csarName = fileName.substr(0, fileName.length - fileExtension.length);
+                const csarID = fileName.lastIndexOf(fileExtension);
                 this.deploymentService.getAppFromCompletionHandlerWinery(this.linkToWineryResourceForCompletion, csarID,
                     csarName).then(app => {
                         this.appToComplete = app;
@@ -175,6 +191,7 @@ export class ApplicationUploadComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
+
         this.repositoryManagementService.installApplication(this.tempData.cur, postURL)
             .toPromise()
             .then(() => {
@@ -212,6 +229,7 @@ export class ApplicationUploadComponent implements OnInit {
      */
     resetUploadStats(): void {
         this.deploymentInProgress = false;
+        this.applyEnrichment = false;
         this.tempData.cur.url = null;
         this.tempData.cur.name = null;
         this.tempData.validURL = false;
@@ -224,6 +242,10 @@ export class ApplicationUploadComponent implements OnInit {
 
     nameChange(name: string): void {
         this.tempData.cur.name = name;
+    }
+
+    applyEnrichmentChange(): void {
+        this.tempData.cur.enrich = JSON.stringify(this.applyEnrichment);
     }
 
     urlValidityChange(validity: boolean): void {
@@ -275,11 +297,10 @@ export class ApplicationUploadComponent implements OnInit {
                 detail: `The completion process was successful, app "${app.displayName}" is now getting installed in container.`
             }
         ));
-        // Todo: Container should check itself if the app already exists and respond appropriately
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        const completedApp = new CsarUploadReference(app.csarURL, app.csarName);
+        const completedApp = new CsarUploadReference(app.csarURL, app.csarName, JSON.stringify(this.applyEnrichment));
         this.repoService.installApplication(completedApp, postURL)
             .subscribe(() => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(

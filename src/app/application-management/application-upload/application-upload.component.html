@@ -18,23 +18,23 @@
     </p-header>
     <p-tabView>
         <p-tabPanel header="Upload local File">
-            <p-fileUpload name="file" [url]="postURL" chooseLabel="Select File"
+            <p-fileUpload #form name="file" [url]="postURL" customUpload="true" chooseLabel="Select File"
+                          (uploadHandler)="handleUpload($event, form)"
                           (onSelect)="onSelect()"
-                          (onProgress)="onUploadProgress($event.originalEvent)"
                           (onUpload)="onUploadFinished($event)"
-                          (onError)="onUploadError($event)"
                           (onClear)="onClear()">
                 <ng-template let-file pTemplate="file">
                     <div>
                         <p>Name: {{ file.name }}</p>
                         <p>Size: {{file.size | humanizeBytes}}</p>
                         <p>Last Modified: {{file.lastModifiedDate}}</p>
+                        <p-checkbox [(ngModel)]="applyEnrichment" label="Apply Management Feature Enrichment"
+                                    binary="true">
+                        </p-checkbox>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="content">
                     <div *ngIf="!fileSelected">Please select a file</div>
-                    <p *ngIf="showUploadProgressLabel">Uploaded {{bytesUploaded | humanizeBytes}} of {{bytesTotal |
-                        humanizeBytes}}</p>
                     <div *ngIf="deploymentInProgress">
                         <div class="p-grid">
                             <div class="p-col-1">
@@ -76,6 +76,13 @@
                             (valueChange)='nameChange($event)'
                             (validityChange)='nameValidityChange($event)'>
                     </opentosca-debounced-validated-input>
+                </div>
+                <div class="p-col-9">
+                    <p-checkbox *ngIf="(this.tempData.validURL && this.tempData.validName)"
+                                (onChange)="applyEnrichmentChange()"
+                                [(ngModel)]="applyEnrichment" label="Apply Management Feature Enrichment"
+                                binary="true">
+                    </p-checkbox>
                 </div>
             </div>
             <button type="button"

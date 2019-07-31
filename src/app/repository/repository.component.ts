@@ -41,13 +41,19 @@ export class RepositoryComponent implements OnInit {
     selectedRepository: Item;
 
     apps: Array<MarketplaceApplication> = [];
+    currentlySelectedApp: MarketplaceApplication;
 
     searchTerm: string;
 
-    public linkToWineryResourceForCompletion: string;
-    public appToComplete: MarketplaceApplication;
+
+    public applyEnrichment = false;
+    public showEnrichmentDialog = false;
+
     public showCompletionDialog = false;
     public initializeCompletionComponent = false;
+
+    public linkToWineryResourceForCompletion: string;
+    public appToComplete: MarketplaceApplication;
 
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
@@ -113,10 +119,16 @@ export class RepositoryComponent implements OnInit {
         this.searchTerm = searchTerm;
     }
 
+    openEnrichmentDialog(app): void {
+        this.showEnrichmentDialog = true;
+        this.currentlySelectedApp = app;
+    }
+
     install(app: MarketplaceApplication): void {
+        this.showEnrichmentDialog = false;
         app.isInstalling = true;
         const url = new Path(this.configurationService.getContainerUrl()).append('csars').toString();
-        const app$ = new CsarUploadReference(app.csarURL, app.id);
+        const app$ = new CsarUploadReference(app.csarURL, app.id, JSON.stringify(this.applyEnrichment));
         this.repositoryService.installApplication(app$, url)
             .subscribe(() => {
                 app.isInstalling = false;
@@ -160,7 +172,7 @@ export class RepositoryComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        const completedApp = new CsarUploadReference(app.csarURL, app.csarName);
+        const completedApp = new CsarUploadReference(app.csarURL, app.csarName, JSON.stringify(this.applyEnrichment));
         this.repoService.installApplication(completedApp, postURL)
             .subscribe(() => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(

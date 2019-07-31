@@ -25,9 +25,25 @@ import { ApplicationDetailResolverService } from './application-detail/applicati
 import { ApplicationOverviewComponent } from './application-overview/application-overview.component';
 import { RouterModule } from '@angular/router';
 import {
-    AccordionModule, ButtonModule, CardModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule,
-    DropdownModule, FieldsetModule, FileUploadModule, InputTextareaModule, PanelModule, ProgressBarModule,
-    ProgressSpinnerModule, ScrollPanelModule, SharedModule, TabViewModule, ToolbarModule, TooltipModule
+    AccordionModule,
+    ButtonModule,
+    CardModule,
+    CheckboxModule,
+    ConfirmationService,
+    ConfirmDialogModule,
+    DataTableModule,
+    DialogModule,
+    FieldsetModule,
+    FileUploadModule,
+    ProgressBarModule,
+    SharedModule,
+    TabViewModule,
+    ScrollPanelModule,
+    ToolbarModule,
+    TooltipModule,
+    ProgressSpinnerModule,
+    InputTextareaModule,
+    PanelModule, DropdownModule,
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { NgSpinKitModule } from 'ng-spin-kit';
@@ -51,6 +67,7 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         SharedModule,
         TooltipModule,
         CardModule,
+        CheckboxModule,
         ButtonModule,
         PanelModule,
         ScrollPanelModule,
