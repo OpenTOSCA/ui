@@ -25,7 +25,7 @@
     </p-dropdown>
 
     <p-footer>
-        <button type="button" pButton [disabled]="!selectedPlan" (click)="showInputs = true;" label="Next">
+        <button type="button" pButton [disabled]="!selectedPlan" (click)="confirmPlan()" label="Next">
         </button>
         <button type="button" pButton (click)="closeModal()" label="Close"></button>
     </p-footer>
@@ -34,6 +34,26 @@
 <p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [(visible)]="visible && showInputs"
+          [draggable]="false" [resizable]="false" modal="true">
+    <p-header>
+        Placement Check
+    </p-header>
+    <p-inplaceContent>
+        Check whether the Service Template has an abstract Operating System Node Template that needs to be placed.
+    </p-inplaceContent>
+    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+    <p-footer>
+        <button type="button" pButton [disabled]="!instanceSelected" (click)="confirmInstance()" label="Confirm">
+        </button>
+        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+    </p-footer>
+    <div>
+
+    </div>
+</p-dialog>
+<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
+          [(visible)]="visible && showInputs && checkedForPlacement"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ selectedPlan?.id }}

@@ -43,7 +43,7 @@ import {
     TooltipModule,
     ProgressSpinnerModule,
     InputTextareaModule,
-    PanelModule, DropdownModule,
+    PanelModule, DropdownModule, InplaceModule, SpinnerModule,
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { NgSpinKitModule } from 'ng-spin-kit';
@@ -54,7 +54,8 @@ import { ManagementPlanExecutionDialogComponent } from './management-plan-execut
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagementPlanInstanceListComponent } from './management-plan-instance-list/management-plan-instance-list.component';
 import { TableModule } from 'primeng/table';
-import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component'; // tslint:disable-line:max-line-length
+import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component';
+import { PlacementComponent } from './placement/placement.component'; // tslint:disable-line:max-line-length
 
 @NgModule({
     imports: [
@@ -87,6 +88,8 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         ToolbarModule,
         ButtonModule,
         DropdownModule,
+        InplaceModule,
+        SpinnerModule,
     ],
     declarations: [
         ApplicationDetailComponent,
@@ -98,7 +101,8 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         ManagementPlanListComponent,
         ManagementPlanExecutionDialogComponent,
         ManagementPlanInstanceListComponent,
-        ApplicationInstanceBoundaryDefinitionInterfacesListComponent
+        ApplicationInstanceBoundaryDefinitionInterfacesListComponent,
+        PlacementComponent
     ],
     providers: [
         ConfigurationService,

@@ -41,7 +41,10 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
 
+    public loading = false;
     public showInputs = false;
+    public checkedForPlacement = false;
+    public instanceSelected = false;
     public selectedPlan: Plan;
     public runnable: boolean;
     private readonly interfaceFromOperationDelimiter = '#';
@@ -137,6 +140,15 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 }
             ));
         });
+    }
+
+    confirmInstance(): void {
+        this.instanceSelected = true;
+    }
+
+    confirmPlan(): void {
+        this.showInputs = true;
+        this.loading = true;
     }
 
     private updateInterfaceList(value?: Interface[]): void {
