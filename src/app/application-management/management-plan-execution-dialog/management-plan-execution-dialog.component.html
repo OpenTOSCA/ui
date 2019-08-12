@@ -45,8 +45,14 @@
     </div>
     <div *ngIf="!loading && abstractOSNodeTypeFound">
         <p-inplaceContent>
-            Found abstract Operating System Node template that needs to be placed!
+            Found abstract Operating System Node Template(s) that needs to be placed!
+            <br/>
+            <br/>
+            <br/>
         </p-inplaceContent>
+        <div *ngFor="let nodeTemplate of nodeTemplateList">
+            <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.</p-inplaceContent>
+        </div>
     </div>
     <div *ngIf="!loading && !abstractOSNodeTypeFound">
         <p-inplaceContent>

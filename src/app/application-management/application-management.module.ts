@@ -101,7 +101,7 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         ManagementPlanListComponent,
         ManagementPlanExecutionDialogComponent,
         ManagementPlanInstanceListComponent,
-        ApplicationInstanceBoundaryDefinitionInterfacesListComponent,
+        ApplicationInstanceBoundaryDefinitionInterfacesListComponent
     ],
     providers: [
         ConfigurationService,

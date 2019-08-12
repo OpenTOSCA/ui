@@ -32,7 +32,6 @@ import { NodeTemplate } from '../../core/model/node-template.model';
 export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges {
 
     @Input() visible = false;
-    @Input() csarId: any;
     @Output() visibleChange = new EventEmitter<boolean>();
     @Input() plan_type: PlanTypes;
     @Input() plan: Plan;
@@ -42,7 +41,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
-    nodeTemplateList: NodeTemplate[];
+    nodeTemplateList: NodeTemplate[] = [];
 
     public loading = false;
     public abstractOSNodeTypeFound = false;
@@ -64,7 +63,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     ngOnInit(): void {
         this.interfaces.subscribe(value => this.updateInterfaceList(value));
-        console.log(this.ngRedux.getState().container.application.csar);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -162,13 +160,13 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             data => {
                 this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
                     data => {
-                        this.nodeTemplateList = data.node_templates;
-                        for (let nodeTemplate of this.nodeTemplateList) {
+                        for (let nodeTemplate of data.node_templates) {
                             if (nodeTemplate.id === 'OperatingSystem') {
+                                this.nodeTemplateList.push(nodeTemplate);
                                 this.abstractOSNodeTypeFound = true;
-                                this.loading = false;
                             }
                         }
+                        this.loading = false;
                     }
                 )
             }
