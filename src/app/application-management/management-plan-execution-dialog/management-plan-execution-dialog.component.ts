@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 import { Interface } from '../../core/model/interface.model';
 import { SelectItemGroup } from 'primeng/api';
 import { PlanTypes } from '../../core/model/plan-types.model';
+import { NodeTemplate } from '../../core/model/node-template.model';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -31,6 +32,7 @@ import { PlanTypes } from '../../core/model/plan-types.model';
 export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges {
 
     @Input() visible = false;
+    @Input() csarId: any;
     @Output() visibleChange = new EventEmitter<boolean>();
     @Input() plan_type: PlanTypes;
     @Input() plan: Plan;
@@ -40,10 +42,11 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
+    nodeTemplateList: NodeTemplate[];
 
     public loading = false;
+    public abstractOSNodeTypeFound = false;
     public showInputs = false;
-    public checkedForPlacement = false;
     public instanceSelected = false;
     public selectedPlan: Plan;
     public runnable: boolean;
@@ -61,6 +64,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     ngOnInit(): void {
         this.interfaces.subscribe(value => this.updateInterfaceList(value));
+        console.log(this.ngRedux.getState().container.application.csar);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -142,13 +146,33 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         });
     }
 
-    confirmInstance(): void {
+    continue(): void {
+        this.showInputs = true;
+    }
+
+    confirm(): void {
         this.instanceSelected = true;
+        this.showInputs = true;
     }
 
     confirmPlan(): void {
         this.showInputs = true;
         this.loading = true;
+        this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
+            data => {
+                this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
+                    data => {
+                        this.nodeTemplateList = data.node_templates;
+                        for (let nodeTemplate of this.nodeTemplateList) {
+                            if (nodeTemplate.id === 'OperatingSystem') {
+                                this.abstractOSNodeTypeFound = true;
+                                this.loading = false;
+                            }
+                        }
+                    }
+                )
+            }
+        )
     }
 
     private updateInterfaceList(value?: Interface[]): void {

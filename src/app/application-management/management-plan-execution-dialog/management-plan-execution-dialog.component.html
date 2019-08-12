@@ -30,30 +30,42 @@
         <button type="button" pButton (click)="closeModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
-
 <p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
-          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
+          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px', 'width': '650px'}"
           [(visible)]="visible && showInputs"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Placement Check
     </p-header>
+    <div *ngIf="loading && !abstractOSNodeTypeFound">
     <p-inplaceContent>
-        Check whether the Service Template has an abstract Operating System Node Template that needs to be placed.
+        Checking whether the Service Template has an abstract Operating System Node Template that needs to be placed.
     </p-inplaceContent>
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+    </div>
+    <div *ngIf="!loading && abstractOSNodeTypeFound">
+        <p-inplaceContent>
+            Found abstract Operating System Node template that needs to be placed!
+        </p-inplaceContent>
+    </div>
+    <div *ngIf="!loading && !abstractOSNodeTypeFound">
+        <p-inplaceContent>
+            No Node Template found that needs to be placed. Continue with input.
+        </p-inplaceContent>
+    </div>
     <p-footer>
-        <button type="button" pButton [disabled]="!instanceSelected" (click)="confirmInstance()" label="Confirm">
+        <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected" (click)="continue()" label="Continue">
+        </button>
+        <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected" (click)="confirm()" label="Confirm">
         </button>
         <button type="button" pButton (click)="closeModal()" label="Close"></button>
     </p-footer>
     <div>
-
     </div>
 </p-dialog>
 <p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
-          [(visible)]="visible && showInputs && checkedForPlacement"
+          [(visible)]="visible && showInputs && !loading && instanceSelected"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ selectedPlan?.id }}

@@ -27,6 +27,7 @@ import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { InterfaceList } from '../model/interface-list.model';
 import { Operation } from '../model/operation.model';
+import { NodeTemplateResultObject } from '../model/node-template-result.model';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -122,8 +123,15 @@ export class ApplicationManagementService {
 
     checkForAbstractOperatingSystem(csarId: string, plan: Plan) {
         /* check here with a http request whether application has abstract OS node template and thus needs to be placed
-        and return possible running instances to be referenced from abstract OS
+        and return possible running instances to be referenced from abstract OSasd
          */
+    }
+
+    getNodeTemplatesOfServiceTemplate(serviceTemplatePath: string): Observable<NodeTemplateResultObject> {
+        const url = new Path(serviceTemplatePath)
+            .append('nodetemplates')
+            .toString();
+        return this.http.get<NodeTemplateResultObject>(url, this.httpOptionsAcceptJson);
     }
 
     getFirstServiceTemplateOfCsar(csarId: string): Observable<string> {

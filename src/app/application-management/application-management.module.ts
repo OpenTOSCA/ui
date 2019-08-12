@@ -55,7 +55,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagementPlanInstanceListComponent } from './management-plan-instance-list/management-plan-instance-list.component';
 import { TableModule } from 'primeng/table';
 import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component';
-import { PlacementComponent } from './placement/placement.component'; // tslint:disable-line:max-line-length
+// tslint:disable-line:max-line-length
 
 @NgModule({
     imports: [
@@ -102,7 +102,6 @@ import { PlacementComponent } from './placement/placement.component'; // tslint:
         ManagementPlanExecutionDialogComponent,
         ManagementPlanInstanceListComponent,
         ApplicationInstanceBoundaryDefinitionInterfacesListComponent,
-        PlacementComponent
     ],
     providers: [
         ConfigurationService,
