@@ -24,6 +24,7 @@ import { Interface } from '../../core/model/interface.model';
 import { SelectItemGroup } from 'primeng/api';
 import { PlanTypes } from '../../core/model/plan-types.model';
 import { NodeTemplate } from '../../core/model/node-template.model';
+import { PlacementService } from '../../core/service/placement.service';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -53,6 +54,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     constructor(
         private appService: ApplicationManagementService,
+        private placementService: PlacementService,
         private ngRedux: NgRedux<AppState>,
         private logger: LoggerService) {
     }
@@ -167,6 +169,11 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                             }
                         }
                         this.loading = false;
+                        this.placementService.getAvailableInstances(this.nodeTemplateList).subscribe(
+                            data => {
+                                console.log(data);
+                            }
+                        );
                     }
                 )
             }
