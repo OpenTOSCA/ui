@@ -21,6 +21,11 @@ export class PlacementService {
     constructor(private http: HttpClient, private logger: LoggerService, private ngRedux: NgRedux<AppState>) {
     }
 
+    /**
+     *  This method fetches all available instances from the API
+     *  that can be used to place the node templates of the node template list
+     * @param nodeTemplateList: node templates that need to be placed, i.e. that are of abstract OperatingSystem node type
+     */
     getAvailableInstances(nodeTemplateList: NodeTemplate[]): Observable<any> {
         const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('placement')
