@@ -12,3 +12,37 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
+ :host ::ng-deep winery-topologymodeler {
+    position: absolute;
+    margin-top: -10px;
+ }
+
+ :host ::ng-deep winery-navbar {
+    position: relative !important;
+    top: 0px !important;
+
+}
+
+    :host ::ng-deep winery-navbar nav {
+        width: 99%
+    }
+
+#managementOperationButton {
+    top: 100px;
+    position: relative;
+    z-index: 3;
+}
+
+@media (min-width: 855px) and (max-width: 1175px) {
+    #managementOperationButton {
+        top: 150px;
+    }
+}
+
+@media (min-width: 335px) and (max-width: 885px) {
+    #managementOperationButton {
+        top: 200px;
+    }
+}
+
+

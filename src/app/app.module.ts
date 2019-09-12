@@ -28,7 +28,6 @@ import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { WineryModule } from 'topologyrenderer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -48,13 +47,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         GrowlModule,
         TabMenuModule,
         CardModule,
-        ApplicationManagementModule,
         RepositoryModule,
         ConfigurationModule,
         CoreModule,
         StoreModule,
         ConfirmDialogModule,
-        WineryModule,
+        ApplicationManagementModule,
 
         // AppRoutingModule must be the last routing module
         AppRoutingModule,

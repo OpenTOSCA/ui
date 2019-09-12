@@ -28,13 +28,21 @@ import { Plan } from '../model/plan.model';
 import { Interface } from '../model/interface.model';
 import { Operation } from '../model/operation.model';
 import { InterfaceList } from '../model/interface-list.model';
+import { Path } from '../path';
+import { ServiceTemplateInstanceTopology } from '../model/service-template-instance-topology-model';
+import * as _ from 'lodash';
+import { NgRedux } from '@angular-redux/store';
+import { AppState } from '../../store/app-state.model';
+import { NodeOperationParameter } from '../model/node-operation-parameter.model';
+import { NodeOperationInterface, NodeOperationAttributes } from '../model/node-operation.model';
 
 @Injectable()
 export class ApplicationInstanceManagementService {
 
     constructor(private logger: LoggerService,
                 private http: HttpClient,
-                private applicationManagementService: ApplicationManagementService) {
+                private applicationManagementService: ApplicationManagementService,
+                private ngRedux: NgRedux<AppState>) {
     }
 
     getServiceTemplateInstance(appId: string, instanceId: string): Observable<ServiceTemplateInstance> {
@@ -52,6 +60,113 @@ export class ApplicationInstanceManagementService {
                     }
                 })
             );
+    }
+
+    getServiceTemplateInstanceTopology(serviceTemplateInstance: ServiceTemplateInstance): Observable<ServiceTemplateInstanceTopology> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+        const url = new Path(serviceTemplateInstance._links['self'].href)
+        .append('topology')
+        .toString();
+        return this.http.get<ServiceTemplateInstanceTopology>(url, httpOptions)
+            .pipe(
+                catchError(err => {
+                    console.error(err);
+                    return throwError(err);
+                })
+            );
+    }
+
+    // runNodeTemplateManagementOperation(nodeOperation: NodeOperationAttributes, iface: NodeOperationInterface): Observable<any> {
+    //     const httpOptions = {
+    //         headers: new HttpHeaders({
+    //             'Accept': 'application/json'
+    //         }),
+    //     };
+    //     let url = new Path(this.ngRedux.getState().administration.containerUrl)
+    //     .append('ManagementBus/v1/invoker?=')
+    //     .toString();
+
+    //     url = _.replace(url, ':1337', ':8086');
+
+    //     let input_params: any = {};
+
+    //     nodeOperation.input_parameters.forEach( param => {
+    //         input_params[param.name] = param.value;
+    //     });
+
+    //     let body = {
+    //         "invocation-information": {
+    //             "csarID": iface.csarID,
+    //             "serviceTemplateID" : iface.serviceTemplateID,
+    //             "serviceInstanceID": "null/" + iface.serviceInstanceID,
+    //             "nodeTemplateID": iface.nodeTemplateID,
+    //             "nodeInstanceID": iface.node_instance_id,
+    //             "interface": iface.name,
+    //             "operation": nodeOperation.name
+    //         },
+    //         "params": input_params
+    //     };
+
+    //     return this.http.post(url, body, { ...httpOptions, responseType: 'text', observe: 'response' })
+    //     .pipe(
+    //         map(response => {
+    //             return response.headers.get('Location');
+    //         }),
+    //         catchError(err => {
+    //             console.error(err);
+    //             return throwError(err);
+    //         })
+    //     );
+    // }
+
+    runNodeTemplateManagementOperations(nodeOperation: NodeOperationAttributes, iface: NodeOperationInterface, serviceTemplateInstance: ServiceTemplateInstance): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            }),
+        };
+        //const url = new Path(serviceTemplateInstance._links['self'].href)
+        // .append('topology/managementoperation')
+        // .toString();
+
+        let url = new Path(serviceTemplateInstance._links['self'].href).toString();
+        url = url.slice(0, url.indexOf("/instances/"));
+        url = url.concat('/nodetemplates/' + iface.nodeTemplateID + '/instances/' + iface.node_instance_id + '/managementoperation').toString();
+
+        let input_params: any = {};
+
+        nodeOperation.input_parameters.forEach( param => {
+            input_params[param.name] = param.value;
+        });
+
+        let body = {
+            "invocation-information": {
+                "csarID": iface.csarID,
+                "serviceTemplateID" : iface.serviceTemplateID,
+                "serviceInstanceID": "null/" + iface.serviceInstanceID,
+                "nodeTemplateID": iface.nodeTemplateID,
+                "nodeInstanceID": iface.node_instance_id,
+                "interface": iface.name,
+                "operation": nodeOperation.name
+            },
+            //"nextState": "CREATED",
+            "params": input_params
+        };
+
+        return this.http.post(url, body, { ...httpOptions, responseType: 'text', observe: 'response' })
+        .pipe(
+             map(response => {
+                 return JSON.parse(response.body);
+            }),
+            catchError(err => {
+                console.error(err);
+                return throwError(err);
+            })
+        );
     }
 
     getBuildPlanInstanceFromServiceTemplateInstance(serviceTemplateInstance: ServiceTemplateInstance): Observable<PlanInstance> {
@@ -169,6 +284,7 @@ export class ApplicationInstanceManagementService {
                 'Accept': 'application/json'
             })
         };
+
         return this.http.get<ServiceTemplateList>(app._links['servicetemplates'].href)
             .pipe(
                 mergeMap(response => {

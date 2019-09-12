@@ -64,6 +64,15 @@
             [instance]="serviceTemplateInstance"></opentosca-application-instance-boundary-definition-interfaces-list>
 </p-fieldset>
 
+<p-fieldset *ngIf="topologyModelerData; let topologyModelerData; else loading"
+[style]="{'margin-bottom': '10px', 'height': '800px', 'overflow': 'hidden', 'position': 'relative'}">
+    <p-header><strong>Instance Topology Model</strong></p-header>
+        <winery-topologymodeler [topologyModelerData]="topologyModelerData"></winery-topologymodeler>
+        <button id="managementOperationButton" class="btn btn-sm align-middle btn-info" (click)="showManagementOperationDialog('{}');">Open Management Operation Modal</button>
+</p-fieldset>
+<p-fieldset *ngIf="interfaces; let interfaces; else loading">
+<opentosca-application-instance-management-operation-execution-dialog [(visible)]="dialogVisible" [interfaces]="interfaces" [serviceTemplateInstance]="serviceTemplateInstance" (nodeInstanceStateChange)="updateInstanceProperties($event)"></opentosca-application-instance-management-operation-execution-dialog>
+</p-fieldset>
 <!--<p-fieldset [toggleable]="true" [collapsed]="true" [style]="{'margin-bottom': '10px'}">-->
 <!--<p-header><strong>Build Plan Monitor</strong></p-header>-->
 <!--<span *ngIf="serviceTemplateInstance; let serviceTemplateInstance;">-->

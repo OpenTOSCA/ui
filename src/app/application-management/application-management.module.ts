@@ -38,8 +38,9 @@ import { ManagementPlanExecutionDialogComponent } from './management-plan-execut
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagementPlanInstanceListComponent } from './management-plan-instance-list/management-plan-instance-list.component';
 import { TableModule } from 'primeng/table';
+import { ApplicationInstanceManagementOperationExecutionDialogComponent } from './application-instance-management-operation-execution-dialog/application-instance-management-operation-execution-dialog.component';
 import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component'; // tslint:disable-line:max-line-length
-
+import { WineryModule } from 'topologyrenderer';
 @NgModule({
     imports: [
         ApplicationManagementRoutingModule,
@@ -70,6 +71,7 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         ToolbarModule,
         ButtonModule,
         DropdownModule,
+        WineryModule,
     ],
     declarations: [
         ApplicationDetailComponent,
@@ -81,6 +83,7 @@ import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './
         ManagementPlanListComponent,
         ManagementPlanExecutionDialogComponent,
         ManagementPlanInstanceListComponent,
+        ApplicationInstanceManagementOperationExecutionDialogComponent,
         ApplicationInstanceBoundaryDefinitionInterfacesListComponent
     ],
     providers: [
