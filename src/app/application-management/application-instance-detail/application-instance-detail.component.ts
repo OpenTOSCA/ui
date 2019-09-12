@@ -162,7 +162,6 @@ export class ApplicationInstanceDetailComponent implements OnInit, OnDestroy {
                 element.properties.kvproperties.NodeInstanceState = node.state;
             }
         });
-        //this.reloadAppInstance();
 
     }
 
