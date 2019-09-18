@@ -170,7 +170,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                         }
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
-                        this.placementService.getAvailableInstances(this.nodeTemplateList).subscribe(
+                        this.placementService.getAvailableInstances(this.ngRedux.getState().container.application.csar.id, this.nodeTemplateList).subscribe(
                             data => {
                                 // TODO: extract data here, then display as dropdown with properties
                                 console.log(data);
