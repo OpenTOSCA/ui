@@ -41,7 +41,10 @@
     <p-inplaceContent>
         Checking whether the Service Template has an abstract Operating System Node Template that needs to be placed.
     </p-inplaceContent>
+        <br/>
+        <div style="text-align: center;">
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+        </div>
     </div>
     <div *ngIf="!loading && abstractOSNodeTypeFound">
         <p-inplaceContent>
