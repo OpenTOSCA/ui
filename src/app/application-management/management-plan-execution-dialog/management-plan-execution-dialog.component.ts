@@ -44,6 +44,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     interfacesList: SelectItemGroup[];
     nodeTemplateList: NodeTemplate[] = [];
 
+    private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem"
+
     public loading = false;
     public abstractOSNodeTypeFound = false;
     public showInputs = false;
@@ -163,19 +165,14 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
                     data => {
                         for (let nodeTemplate of data.node_templates) {
-                            if (nodeTemplate.id === 'OperatingSystem') {
+                            if (nodeTemplate.node_type === this.operatingSystemNodeType) {
                                 this.nodeTemplateList.push(nodeTemplate);
                                 this.abstractOSNodeTypeFound = true;
                             }
                         }
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
-                        this.placementService.getAvailableInstances(this.ngRedux.getState().container.application.csar.id, this.nodeTemplateList).subscribe(
-                            data => {
-                                // TODO: extract data here, then display as dropdown with properties
-                                console.log(data);
-                            }
-                        );
+                        this.placementService.getAvailableInstances(this.ngRedux.getState().container.application.csar.id, this.nodeTemplateList);
                     }
                 )
             }
