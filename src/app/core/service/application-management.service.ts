@@ -121,12 +121,6 @@ export class ApplicationManagementService {
             );
     }
 
-    checkForAbstractOperatingSystem(csarId: string, plan: Plan) {
-        /* check here with a http request whether application has abstract OS node template and thus needs to be placed
-        and return possible running instances to be referenced from abstract OSasd
-         */
-    }
-
     getNodeTemplatesOfServiceTemplate(serviceTemplatePath: string): Observable<NodeTemplateResultObject> {
         const url = new Path(serviceTemplatePath)
             .append('nodetemplates')
