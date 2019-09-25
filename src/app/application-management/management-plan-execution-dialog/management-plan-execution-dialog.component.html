@@ -63,7 +63,7 @@
         </p-inplaceContent>
     </div>
     <p-footer>
-        <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected" (click)="continue()" label="Continue">
+        <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton (click)="continue()" label="Continue">
         </button>
         <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected" (click)="confirm()" label="Confirm">
         </button>
