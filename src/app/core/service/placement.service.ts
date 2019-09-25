@@ -29,20 +29,21 @@ export class PlacementService {
      *  that can be used to place the node templates of the node template list
      * @param nodeTemplateList: node templates that need to be placed, i.e. that are of abstract OperatingSystem node type
      */
-    getAvailableInstances(csarId: string, nodeTemplateList: NodeTemplate[]): Observable<any> {
-        console.log(this.appService.getFirstServiceTemplateOfCsar(csarId));
-        const url = new Path(this.ngRedux.getState().administration.containerUrl)
-            .append('csars')
-            .append(csarId)
-            .append('servicetemplates')
-            .append('%257Bhttp:%252F%252Fopentosca.org%252Fservicetemplates%257DMyTinyToDo_Bare_Docker_AbstractOS')
-            .append('placement')
-            .toString();
-        const formData: FormData = new FormData();
-        formData.append('csar', csarId);
-        formData.append('servicetemplate', '%257Bhttp:%252F%252Fopentosca.org%252Fservicetemplates%257DMyTinyToDo_Bare_Docker_AbstractOS');
-        formData.append('nodetemplates', JSON.stringify(nodeTemplateList));
-        return this.http.post<any>(url, formData, this.httpOptions);
+    getAvailableInstances(csarId: string, nodeTemplateList: NodeTemplate[]): void {
+        this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
+            data => {
+                 const postUrl = new Path(data)
+                    .append('placement')
+                    .toString();
+                const formData: FormData = new FormData();
+                formData.append('nodeTemplates', JSON.stringify(nodeTemplateList));
+                this.http.post<any>(postUrl, formData, this.httpOptions).subscribe(
+                    data => {
+                        console.log(data);
+                    }
+                );
+            }
+        );
     }
 
 }
