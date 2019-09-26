@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoggerService } from './logger.service';
-import { NodeTemplate } from '../model/node-template.model';
 import { Path } from '../path';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
-import { Observable } from 'rxjs';
-import { ServiceTemplate } from '../model/service-template.model';
 import { ApplicationManagementService } from './application-management.service';
+import { PlacementModel } from '../model/placement.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,16 +27,15 @@ export class PlacementService {
      *  that can be used to place the node templates of the node template list
      * @param nodeTemplateList: node templates that need to be placed, i.e. that are of abstract OperatingSystem node type
      */
-    getAvailableInstances(csarId: string, nodeTemplateList: NodeTemplate[]): void {
+    getAvailableInstances(csarId: string, placementModel: PlacementModel): void {
         this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
             data => {
                  const postUrl = new Path(data)
                     .append('placement')
                     .toString();
-                const formData: FormData = new FormData();
-                formData.append('nodeTemplates', JSON.stringify(nodeTemplateList));
-                this.http.post<any>(postUrl, formData, this.httpOptions).subscribe(
+                this.http.post<any>(postUrl, placementModel, this.httpOptions).subscribe(
                     data => {
+                        // reply here
                         console.log(data);
                     }
                 );

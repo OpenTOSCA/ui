@@ -25,6 +25,7 @@ import { SelectItemGroup } from 'primeng/api';
 import { PlanTypes } from '../../core/model/plan-types.model';
 import { NodeTemplate } from '../../core/model/node-template.model';
 import { PlacementService } from '../../core/service/placement.service';
+import { PlacementModel } from '../../core/model/placement.model';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -42,7 +43,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
-    nodeTemplateList: NodeTemplate[] = [];
+    placementModel: PlacementModel;
 
     private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem"
 
@@ -164,15 +165,17 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             data => {
                 this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
                     data => {
+                        this.placementModel = new PlacementModel();
+                        this.placementModel.needToBePlaced = [];
                         for (let nodeTemplate of data.node_templates) {
                             if (nodeTemplate.node_type === this.operatingSystemNodeType) {
-                                this.nodeTemplateList.push(nodeTemplate);
+                                this.placementModel.needToBePlaced.push(nodeTemplate);
                                 this.abstractOSNodeTypeFound = true;
                             }
                         }
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
-                        this.placementService.getAvailableInstances(this.ngRedux.getState().container.application.csar.id, this.nodeTemplateList);
+                        this.placementService.getAvailableInstances(this.ngRedux.getState().container.application.csar.id, this.placementModel);
                     }
                 )
             }
