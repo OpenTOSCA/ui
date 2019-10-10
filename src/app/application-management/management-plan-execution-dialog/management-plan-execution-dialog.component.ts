@@ -23,9 +23,12 @@ import { Observable } from 'rxjs';
 import { Interface } from '../../core/model/interface.model';
 import { SelectItemGroup } from 'primeng/api';
 import { PlanTypes } from '../../core/model/plan-types.model';
-import { NodeTemplate } from '../../core/model/node-template.model';
 import { PlacementService } from '../../core/service/placement.service';
 import { PlacementModel } from '../../core/model/placement.model';
+import { Path } from '../../core/path';
+import { PlacementNodeTemplate } from '../../core/model/placement-node-template.model';
+import { NodeTemplateInstance } from '../../core/model/node-template-instance.model';
+import { PlacementPair } from '../../core/model/placement-pair.model';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -43,9 +46,15 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
-    placementModel: PlacementModel;
+    inputPlacementModel: PlacementModel;
+    outputPlacementModel: PlacementNodeTemplate[];
+    checkForAbstractOSOngoing = false;
 
-    private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem"
+    placementPairs: PlacementPair[];
+
+    selectedInstance: NodeTemplateInstance;
+
+    private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem";
 
     public loading = false;
     public abstractOSNodeTypeFound = false;
@@ -72,6 +81,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes) {
+            console.log(changes);
             if (changes['plan_type']) {
                 this.updateInterfaceList();
             }
@@ -88,10 +98,14 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     /**
      * Closes the modal and emits change event.
      */
-    closeModal(): void {
+    closeInputModal(): void {
         this.visible = false;
         this.selectedPlan = null;
         this.visibleChange.emit(false);
+    }
+
+    closeCheckModal(): void {
+        this.checkForAbstractOSOngoing = false;
     }
 
     operationSelected(op: string): void {
@@ -101,8 +115,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             const selectedOperation = selectedInterface.operations.find(operation => operation.name === names[1]);
 
             this.selectedPlan = selectedOperation._embedded.plan;
-
-            this.checkInputs();
         }
     }
 
@@ -151,35 +163,56 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     continue(): void {
         this.showInputs = true;
+        this.checkInputs();
     }
 
     confirm(): void {
-        this.instanceSelected = true;
         this.showInputs = true;
+        this.instanceSelected = true;
+        this.checkForAbstractOSOngoing = false;
+        this.checkInputs();
+
     }
 
     confirmPlan(): void {
-        this.showInputs = true;
         this.loading = true;
+        this.checkForAbstractOSOngoing = true;
         this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
             data => {
                 this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
                     data => {
-                        this.placementModel = new PlacementModel();
-                        this.placementModel.needToBePlaced = [];
+                        this.inputPlacementModel = new PlacementModel();
+                        this.inputPlacementModel.needToBePlaced = [];
                         for (let nodeTemplate of data.node_templates) {
                             if (nodeTemplate.node_type === this.operatingSystemNodeType) {
-                                this.placementModel.needToBePlaced.push(nodeTemplate);
+                                this.inputPlacementModel.needToBePlaced.push(nodeTemplate);
                                 this.abstractOSNodeTypeFound = true;
                             }
                         }
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
-                        this.placementService.getAvailableInstances(this.ngRedux.getState().container.application.csar.id, this.placementModel);
+                        this.outputPlacementModel = [];
+                        this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
+                            data => {
+                                const postURL = new Path(data)
+                                    .append('placement')
+                                    .toString();
+                                this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
+                                    data => {
+                                        this.outputPlacementModel = data;
+                                    }
+                                );
+                            }
+                        );
                     }
                 )
             }
         )
+    }
+
+    onInstanceSelected(nodeTemplate: PlacementNodeTemplate, selectedInstance: NodeTemplateInstance) {
+        this.instanceSelected = true;
+        console.log(nodeTemplate, selectedInstance);
     }
 
     private updateInterfaceList(value?: Interface[]): void {

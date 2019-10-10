@@ -12,7 +12,7 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeInputModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [(visible)]="visible"
           [draggable]="false" [resizable]="false" modal="true">
@@ -27,12 +27,12 @@
     <p-footer>
         <button type="button" pButton [disabled]="!selectedPlan" (click)="confirmPlan()" label="Next">
         </button>
-        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+        <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeCheckModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px', 'width': '650px'}"
-          [(visible)]="visible && showInputs"
+          [(visible)]="visible && checkForAbstractOSOngoing"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Placement Check
@@ -42,19 +42,25 @@
         Checking whether the Service Template has an abstract Operating System Node Template that needs to be placed.
     </p-inplaceContent>
         <br/>
+        <br/>
+        <br/>
         <div style="text-align: center;">
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
         </div>
     </div>
     <div *ngIf="!loading && abstractOSNodeTypeFound">
         <p-inplaceContent>
-            Found {{placementModel.needToBePlaced.length}}abstract Operating System Node Template(s) that needs to be placed!
-            <br/>
+            Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that needs to be placed!
             <br/>
             <br/>
         </p-inplaceContent>
-        <div *ngFor="let nodeTemplate of placementModel.needToBePlaced">
-            <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.</p-inplaceContent>
+        <div *ngFor="let nodeTemplate of outputPlacementModel">
+            <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.
+                <br/>
+                <p-dropdown [options]="nodeTemplate.valid_node_template_instances" optionLabel="template_id"
+                            [(ngModel)]="selectedInstance" placeholder="Select an instance"
+                (onChange)="onInstanceSelected(nodeTemplate, $event.value)"></p-dropdown>
+            </p-inplaceContent>
         </div>
     </div>
     <div *ngIf="!loading && !abstractOSNodeTypeFound">
@@ -65,16 +71,16 @@
     <p-footer>
         <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton (click)="continue()" label="Continue">
         </button>
-        <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected" (click)="confirm()" label="Confirm">
+        <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
         </button>
-        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+        <button type="button" pButton (click)="closeCheckModal()" label="Close"></button>
     </p-footer>
     <div>
     </div>
 </p-dialog>
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeInputModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
-          [(visible)]="visible && showInputs && !loading && instanceSelected"
+          [(visible)]="visible && showInputs"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ selectedPlan?.id }}
@@ -100,6 +106,6 @@
     <p-footer>
         <button type="button" pButton [disabled]="!runnable" (click)="runPlan()" label="Run Management Plan">
         </button>
-        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+        <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
