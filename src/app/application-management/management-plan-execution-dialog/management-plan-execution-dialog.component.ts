@@ -81,7 +81,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes) {
-            console.log(changes);
             if (changes['plan_type']) {
                 this.updateInterfaceList();
             }
@@ -211,8 +210,20 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     onInstanceSelected(nodeTemplate: PlacementNodeTemplate, selectedInstance: NodeTemplateInstance) {
+        if (!this.placementPairs) {
+            this.placementPairs = [];
+        }
         this.instanceSelected = true;
-        console.log(nodeTemplate, selectedInstance);
+        const placementPair: PlacementPair = new PlacementPair();
+        placementPair.nodeTemplate = nodeTemplate;
+        placementPair.selectedInstance = selectedInstance;
+        const checkPlacementPairExistence = placementParam => this.placementPairs.some( ({nodeTemplate}) => nodeTemplate == placementParam);
+        if (!checkPlacementPairExistence(placementPair.nodeTemplate)) {
+            this.placementPairs.push(placementPair);
+        } else {
+            const index = this.placementPairs.findIndex(x => x.nodeTemplate == placementPair.nodeTemplate);
+            this.placementPairs[index].selectedInstance = placementPair.selectedInstance;
+        }
     }
 
     private updateInterfaceList(value?: Interface[]): void {
