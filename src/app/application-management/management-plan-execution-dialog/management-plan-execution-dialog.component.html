@@ -30,7 +30,7 @@
         <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
-<p-dialog styleClass="modal-scrollable" (onHide)="closeCheckModal()"
+<p-dialog *ngIf="isInitPlan()" styleClass="modal-scrollable" (onHide)="closeCheckModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px', 'width': '650px'}"
           [(visible)]="visible && checkForAbstractOSOngoing"
           [draggable]="false" [resizable]="false" modal="true">

@@ -75,6 +75,15 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         return globals.hiddenElements;
     }
 
+    isInitPlan(): boolean {
+        if (this.plan_type == PlanTypes.BuildPlan) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     ngOnInit(): void {
         this.interfaces.subscribe(value => this.updateInterfaceList(value));
     }
@@ -136,6 +145,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     runPlan(): void {
         this.visible = false;
+        console.log(this.selectedPlan);
+        console.log(this.instanceId);
         this.appService.triggerManagementPlan(this.selectedPlan, this.instanceId).subscribe(() => {
             this.logger.log(
                 '[management-plan-execution-dialog][run management plan]',
@@ -174,6 +185,9 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     confirmPlan(): void {
+        if (!this.isInitPlan()) {
+            this.visible = false;
+        }
         this.loading = true;
         this.checkForAbstractOSOngoing = true;
         this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
