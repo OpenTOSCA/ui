@@ -13,15 +13,15 @@
   -->
 
 <p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
-          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
-          [(visible)]="visible"
-          [draggable]="false" [resizable]="false" modal="true">
+    [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}" [(visible)]="visible"
+    [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Select Plan
     </p-header>
 
-    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList" [style]="{ 'min-width': '300px'}" [showClear]="true"
-                [group]="true" (onChange)="operationSelected($event.value)">
+    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList"
+        [style]="{ 'min-width': '300px'}" [showClear]="true" [group]="true"
+        (onChange)="operationSelected($event.value)">
     </p-dropdown>
 
     <p-footer>
@@ -32,11 +32,11 @@
 </p-dialog>
 
 <p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
-          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
-          [(visible)]="visible && showInputs"
-          [draggable]="false" [resizable]="false" modal="true">
+    [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}" [(visible)]="visible && showInputs"
+    [draggable]="false" [resizable]="false" modal="true">
     <p-header>
-        Current Plan: {{ selectedPlan?.id }}
+        Current Plan: {{ selectedPlan?.id }}<br />
+        Calculated WCET in ms: {{ selectedPlan?.calculated_wcet}}
     </p-header>
 
     <div *ngFor="let param of selectedPlan?.input_parameters">
@@ -45,13 +45,9 @@
                 <label [for]="param.name">{{ param.name }}:</label>
             </div>
             <div class="p-col">
-                <textarea [id]="param.name" pInputTextarea
-                          [autoResize]="false"
-                          type="text"
-                          style="width: 100%"
-                          [rows]="2"
-                          [placeholder]="param.required ? '' : '<optional>'"
-                          [(ngModel)]="param.value" (ngModelChange)="checkInputs()">
+                <textarea [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
+                    [rows]="2" [placeholder]="param.required ? '' : '<optional>'" [(ngModel)]="param.value"
+                    (ngModelChange)="checkInputs()">
                 </textarea>
             </div>
         </div>
