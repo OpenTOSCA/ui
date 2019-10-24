@@ -41,18 +41,13 @@
     <p-inplaceContent>
         Checking whether the Service Template has an abstract Operating System Node Template that needs to be placed.
     </p-inplaceContent>
-        <br/>
-        <br/>
-        <br/>
-        <div style="text-align: center;">
+        <div style="text-align: center; margin-top: 2cm;">
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
         </div>
     </div>
     <div *ngIf="!loading && abstractOSNodeTypeFound">
         <p-inplaceContent>
             Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that needs to be placed!
-            <br/>
-            <br/>
         </p-inplaceContent>
         <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-bottom: 1cm">
             <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.
