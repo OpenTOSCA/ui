@@ -52,9 +52,9 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     placementPairs: PlacementPair[];
 
-    selectedInstance: NodeTemplateInstance;
-
     private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem";
+    operatingSystemProperty = "instanceRef";
+    operatingSystemPropertyDelimiter = "_";
 
     public loading = false;
     public abstractOSNodeTypeFound = false;
@@ -145,8 +145,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     runPlan(): void {
         this.visible = false;
-        console.log(this.selectedPlan);
-        console.log(this.instanceId);
         this.appService.triggerManagementPlan(this.selectedPlan, this.instanceId).subscribe(() => {
             this.logger.log(
                 '[management-plan-execution-dialog][run management plan]',
@@ -180,8 +178,27 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         this.showInputs = true;
         this.instanceSelected = true;
         this.checkForAbstractOSOngoing = false;
+        for (const inputParam of this.selectedPlan.input_parameters) {
+            const name = inputParam.name;
+            if (name.includes(this.operatingSystemProperty)) {
+                for (const placementPair of this.placementPairs) {
+                    const placementNodeTemplateId = placementPair.nodeTemplate.id;
+                    const nrInputParam = name.substring(name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
+                    const nrPlacementNodeTemplate = placementNodeTemplateId.substring(placementNodeTemplateId.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
+                    if (nrInputParam == nrPlacementNodeTemplate) {
+                        inputParam.value = placementPair.selectedInstance.id;
+                    } else if (!this.isNumeric(inputParam.name) && (!this.isNumeric(nrPlacementNodeTemplate))) {
+                        inputParam.value = placementPair.selectedInstance.id;
+                    }
+                }
+            }
+        }
         this.checkInputs();
 
+    }
+
+    isNumeric(input: string): boolean {
+        return !isNaN(parseInt(input));
     }
 
     confirmPlan(): void {

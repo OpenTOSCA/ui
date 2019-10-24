@@ -58,8 +58,8 @@
             <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.
                 <br/>
                 <p-dropdown [options]="nodeTemplate.valid_node_template_instances" optionLabel="template_id"
-                            [(ngModel)]="selectedInstance" placeholder="Select an instance"
-                (onChange)="onInstanceSelected(nodeTemplate, $event.value)"></p-dropdown>
+                             placeholder="Select an instance"
+                            (onChange)="onInstanceSelected(nodeTemplate, $event.value)"></p-dropdown></p-dropdown>
             </p-inplaceContent>
         </div>
     </div>
@@ -94,6 +94,7 @@
             <div class="p-col">
                 <textarea [id]="param.name" pInputTextarea
                           [autoResize]="false"
+                          [disabled]="param.name.includes(this.operatingSystemProperty)"
                           type="text"
                           style="width: 100%"
                           [rows]="2"
