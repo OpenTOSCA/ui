@@ -49,7 +49,7 @@
         <p-inplaceContent>
             Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that needs to be placed!
         </p-inplaceContent>
-        <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-bottom: 1cm">
+        <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-top: 0.5cm; margin-bottom: 0.5cm">
             <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.
                 <p-dropdown [options]="nodeTemplate.valid_node_template_instances" optionLabel="template_id"
                              placeholder="Select an instance"
