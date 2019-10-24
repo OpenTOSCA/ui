@@ -31,7 +31,7 @@
     </p-footer>
 </p-dialog>
 <p-dialog *ngIf="isInitPlan()" styleClass="modal-scrollable" (onHide)="closeCheckModal()"
-          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px', 'width': '650px'}"
+          [contentStyle]="{'overflow': 'auto', 'height': '500px', 'min-height': '300px', 'width': '600px'}"
           [(visible)]="visible && checkForAbstractOSOngoing"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
@@ -54,9 +54,8 @@
             <br/>
             <br/>
         </p-inplaceContent>
-        <div *ngFor="let nodeTemplate of outputPlacementModel">
+        <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-bottom: 1cm">
             <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.
-                <br/>
                 <p-dropdown [options]="nodeTemplate.valid_node_template_instances" optionLabel="template_id"
                              placeholder="Select an instance"
                             (onChange)="onInstanceSelected(nodeTemplate, $event.value)"></p-dropdown>
