@@ -52,6 +52,17 @@
             </div>
         </div>
     </div>
+    <div class="p-grid">
+        <div class="p-col-5 ot-input-label" style="word-break: break-all">
+            <label>Time available for plan execution</label>
+        </div>
+        <div class="p-col">
+            <textarea [id]="TimeAvailable" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
+                [rows]="2">
+            </textarea>
+        </div>
+    </div>
+
     <p-footer>
         <button type="button" pButton [disabled]="!runnable" (click)="runPlan()" label="Run Management Plan">
         </button>
