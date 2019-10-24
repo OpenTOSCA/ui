@@ -57,7 +57,7 @@
         <div *ngFor="let nodeTemplate of outputPlacementModel">
             <p-inplaceContent><strong>{{nodeTemplate.name}}</strong> needs to be placed.
                 <br/>
-                <p-dropdown> [options]="nodeTemplate.valid_node_template_instances" optionLabel="template_id"
+                <p-dropdown [options]="nodeTemplate.valid_node_template_instances" optionLabel="template_id"
                              placeholder="Select an instance"
                             (onChange)="onInstanceSelected(nodeTemplate, $event.value)"></p-dropdown>
             </p-inplaceContent>
