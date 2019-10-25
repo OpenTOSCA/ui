@@ -185,10 +185,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                     const placementNodeTemplateId = placementPair.nodeTemplate.id;
                     const nrInputParam = name.substring(name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
                     const nrPlacementNodeTemplate = placementNodeTemplateId.substring(placementNodeTemplateId.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
-                    if (nrInputParam == nrPlacementNodeTemplate) {
-                        inputParam.value = placementPair.selectedInstance.id;
-                    } else if (!this.isNumeric(inputParam.name) && (!this.isNumeric(nrPlacementNodeTemplate))) {
-                        inputParam.value = placementPair.selectedInstance.id;
+                    if (nrInputParam == nrPlacementNodeTemplate || (!this.isNumeric(inputParam.name) && !this.isNumeric(nrPlacementNodeTemplate))) {
+                        inputParam.value = placementPair.selectedInstance.service_template_instance_id + ',' + placementPair.selectedInstance.node_template_id + ',' + placementPair.selectedInstance.id;
                     }
                 }
             }
@@ -230,6 +228,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
                                     data => {
                                         this.outputPlacementModel = data;
+                                        console.log(this.outputPlacementModel);
                                     }
                                 );
                             }
