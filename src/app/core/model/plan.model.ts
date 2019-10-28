@@ -14,7 +14,6 @@
 
 import { ResourceSupport } from './resource-support.model';
 import { PlanParameter } from './plan-parameter.model';
-import { logging } from 'selenium-webdriver';
 
 export class Plan extends ResourceSupport {
     id: string;
@@ -24,4 +23,5 @@ export class Plan extends ResourceSupport {
     output_parameters: Array<PlanParameter>;
     plan_model_reference: string;
     calculated_wcet: number;
+    time_available: number;
 }

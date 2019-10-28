@@ -45,6 +45,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     public selectedPlan: Plan;
     public runnable: boolean;
     private readonly interfaceFromOperationDelimiter = '#';
+    public enteredTimeAvailable: number;
 
     constructor(
         private appService: ApplicationManagementService,
@@ -72,6 +73,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 this.showInputs = true;
                 this.selectedPlan = this.plan
             }
+            this.enteredTimeAvailable = this.plan.time_available
         }
     }
 
