@@ -23,5 +23,4 @@ export class Plan extends ResourceSupport {
     output_parameters: Array<PlanParameter>;
     plan_model_reference: string;
     calculated_wcet: number;
-    time_available: number;
 }

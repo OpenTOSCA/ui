@@ -36,30 +36,28 @@
     [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Current Plan: {{ selectedPlan?.id }}<br />
-        Calculated WCET in ms: {{ selectedPlan?.calculated_wcet}}
+        <br/>
+        Calculated WCET from previous executions (in ms): {{ selectedPlan?.calculated_wcet}}
     </p-header>
 
     <div *ngFor="let param of selectedPlan?.input_parameters">
         <div class="p-grid" *ngIf="hiddenElements.indexOf(param.name) === -1">
             <div class="p-col-5 ot-input-label" style="word-break: break-all">
-                <label [for]="param.name">{{ param.name }}:</label>
+                <label *ngIf="param.name!='AvailableTimeForExecution(Optional)'; else elseBlock" [for]="param.name">{{ param.name }}:</label>
+                <ng-template #elseBlock>
+                    <label *ngIf="selectedPlan?.calculated_wcet > 0" [for]="param.name">{{ param.name }}:</label>
+                </ng-template>
             </div>
             <div class="p-col">
-                <textarea [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
+                <textarea *ngIf="param.name!='AvailableTimeForExecution(Optional)'; else else3Block" [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
                     [rows]="2" [placeholder]="param.required ? '' : '<optional>'" [(ngModel)]="param.value"
                     (ngModelChange)="checkInputs()">
                 </textarea>
+                <ng-template #else3Block>
+                    <textarea *ngIf="selectedPlan?.calculated_wcet > 0" [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
+                            [rows]="2" [placeholder]="param.required ? '' : '<optional>'" [(ngModel)]="param.value" (ngModelChange)="checkInputs()"></textarea>
+                </ng-template>
             </div>
-        </div>
-    </div>
-    <div class="p-grid">
-        <div class="p-col-5 ot-input-label" style="word-break: break-all">
-            <label>Time available for plan execution</label>
-        </div>
-        <div class="p-col">
-            <textarea [id]="selectedPlan?.time_available" pInputTextarea [autoResize]="false" type="text"
-                style="width: 100%" [rows]="2" [(ngModel)]="selectedPlan?.time_available.value">
-            </textarea>
         </div>
     </div>
 

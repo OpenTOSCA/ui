@@ -37,6 +37,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @Input() inputValidation = true;
     @Input() instanceId: string;
 
+
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
@@ -45,7 +46,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     public selectedPlan: Plan;
     public runnable: boolean;
     private readonly interfaceFromOperationDelimiter = '#';
-    public enteredTimeAvailable: number;
 
     constructor(
         private appService: ApplicationManagementService,
@@ -73,7 +73,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 this.showInputs = true;
                 this.selectedPlan = this.plan
             }
-            this.enteredTimeAvailable = this.plan.time_available
         }
     }
 
@@ -93,7 +92,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             const selectedOperation = selectedInterface.operations.find(operation => operation.name === names[1]);
 
             this.selectedPlan = selectedOperation._embedded.plan;
-
             this.checkInputs();
         }
     }
