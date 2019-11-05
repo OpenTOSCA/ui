@@ -20,7 +20,6 @@ export const globals = {
         'containerApiAddress',
         'instanceDataAPIUrl',
         'planCallbackAddress_invoker',
-        'csarEntrypoint',
-        'OpenTOSCAContainerAPIServiceInstanceID'
+        'csarEntrypoint'
     ]
 };

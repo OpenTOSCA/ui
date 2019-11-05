@@ -35,30 +35,32 @@
     [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}" [(visible)]="visible && showInputs"
     [draggable]="false" [resizable]="false" modal="true">
     <p-header>
-        Current Plan: {{ selectedPlan?.id }}<br />
-        <br/>
-        Calculated WCET from previous executions (in ms): {{ selectedPlan?.calculated_wcet}}
+        Current Plan: {{ selectedPlan?.id }}
+        <div *ngIf="selectedPlan?.calculated_wcet > 0">
+            <br />
+            Calculated WCET from previous executions (in ms): {{ selectedPlan.calculated_wcet}}
+        </div>
     </p-header>
 
     <div *ngFor="let param of selectedPlan?.input_parameters">
-        <div class="p-grid" *ngIf="hiddenElements.indexOf(param.name) === -1">
-            <div class="p-col-5 ot-input-label" style="word-break: break-all">
-                <label *ngIf="param.name!='AvailableTimeForExecution(Optional)'; else elseBlock" [for]="param.name">{{ param.name }}:</label>
-                <ng-template #elseBlock>
-                    <label *ngIf="selectedPlan?.calculated_wcet > 0" [for]="param.name">{{ param.name }}:</label>
-                </ng-template>
-            </div>
-            <div class="p-col">
-                <textarea *ngIf="param.name!='AvailableTimeForExecution(Optional)'; else else3Block" [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
-                    [rows]="2" [placeholder]="param.required ? '' : '<optional>'" [(ngModel)]="param.value"
-                    (ngModelChange)="checkInputs()">
-                </textarea>
-                <ng-template #else3Block>
-                    <textarea *ngIf="selectedPlan?.calculated_wcet > 0" [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
-                            [rows]="2" [placeholder]="param.required ? '' : '<optional>'" [(ngModel)]="param.value" (ngModelChange)="checkInputs()"></textarea>
-                </ng-template>
+        <div *ngIf="param.name!='AvailableTimeForExecution' || selectedPlan?.calculated_wcet > 0">
+            <div class="p-grid" *ngIf="hiddenElements.indexOf(param.name) === -1">
+                <div class="p-col-5 ot-input-label" style="word-break: break-all">
+                    <label [for]="param.name">{{ param.name }}:</label>
+                    <div *ngIf="param.name=='AvailableTimeForExecution' && selectedPlan?.calculated_wcet > 0">
+                        <br />
+                        Optional Parameter: Executes plan if available time > WCET
+                    </div>
+                </div>
+                <div class="p-col">
+                    <textarea [id]="param.name" pInputTextarea [autoResize]="false" type="text" style="width: 100%"
+                        [rows]="2" [placeholder]="param.required ? '' : '<optional>'" [(ngModel)]="param.value"
+                        (ngModelChange)="checkInputs()">
+                    </textarea>
+                </div>
             </div>
         </div>
+
     </div>
 
     <p-footer>
