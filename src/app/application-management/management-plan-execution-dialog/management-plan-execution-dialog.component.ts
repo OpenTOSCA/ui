@@ -115,6 +115,19 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     runPlan(): void {
         this.visible = false;
+        //add Growl if WCET > AvailableTime
+        for (const parameter of this.selectedPlan.input_parameters){
+            if ((parameter.name == 'AvailableTimeForExecution') && (Number(parameter.value) < this.selectedPlan.calculated_wcet)){
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'error',
+                        summary: 'Not Enough Time Available',
+                        detail: 'The WCET is larger than the available time, aborting plan'
+                    }
+                ))
+            }
+        }
+
         this.appService.triggerManagementPlan(this.selectedPlan, this.instanceId).subscribe(() => {
             this.logger.log(
                 '[management-plan-execution-dialog][run management plan]',
