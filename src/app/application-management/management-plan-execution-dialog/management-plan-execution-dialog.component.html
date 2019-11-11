@@ -20,7 +20,8 @@
         Select Plan
     </p-header>
 
-    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList" [style]="{ 'min-width': '300px'}" [showClear]="true"
+    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList"
+                [style]="{ 'min-width': '300px'}" [showClear]="true"
                 [group]="true" (onChange)="operationSelected($event.value)">
     </p-dropdown>
 
@@ -38,26 +39,34 @@
         Placement Check
     </p-header>
     <div *ngIf="loading && !abstractOSNodeTypeFound">
-    <p-inplaceContent>
-        Checking whether the Service Template has an abstract Operating System Node Template that needs to be placed.
-    </p-inplaceContent>
+        <p-inplaceContent>
+            Checking whether the Service Template has an abstract Operating System Node Template that needs to be
+            placed.
+        </p-inplaceContent>
         <div style="text-align: center; margin-top: 2cm;">
-    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+            <p-progressSpinner *ngIf="loading"></p-progressSpinner>
         </div>
     </div>
     <div *ngIf="!loading && abstractOSNodeTypeFound">
         <p-inplaceContent>
-            Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that needs to be placed!
+            Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that need(s) to
+            be placed!
         </p-inplaceContent>
         <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-top: 0.5cm; margin-bottom: 0.5cm">
             <p-inplaceContent><strong>{{nodeTemplate.id}}</strong> needs to be placed.
                 <br/>
                 <div *ngIf="nodeTemplate.valid_node_template_instances.length > 0 then found; else notFound"></div>
                 <ng-template #found>
-                <p-dropdown [options]="nodeTemplate.valid_node_template_instances"
-                             placeholder="Select an instance"
-                            (onChange)="onInstanceSelected(nodeTemplate, $event.value)" optionLabel="node_template_id">
-                </p-dropdown>
+                    <p-dropdown [options]="nodeTemplate.valid_node_template_instances"
+                                placeholder="Select an instance"
+                                (onChange)="onInstanceSelected(nodeTemplate, $event.value)"
+                                [group]="true"
+                                [style]="{ 'width': '100%'}">
+                        <ng-template let-group pTemplate="group">
+                            {{group.node_template_id}} (ID: {{group.id}}),
+                            {{group.service_template_id}} (ID: {{group.service_template_instance_id}})
+                        </ng-template>
+                    </p-dropdown>
                 </ng-template>
                 <ng-template #notFound>
                     No valid running instances found where {{nodeTemplate.id}} can be placed.
@@ -71,9 +80,11 @@
         </p-inplaceContent>
     </div>
     <p-footer>
-        <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton (click)="continue()" label="Continue">
+        <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton (click)="continue()"
+                label="Continue">
         </button>
-        <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton [disabled]="!instanceSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
+        <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton
+                [disabled]="!instanceSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
         </button>
         <button type="button" pButton (click)="closeCheckModal()" label="Close"></button>
     </p-footer>

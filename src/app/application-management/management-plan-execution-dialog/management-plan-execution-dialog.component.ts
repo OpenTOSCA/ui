@@ -170,14 +170,13 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     continue(): void {
+        this.checkForAbstractOSOngoing = false;
         this.showInputs = true;
         this.checkInputs();
     }
 
     confirm(): void {
-        this.showInputs = true;
-        this.instanceSelected = true;
-        this.checkForAbstractOSOngoing = false;
+        this.continue();
         for (const inputParam of this.selectedPlan.input_parameters) {
             const name = inputParam.name;
             if (name.includes(this.operatingSystemProperty)) {
@@ -191,8 +190,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 }
             }
         }
-        this.checkInputs();
-
     }
 
     isNumeric(input: string): boolean {
@@ -228,7 +225,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
                                     data => {
                                         this.outputPlacementModel = data;
-                                        console.log(this.outputPlacementModel);
                                     }
                                 );
                             }
