@@ -120,6 +120,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     closeCheckModal(): void {
+        this.closeInputModal();
         this.checkForAbstractOSOngoing = false;
     }
 
