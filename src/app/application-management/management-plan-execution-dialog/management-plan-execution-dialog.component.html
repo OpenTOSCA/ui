@@ -32,7 +32,7 @@
     </p-footer>
 </p-dialog>
 <p-dialog *ngIf="isInitPlan()" styleClass="modal-scrollable" (onHide)="closeCheckModal()"
-          [contentStyle]="{'overflow': 'auto', 'height': '500px', 'min-height': '300px', 'width': '600px'}"
+          [contentStyle]="{'overflow': 'auto', 'height': '500px', 'min-height': '300px', 'width': '600px', 'min-width': '350px'}"
           [(visible)]="visible && checkForAbstractOSOngoing"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
@@ -49,7 +49,8 @@
     </div>
     <div *ngIf="!loading && abstractOSNodeTypeFound">
         <p-inplaceContent>
-            Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that need(s) to
+            Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that need(s)
+            to
             be placed!
         </p-inplaceContent>
         <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-top: 0.5cm; margin-bottom: 0.5cm">
@@ -60,12 +61,8 @@
                     <p-dropdown [options]="nodeTemplate.valid_node_template_instances"
                                 placeholder="Select an instance"
                                 (onChange)="onInstanceSelected(nodeTemplate, $event.value)"
-                                [group]="true"
-                                [style]="{ 'width': '100%'}">
-                        <ng-template let-group pTemplate="group">
-                            {{group.node_template_id}} (ID: {{group.id}}),
-                            {{group.service_template_id}} (ID: {{group.service_template_instance_id}})
-                        </ng-template>
+                                [style]="{ 'width': '100%'}"
+                    optionLabel="node_template_id">
                     </p-dropdown>
                 </ng-template>
                 <ng-template #notFound>
