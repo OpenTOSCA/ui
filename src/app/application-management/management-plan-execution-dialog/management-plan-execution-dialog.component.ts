@@ -46,20 +46,28 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
     private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
+
+    // placement model with node templates that need to be placed
     inputPlacementModel: PlacementModel;
+    // return of container with valid instance list for each node template that need to nbe placed
     outputPlacementModel: PlacementNodeTemplate[];
     checkForAbstractOSOngoing = false;
 
+    // list of placement pair, i.e. node template to be placed and selected instance (in dropdown)
     placementPairs: PlacementPair[];
 
+    // abstract operating system node type
     private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem";
+    // name of property where we set selected instance
     operatingSystemProperty = "instanceRef";
     operatingSystemPropertyDelimiter = "_";
+    selectedInstanceDisplayLimiter = ",";
+
+    public instanceSelected = false;
+    public abstractOSNodeTypeFound = false;
 
     public loading = false;
-    public abstractOSNodeTypeFound = false;
     public showInputs = false;
-    public instanceSelected = false;
     public selectedPlan: Plan;
     public runnable: boolean;
     private readonly interfaceFromOperationDelimiter = '#';
@@ -78,8 +86,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     isInitPlan(): boolean {
         if (this.plan_type == PlanTypes.BuildPlan) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -179,13 +186,21 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         this.continue();
         for (const inputParam of this.selectedPlan.input_parameters) {
             const name = inputParam.name;
+            // check if instance ref property is available in input params list
             if (name.includes(this.operatingSystemProperty)) {
+                // iterate over every placement pair, i.e. each node template that needs to be placed and the selected instance
                 for (const placementPair of this.placementPairs) {
                     const placementNodeTemplateId = placementPair.nodeTemplate.id;
+                    /* get number x from get_input: instanceRef_x to match with node template id to assign the selected instances correctly to the according node template ids
+                    this is required since input params are in this representation not related to their originating node templates */
                     const nrInputParam = name.substring(name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
+                    // get number x from nodeTemplateId_x to match with instanceRef_x to assign values correctly (see comment above)
                     const nrPlacementNodeTemplate = placementNodeTemplateId.substring(placementNodeTemplateId.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
+                    // check if instanceRef_x matches nodeTemplateId_y, if x = y instanceRef_x is selected instance for node template nodeTemplateId_y
                     if (nrInputParam == nrPlacementNodeTemplate || (!this.isNumeric(inputParam.name) && !this.isNumeric(nrPlacementNodeTemplate))) {
-                        inputParam.value = placementPair.selectedInstance.service_template_instance_id + ',' + placementPair.selectedInstance.node_template_id + ',' + placementPair.selectedInstance.id;
+                        inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
+                            + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
+                            + placementPair.selectedInstance.id;
                     }
                 }
             }
@@ -202,14 +217,19 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         }
         this.loading = true;
         this.checkForAbstractOSOngoing = true;
+        // get (first) service template of CSAR
         this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
             data => {
+                // get node templates of service template
                 this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
                     data => {
                         this.inputPlacementModel = new PlacementModel();
                         this.inputPlacementModel.needToBePlaced = [];
+                        // iterate over node templates of service template
                         for (let nodeTemplate of data.node_templates) {
+                            // check if abstract OS node type contained
                             if (nodeTemplate.node_type === this.operatingSystemNodeType) {
+                                // if contained, add to need to be placed list
                                 this.inputPlacementModel.needToBePlaced.push(nodeTemplate);
                                 this.abstractOSNodeTypeFound = true;
                             }
@@ -217,18 +237,22 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
                         this.outputPlacementModel = [];
-                        this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
-                            data => {
-                                const postURL = new Path(data)
-                                    .append('placement')
-                                    .toString();
-                                this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
-                                    data => {
-                                        this.outputPlacementModel = data;
-                                    }
-                                );
-                            }
-                        );
+                        if (this.inputPlacementModel.needToBePlaced.length) {
+                            // start placement if need to be placed not empty
+                            this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
+                                data => {
+                                    const postURL = new Path(data)
+                                        .append('placement')
+                                        .toString();
+                                    // request all available, valid instances from container for node templates that need to be placed
+                                    this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
+                                        data => {
+                                            this.outputPlacementModel = data;
+                                        }
+                                    );
+                                }
+                            );
+                        }
                     }
                 )
             }
@@ -240,13 +264,17 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             this.placementPairs = [];
         }
         this.instanceSelected = true;
+
         const placementPair: PlacementPair = new PlacementPair();
         placementPair.nodeTemplate = nodeTemplate;
         placementPair.selectedInstance = selectedInstance;
-        const checkPlacementPairExistence = placementParam => this.placementPairs.some( ({nodeTemplate}) => nodeTemplate == placementParam);
+        // check if node template already exists in list of placement pairs
+        const checkPlacementPairExistence = placementParam => this.placementPairs.some(({ nodeTemplate }) => nodeTemplate == placementParam);
+
         if (!checkPlacementPairExistence(placementPair.nodeTemplate)) {
             this.placementPairs.push(placementPair);
         } else {
+            // if node template already exists in list, just update the selected instance
             const index = this.placementPairs.findIndex(x => x.nodeTemplate == placementPair.nodeTemplate);
             this.placementPairs[index].selectedInstance = placementPair.selectedInstance;
         }
