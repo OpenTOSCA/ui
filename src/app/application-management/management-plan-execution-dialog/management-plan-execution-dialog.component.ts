@@ -188,19 +188,22 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             const name = inputParam.name;
             // check if instance ref property is available in input params list
             if (name.includes(this.operatingSystemProperty)) {
-                // iterate over every placement pair, i.e. each node template that needs to be placed and the selected instance
+                // iterate over every placement pair, i.e. each node template that needs to be placed and the selected
+                // instance
                 for (const placementPair of this.placementPairs) {
                     const placementNodeTemplateId = placementPair.nodeTemplate.id;
                     /* get number x from get_input: instanceRef_x to match with node template id to assign the selected instances correctly to the according node template ids
                     this is required since input params are in this representation not related to their originating node templates */
                     const nrInputParam = name.substring(name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
-                    // get number x from nodeTemplateId_x to match with instanceRef_x to assign values correctly (see comment above)
+                    // get number x from nodeTemplateId_x to match with instanceRef_x to assign values correctly (see
+                    // comment above)
                     const nrPlacementNodeTemplate = placementNodeTemplateId.substring(placementNodeTemplateId.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
-                    // check if instanceRef_x matches nodeTemplateId_y, if x = y instanceRef_x is selected instance for node template nodeTemplateId_y
+                    // check if instanceRef_x matches nodeTemplateId_y, if x = y instanceRef_x is selected instance for
+                    // node template nodeTemplateId_y
                     if (nrInputParam == nrPlacementNodeTemplate || (!this.isNumeric(inputParam.name) && !this.isNumeric(nrPlacementNodeTemplate))) {
                         inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
                             + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
-                            + placementPair.selectedInstance.id;
+                            + placementPair.selectedInstance.node_template_instance_id;
                     }
                 }
             }
@@ -244,7 +247,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                     const postURL = new Path(data)
                                         .append('placement')
                                         .toString();
-                                    // request all available, valid instances from container for node templates that need to be placed
+                                    // request all available, valid instances from container for node templates that
+                                    // need to be placed
                                     this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
                                         data => {
                                             this.outputPlacementModel = data;
