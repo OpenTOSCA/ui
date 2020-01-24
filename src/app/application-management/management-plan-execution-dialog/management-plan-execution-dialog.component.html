@@ -104,7 +104,7 @@
             <div class="p-col">
                 <textarea [id]="param.name" pInputTextarea
                           [autoResize]="false"
-                          [disabled]="param.name.includes(this.operatingSystemProperty)"
+                          [disabled]="existsCorrespondingInputParam(param)"
                           type="text"
                           style="width: 100%"
                           [rows]="2"

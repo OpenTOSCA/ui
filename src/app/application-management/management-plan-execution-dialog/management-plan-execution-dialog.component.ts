@@ -29,6 +29,7 @@ import { Path } from '../../core/path';
 import { PlacementNodeTemplate } from '../../core/model/placement-node-template.model';
 import { NodeTemplateInstance } from '../../core/model/node-template-instance.model';
 import { PlacementPair } from '../../core/model/placement-pair.model';
+import { PlanParameter } from '../../core/model/plan-parameter.model';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -60,6 +61,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem";
     // name of property where we set selected instance
     operatingSystemProperty = "instanceRef";
+    vmIpProperty = "VMIP";
     operatingSystemPropertyDelimiter = "_";
     selectedInstanceDisplayLimiter = ",";
 
@@ -176,6 +178,19 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         });
     }
 
+    existsCorrespondingInputParam(inputParam: PlanParameter): boolean {
+        if (inputParam.name.includes(this.operatingSystemProperty)) {
+            return true;
+        } else if (!inputParam.name.includes(this.vmIpProperty)) {
+            return false;
+        }
+        for (const input of this.selectedPlan.input_parameters) {
+            if (input.value == inputParam.value && input.name.includes(this.operatingSystemProperty)) {
+                return true;
+            }
+        }
+    }
+
     continue(): void {
         this.checkForAbstractOSOngoing = false;
         this.showInputs = true;
@@ -204,6 +219,12 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                         inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
                             + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
                             + placementPair.selectedInstance.node_template_instance_id;
+                        for (const inputParam_new of this.selectedPlan.input_parameters) {
+                            const nrInputParam_new = inputParam_new.name.substring(inputParam_new.name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
+                            if (inputParam_new.name.includes(this.vmIpProperty) && (nrInputParam_new == nrInputParam) || !this.isNumeric(nrInputParam_new) && !this.isNumeric(nrInputParam)) {
+                                inputParam_new.value = inputParam.value;
+                            }
+                        }
                     }
                 }
             }
