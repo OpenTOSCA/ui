@@ -143,6 +143,11 @@ export class ApplicationManagementService {
             );
     }
 
+    getPropertiesOfNodeTemplate(serviceTemplateURL: string, nodeTemplateId: string): Observable<any> {
+        const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/properties';
+        return this.http.get(url, this.httpOptionsAcceptJson);
+    }
+
     triggerManagementPlan(plan: Plan, instanceId: string): Observable<string> {
         this.logger.log('[application-management.service][triggerManagementPlan]',
             'Starting Management Plan <' + plan.id + '>');

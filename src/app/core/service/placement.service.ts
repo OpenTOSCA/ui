@@ -26,6 +26,5 @@ export class PlacementService {
      */
     getAvailableInstances(postURL: string, placementModel: PlacementModel): Observable<PlacementNodeTemplate[]> {
         return this.http.post<PlacementNodeTemplate[]>(postURL, placementModel, this.httpOptions);
-
     }
 }

@@ -57,6 +57,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     // list of placement pair, i.e. node template to be placed and selected instance (in dropdown)
     placementPairs: PlacementPair[];
 
+    serviceTemplateURL: string;
+
     // abstract operating system node type
     private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem";
     // name of property where we set selected instance
@@ -206,33 +208,34 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 // iterate over every placement pair, i.e. each node template that needs to be placed and the selected
                 // instance
                 for (const placementPair of this.placementPairs) {
-                    const placementNodeTemplateId = placementPair.nodeTemplate.id;
-                    /* get number x from get_input: instanceRef_x to match with node template id to assign the selected instances correctly to the according node template ids
-                    this is required since input params are in this representation not related to their originating node templates */
-                    const nrInputParam = name.substring(name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
-                    // get number x from nodeTemplateId_x to match with instanceRef_x to assign values correctly (see
-                    // comment above)
-                    const nrPlacementNodeTemplate = placementNodeTemplateId.substring(placementNodeTemplateId.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
-                    // check if instanceRef_x matches nodeTemplateId_y, if x = y instanceRef_x is selected instance for
-                    // node template nodeTemplateId_y
-                    if (nrInputParam == nrPlacementNodeTemplate || (!this.isNumeric(inputParam.name) && !this.isNumeric(nrPlacementNodeTemplate))) {
-                        inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
-                            + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
-                            + placementPair.selectedInstance.node_template_instance_id;
-                        for (const inputParam_new of this.selectedPlan.input_parameters) {
-                            const nrInputParam_new = inputParam_new.name.substring(inputParam_new.name.lastIndexOf(this.operatingSystemPropertyDelimiter) + 1);
-                            if (inputParam_new.name.includes(this.vmIpProperty) && (nrInputParam_new == nrInputParam) || !this.isNumeric(nrInputParam_new) && !this.isNumeric(nrInputParam)) {
-                                inputParam_new.value = inputParam.value;
+                    for (const propertyKey of Object.keys(placementPair.nodeTemplate.properties)) {
+                        const propertyValue = placementPair.nodeTemplate.properties[propertyKey];
+                        const separatorIndex = propertyValue.lastIndexOf(":");
+                        const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
+                        if (propertyValueWithoutGetInput == name) {
+                            inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
+                                + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
+                                + placementPair.selectedInstance.node_template_instance_id;
+                        }
+                    }
+                    for (const newInput of this.selectedPlan.input_parameters) {
+                        if (newInput.name.includes(this.vmIpProperty)) {
+                            for (const propertyKey of Object.keys(placementPair.nodeTemplate.properties)) {
+                                const propertyValue = placementPair.nodeTemplate.properties[propertyKey];
+                                const separatorIndex = propertyValue.lastIndexOf(":");
+                                const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
+                                if (propertyValueWithoutGetInput == newInput.name) {
+                                    newInput.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
+                                        + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
+                                        + placementPair.selectedInstance.node_template_instance_id;
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
-    }
-
-    isNumeric(input: string): boolean {
-        return !isNaN(parseInt(input));
     }
 
     confirmPlan(): void {
@@ -244,6 +247,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         // get (first) service template of CSAR
         this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
             data => {
+                this.serviceTemplateURL = data;
                 // get node templates of service template
                 this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
                     data => {
@@ -273,6 +277,13 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                     this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
                                         data => {
                                             this.outputPlacementModel = data;
+                                            for (let nodeTemplate of this.outputPlacementModel) {
+                                                this.appService.getPropertiesOfNodeTemplate(this.serviceTemplateURL, nodeTemplate.id).subscribe(
+                                                    data => {
+                                                        nodeTemplate.properties = data;
+                                                    }
+                                                );
+                                            }
                                         }
                                     );
                                 }
