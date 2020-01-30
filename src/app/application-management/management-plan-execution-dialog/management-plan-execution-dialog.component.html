@@ -81,7 +81,7 @@
                 label="Continue">
         </button>
         <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton
-                [disabled]="!instanceSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
+                [disabled]="!allInstancesSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
         </button>
         <button type="button" pButton (click)="closeCheckModal()" label="Close"></button>
     </p-footer>

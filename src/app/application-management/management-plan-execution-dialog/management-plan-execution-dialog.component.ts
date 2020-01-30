@@ -67,7 +67,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     operatingSystemPropertyDelimiter = "_";
     selectedInstanceDisplayLimiter = ",";
 
-    public instanceSelected = false;
+    public allInstancesSelected = false;
     public abstractOSNodeTypeFound = false;
 
     public loading = false;
@@ -299,7 +299,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         if (!this.placementPairs) {
             this.placementPairs = [];
         }
-        this.instanceSelected = true;
 
         const placementPair: PlacementPair = new PlacementPair();
         placementPair.nodeTemplate = nodeTemplate;
@@ -313,6 +312,10 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             // if node template already exists in list, just update the selected instance
             const index = this.placementPairs.findIndex(x => x.nodeTemplate == placementPair.nodeTemplate);
             this.placementPairs[index].selectedInstance = placementPair.selectedInstance;
+        }
+
+        if (this.outputPlacementModel.length == this.placementPairs.length) {
+            this.allInstancesSelected = true;
         }
     }
 
