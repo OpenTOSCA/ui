@@ -31,23 +31,14 @@
         <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
-<p-dialog *ngIf="isInitPlan()" styleClass="modal-scrollable" (onHide)="closeCheckModal()"
+<p-dialog *ngIf="isInitPlan() && abstractOSNodeTypeFound" styleClass="modal-scrollable" (onHide)="closeCheckModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '500px', 'min-height': '300px', 'width': '600px', 'min-width': '350px'}"
           [(visible)]="visible && checkForAbstractOSOngoing"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>
         Placement Check
     </p-header>
-    <div *ngIf="loading && !abstractOSNodeTypeFound">
-        <p-inplaceContent>
-            Checking whether the Service Template has an abstract Operating System Node Template that needs to be
-            placed.
-        </p-inplaceContent>
-        <div style="text-align: center; margin-top: 2cm;">
-            <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-        </div>
-    </div>
-    <div *ngIf="!loading && abstractOSNodeTypeFound">
+    <div>
         <p-inplaceContent>
             Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that need(s)
             to
@@ -71,15 +62,7 @@
             </p-inplaceContent>
         </div>
     </div>
-    <div *ngIf="!loading && !abstractOSNodeTypeFound">
-        <p-inplaceContent>
-            No Node Template found that needs to be placed. Continue with input.
-        </p-inplaceContent>
-    </div>
     <p-footer>
-        <button *ngIf="!loading && !abstractOSNodeTypeFound" type="button" pButton (click)="continue()"
-                label="Continue">
-        </button>
         <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton
                 [disabled]="!allInstancesSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
         </button>
@@ -88,7 +71,7 @@
     <div>
     </div>
 </p-dialog>
-<p-dialog styleClass="modal-scrollable" (onHide)="closeInputModal()"
+<p-dialog *ngIf="showInputs" styleClass="modal-scrollable" (onHide)="closeInputModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [(visible)]="visible && showInputs"
           [draggable]="false" [resizable]="false" modal="true">

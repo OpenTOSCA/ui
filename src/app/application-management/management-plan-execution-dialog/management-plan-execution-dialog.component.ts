@@ -64,7 +64,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     // name of property where we set selected instance
     operatingSystemProperty = "instanceRef";
     vmIpProperty = "VMIP";
-    operatingSystemPropertyDelimiter = "_";
     selectedInstanceDisplayLimiter = ",";
 
     public allInstancesSelected = false;
@@ -193,14 +192,10 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         }
     }
 
-    continue(): void {
+    confirm(): void {
         this.checkForAbstractOSOngoing = false;
         this.showInputs = true;
         this.checkInputs();
-    }
-
-    confirm(): void {
-        this.continue();
         for (const inputParam of this.selectedPlan.input_parameters) {
             const name = inputParam.name;
             // check if instance ref property is available in input params list
@@ -261,6 +256,10 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 this.inputPlacementModel.needToBePlaced.push(nodeTemplate);
                                 this.abstractOSNodeTypeFound = true;
                             }
+                        }
+                        if (this.abstractOSNodeTypeFound == false) {
+                            this.confirm();
+                            return
                         }
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
