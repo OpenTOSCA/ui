@@ -143,6 +143,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             return;
         }
         for (const parameter of this.selectedPlan.input_parameters) {
+            console.log(parameter);
             if ((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
                 if (parameter.value == null || parameter.value === '') {
                     this.runnable = false;
@@ -185,10 +186,10 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         } else if (!inputParam.name.includes(this.vmIpProperty)) {
             return false;
         }
-        for (const input of this.selectedPlan.input_parameters) {
-            if (input.value == inputParam.value && input.name.includes(this.operatingSystemProperty)) {
+
+        for (const placementPair of this.placementPairs) {
+            if (placementPair.selectedInstance.properties[this.vmIpProperty] == inputParam.value)
                 return true;
-            }
         }
     }
 
@@ -220,9 +221,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 const separatorIndex = propertyValue.lastIndexOf(":");
                                 const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
                                 if (propertyValueWithoutGetInput == newInput.name) {
-                                    newInput.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
-                                        + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
-                                        + placementPair.selectedInstance.node_template_instance_id;
+                                    newInput.value = placementPair.selectedInstance.properties[this.vmIpProperty];
                                 }
                             }
                         }
