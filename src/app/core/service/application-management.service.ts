@@ -143,6 +143,7 @@ export class ApplicationManagementService {
             );
     }
 
+    // TODO: typing return
     getPropertiesOfNodeTemplate(serviceTemplateURL: string, nodeTemplateId: string): Observable<any> {
         const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/properties';
         return this.http.get(url, this.httpOptionsAcceptJson);
