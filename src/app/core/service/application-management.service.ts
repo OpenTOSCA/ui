@@ -187,6 +187,11 @@ export class ApplicationManagementService {
             .catch(() => false);
     }
 
+    getNodeTemplateInstanceProperties(serviceTemplateURL: string, nodeTemplateId: string, nodeTemplateInstanceId: string): Observable<any> {
+        const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/instances/' + nodeTemplateInstanceId + '/properties';
+        return this.http.get(url, this.httpOptionsAcceptJson);
+    }
+
     getCsar(csarId: string): Observable<Csar> {
         csarId = this.normalizeApplicationId(csarId);
         const url = new Path(this.ngRedux.getState().administration.containerUrl)

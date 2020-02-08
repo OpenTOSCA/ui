@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { PlacementModel } from '../model/placement.model';
 import { Observable } from 'rxjs';
-import { PlacementNodeTemplate } from '../model/placement-node-template.model';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +22,7 @@ export class PlacementService {
      * @param nodeTemplateList: node templates that need to be placed, i.e. that are of abstract OperatingSystem node
      *     type
      */
-    getAvailableInstances(postURL: string, placementModel: PlacementModel): Observable<PlacementNodeTemplate[]> {
-        return this.http.post<PlacementNodeTemplate[]>(postURL, placementModel, this.httpOptions);
+    getAvailableInstances(postURL: string, toBePlaced: string[]): Observable<any> {
+        return this.http.post<string[]>(postURL, toBePlaced, this.httpOptions);
     }
 }

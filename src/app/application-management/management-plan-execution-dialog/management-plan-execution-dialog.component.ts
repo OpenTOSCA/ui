@@ -143,7 +143,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             return;
         }
         for (const parameter of this.selectedPlan.input_parameters) {
-            console.log(parameter);
             if ((-1 === this.hiddenElements.indexOf(parameter.name)) && ('YES' === parameter.required)) {
                 if (parameter.value == null || parameter.value === '') {
                     this.runnable = false;
@@ -252,7 +251,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                             // check if abstract OS node type contained
                             if (nodeTemplate.node_type === this.operatingSystemNodeType) {
                                 // if contained, add to need to be placed list
-                                this.inputPlacementModel.needToBePlaced.push(nodeTemplate);
+                                this.inputPlacementModel.needToBePlaced.push(nodeTemplate.id);
                                 this.abstractOSNodeTypeFound = true;
                             }
                         }
@@ -272,16 +271,39 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                         .toString();
                                     // request all available, valid instances from container for node templates that
                                     // need to be placed
-                                    this.placementService.getAvailableInstances(postURL, this.inputPlacementModel).subscribe(
+                                    this.placementService.getAvailableInstances(postURL, this.inputPlacementModel.needToBePlaced).subscribe(
                                         data => {
-                                            this.outputPlacementModel = data;
-                                            for (let nodeTemplate of this.outputPlacementModel) {
-                                                this.appService.getPropertiesOfNodeTemplate(this.serviceTemplateURL, nodeTemplate.id).subscribe(
+                                            const result = data;
+                                            this.outputPlacementModel = [];
+                                            Object.keys(data).forEach(key => {
+                                                this.appService.getPropertiesOfNodeTemplate(this.serviceTemplateURL, key).subscribe(
                                                     data => {
+                                                        let nodeTemplate = new PlacementNodeTemplate();
+                                                        nodeTemplate.id = key;
+                                                        nodeTemplate.name = key;
                                                         nodeTemplate.properties = data;
-                                                    }
-                                                );
-                                            }
+                                                        nodeTemplate.valid_node_template_instances = [];
+                                                        for (const instanceString of result[key]) {
+                                                            const separated = instanceString.split('|||');
+                                                            let nodeTemplateInstance = new NodeTemplateInstance();
+                                                            nodeTemplateInstance.node_template_instance_id = separated[0];
+                                                            nodeTemplateInstance.node_template_id = separated[1];
+                                                            nodeTemplateInstance.service_template_instance_id = separated[2];
+                                                            const csarId = separated[3];
+                                                            this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
+                                                                data => {
+                                                                    this.serviceTemplateURL = data;
+                                                                    this.appService.getNodeTemplateInstanceProperties(this.serviceTemplateURL, nodeTemplateInstance.node_template_id , nodeTemplateInstance.node_template_instance_id).subscribe(
+                                                                        data => {
+                                                                            nodeTemplateInstance.properties = data;
+                                                                        }
+                                                                    );
+                                                                    nodeTemplate.valid_node_template_instances.push(nodeTemplateInstance);
+                                                                });
+                                                            this.outputPlacementModel.push(nodeTemplate);
+                                                        }
+                                                    });
+                                            });
                                         }
                                     );
                                 }
