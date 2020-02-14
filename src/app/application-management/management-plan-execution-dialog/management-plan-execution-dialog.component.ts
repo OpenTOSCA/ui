@@ -195,7 +195,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     confirm(): void {
         this.checkForAbstractOSOngoing = false;
         this.showInputs = true;
-        this.checkInputs();
         for (const inputParam of this.selectedPlan.input_parameters) {
             const name = inputParam.name;
             // check if instance ref property is available in input params list
@@ -229,6 +228,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
             }
         }
+        this.checkInputs();
     }
 
     confirmPlan(): void {

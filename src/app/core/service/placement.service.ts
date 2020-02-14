@@ -22,8 +22,7 @@ export class PlacementService {
      * @param nodeTemplateList: node templates that need to be placed, i.e. that are of abstract OperatingSystem node
      *     type
      */
-    // TODO: typing return
-    getAvailableInstances(postURL: string, toBePlaced: string[]): Observable<any> {
-        return this.http.post<string[]>(postURL, toBePlaced, this.httpOptions);
+    getAvailableInstances(postURL: string, toBePlaced: string[]): Observable<Map<string, string[]>> {
+        return this.http.post<Map<string, string[]>>(postURL, toBePlaced, this.httpOptions);
     }
 }

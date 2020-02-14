@@ -28,6 +28,7 @@ import { catchError, flatMap, map } from 'rxjs/operators';
 import { InterfaceList } from '../model/interface-list.model';
 import { Operation } from '../model/operation.model';
 import { NodeTemplateResultObject } from '../model/node-template-result.model';
+import { Property } from '../model/property.model';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -143,10 +144,9 @@ export class ApplicationManagementService {
             );
     }
 
-    // TODO: typing return
-    getPropertiesOfNodeTemplate(serviceTemplateURL: string, nodeTemplateId: string): Observable<any> {
+    getPropertiesOfNodeTemplate(serviceTemplateURL: string, nodeTemplateId: string): Observable<Property[]> {
         const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/properties';
-        return this.http.get(url, this.httpOptionsAcceptJson);
+        return this.http.get<Property[]>(url, this.httpOptionsAcceptJson);
     }
 
     triggerManagementPlan(plan: Plan, instanceId: string): Observable<string> {
@@ -188,9 +188,9 @@ export class ApplicationManagementService {
             .catch(() => false);
     }
 
-    getNodeTemplateInstanceProperties(serviceTemplateURL: string, nodeTemplateId: string, nodeTemplateInstanceId: string): Observable<any> {
+    getNodeTemplateInstanceProperties(serviceTemplateURL: string, nodeTemplateId: string, nodeTemplateInstanceId: string): Observable<Map<string, string>> {
         const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/instances/' + nodeTemplateInstanceId + '/properties';
-        return this.http.get(url, this.httpOptionsAcceptJson);
+        return this.http.get<Map<string, string>>(url, this.httpOptionsAcceptJson);
     }
 
     getCsar(csarId: string): Observable<Csar> {
