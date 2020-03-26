@@ -47,17 +47,20 @@
         <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-top: 0.5cm; margin-bottom: 0.5cm">
             <p-inplaceContent><strong>{{nodeTemplate.id}}</strong> needs to be placed.
                 <br/>
-                <div *ngIf="nodeTemplate.valid_node_template_instances.length > 0 then found; else notFound"></div>
+                <div *ngIf="!nodeTemplate.valid_node_template_instances.length > 0; else found">
+                    No suitable Node Templates found for Placement.
+                </div>
                 <ng-template #found>
                     <p-dropdown [options]="nodeTemplate.valid_node_template_instances"
-                                placeholder="Select an instance"
                                 (onChange)="onInstanceSelected(nodeTemplate, $event.value)"
-                                [style]="{ 'width': '100%'}"
-                    optionLabel="node_template_id">
+                                [style]="{ 'width': '100%'}">
+                        <ng-template let-item pTemplate="selectedItem">
+                            <b>{{item.label}}</b>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            {{item.label}}
+                        </ng-template>
                     </p-dropdown>
-                </ng-template>
-                <ng-template #notFound>
-                    No valid running instances found where {{nodeTemplate.id}} can be placed.
                 </ng-template>
             </p-inplaceContent>
         </div>

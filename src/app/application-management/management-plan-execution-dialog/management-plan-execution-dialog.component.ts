@@ -53,7 +53,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     // return of container with valid instance list for each node template that need to nbe placed
     outputPlacementModel: PlacementNodeTemplate[];
     checkForAbstractOSOngoing = false;
-
     // list of placement pair, i.e. node template to be placed and selected instance (in dropdown)
     placementPairs: PlacementPair[];
 
@@ -219,6 +218,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 const separatorIndex = propertyValue.lastIndexOf(":");
                                 const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
                                 if (propertyValueWithoutGetInput == newInput.name) {
+
                                     newInput.value = placementPair.selectedInstance.properties[this.vmIpProperty];
                                 }
                             }
@@ -289,6 +289,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                                             nodeTemplateInstance.node_template_instance_id = separated[0];
                                                             nodeTemplateInstance.node_template_id = separated[1];
                                                             nodeTemplateInstance.service_template_instance_id = separated[2];
+                                                            nodeTemplateInstance.label = 'Instance ID: '+  nodeTemplateInstance.node_template_instance_id + ' of Node Template: ' + nodeTemplateInstance.node_template_id;
                                                             const csarId = separated[3];
                                                             this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
                                                                 data => {
@@ -300,8 +301,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                                                     );
                                                                     nodeTemplate.valid_node_template_instances.push(nodeTemplateInstance);
                                                                 });
-                                                            this.outputPlacementModel.push(nodeTemplate);
                                                         }
+                                                        this.outputPlacementModel.push(nodeTemplate);
                                                     });
                                             });
                                         }
@@ -316,6 +317,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     onInstanceSelected(nodeTemplate: PlacementNodeTemplate, selectedInstance: NodeTemplateInstance) {
+        console.log(nodeTemplate);
         if (!this.placementPairs) {
             this.placementPairs = [];
         }
@@ -333,7 +335,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             const index = this.placementPairs.findIndex(x => x.nodeTemplate == placementPair.nodeTemplate);
             this.placementPairs[index].selectedInstance = placementPair.selectedInstance;
         }
-
         if (this.outputPlacementModel.length == this.placementPairs.length) {
             this.allInstancesSelected = true;
         }
