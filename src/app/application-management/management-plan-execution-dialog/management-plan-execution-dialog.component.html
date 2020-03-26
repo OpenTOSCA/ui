@@ -53,6 +53,7 @@
                 <ng-template #found>
                     <p-dropdown [options]="nodeTemplate.valid_node_template_instances"
                                 (onChange)="onInstanceSelected(nodeTemplate, $event.value)"
+                                placeholder="Select an instance..."
                                 [style]="{ 'width': '100%'}">
                         <ng-template let-item pTemplate="selectedItem">
                             <b>{{item.label}}</b>

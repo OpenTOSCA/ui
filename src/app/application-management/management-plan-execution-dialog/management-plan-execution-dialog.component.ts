@@ -194,6 +194,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     confirm(): void {
         this.checkForAbstractOSOngoing = false;
         this.showInputs = true;
+
         for (const inputParam of this.selectedPlan.input_parameters) {
             const name = inputParam.name;
             // check if instance ref property is available in input params list
@@ -290,6 +291,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                                             nodeTemplateInstance.node_template_id = separated[1];
                                                             nodeTemplateInstance.service_template_instance_id = separated[2];
                                                             nodeTemplateInstance.label = 'Instance ID: '+  nodeTemplateInstance.node_template_instance_id + ' of Node Template: ' + nodeTemplateInstance.node_template_id;
+                                                            nodeTemplateInstance.value = nodeTemplateInstance;
                                                             const csarId = separated[3];
                                                             this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
                                                                 data => {
@@ -317,7 +319,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     onInstanceSelected(nodeTemplate: PlacementNodeTemplate, selectedInstance: NodeTemplateInstance) {
-        console.log(nodeTemplate);
         if (!this.placementPairs) {
             this.placementPairs = [];
         }
