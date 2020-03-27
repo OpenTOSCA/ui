@@ -119,11 +119,13 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         this.visible = false;
         // TODO: remove this or place elsewhere
         this.selectedPlan = null;
+        this.placementPairs = [];
         this.visibleChange.emit(false);
     }
 
     closeCheckModal(): void {
         this.checkForAbstractOSOngoing = false;
+        this.placementPairs = [];
     }
 
     operationSelected(op: string): void {
@@ -155,6 +157,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     runPlan(): void {
         this.visible = false;
+        this.placementPairs = [];
         this.appService.triggerManagementPlan(this.selectedPlan, this.instanceId).subscribe(() => {
             this.logger.log(
                 '[management-plan-execution-dialog][run management plan]',
