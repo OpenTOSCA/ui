@@ -62,6 +62,15 @@
                             {{item.label}}
                         </ng-template>
                     </p-dropdown>
+                    <p-accordion>
+                        <p-accordionTab *ngFor="let placementPair of placementPairs" header="Properties of {{placementPair.selectedInstance.node_template_id}}">
+                            <li *ngFor="let property of placementPair.selectedInstance.properties | keyvalue">
+                                <div *ngIf="!(property.key.includes('Key') || property.value == null)">
+                                    <b>{{property.key}}</b> : {{property.value}}
+                                </div>
+                            </li>
+                        </p-accordionTab>
+                    </p-accordion>
                 </ng-template>
             </p-inplaceContent>
         </div>

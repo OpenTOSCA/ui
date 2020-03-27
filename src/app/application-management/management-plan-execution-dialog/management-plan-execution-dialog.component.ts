@@ -117,6 +117,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
      */
     closeInputModal(): void {
         this.visible = false;
+        // TODO: remove this or place elsewhere
         this.selectedPlan = null;
         this.visibleChange.emit(false);
     }
@@ -184,11 +185,13 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         } else if (!inputParam.name.includes(this.vmIpProperty)) {
             return false;
         }
-
-        for (const placementPair of this.placementPairs) {
-            if (placementPair.selectedInstance.properties[this.vmIpProperty] == inputParam.value)
-                return true;
+        if (this.placementPairs) {
+            for (const placementPair of this.placementPairs) {
+                if (placementPair.selectedInstance.properties[this.vmIpProperty] == inputParam.value)
+                    return true;
+            }
         }
+        return false;
     }
 
     confirm(): void {
