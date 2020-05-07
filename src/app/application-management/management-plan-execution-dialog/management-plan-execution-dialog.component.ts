@@ -73,6 +73,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     public selectedPlan: Plan;
     public runnable: boolean;
     private readonly interfaceFromOperationDelimiter = '#';
+    private disabledProperties = [];
 
     constructor(
         private appService: ApplicationManagementService,
@@ -183,18 +184,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     existsCorrespondingInputParam(inputParam: PlanParameter): boolean {
-        if (inputParam.name.includes(this.operatingSystemProperty)) {
-            return true;
-        } else if (!inputParam.name.includes(this.vmIpProperty)) {
-            return false;
-        }
-        if (this.placementPairs) {
-            for (const placementPair of this.placementPairs) {
-                if (placementPair.selectedInstance.properties[this.vmIpProperty] == inputParam.value)
-                    return true;
-            }
-        }
-        return false;
+        return this.disabledProperties.some(disabledProps => disabledProps === inputParam);
     }
 
     confirm(): void {
@@ -216,6 +206,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                             inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
                                 + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
                                 + placementPair.selectedInstance.node_template_instance_id;
+                            this.disabledProperties.push(inputParam);
                         }
                     }
                     for (const newInput of this.selectedPlan.input_parameters) {
@@ -225,8 +216,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 const separatorIndex = propertyValue.lastIndexOf(":");
                                 const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
                                 if (propertyValueWithoutGetInput == newInput.name) {
-
                                     newInput.value = placementPair.selectedInstance.properties[this.vmIpProperty];
+                                    this.disabledProperties.push(newInput);
                                 }
                             }
                         }
@@ -296,13 +287,13 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                                             nodeTemplateInstance.node_template_instance_id = separated[0];
                                                             nodeTemplateInstance.node_template_id = separated[1];
                                                             nodeTemplateInstance.service_template_instance_id = separated[2];
-                                                            nodeTemplateInstance.label = 'Instance ID: '+  nodeTemplateInstance.node_template_instance_id + ' of Node Template: ' + nodeTemplateInstance.node_template_id;
+                                                            nodeTemplateInstance.label = 'Instance ID: ' + nodeTemplateInstance.node_template_instance_id + ' of Node Template: ' + nodeTemplateInstance.node_template_id;
                                                             nodeTemplateInstance.value = nodeTemplateInstance;
                                                             const csarId = separated[3];
                                                             this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
                                                                 data => {
                                                                     this.serviceTemplateURL = data;
-                                                                    this.appService.getNodeTemplateInstanceProperties(this.serviceTemplateURL, nodeTemplateInstance.node_template_id , nodeTemplateInstance.node_template_instance_id).subscribe(
+                                                                    this.appService.getNodeTemplateInstanceProperties(this.serviceTemplateURL, nodeTemplateInstance.node_template_id, nodeTemplateInstance.node_template_instance_id).subscribe(
                                                                         data => {
                                                                             nodeTemplateInstance.properties = data;
                                                                         }
