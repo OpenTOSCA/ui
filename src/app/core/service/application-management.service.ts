@@ -27,6 +27,8 @@ import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { InterfaceList } from '../model/interface-list.model';
 import { Operation } from '../model/operation.model';
+import { NodeTemplateResultObject } from '../model/node-template-result.model';
+import { Property } from '../model/property.model';
 
 @Injectable()
 export class ApplicationManagementService {
@@ -120,6 +122,13 @@ export class ApplicationManagementService {
             );
     }
 
+    getNodeTemplatesOfServiceTemplate(serviceTemplatePath: string): Observable<NodeTemplateResultObject> {
+        const url = new Path(serviceTemplatePath)
+            .append('nodetemplates')
+            .toString();
+        return this.http.get<NodeTemplateResultObject>(url, this.httpOptionsAcceptJson);
+    }
+
     getFirstServiceTemplateOfCsar(csarId: string): Observable<string> {
         const url = new Path(this.ngRedux.getState().administration.containerUrl)
             .append('csars')
@@ -133,6 +142,11 @@ export class ApplicationManagementService {
                 }),
                 catchError(err => this.logger.handleObservableError('[application.service][getFirstServiceTemplateOfCsar]', err))
             );
+    }
+
+    getPropertiesOfNodeTemplate(serviceTemplateURL: string, nodeTemplateId: string): Observable<Property[]> {
+        const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/properties';
+        return this.http.get<Property[]>(url, this.httpOptionsAcceptJson);
     }
 
     triggerManagementPlan(plan: Plan, instanceId: string): Observable<string> {
@@ -172,6 +186,11 @@ export class ApplicationManagementService {
             .toPromise()
             .then(() => true)
             .catch(() => false);
+    }
+
+    getNodeTemplateInstanceProperties(serviceTemplateURL: string, nodeTemplateId: string, nodeTemplateInstanceId: string): Observable<Map<string, string>> {
+        const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/instances/' + nodeTemplateInstanceId + '/properties';
+        return this.http.get<Map<string, string>>(url, this.httpOptionsAcceptJson);
     }
 
     getCsar(csarId: string): Observable<Csar> {

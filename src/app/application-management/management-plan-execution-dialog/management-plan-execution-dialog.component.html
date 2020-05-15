@@ -12,7 +12,7 @@
   ~ SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
   -->
 
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+<p-dialog styleClass="modal-scrollable" (onHide)="closeInputModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [(visible)]="visible"
           [draggable]="false" [resizable]="false" modal="true">
@@ -20,18 +20,71 @@
         Select Plan
     </p-header>
 
-    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList" [style]="{ 'min-width': '300px'}" [showClear]="true"
+    <p-dropdown *ngIf="visible" [resetFilterOnHide]="true" pladeholder="Select an Operation" [options]="interfacesList"
+                [style]="{ 'min-width': '300px'}" [showClear]="true"
                 [group]="true" (onChange)="operationSelected($event.value)">
     </p-dropdown>
 
     <p-footer>
-        <button type="button" pButton [disabled]="!selectedPlan" (click)="showInputs = true;" label="Next">
+        <button type="button" pButton [disabled]="!selectedPlan" (click)="confirmPlan()" label="Next">
         </button>
-        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+        <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
-
-<p-dialog styleClass="modal-scrollable" (onHide)="closeModal()"
+<p-dialog *ngIf="isInitPlan() && abstractOSNodeTypeFound" styleClass="modal-scrollable" (onHide)="closeCheckModal()"
+          [contentStyle]="{'overflow': 'auto', 'height': '500px', 'min-height': '300px', 'width': '600px', 'min-width': '350px'}"
+          [(visible)]="visible && checkForAbstractOSOngoing"
+          [draggable]="false" [resizable]="false" modal="true">
+    <p-header>
+        Placement Check
+    </p-header>
+    <div>
+        <p-inplaceContent>
+            Found {{inputPlacementModel.needToBePlaced.length}} abstract Operating System Node Template(s) that need(s)
+            to
+            be placed!
+        </p-inplaceContent>
+        <div *ngFor="let nodeTemplate of outputPlacementModel" style="margin-top: 0.5cm; margin-bottom: 0.5cm">
+            <p-inplaceContent><strong>{{nodeTemplate.id}}</strong> needs to be placed.
+                <br/>
+                <div *ngIf="!nodeTemplate.valid_node_template_instances.length > 0; else found">
+                    No suitable Node Templates found for Placement.
+                </div>
+                <ng-template #found>
+                    <p-dropdown [options]="nodeTemplate.valid_node_template_instances"
+                                (onChange)="onInstanceSelected(nodeTemplate, $event.value)"
+                                placeholder="Select an instance..."
+                                [style]="{ 'width': '100%'}">
+                        <ng-template let-item pTemplate="selectedItem">
+                            <b>{{item.label}}</b>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            {{item.label}}
+                        </ng-template>
+                    </p-dropdown>
+                    <p-accordion>
+                        <p-accordionTab *ngFor="let placementPair of placementPairs" header="Properties of {{placementPair.selectedInstance.node_template_id}}">
+                            <li *ngFor="let property of placementPair.selectedInstance.properties | keyvalue">
+                                <div *ngIf="!(property.key.includes('Key') || property.value == null)">
+                                    <b>{{property.key}}</b> : {{property.value}}
+                                </div>
+                            </li>
+                        </p-accordionTab>
+                    </p-accordion>
+                </ng-template>
+            </p-inplaceContent>
+        </div>
+    </div>
+    <p-footer>
+        <button *ngIf="!loading && abstractOSNodeTypeFound" type="button" pButton
+                [disabled]="!allInstancesSelected && abstractOSNodeTypeFound" (click)="confirm()" label="Confirm">
+        </button>
+        <button type="button" pButton (click)="closeCheckModal()" label="Close"></button>
+    </p-footer>
+    <div>
+    </div>
+</p-dialog>
+<p-dialog *ngIf="showInputs" styleClass="modal-scrollable" (onHide)="closeInputModal()"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [(visible)]="visible && showInputs"
           [draggable]="false" [resizable]="false" modal="true">
@@ -47,6 +100,7 @@
             <div class="p-col">
                 <textarea [id]="param.name" pInputTextarea
                           [autoResize]="false"
+                          [disabled]="existsCorrespondingInputParam(param)"
                           type="text"
                           style="width: 100%"
                           [rows]="2"
@@ -59,6 +113,6 @@
     <p-footer>
         <button type="button" pButton [disabled]="!runnable" (click)="runPlan()" label="Run Management Plan">
         </button>
-        <button type="button" pButton (click)="closeModal()" label="Close"></button>
+        <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
     </p-footer>
 </p-dialog>
