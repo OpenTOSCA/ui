@@ -38,8 +38,8 @@ export class FuzzySearchPipe implements PipeTransform {
             keys: searchFields
         };
 
-        const fuse: Fuse<T> = new Fuse(items, options);
-        const filteredItems: T[] = fuse.search(searchTerm);
+        const fuse: Fuse<T, FuseOptions<T>> = new Fuse(items, options);
+        const filteredItems = fuse.search(searchTerm) as T[];
 
         console.log('[fuzzy-search.pipe] Filtered Items:', filteredItems);
         return filteredItems;
