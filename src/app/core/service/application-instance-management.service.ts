@@ -149,7 +149,9 @@ export class ApplicationInstanceManagementService {
                                     // we got an array of plan instances for each plan, so we have to merge all these arrays to one
                                     let resultAry: Array<PlanInstance> = [];
                                     for (const instAry of result) {
-                                        resultAry = resultAry.concat(instAry);
+                                        if (instAry) {
+                                            resultAry = resultAry.concat(instAry);
+                                        }
                                     }
                                     return resultAry;
                                 })
