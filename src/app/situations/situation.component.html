@@ -1,0 +1,212 @@
+<p-fieldset>
+    <p-header><strong>Situations</strong></p-header>
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" (click)="refreshSituations()"
+            class="ui-button-info" icon="fas fa-sync-alt"
+            pTooltip="refresh"  tooltipPosition="top"></button>
+            &nbsp;
+            <button pButton type="button" (click)="getTextInputSituation()"
+                        class="ui-button-info" icon="fas fa-plus"
+                        pTooltip="Add a situation"  tooltipPosition="top"></button>
+            &nbsp;
+            <button pButton type="button" (click)="deleteAllSituations()"
+                        class="ui-button-info" icon="far fa-trash-alt"
+                        pTooltip="Delete all situations"  tooltipPosition="top"></button>
+        </div>
+    </p-toolbar>
+    <p-toolbar>
+        Situation Template ID : <input placeholder="e.g. AtHome" type="text" name="st_id" id="st_id">
+        Active: <input placeholder="true|false" type="text" name="active" id="active">
+        ThingID: <input placeholder="e.g. Person" type="text" name="t_id" id="t_id">
+    </p-toolbar>
+
+<p-table [columns]="cols" id="sit"[value]="situations" [resizableColumns]="true">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: left">
+                    {{col.header}}
+                    <span *ngIf="col.sortable"><p-sortIcon [field]="col.field"></p-sortIcon></span>
+                </th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-instance let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" >
+                    <span
+                        *ngIf="col.field === 'created_at'; else default" ng-click="fillTextField()">{{instance[col.field] | date:'yyyy-MM-dd HH:mm'}}</span>
+                    <span *ngIf="col.field === 'actions'">
+                        <button type="button" pButton icon="fas fa-check" class="ui-button-success"
+                                pTooltip="Deactivate/activate situation" tooltipPosition="top" 
+                                (click)="putSituation(instance.id)">
+                        </button>
+                        &nbsp;
+                        <button type="button" pButton icon="far fa-trash-alt" class="ui-button-danger"
+                                pTooltip="Delete Instance" tooltipPosition="top"
+                                (click)="deleteSituation(instance.id)">
+                        </button>
+                    </span>
+                    <ng-template #default >{{instance[col.field]}}</ng-template>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-fieldset>
+<p-fieldset>
+    <p-header><strong>Aggregated Situations</strong></p-header>
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" (click)="refreshAggrSituations()"
+            class="ui-button-info" icon="fas fa-sync-alt"
+            pTooltip="refresh"  tooltipPosition="top"></button>
+            &nbsp;
+            <button pButton type="button" (click)="getTextInputAggregatedSituation()"
+                        class="ui-button-info" icon="fas fa-plus"
+                        pTooltip="Add a aggregated situation"  tooltipPosition="top"></button>
+            &nbsp;
+            <button pButton type="button" (click)="deleteAllAggregatedSituations()"
+                        class="ui-button-info" icon="far fa-trash-alt"
+                        pTooltip="Delete all aggregated situations"  tooltipPosition="top"></button>
+        </div>
+    </p-toolbar>
+    <p-toolbar>
+        Aggregated Situation ID: <input type="text" name="aggregateSituation_id" id="aggregateSituation_id" disabled=true>
+        Situation IDs: <input placeholder="e.g. 1,2,5" type="text" name="aggregateSituation_ids" id="aggregateSituation_ids">
+        Logic Expression: <input placeholder="e.g. 5||6" type="text" name="logic_expression" id="logic_expression">
+        &nbsp;
+        <button type="button" id="editButton"  class="ui-button-info"
+                                pTooltip="Edit Instance" tooltipPosition="top" disabled=true
+                                (click)="applyTable()">OK
+        </button>
+    </p-toolbar>
+    <p-table [columns]="colsOfAggregatedSituations" id="aggregated" [value]="aggregatedSituations" [resizableColumns]="true">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: left">
+                    {{col.header}}
+                    <span *ngIf="col.sortable"><p-sortIcon [field]="col.field"></p-sortIcon></span>
+                </th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-instance let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column">
+                    <span
+                        *ngIf="col.field === 'created_at'; else default">{{instance[col.field] | date:'yyyy-MM-dd HH:mm'}}</span>
+                    <span *ngIf="col.field === 'actions'">
+                        <button type="button" pButton icon="fas fa-pencil-alt" class="ui-button-info"
+                                pTooltip="Edit Instance" tooltipPosition="top"
+                                (click)="editInstance(instance.id)">
+                        </button>
+                        &nbsp;
+                        <button type="button" pButton icon="far fa-trash-alt" class="ui-button-danger"
+                                pTooltip="Delete Instance" tooltipPosition="top"
+                                (click)="deleteAggregatedSituation(instance.id)">
+                        </button>
+                    </span>
+                    <ng-template #default>{{instance[col.field]}}</ng-template>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-fieldset>
+    <p-fieldset>
+        <p-header><strong>Situationtriggers</strong></p-header>
+        <p-toolbar>
+            <div class="ui-toolbar-group-left">
+                <button pButton type="button" (click)="refreshTriggers()"
+                class="ui-button-info" icon="fas fa-sync-alt"
+                pTooltip="refresh"  tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="getTextInputTrigger()"
+                            class="ui-button-info" icon="fas fa-plus"
+                            pTooltip="Add a situationtrigger"  tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="deleteAllTriggers()"
+                        class="ui-button-info" icon="far fa-trash-alt"
+                        pTooltip="Delete all situationtriggers"  tooltipPosition="top"></button>
+            </div>
+        </p-toolbar>
+        <p-toolbar>
+                Situation IDs : <input placeholder="3,5,7" type="text" name="situation_ids" id="situation_ids">
+                Aggregated Situation IDs : <input placeholder="3,5,7" type="text" name="aggregatedsituation_ids" id="aggregatedsituation_ids">
+                CSAR ID: <select id="csar_combobox" name="csar_combobox"  (click)="onchangeCSAR()">
+                    <option value="none" selected disabled hidden> Select an installed CSAR</option> 
+                </select>
+                
+                active: <input placeholder="true|false" type="text" name="on_activation" id="on_activation">
+                
+                Interface Name 
+                <select id="interface_combobox" name="interface_combobox"  (click)="activateInputParameters()">
+                    <option value="none" selected disabled hidden> Select an interface</option> 
+                </select>
+                Operation Name: <input placeholder="e.g.initiate" type="text" name="operation_name" id="operation_name">
+                Single Instance: <input placeholder="true|false" type="text" name="single_instance" id="single_instance">
+             
+        </p-toolbar>
+        <p-fieldset id="FieldsetInputParam" hidden=true>
+            <p-header><strong>Input Parameter</strong></p-header>
+            <p-toolbar>
+                Plan Parameter: <select id="plan_parameter_combobox" name="plan_parameter_combobox"  (click)="getPlanParameter()">
+                    <option value="none" selected disabled hidden> Select plan parameter</option> 
+                </select>
+                Name: <input placeholder="DockerEngineURL" type="text" name="nameInput" id="nameInput" disabled=true>
+                Type: <input placeholder="xs:string" type="text" name="typeInput" id="typeInput" disabled=true>
+                Value: <input placeholder="tcp://dind:2375" type="text" name="valueInput" id="valueInput">
+                &nbsp;
+                <button type="button" id="editButton"  class="ui-button-info"
+                                tooltipPosition="top"
+                                (click)="addInputParam()">+
+                </button>
+                &nbsp;<button type="button" id="removeInputButton"  class="ui-button-info"
+                tooltipPosition="top"
+                (click)="removeInputParam()">-
+</button>
+&nbsp;         
+                Input Parameter: <select id="input_parameter_combobox" name="input_parameter_combobox"  (click)="fillInputFields()" >
+                    <option value="none" selected disabled hidden> Select plan parameter</option> 
+                </select>
+        </p-toolbar>
+        </p-fieldset>
+        &nbsp;
+        <p-table [columns]="colsOfTriggers" id="triggers" [value]="situationtriggers" [resizableColumns]="true" ng-mouseenter="rollClass = 'highlight'">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: center">
+                            {{col.header}}
+                            <span *ngIf="col.sortable"><p-sortIcon [field]="col.field"></p-sortIcon></span>
+                        </th>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="body" let-instance let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns" class="ui-resizable-column">
+                            <span
+                                *ngIf="col.field === 'input_params'; else default">
+                                <span *ngFor="let params of instance.input_params">
+                                  <span>name:{{params.name}}</span><br>
+                                  <span>type:{{params.type}}</span><br>
+                                  <span>value:{{params.value}}</span><br><br>
+                                </span>
+                            </span>
+                            <span *ngIf="col.field === 'actions'">
+                                <button type="button" pButton icon="far fa-trash-alt" class="ui-button-danger"
+                                        pTooltip="Delete Instance" tooltipPosition="top"
+                                        (click)="deleteTrigger(instance.id)">
+                                </button>
+                                &nbsp;
+                                <button type="button" pButton icon="fas fa-play" class="weiss"
+                                        pTooltip="Start Trigger" tooltipPosition="top"
+                                        (click)="activate(instance)">
+                                </button>
+                            </span>
+                            
+                            <ng-template #default>{{instance[col.field]}}</ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+</p-fieldset> 

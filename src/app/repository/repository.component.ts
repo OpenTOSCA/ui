@@ -63,6 +63,7 @@ export class RepositoryComponent implements OnInit {
     ngOnInit() {
         this.repositoryItems$.subscribe(items => this.repositoryItems = items);
         this.selectedRepository$.subscribe(item => {
+            //
             this.selectedRepository = item;
             if (this.selectedRepository === null) {
                 this.selectedRepository = this.repositoryItems[0];

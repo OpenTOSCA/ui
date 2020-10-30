@@ -15,11 +15,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { AboutComponent } from './about.component';
+import { SituationComponent } from './situations/situation.component';
 
 const routes: Routes = [
     {
         path: 'about',
         component: AboutComponent
+    },
+    {
+        path: 'situation',
+        component: SituationComponent
     },
     {
         path: '',
