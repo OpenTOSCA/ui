@@ -38,8 +38,12 @@
                                         (click)="selectBuildPlan()"></button>
                                 &nbsp;
                                 <button pButton type="button" icon="fas fa-sync-alt"
-                                        pTooltip="Reload instances" showDelay="300" tooltipPosition="top"
+                                        pTooltip="Reload instances" showDelay="300" tooltipPosition="right"
                                         (click)="triggerReloadAppInstances()"></button>
+
+                                <button pButton type="button" icon="fas fa-code-branch"
+                                        pTooltip="Generate Migration Plans" showDelay="300" tooltipPosition="top"
+                                        (click)="selectCSARForMigrationPlan(csar)"></button>
                             </div>
                         </p-toolbar>
                         <opentosca-application-instance-list
@@ -78,3 +82,5 @@
                                             [instanceId]="instanceId"
                                             [inputValidation]="true">
 </opentosca-management-plan-execution-dialog>
+<opentosca-migration-plan-creation-dialog [(visible)]="csarSelectDialogVisible" [csar]="csar">
+</opentosca-migration-plan-creation-dialog>
