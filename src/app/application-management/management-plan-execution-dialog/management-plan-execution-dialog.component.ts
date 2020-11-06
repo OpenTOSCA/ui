@@ -109,6 +109,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             if (this.plan) {
                 this.showInputs = true;
                 this.selectedPlan = this.plan
+                this.checkInputs();
             }
         }
     }

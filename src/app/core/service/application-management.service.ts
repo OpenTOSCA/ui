@@ -22,7 +22,7 @@ import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { Interface } from '../model/interface.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { InterfaceList } from '../model/interface-list.model';
@@ -127,6 +127,18 @@ export class ApplicationManagementService {
             .append('nodetemplates')
             .toString();
         return this.http.get<NodeTemplateResultObject>(url, this.httpOptionsAcceptJson);
+    }
+
+    createMigrationPlan(sourceCsarId: string, targetCsarId: string): Observable<HttpResponse<string>> {
+        console.log("requesting migration plan creation");
+        const url = new Path(this.ngRedux.getState().administration.containerUrl).append('csars').append('transform').toString();
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            }),
+        };
+        return this.http.post(url, {source_csar_name: sourceCsarId, target_csar_name: targetCsarId}, { ...httpOptions, responseType: 'text', observe: 'response' });
     }
 
     getFirstServiceTemplateOfCsar(csarId: string): Observable<string> {

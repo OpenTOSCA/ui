@@ -34,6 +34,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     @select(['container', 'application', 'csar']) csar: Observable<Csar>;
 
     public dialogVisible = false;
+    public csarSelectDialogVisible = false;
     public selectedPlanType: PlanTypes;
     public buildPlanExists = false;
     public terminationPlanExists = false;
@@ -107,5 +108,9 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
         this.selectedPlanType = PlanTypes.TerminationPlan;
         this.instanceId = instanceId;
         this.dialogVisible = true;
+    }
+
+    selectCSARForMigrationPlan(app: Csar): void {
+        this.csarSelectDialogVisible = true;
     }
 }
