@@ -27,110 +27,21 @@ import { Plan } from '../core/model/plan.model';
 
 /**
  * This class contains the auxiliary methods for the http requests
- * 
+ *
  * @author Lavinia Stiliadou
  */
 export class FunctionComponent implements OnInit {
   ngOnInit(): void { }
 
-  /**
-  * Format the @GET response and adds the situations from the API to the table.
-  * @param jsonText 
-  */
-  editGetResponseSituations(jsonText: string): Array<Situation> {
-    let o = jsonText;
-    while (o.includes('_links')) {
-      o = o.replace(",\"_links\"", "");
-    }
-    let situations = o;
-    let obj = JSON.parse(situations);
-    let situationsA = new Array<Situation>();
-    // number of situations
-    if (obj.situations != undefined) {
-      let length = obj.situations.length;
 
-      // goes over all situations in the API and adds them to the table
-      for (let i = 0; i < length; i++) {
-        let situation = new Situation();
-        situation.id = obj.situations[i].id;
-        situation.situation_template_id = obj.situations[i].situation_template_id;
-        situation.active = obj.situations[i].active;
-        situation.thing_id = obj.situations[i].thing_id;
-        situationsA.push(situation);
-      }
-      return situationsA;
-    }
-    return null;
-  }
 
-  /**
-   * Resets all text fields.
-   */
-  reset(): void {
-    // Situation text fields
-    (<HTMLInputElement>document.getElementById('st_id')).value = "";
-    (<HTMLInputElement>document.getElementById('active')).value = "";
-    (<HTMLInputElement>document.getElementById('t_id')).value = "";
 
-    // Aggregated Situation text fields
-    (<HTMLInputElement>document.getElementById("aggregateSituation_id")).value = "";
-    (<HTMLInputElement>document.getElementById('aggregateSituation_ids')).value = "";
-    (<HTMLInputElement>document.getElementById('logic_expression')).value = "";
 
-    // Situationtrigger text fields
-    (<HTMLInputElement>document.getElementById('situation_ids')).value = "";
-    (<HTMLInputElement>document.getElementById('aggregatedsituation_ids')).value = "";
-    (<HTMLSelectElement>document.getElementById('csar_combobox')).value = "none";
-    (<HTMLInputElement>document.getElementById('on_activation')).value = "";
-    (<HTMLSelectElement>document.getElementById('interface_combobox')).value = "none";
-    (<HTMLInputElement>document.getElementById('operation_name')).value = "";
-    (<HTMLSelectElement>document.getElementById('plan_parameter_combobox')).value = "none";
-    (<HTMLInputElement>document.getElementById('nameInput')).value = "";
-    (<HTMLInputElement>document.getElementById('typeInput')).value = "";
-    (<HTMLInputElement>document.getElementById('valueInput')).value = "";
-    (<HTMLSelectElement>document.getElementById('input_parameter_combobox')).value = "none";
-    (<HTMLInputElement>document.getElementById('single_instance')).value = "";
-  }
-
-  /**
-   * Takes the value of the situation text fields and return a situation.
-   */
-  getTextInputSituation(): Situation {
-    let situation_template_id = (<HTMLInputElement>document.getElementById('st_id')).value,
-      active = (<HTMLInputElement>document.getElementById('active')).value,
-      thing_id = (<HTMLInputElement>document.getElementById('t_id')).value;
-
-    let situation = new Situation();
-    situation.situation_template_id = situation_template_id;
-    situation.active = active;
-    situation.thing_id = thing_id;
-    return situation;
-  }
-
-  /**
-   * Checks that all inputs are valid.
-   */
-  checkTextInput(): string {
-    let empty = 'ok',
-      situation_template_id = (<HTMLInputElement>document.getElementById('st_id')).value,
-      active = (<HTMLInputElement>document.getElementById('active')).value,
-      thing_id = (<HTMLInputElement>document.getElementById('t_id')).value;
-
-    if (situation_template_id === "") {
-      return 'Situation Template ID';
-    } else if ((active !== "true") && (active !== "false")) {
-      return 'Active';
-    } else if (thing_id === "") {
-      return 'Thing ID';
-    }
-
-    return empty.toString();
-  }
 
   /**
    * Changes the active from true/false to false/true.
    *
-   * @param index column index where the active attribut need to be changed 
+   * @param index column index where the active attribut need to be changed
    */
   switchActive(index) {
     let table = <HTMLTableElement>document.getElementById('sit'),
@@ -153,7 +64,7 @@ export class FunctionComponent implements OnInit {
 
   /**
    * Format the @GET response and adds the aggregated situations from the API to the table.
-   * @param jsonText 
+   * @param jsonText
    */
   editGetResponseAggregatedSituations(jsonText: string): Array<AggregatedSituation> {
     let o = jsonText;
@@ -219,7 +130,7 @@ export class FunctionComponent implements OnInit {
       temp = aggregateSituation_ids.trim(),
       arrayOfAggregatedSituationIds = temp.split(',');
 
-    // logic expression should start with a number (then an operator and a number)   
+    // logic expression should start with a number (then an operator and a number)
     let regex: RegExp;
     regex = /^[0-9]+(?:(?:\|\||&&)[0-9]+)*$/;
     let situationLogExp = logic_expression.split(/\|\||&&/);
@@ -256,7 +167,7 @@ export class FunctionComponent implements OnInit {
           failed = true;
           return 'Situation IDs';
         }
-      
+
     }
 
     if (failedExp) {
@@ -296,7 +207,7 @@ export class FunctionComponent implements OnInit {
 
   /**
    * Write the input of the text fields back to the table.
-   * @param situations 
+   * @param situations
    */
   applyTable(situations: Array<Situation>): AggregatedSituation {
     let table = <HTMLTableElement>document.getElementById("aggregated");
@@ -324,7 +235,7 @@ export class FunctionComponent implements OnInit {
 
   /**
    * Format the @GET response and adds the situationtrigger from the API to the table.
-   * @param jsonText 
+   * @param jsonText
    */
   editGetResponseTriggers(jsonText: string): Array<SituationTrigger> {
     let o = jsonText;
@@ -369,13 +280,12 @@ export class FunctionComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    * Takes the value of the situationtrigger text fields and returns a situationstrigger.
    *
    */
   getTextInputTrigger(): SituationTrigger {
     let situation_ids = (<HTMLInputElement>document.getElementById('situation_ids')).value,
-      aggregated_situations = (<HTMLInputElement>document.getElementById('aggregatedsituation_ids')).value,
       csar_id = (<HTMLSelectElement>document.getElementById('csar_combobox')).value,
       on_activation = (<HTMLInputElement>document.getElementById('on_activation')).value,
       interface_name = (<HTMLSelectElement>document.getElementById('interface_combobox')).value,
@@ -385,11 +295,10 @@ export class FunctionComponent implements OnInit {
 
 
     let arrayOfSituationIds = situation_ids.split(',');
-    let arrayOfAggregatedSituationIds = aggregated_situations.split(',');
+
     let trigger = new SituationTrigger();
     let input = new Array<PlanParameter>();
     trigger.situation_ids = arrayOfSituationIds;
-    trigger.aggregated_situation_ids = arrayOfAggregatedSituationIds;
     trigger.csar_id = csar_id;
     trigger.on_activation = on_activation;
     trigger.interface_name = interface_name;
@@ -416,7 +325,6 @@ export class FunctionComponent implements OnInit {
    */
   checkTextInputTrigger(situations: Array<Situation>, aggregated_situations: Array<AggregatedSituation>): string {
     let situation_ids = (<HTMLInputElement>document.getElementById('situation_ids')).value,
-      aggregated_situations_ids = (<HTMLInputElement>document.getElementById('aggregatedsituation_ids')).value,
       csar_id = (<HTMLSelectElement>document.getElementById('csar_combobox')).value,
       on_activation = (<HTMLInputElement>document.getElementById('on_activation')).value,
       interface_name = (<HTMLSelectElement>document.getElementById('interface_combobox')).value,
@@ -444,24 +352,6 @@ export class FunctionComponent implements OnInit {
         // checks if the input of the text field contains unknown situations
         if (!situations.some(s => s.id == id)) {
           return 'Situation IDs';
-        }
-      }
-    }
-
-    let arrayOfAggregatedSituationIds = aggregated_situations_ids.split(',');
-    for (let i = 0; i < arrayOfAggregatedSituationIds.length; i++) {
-      let id = arrayOfAggregatedSituationIds[i];
-      // checks if the aggregated situations are also empty
-      if (aggregated_situations_ids === '' && check) {
-        return 'Empty';
-      } else {
-        if (aggregated_situations_ids === '') {
-
-        } else {
-          // checks if the input of the text field contains unknown aggregated situations
-          if (!aggregated_situations.some(s => s.id == id)) {
-            return 'Aggregated Situation IDs';
-          }
         }
       }
     }
@@ -550,7 +440,7 @@ export class FunctionComponent implements OnInit {
 
   /**
    * Colors the row where the situationtrigger is activated.
-   * @param trigger 
+   * @param trigger
    */
   colorTriggerRow(trigger: SituationTrigger) {
     let table = <HTMLTableElement>document.getElementById("triggers");
@@ -568,7 +458,7 @@ export class FunctionComponent implements OnInit {
 
   /**
    * Starts the situation-dependent execution of the plan if trigger active = all situations active.
-   * @param trigger 
+   * @param trigger
    */
   activate(trigger: SituationTrigger, situations: Array<Situation>, aggregated_situations: Array<AggregatedSituation>): boolean {
     let active = trigger.on_activation;
@@ -609,8 +499,8 @@ export class FunctionComponent implements OnInit {
 
 
   /**
-   * 
-   * Returns the plan based on the operation and interface of the trigger. 
+   *
+   * Returns the plan based on the operation and interface of the trigger.
    *
    * @param text response from the http Request to the interface
    * @param trigger responsible for the situation-dependent execution

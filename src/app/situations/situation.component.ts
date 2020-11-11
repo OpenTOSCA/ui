@@ -26,6 +26,10 @@ import { Item } from './../configuration/repository-configuration/repository-con
 import { FunctionComponent } from './function.component';
 import { FeedbackComponent } from './feedback.component';
 import { Plan } from '../core/model/plan.model';
+import {SelectItem} from "primeng/api";
+import {Csar} from "../core/model/csar.model";
+import {Interface} from "../core/model/interface.model";
+import {Operation} from "../core/model/operation.model";
 
 
 @Component({
@@ -37,9 +41,9 @@ import { Plan } from '../core/model/plan.model';
 /**
  * This class contains the management of situations, aggregated situations and situation triggers. It also contains the
  * situational execution of management plans.
- * 
+ *
  * ! Note that a new version of the container must be used because aggregated situations did not exist.
- * 
+ *
  * @author Lavinia Stiliadou
  */
 export class SituationComponent implements OnInit {
@@ -50,11 +54,15 @@ export class SituationComponent implements OnInit {
   administrationItems: Array<Item> = [];
   selectedRepository: string;
 
+  console = console;
+
   public instanceId: string;
 
   fc = new FunctionComponent();
   feedback: FeedbackComponent;
   situations: Array<Situation>;
+  csars: Csar[];
+  csar2interface: Map<Csar,Interface[]> = new Map<Csar,Interface[]>();
   situationtriggers: Array<SituationTrigger>;
   aggregatedSituations = new Array<AggregatedSituation>();
 
@@ -62,10 +70,22 @@ export class SituationComponent implements OnInit {
   colsOfTriggers;
   colsOfAggregatedSituations;
 
+  //inputs and selection
+  situationTemplateInput: string;
+  situationThingInput: string;
+  situationStateInput: boolean = false;
+
+  selectableSituations: Situation[];
+  selectedSituations: Situation[];
+  selectSingleInstance: boolean;
+  selectedCsar: Csar;
+  selectedInterface: Interface;
+  selectedOperation: Operation;
+
   /**
    * The constructor of the class.
-   * 
-   * @param ngRedux to dispatch the feedback 
+   *
+   * @param ngRedux to dispatch the feedback
    * @param http for the communication with the Situation API
    * @param appService to access the normal execution of management plans
    */
@@ -75,15 +95,23 @@ export class SituationComponent implements OnInit {
    * Initialize the table for situations, aggregated situations and situationtriggers.
    */
   ngOnInit(): void {
+      this.administrationItems$.subscribe(items => { let temp = ""; this.administrationItems = items; temp = temp + items });
+
+      // sets the selectedRepository to the API Endpoint
+      this.selectedRepository = this.administrationItems + "/situationsapi";
+
+
+      this.appService.getResolvedApplications().subscribe(value => {
+          this.csars = value;
+          this.csars.forEach(value => this.appService.getInterfaces(value.id).subscribe(val => this.csar2interface.set(value,val)));
+      });
+
+
 
     this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
       { label: 'Situation', routerLink: ['/situation'] }
     ]));
 
-    this.administrationItems$.subscribe(items => { let temp = ""; this.administrationItems = items; temp = temp + items });
-
-    // sets the selectedRepository to the API Endpoint
-    this.selectedRepository = this.administrationItems + "/situationsapi";
 
     // situation table columns
     this.cols = [
@@ -107,7 +135,6 @@ export class SituationComponent implements OnInit {
     this.colsOfTriggers = [
       { field: 'id', header: 'Trigger ID', sortable: true },
       { field: 'situation_ids', header: 'Situation IDs', sortable: true },
-      { field: 'aggregated_situation_ids', header: 'Aggregated Situation IDs', sortable: true },
       { field: 'csar_id', header: 'CSAR ID', sortable: true },
       { field: 'on_activation', header: 'active', sortable: true },
       { field: 'interface_name', header: 'Interface Name', sortable: true },
@@ -118,58 +145,97 @@ export class SituationComponent implements OnInit {
     ];
 
     this.feedback = new FeedbackComponent(this.ngRedux);
-    this.refresh();
+      this.refresh();
   }
 
   /**
    * Sends multiple @GET requests to the Situation API
    */
   refresh(): void {
+      console.log('Starting to refresh situations and triggers');
     this.refreshSituations();
-    this.refreshAggrSituations();
+    //this.refreshAggrSituations();
     this.refreshTriggers();
 
-    this.situations = new Array<Situation>();
-    this.situationtriggers = new Array<SituationTrigger>();
-    this.aggregatedSituations = new Array<AggregatedSituation>();
+    //this.situations = new Array<Situation>();
+    //this.situationtriggers = new Array<SituationTrigger>();
+    //this.aggregatedSituations = new Array<AggregatedSituation>();
   }
 
-  // situations  
+  // situations
 
   /**
    * Sends a @GET requests to the Situation API.
    */
   refreshSituations(): void {
-    let situations = this.http.get(this.selectedRepository + '/situations', { responseType: 'text' });
-    situations.subscribe(response => this.editGetResponseSituations(response));
+    this.http.get(this.selectedRepository + '/situations', { responseType: 'text' }).subscribe(response => this.editGetResponseSituations(response));
   }
 
   /**
    * Format the @GET response and adds the situations from the API to the table.
-   * @param jsonText 
+   * @param jsonText
    */
   editGetResponseSituations(jsonText: string): void {
-    this.situations = this.fc.editGetResponseSituations(jsonText);
+    this.situations = this.parseSituationsResponse(jsonText);
+    this.selectableSituations = this.situations;
   }
 
-  /**
-   * Takes the value of the situation text fields. If all entries are valid, a @POST request is made to the API.
-   */
-  getTextInputSituation(): void {
-    let situation = this.fc.getTextInputSituation();
-    let result = this.fc.checkTextInput();
-    if (result === 'ok') {
-      this.postSituation(situation);
-      this.reset();
-    } else {
-      this.failedSituationTextInput(result);
-      this.reset();
+    /**
+     * Format the @GET response and adds the situations from the API to the table.
+     * @param jsonText
+     */
+    parseSituationsResponse(jsonText: string): Situation[] {
+        let o = jsonText;
+        while (o.includes('_links')) {
+            o = o.replace(",\"_links\"", "");
+        }
+        let situations = o;
+        let obj = JSON.parse(situations);
+        let situationsA: Situation[] = [];
+        // number of situations
+        if (obj.situations != undefined) {
+            let length = obj.situations.length;
+
+            // goes over all situations in the API and adds them to the table
+            for (let i = 0; i < length; i++) {
+                let situation = new Situation();
+                situation.id = obj.situations[i].id;
+                situation.situation_template_id = obj.situations[i].situation_template_id;
+                situation.active = obj.situations[i].active;
+                situation.thing_id = obj.situations[i].thing_id;
+                situationsA.push(situation);
+            }
+            console.log('Fetched situations');
+            return situationsA;
+        }
+        console.log('Couldnt fetch situations');
+        return null;
     }
+
+  createSituation(){
+      let check: boolean = true;
+      check = check && this.checkString(this.situationThingInput);
+      check = check && this.checkString(this.situationTemplateInput);
+      if(check) {
+          let sit: Situation = new Situation();
+          sit.situation_template_id = this.situationTemplateInput;
+          sit.thing_id = this.situationThingInput;
+          sit.active = String(this.situationStateInput);
+          this.postSituation(sit);
+      }
+  }
+
+  checkString(string: String): boolean {
+      if(string == "" || string == null) {
+          return false;
+      } else {
+          return true;
+      }
   }
 
   /**
    * Sends a @POST request to the API to create a new situation.
-   * @param situation 
+   * @param situation
    */
   postSituation(situation: Situation): void {
     let post = this.http.post(this.selectedRepository + '/situations', {
@@ -184,8 +250,8 @@ export class SituationComponent implements OnInit {
 
   /**
    * Sends a @PUT request to the API to activate/deactivate a situation with the given id.
-   * 
-   * @param id 
+   *
+   * @param id
    */
   putSituation(id: string): void {
     let active = this.fc.switchActive(id);
@@ -202,7 +268,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Deletes the situation with the given id.
-   * 
+   *
    * @param id
    */
   deleteSituation(id: string): void {
@@ -242,79 +308,16 @@ export class SituationComponent implements OnInit {
   }
 
   /**
-   * Resets all text fields.
-   */
-  reset(): void {
-    this.fc.reset();
-  }
-
-  /**
-   * Error messages if the input is invalid.
-   * @param failedInput 
-   */
-  failedSituationTextInput(failedInput: string) {
-    this.feedback.failedSituationTextInput(failedInput);
-  }
-
-  // aggregated situations
-
-  /**
-   * Sends a @GET request to the Situation API to get all aggregated situations.
-   */
-  refreshAggrSituations(): void {
-    let aggrSituations = this.http.get(this.selectedRepository + '/aggregatedsituations', { responseType: 'text' });
-    aggrSituations.subscribe(response => this.editGetResponseAggregatedSituations(response));
-  }
-
-  /**
    * Format the @GET response and adds the aggregated situations from the API to the table.
-   * @param jsonText 
+   * @param jsonText
    */
   editGetResponseAggregatedSituations(jsonText: string): void {
     this.aggregatedSituations = this.fc.editGetResponseAggregatedSituations(jsonText);
   }
 
   /**
-   * Takes the value of the aggregated situation text fields. If all entries are valid, a @POST request is made to the API.
-   */
-  getTextInputAggregatedSituation(): void {
-    let aggregatedsituation = this.fc.getTextInputAggregatedSituation();
-    let result = this.fc.checkTextInputAggregatedSituation(this.situations);
-    if (result === 'ok') {
-      this.postAggregatedSituation(aggregatedsituation);
-      this.reset();
-    } else {
-      this.failedAggregatedSituationTextInput(result);
-      this.reset();
-    }
-  }
-
-  /**
-   * To edit a aggregated situation.
-   * @param instanceId id of the aggregated situation
-   */
-  editInstance(instanceId: string) {
-    this.fc.editInstance(instanceId);
-  }
-
-  /**
-   * Sends a @PUT request to update the aggregated situation.
-   */
-  applyTable() {
-    let aggregatedSituation = this.fc.applyTable(this.situations);
-    if(typeof aggregatedSituation !== 'undefined'){
-      this.putAggregatedSituation(aggregatedSituation);
-      this.reset();
-    }else{
-      let id = (<HTMLInputElement> document.getElementById('aggregateSituation_id')).value;
-      this.onCompletionErrorAggregatedSituation(id+',P');
-      this.reset();
-    }
-  }
-
-  /**
    * Sends a @PUT request to the API to activate/deactivate the given aggregated situation.
-   * 
+   *
    * @param aggregatedSituation
    */
   putAggregatedSituation(aggregatedSituation: AggregatedSituation) {
@@ -332,7 +335,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Deletes the aggregated situation with the given id.
-   * 
+   *
    * @param id
    */
   deleteAggregatedSituation(id: string): void {
@@ -343,22 +346,8 @@ export class SituationComponent implements OnInit {
   }
 
   /**
-   * Deletes all aggregated situations.
-   */
-  deleteAllAggregatedSituations(): void {
-    let arrayOfAggregatedSituationIds: string[] = new Array();
-    this.aggregatedSituations.forEach(function (value) {
-      arrayOfAggregatedSituationIds.push(value.id);
-    })
-    for (let i = 0; i < arrayOfAggregatedSituationIds.length; i++) {
-      let id = arrayOfAggregatedSituationIds[i];
-      this.deleteAggregatedSituation(id);
-    }
-  }
-
-  /**
    * Sends a @POST request to the API to create a new aggregated situation.
-   * @param aggregatedSituation 
+   * @param aggregatedSituation
    */
   postAggregatedSituation(aggregatedSituation: AggregatedSituation): void {
     let result = aggregatedSituation.situation_ids;
@@ -389,7 +378,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Error messages if the input is invalid.
-   * @param failedInput 
+   * @param failedInput
    */
   failedAggregatedSituationTextInput(failedInput: string) {
     this.feedback.failedAggregatedSituationTextInput(failedInput);
@@ -404,106 +393,47 @@ export class SituationComponent implements OnInit {
     let triggers = this.http.get(this.selectedRepository + '/triggers', { responseType: 'text' });
     triggers.subscribe(response2 => this.editGetResponseTriggers(response2));
   }
-  
+
   /**
    * Format the @GET response and adds the situationtrigger from the API to the table.
-   * @param jsonText 
+   * @param jsonText
    */
   editGetResponseTriggers(jsonText: string): void {
     this.situationtriggers = this.fc.editGetResponseTriggers(jsonText);
   }
 
-  /**
-   * Adds all installed CSARs in the API to the select box
-   */
-  onchangeCSAR() {
-    let combibox = <HTMLSelectElement>document.getElementById('csar_combobox');
-    let containsCSAR;
-    let csarRepo = this.selectedRepository.replace('/situationsapi', '/csars');
-    let csarsRequest = this.http.get(csarRepo, { responseType: 'text' });
-    csarsRequest.subscribe(response => {
-      let csars = response; let obj = JSON.parse(csars);
-      for (let i = 0; i < obj.csars.length; i++) {
-        let newOption = document.createElement("option");
-        newOption.text = obj.csars[i].id;
-        for (let j = 0; j < combibox.options.length; j++) {
-          if (combibox.options.item(j).innerHTML === obj.csars[i].id) {
-            containsCSAR = true;
-          }
-        }
-        if (!containsCSAR) {
-          combibox.add(newOption);
-        }
-      }
-    });
-  }
 
-  /**
-   * Takes the value of the situation text fields. If all entries are valid, a @POST request is made to the API.
-   */
-  getTextInputTrigger(): void {
-    let trigger = this.fc.getTextInputTrigger();
-    let result = this.fc.checkTextInputTrigger(this.situations, this.aggregatedSituations);
-    if (result === 'ok') {
+  createSituationTrigger(): void {
+      let trigger: SituationTrigger = new SituationTrigger();
+      trigger.situation_ids = new Array<string>();
+      this.selectedSituations.forEach(value => trigger.situation_ids.push(value.id));
+      trigger.csar_id = this.selectedCsar.id;
+      trigger.interface_name = this.selectedInterface.name;
+      trigger.operation_name = this.selectedOperation.name;
+      trigger.single_instance = String(this.selectSingleInstance);
+      trigger.on_activation = "true";
+      trigger.input_params = this.selectedOperation._embedded.plan.input_parameters;
+
       this.postSituationTrigger(trigger);
-      this.reset();
-    } else {
-      if (result !== 'ok') {
-        this.failedSituationTriggerTextInput(result);
-        this.reset();
-      }
-    }
-
   }
+
 
   /**
    * Error messages if the input is invalid
-   * @param failedInput 
+   * @param failedInput
    */
   failedSituationTriggerTextInput(failedInput: string) {
     this.feedback.failedSituationTriggerTextInput(failedInput);
   }
 
-  /**
-   * Activates the field set which contains the input parameters based on the interface.
-   */
-  activateInputParameters() {
-    (<HTMLFieldSetElement>document.getElementById("FieldsetInputParam")).hidden = false;
-    let csar = (<HTMLSelectElement>document.getElementById('csar_combobox')).value;
-    let combibox = <HTMLSelectElement>document.getElementById('interface_combobox');
-    let containsInterface;
-    let csarRepo = this.selectedRepository.replace('/situationsapi', '/csars/');
-    if (csar !== 'none') {
-      let csarsRequest = this.http.get(csarRepo + csar, { responseType: 'text' });
-      csarsRequest.subscribe(response => {
-        let servicetemplate = this.getServiceTemplateCsar(response);
-        let interfaceOfCSAR = servicetemplate + '/boundarydefinitions/interfaces'
-        let requestInterfaces = this.http.get(interfaceOfCSAR, { responseType: 'text' });
-        requestInterfaces.subscribe(response2 => {
-          let interfaces = response2; let obj = JSON.parse(interfaces);
-          for (let i = 0; i < obj.interfaces.length; i++) {
-            let newOption = document.createElement("option");
-            newOption.text = obj.interfaces[i].name;
-            for (let j = 0; j < combibox.options.length; j++) {
-              if (combibox.options.item(j).innerHTML === obj.interfaces[i].name) {
-                containsInterface = true;
-              }
-            }
-            if (!containsInterface) {
-              combibox.add(newOption);
-            }
-          }
-        })
-      });
-    }
-  }
+
 
   /**
    * Computes the possible operations based on the csar and the interfaces.
-   * @param csar 
+   * @param csar
    */
   setPlan(csar) {
-    let interfaceC = (<HTMLSelectElement>document.getElementById('interface_combobox')).value;
+    let interfaceC = this.selectedInterface.name;
     let servicetemplate = this.getServiceTemplateCsar(csar);
     if (interfaceC !== 'none') {
       let interfaceOfCSAR = servicetemplate + '/boundarydefinitions/interfaces/' + interfaceC;
@@ -511,83 +441,18 @@ export class SituationComponent implements OnInit {
     }
   }
 
-  /**
-   * Computes the required plan paramaters based on the CSAR, interface and operation.
-   */
-  getPlanParameter() {
-    let csar = (<HTMLSelectElement>document.getElementById('csar_combobox')).value;
-    let operationName = (<HTMLInputElement>document.getElementById("operation_name")).value;
-    let containsParameter;
-    let combibox = <HTMLSelectElement>document.getElementById('plan_parameter_combobox');
-    let csarRepo = this.selectedRepository.replace('/situationsapi', '/csars/');
-    if (csar !== 'none' && operationName !== '') {
-      let plan = this.http.get(csarRepo + csar, { responseType: 'text' });
-      plan.subscribe(response => {
-        let interfaceC = this.setPlan(response); let interfaceRequest = this.http.get(interfaceC, { responseType: 'text' });
-          interfaceRequest.subscribe(response => {
-            let operations = response; let obj = JSON.parse(operations);
-            if (typeof obj.operations[operationName] !== 'undefined') {
-              let inputParameter = obj.operations[operationName]._embedded.plan.input_parameters;
-              for (let i = 0; i < inputParameter.length; i++) {
-                let newOption = document.createElement("option");
-                let planParam = new PlanParameter();
-                planParam.name = inputParameter[i].name;
-                planParam.type = inputParameter[i].type;
-                planParam.value = inputParameter[i].value;
-                newOption.text = planParam.name + ',' + planParam.type;
-                for (let j = 0; j < combibox.options.length; j++) {
-                  if (combibox.options.item(j).innerHTML === (planParam.name + ',' + planParam.type)) {
-                    containsParameter = true;
-                  }
-                }
-                if (!containsParameter) {
-                  combibox.add(newOption);
-                }
-              }
-            } else {
-              this.failedSituationTriggerTextInput(operationName + ',O');
-            }
-            let displayText = combibox.options[combibox.selectedIndex].text.split(',');
-            if (displayText[0] !== 'Select plan parameter') {
-              (<HTMLInputElement>document.getElementById("nameInput")).value = displayText[0];
-              (<HTMLInputElement>document.getElementById("typeInput")).value = displayText[1];
-            }
-          }, () => this.reset())
-      }, () => this.reset());
-    }
-  }
 
-  /**
-   * Adds the content of the text fields to the input parameter list.
-   */
-  addInputParam() {
-    this.fc.addInputParam();
-  }
-
-  /**
-   * Removes the content of the text fields to the input parameter list.
-   */
-  removeInputParam() {
-    this.fc.removeInputParam();
-  }
-
-  /**
-   * Fill the text fields name, type and value with the content of the input paramters.
-   */
-  fillInputFields() {
-    this.fc.fillInputFields();
-  }
 
   /**
   * Sends a @POST request to the API to create a new situationtrigger.
-  * @param trigger 
+  * @param trigger
   */
   postSituationTrigger(trigger: SituationTrigger): void {
     let result = trigger.situation_ids;
 
     let post = this.http.post(this.selectedRepository + '/triggers', {
       situation_ids: result,
-      aggregatedsituation_ids: trigger.aggregated_situation_ids,
+      //aggregatedsituation_ids: trigger.aggregated_situation_ids,
       csar_id: trigger.csar_id,
       interface_name: trigger.interface_name,
       operation_name: trigger.operation_name,
@@ -600,7 +465,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Deletes the situationtrigger with the given id.
-   * 
+   *
    * @param id
    */
   deleteTrigger(id: string): void {
@@ -625,7 +490,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Error messages
-   * @param typeOfRequest @POST / @DELETE 
+   * @param typeOfRequest @POST / @DELETE
    */
   onCompletionErrorTrigger(typeOfRequest: string) {
     this.feedback.onCompletionErrorTrigger(typeOfRequest);
@@ -641,7 +506,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Colors the row where the situationtrigger is activated.
-   * @param trigger 
+   * @param trigger
    */
   colorTriggerRow(trigger: SituationTrigger) {
     this.fc.colorTriggerRow(trigger);
@@ -649,7 +514,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Starts the situation-dependent execution of the plan if trigger active = all situations active.
-   * @param trigger 
+   * @param trigger
    */
   activate(trigger: SituationTrigger): void {
     let success = this.fc.activate(trigger, this.situations, this.aggregatedSituations);
@@ -662,7 +527,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Executes the plan (based on the interface and operation)
-   * @param trigger 
+   * @param trigger
    */
   selectPlan(trigger: SituationTrigger) {
     this.instanceId = null;
@@ -699,7 +564,7 @@ export class SituationComponent implements OnInit {
 
   /**
    * Returns the servicetemplate link from the CSAR.
-   * @param text 
+   * @param text
    */
   getServiceTemplateCsar(text: any) {
     let o = text;
@@ -708,11 +573,11 @@ export class SituationComponent implements OnInit {
   }
 
   /**
-   * 
-   * Returns the plan based on the operation and interface of the trigger. 
+   *
+   * Returns the plan based on the operation and interface of the trigger.
    *
    * @param text response from the http Request to the interface
-   * @param trigger responsible for the situation-dependent execution 
+   * @param trigger responsible for the situation-dependent execution
    */
   getPlan(text: string, trigger: SituationTrigger) {
     let plan = this.fc.getPlan(text, trigger);

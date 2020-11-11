@@ -19,7 +19,7 @@ import { NgSpinKitModule } from 'ng-spin-kit';
 import {
     ButtonModule, CardModule, CheckboxModule, ConfirmDialogModule, DialogModule,
     DropdownModule, ScrollPanelModule, ToolbarModule, FieldsetModule,
-    TooltipModule
+    TooltipModule, MultiSelect, MultiSelectModule, ToggleButtonModule, InputTextModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
@@ -41,8 +41,10 @@ import { FormsModule } from '@angular/forms';
         DropdownModule,
         DialogModule,
         NgSpinKitModule,
-        CheckboxModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        MultiSelectModule,
+        ToggleButtonModule,
+        InputTextModule
     ],
     declarations: [SituationComponent],
 })
