@@ -23,8 +23,6 @@ import { SituationTrigger } from './model/situationtrigger.module';
 import { AggregatedSituation } from './model/agggregatedSituation.module';
 import { PlanParameter } from './../core/model/plan-parameter.model';
 import { Item } from './../configuration/repository-configuration/repository-configuration.component';
-import { FunctionComponent } from './function.component';
-import { FeedbackComponent } from './feedback.component';
 import { Plan } from '../core/model/plan.model';
 import {SelectItem} from "primeng/api";
 import {Csar} from "../core/model/csar.model";
@@ -33,6 +31,7 @@ import {Operation} from "../core/model/operation.model";
 import {globals} from "../globals";
 import {ServiceTemplateInstance} from "../core/model/service-template-instance.model";
 import {ApplicationInstanceManagementService} from "../core/service/application-instance-management.service";
+import {GrowlActions} from "../core/growl/growl-actions";
 
 
 @Component({
@@ -61,8 +60,6 @@ export class SituationComponent implements OnInit {
 
   public instanceId: string;
 
-  fc = new FunctionComponent();
-  feedback: FeedbackComponent;
   situations: Array<Situation>;
   csars: Csar[];
   csar2interface: Map<Csar,Interface[]> = new Map<Csar,Interface[]>();
@@ -157,7 +154,6 @@ export class SituationComponent implements OnInit {
       { field: 'actions', header: 'actions', sortable: false }
     ];
 
-    this.feedback = new FeedbackComponent(this.ngRedux);
       this.refresh();
   }
 
@@ -177,12 +173,7 @@ export class SituationComponent implements OnInit {
 
   // situations
 
-  /**
-   * Sends a @GET requests to the Situation API.
-   */
-  refreshSituations(): void {
-    this.http.get(this.selectedRepository + '/situations', { responseType: 'text' }).subscribe(response => this.editGetResponseSituations(response));
-  }
+
 
   /**
    * Format the @GET response and adds the situations from the API to the table.
@@ -261,13 +252,73 @@ export class SituationComponent implements OnInit {
       () => { this.onCompletionError('post'); this.refresh() });
   }
 
+
+    /**
+     * Changes the active from true/false to false/true.
+     *
+     * @param index column index where the active attribut need to be changed
+     */
+    switchActive(index) {
+        let table = <HTMLTableElement>document.getElementById('sit'),
+            active;
+        for (let i = 1; i < table.getElementsByTagName("tr").length; i++) {
+            // sucht die Tabellenzeile, dessen erste Spalte dem Index der Situation entspricht
+            if (table.getElementsByTagName("tr").item(i).cells.item(0).innerText == index) {
+                active = table.getElementsByTagName("tr").item(i).cells.item(2).innerText;
+                if (active === 'true') {
+                    active = 'false';
+                } else {
+                    active = 'true';
+                }
+                table.getElementsByTagName("tr").item(i).cells.item(2).innerText = active;
+            };
+        }
+        return active;
+    }
+
+
+    /**
+     * Format the @GET response and adds the aggregated situations from the API to the table.
+     * @param jsonText
+     */
+    editGetResponseAggregatedSituations(jsonText: string): Array<AggregatedSituation> {
+        let o = jsonText;
+        while (o.includes('_links')) {
+            o = o.replace(",\"_links\"", "");
+        }
+        let aggregated_situations = o;
+        let obj = JSON.parse(aggregated_situations);
+
+        let aggregatedSituations = new Array<AggregatedSituation>();
+        if (obj.aggregated_situations != undefined) {
+            // number of aggregated situations
+            let length = obj.aggregated_situations.length;
+
+
+            // goes over all aggregated situations in the API and adds them to the table
+            for (let i = 0; i < length; i++) {
+                let aggregatedsituation = new AggregatedSituation();
+                aggregatedsituation.id = obj.aggregated_situations[i].id;
+                aggregatedsituation.situation_ids = obj.aggregated_situations[i].situation_ids;
+                aggregatedsituation.logic_expression = obj.aggregated_situations[i].logic_expression;
+                aggregatedsituation.active = obj.aggregated_situations[i].active;
+
+                aggregatedSituations.push(aggregatedsituation);
+            }
+
+            return aggregatedSituations;
+        }
+        return null;
+
+    }
+
   /**
    * Sends a @PUT request to the API to activate/deactivate a situation with the given id.
    *
    * @param id
    */
   putSituation(id: string): void {
-    let active = this.fc.switchActive(id);
+    let active = this.switchActive(id);
     let put = this.http.put(this.selectedRepository + '/situations/' + id.toString(), {
       id: id,
       active: active
@@ -304,101 +355,166 @@ export class SituationComponent implements OnInit {
     }
   }
 
-  /**
-   * Confirmation messages
-   * @param typeOfRequest @POST / @DELETE / @PUT
-   */
-  onCompletionSuccess(typeOfRequest: string) {
-    this.feedback.onCompletionSuccess(typeOfRequest);
-  }
 
-  /**
-   * Error messages
-   * @param typeOfRequest @POST / activateTrigger / @DELETE / @PUT
-   */
-  onCompletionError(typeOfRequest: string): void {
-    this.feedback.onCompletionError(typeOfRequest);
-  }
+    /**
+     * Format the @GET response and adds the situationtrigger from the API to the table.
+     * @param jsonText
+     */
+    editGetResponseTriggers(jsonText: string): Array<SituationTrigger> {
+        let o = jsonText;
 
-  /**
-   * Format the @GET response and adds the aggregated situations from the API to the table.
-   * @param jsonText
-   */
-  editGetResponseAggregatedSituations(jsonText: string): void {
-    this.aggregatedSituations = this.fc.editGetResponseAggregatedSituations(jsonText);
-  }
+        console.log("Received following json:");
+        console.log(jsonText);
 
-  /**
-   * Sends a @PUT request to the API to activate/deactivate the given aggregated situation.
-   *
-   * @param aggregatedSituation
-   */
-  putAggregatedSituation(aggregatedSituation: AggregatedSituation) {
-    let put = this.http.put(this.selectedRepository + '/aggregatedsituations/' + aggregatedSituation.id, {
-      id: aggregatedSituation.id,
-      situation_ids: aggregatedSituation.situation_ids,
-      logic_expression: aggregatedSituation.logic_expression
-    }, { responseType: 'text' });
-    put.subscribe(() => {
-      this.onCompletionSuccessAggregatedSituation(aggregatedSituation.id + ',P'); this.refresh();
-    }, err => {
-      this.onCompletionErrorAggregatedSituation(aggregatedSituation.id + ',P'); this.refresh();
-    });
-  }
+        while (o.includes('_links')) {
+            o = o.replace(",\"_links\"", "");
+        }
 
-  /**
-   * Deletes the aggregated situation with the given id.
-   *
-   * @param id
-   */
-  deleteAggregatedSituation(id: string): void {
-    let deleteRequest = this.http.delete(this.selectedRepository + '/aggregatedsituations/' + id, {
-    });
-    deleteRequest.subscribe(() => { this.onCompletionSuccessAggregatedSituation(id + ',D'); this.refresh() },
-      err => { this.onCompletionErrorAggregatedSituation(id + ',D'); this.refresh(); })
-  }
+        let situation_triggers = o;
+        let obj = JSON.parse(situation_triggers);
 
-  /**
-   * Sends a @POST request to the API to create a new aggregated situation.
-   * @param aggregatedSituation
-   */
-  postAggregatedSituation(aggregatedSituation: AggregatedSituation): void {
-    let result = aggregatedSituation.situation_ids;
-    let post = this.http.post(this.selectedRepository + '/aggregatedsituations', {
-      situation_ids: result,
-      logic_expression: aggregatedSituation.logic_expression,
-      active: false
-    });
-    post.subscribe(() => { this.onCompletionSuccessAggregatedSituation('post'); this.refresh() },
-      err => this.onCompletionErrorAggregatedSituation('post'));
-  }
+        let situationtriggers = new Array<SituationTrigger>();
+        if (obj.situation_triggers != undefined) {
+            // number of situationtriggers
+            let length = obj.situation_triggers.length;
 
-  /**
-   * Confirmation messages
-   * @param typeOfRequest @POST / @DELETE / @PUT
-   */
-  onCompletionSuccessAggregatedSituation(typeOfRequest: string) {
-    this.feedback.onCompletionSuccessAggregatedSituation(typeOfRequest);
-  }
+            for (let i = 0; i < length; i++) {
+                let trigger = new SituationTrigger();
+                trigger.id = obj.situation_triggers[i].id;
+                trigger.situation_ids = obj.situation_triggers[i].situation_ids;
+                trigger.aggregated_situation_ids = obj.situation_triggers[i].aggregated_situations_ids;
+                trigger.csar_id = obj.situation_triggers[i].csar_id;
+                trigger.on_activation = obj.situation_triggers[i].on_activation;
+                trigger.interface_name = obj.situation_triggers[i].interface_name;
+                trigger.operation_name = obj.situation_triggers[i].operation_name;
+                trigger.single_instance = obj.situation_triggers[i].single_instance;
+                let lengthInput = obj.situation_triggers[i].input_params.length;
+                console.log("Inputparams length:");
+                console.log(lengthInput);
+                let inputParameter = new Array<PlanParameter>();
+                for (let j = 0; j < lengthInput; j++) {
+                    let planParam = new PlanParameter();
+                    planParam.name = obj.situation_triggers[i].input_params[j].name;
+                    planParam.type = obj.situation_triggers[i].input_params[j].type;
+                    planParam.value = obj.situation_triggers[i].input_params[j].value;
+                    inputParameter.push(planParam);
+                }
+                trigger.input_params = inputParameter;
+                console.log("Parsed following trigger:");
+                console.log(trigger);
+                situationtriggers.push(trigger);
+            }
+            this.situationtriggers = situationtriggers;
+            return situationtriggers;
+        } else {
+            return null;
+        }
+    }
 
-  /**
-   * Error messages
-   * @param typeOfRequest @POST
-   */
-  onCompletionErrorAggregatedSituation(typeOfRequest: string) {
-    this.feedback.onCompletionErrorAggregatedSituation(typeOfRequest);
-  }
+    /**
+     * Colors the row where the situationtrigger is activated.
+     * @param trigger
+     */
+    colorTriggerRow(trigger: SituationTrigger) {
+        let table = <HTMLTableElement>document.getElementById("triggers");
+        let colorCells;
 
-  /**
-   * Error messages if the input is invalid.
-   * @param failedInput
-   */
-  failedAggregatedSituationTextInput(failedInput: string) {
-    this.feedback.failedAggregatedSituationTextInput(failedInput);
-  }
+        for (let i = 1; i < table.getElementsByTagName("tr").length; i++) {
+            if (table.getElementsByTagName("tr").item(i).cells.item(0).innerText === trigger.id) {
+                colorCells = table.getElementsByTagName("tr").item(i).cells;
+                for (let j = 0; j < colorCells.length; j++) {
+                    table.getElementsByTagName("tr").item(i).cells.item(j).style.background = "#c1c3c5";
+                }
+            };
+        }
+    }
 
-  // situationtriggers
+    /**
+     * Starts the situation-dependent execution of the plan if trigger active = all situations active.
+     * @param trigger
+     */
+    activateTrigger(trigger: SituationTrigger, situations: Array<Situation>, aggregated_situations: Array<AggregatedSituation>): boolean {
+        let active = trigger.on_activation;
+        let success = true;
+        let index;
 
+        // situationtriggers must contain at least one situation or aggregated situation
+        if (trigger.aggregated_situation_ids.length == 0 && trigger.situation_ids.length == 0) {
+            return false;
+        }
+
+        // check if trigger active = all situations active
+        for (let i = 0; i < trigger.situation_ids.length; i++) {
+            for (let j = 0; j < situations.length; j++) {
+                if (situations[j].id == trigger.situation_ids[i]) {
+                    index = j;
+                    if (situations[index].active.toString() != active) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // check if trigger active = all aggr situations active
+        for (let i = 0; i < trigger.aggregated_situation_ids.length; i++) {
+            for (let j = 0; j < aggregated_situations.length; j++) {
+                if (aggregated_situations[j].id == trigger.aggregated_situation_ids[i]) {
+                    index = j;
+                    if (aggregated_situations[index].active.toString() != active) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return success;
+    }
+
+
+    /**
+     *
+     * Returns the plan based on the operation and interface of the trigger.
+     *
+     * @param text response from the http Request to the interface
+     * @param trigger responsible for the situation-dependent execution
+     */
+    getPlan(text: string, trigger: SituationTrigger) {
+        let o = text;
+        let obj = JSON.parse(o);
+        let operation_name = trigger.operation_name;
+        if (operation_name !== null) {
+            let temp = obj.operations[operation_name]._embedded.plan;
+
+            let plan = new Plan();
+            plan.id = temp.id;
+            plan.plan_type = temp.plan_type;
+            plan.plan_language = temp.plan_language;
+            for (let j = 0; j < trigger.input_params.length; j++) {
+                for (let i = 0; i < temp.input_parameters.length; i++) {
+                    if (typeof trigger.input_params !== 'undefined') {
+                        if (temp.input_parameters[i].name === trigger.input_params[j].name) {
+                            temp.input_parameters[i].value = trigger.input_params[j].value;
+                        }
+                    }
+                }
+            }
+            plan.input_parameters = temp.input_parameters;
+            plan.output_parameters = temp.output_parameters;
+            plan.plan_model_reference = temp.plan_model_reference;
+            plan._links = temp._links;
+
+            return plan;
+        }
+    }
+
+
+
+    /**
+     * Sends a @GET requests to the Situation API.
+     */
+    refreshSituations(): void {
+        this.http.get(this.selectedRepository + '/situations', { responseType: 'text' }).subscribe(response => this.editGetResponseSituations(response));
+    }
   /**
    * Sends a @GET request to the Situation API to get all triggers.
    */
@@ -406,15 +522,6 @@ export class SituationComponent implements OnInit {
     let triggers = this.http.get(this.selectedRepository + '/triggers', { responseType: 'text' });
     triggers.subscribe(response2 => this.editGetResponseTriggers(response2));
   }
-
-  /**
-   * Format the @GET response and adds the situationtrigger from the API to the table.
-   * @param jsonText
-   */
-  editGetResponseTriggers(jsonText: string): void {
-    this.situationtriggers = this.fc.editGetResponseTriggers(jsonText);
-  }
-
 
   createSituationTrigger(): void {
       let trigger: SituationTrigger = new SituationTrigger();
@@ -442,32 +549,6 @@ export class SituationComponent implements OnInit {
       this.selectedInstance = null;
 
   }
-
-
-  /**
-   * Error messages if the input is invalid
-   * @param failedInput
-   */
-  failedSituationTriggerTextInput(failedInput: string) {
-    this.feedback.failedSituationTriggerTextInput(failedInput);
-  }
-
-
-
-  /**
-   * Computes the possible operations based on the csar and the interfaces.
-   * @param csar
-   */
-  setPlan(csar) {
-    let interfaceC = this.selectedInterface.name;
-    let servicetemplate = this.getServiceTemplateCsar(csar);
-    if (interfaceC !== 'none') {
-      let interfaceOfCSAR = servicetemplate + '/boundarydefinitions/interfaces/' + interfaceC;
-      return interfaceOfCSAR;
-    }
-  }
-
-
 
   /**
   * Sends a @POST request to the API to create a new situationtrigger.
@@ -516,39 +597,15 @@ export class SituationComponent implements OnInit {
   }
 
   /**
-   * Error messages
-   * @param typeOfRequest @POST / @DELETE
-   */
-  onCompletionErrorTrigger(typeOfRequest: string) {
-    this.feedback.onCompletionErrorTrigger(typeOfRequest);
-  }
-
-  /**
-   * Confirmation messages
-   * @param typeOfRequest @POST / @DELETE
-   */
-  onCompletionSuccessTrigger(typeOfRequest: string) {
-    this.feedback.onCompletionSuccessTrigger(typeOfRequest);
-  }
-
-  /**
-   * Colors the row where the situationtrigger is activated.
-   * @param trigger
-   */
-  colorTriggerRow(trigger: SituationTrigger) {
-    this.fc.colorTriggerRow(trigger);
-  }
-
-  /**
    * Starts the situation-dependent execution of the plan if trigger active = all situations active.
    * @param trigger
    */
   activate(trigger: SituationTrigger): void {
-    let success = this.fc.activate(trigger, this.situations, this.aggregatedSituations);
+    let success = this.activateTrigger(trigger, this.situations, this.aggregatedSituations);
     if (success) {
       this.selectPlan(trigger);
     }else{
-      this.feedback.onCompletionError('activate');
+      this.onCompletionError('activate');
     }
   }
 
@@ -599,15 +656,301 @@ export class SituationComponent implements OnInit {
     return o._links.servicetemplate.href;
   }
 
-  /**
-   *
-   * Returns the plan based on the operation and interface of the trigger.
-   *
-   * @param text response from the http Request to the interface
-   * @param trigger responsible for the situation-dependent execution
-   */
-  getPlan(text: string, trigger: SituationTrigger) {
-    let plan = this.fc.getPlan(text, trigger);
-    return plan;
-  }
+    /**
+     * Confirmation messages
+     * @param typeOfRequest @POST / @DELETE / @PUT
+     */
+    onCompletionSuccess(typeOfRequest: string) {
+        let filterRequest = typeOfRequest.split(',');
+        if (typeOfRequest === 'post') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Creation of situation ',
+                    detail: `The situation is successfully created.`
+                }
+            ));
+        } else if (filterRequest[1] === 'D') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Delete of situation ' + filterRequest[0],
+                    detail: `The aggregated situations and the situationtriggers which contains the situation and the situation are successfully deleted.`
+                }
+            ));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Update of situation ' + filterRequest[0],
+                    detail: `The situation is successfully updated.`
+                }
+            ));
+        }
+
+    }
+
+    /**
+     * Error messages
+     * @param typeOfRequest @POST / activateTrigger / @DELETE / @PUT
+     */
+    onCompletionError(typeOfRequest: string): void {
+        let filterRequest = typeOfRequest.split(',');
+        if (typeOfRequest === 'post') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error at creation of situation',
+                    detail: `The situation is not created.`
+                }
+            ));
+        } else if (typeOfRequest === 'activate') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'The active attribute of the situation trigger and of it is situations and aggregated situations are not corresponding.'
+                }
+            ));
+        } else if (filterRequest[1] === 'D') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error at delete of situation',
+                    detail: 'The aggregated situations which contains the situation and the situation are not deleted.'
+                }
+            ));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error at update of situation' + typeOfRequest,
+                    detail: `The situation is not updated.`
+                }
+            ));
+        }
+    }
+
+    /**
+     * Confirmation messages
+     * @param typeOfRequest @POST / @DELETE / @PUT
+     */
+    onCompletionSuccessAggregatedSituation(typeOfRequest: string) {
+        let filterRequest = typeOfRequest.split(',');
+        if (typeOfRequest === 'post') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Creation of a aggregated situation ',
+                    detail: `The aggregated situation is successfully created.`
+                }
+            ));
+        } else if (filterRequest[1] === 'D') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Delete of aggregated situation ' + filterRequest[0],
+                    detail: `The aggregated situation is successfully deleted and the corresponding situationtriggers are deleted.`
+                }
+            ));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Update of aggregated situation ' + filterRequest[0],
+                    detail: `The aggregated situation is successfully updated.`
+                }
+            ));
+        }
+    }
+
+    /**
+     * Error messages
+     * @param typeOfRequest @POST
+     */
+    onCompletionErrorAggregatedSituation(typeOfRequest: string) {
+        let filterRequest = typeOfRequest.split(',');
+        if (typeOfRequest === 'post') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Creation of aggregation situation failed',
+                    detail: `The aggregated situation is not created.`
+                }
+            ));
+        } else if (filterRequest[1] === 'D') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Delete of aggregation situation ' + filterRequest[0] + ' failed.',
+                    detail: `The aggregated situation is not deleted.`
+                }
+            ));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Update of aggregation situation ' + filterRequest[0] + ' failed.',
+                    detail: `The aggregated situation is not updated.`
+                }
+            ));
+        }
+    }
+
+    /**
+     * Error messages if the input is invalid.
+     * @param failedInput
+     */
+    failedAggregatedSituationTextInput(failedInput: string) {
+        if (failedInput === 'Expression') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid ' + failedInput,
+                    detail: failedInput + ' does not correspond to the scheme NumberOperatorNumber.'
+                }));
+        } else if (failedInput === 'ExpressionSit') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid ' + failedInput,
+                    detail: failedInput + ' contains situation ids which are not in situation ids.'
+                }));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid ' + failedInput,
+                    detail: failedInput + ' contains some unknown situation ids.'
+                }));
+        }
+    }
+
+    /**
+     * Error messages
+     * @param typeOfRequest @POST / @DELETE
+     */
+    onCompletionErrorTrigger(typeOfRequest: string) {
+        let filterRequest = typeOfRequest.split(',');
+        if (typeOfRequest === 'post') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Creation of situationtrigger failed',
+                    detail: `The situationtrigger is not created.`
+                }
+            ));
+        } else if (filterRequest[1] === 'C') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Activation of situationtrigger failed',
+                    detail: `The situationtrigger is not started because the CSAR ` + filterRequest[0] + ' not exists.'
+                }
+            ));
+        } else if (filterRequest[1] === 'I') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Activation of situationtrigger failed',
+                    detail: `The situationtrigger is not started because the Interface ` + filterRequest[0] + ' not exists.'
+                }
+            ));
+        } else if ( filterRequest[1] === 'D'){
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Delete of situationtrigger ' + filterRequest[0]+' failed',
+                    detail: `The situationtrigger is not deleted.`
+                }
+            ));
+        }else{
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Execution of plan failed',
+                    detail: 'The plan ' + filterRequest[0]+ ' is not executed.'
+                }
+            ));
+        }
+    }
+
+    /**
+     * Confirmation messages
+     * @param typeOfRequest @POST / @DELETE
+     */
+    onCompletionSuccessTrigger(typeOfRequest: string) {
+        if (typeOfRequest === 'post') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Creation of situationtrigger',
+                    detail: `The situationtrigger is successfully created.`
+                }
+            ));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'success',
+                    summary: 'Delete of situationtrigger',
+                    detail: `The situationtrigger is successfully deleted.`
+                }
+            ));
+        }
+    }
+
+    /**
+     * Error messages if the input is invalid
+     * @param failedInput
+     */
+    failedSituationTriggerTextInput(failedInput: string) {
+        let filterInput = failedInput.split(',');
+        if (failedInput === 'Active' || failedInput === 'Single Instance') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid ' + failedInput,
+                    detail: failedInput + ' must be false or true.'
+                }));
+        } else if (filterInput[1] === 'O') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Creation of situationtrigger failed',
+                    detail: 'The operation ' + filterInput[0] + ' not exists for the given interface.'
+                }
+            ));
+        } else if (failedInput === 'Situation IDs' || failedInput === 'Aggregated Situation IDs') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid ' + failedInput,
+                    detail: 'Some ' + failedInput + ' are unknown'
+                }));
+        } else if (failedInput === 'Empty') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid Input',
+                    detail: 'The Id of the situations and aggregated situations can never be empty at the same time.'
+                }));
+        } else if (failedInput === 'Value') {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: `The value of an input parameter can not be empty.`
+                }
+            ));
+        } else {
+            this.ngRedux.dispatch(GrowlActions.addGrowl(
+                {
+                    severity: 'error',
+                    summary: 'Invalid ' + failedInput,
+                    detail: failedInput + ' can not be empty.'
+                }));
+        }
+    }
+
+
 }
