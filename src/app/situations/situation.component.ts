@@ -30,6 +30,9 @@ import {SelectItem} from "primeng/api";
 import {Csar} from "../core/model/csar.model";
 import {Interface} from "../core/model/interface.model";
 import {Operation} from "../core/model/operation.model";
+import {globals} from "../globals";
+import {ServiceTemplateInstance} from "../core/model/service-template-instance.model";
+import {ApplicationInstanceManagementService} from "../core/service/application-instance-management.service";
 
 
 @Component({
@@ -63,8 +66,12 @@ export class SituationComponent implements OnInit {
   situations: Array<Situation>;
   csars: Csar[];
   csar2interface: Map<Csar,Interface[]> = new Map<Csar,Interface[]>();
+  csar2instance: Map<Csar,ServiceTemplateInstance[]> = new Map<Csar,ServiceTemplateInstance[]>();
   situationtriggers: Array<SituationTrigger>;
   aggregatedSituations = new Array<AggregatedSituation>();
+
+
+  hiddenParams: string[];
 
   cols;
   colsOfTriggers;
@@ -77,8 +84,10 @@ export class SituationComponent implements OnInit {
 
   selectableSituations: Situation[];
   selectedSituations: Situation[];
-  selectSingleInstance: boolean;
+  selectOnActivation: boolean = false;
+  selectSingleInstance: boolean = false;
   selectedCsar: Csar;
+  selectedInstance : ServiceTemplateInstance;
   selectedInterface: Interface;
   selectedOperation: Operation;
 
@@ -89,7 +98,7 @@ export class SituationComponent implements OnInit {
    * @param http for the communication with the Situation API
    * @param appService to access the normal execution of management plans
    */
-  constructor(private ngRedux: NgRedux<AppState>, private http: HttpClient, private appService: ApplicationManagementService) { }
+  constructor(private ngRedux: NgRedux<AppState>, private http: HttpClient, private appService: ApplicationManagementService,private instancesService: ApplicationInstanceManagementService) { }
 
   /**
    * Initialize the table for situations, aggregated situations and situationtriggers.
@@ -100,10 +109,14 @@ export class SituationComponent implements OnInit {
       // sets the selectedRepository to the API Endpoint
       this.selectedRepository = this.administrationItems + "/situationsapi";
 
+      this.hiddenParams = globals.hiddenElements;
 
       this.appService.getResolvedApplications().subscribe(value => {
           this.csars = value;
-          this.csars.forEach(value => this.appService.getInterfaces(value.id).subscribe(val => this.csar2interface.set(value,val)));
+          this.csars.forEach(value => {
+              this.appService.getInterfaces(value.id).subscribe(val => this.csar2interface.set(value,val));
+              this.instancesService.getServiceTemplateInstancesOfCsar(value).subscribe(val => this.csar2instance.set(value,Array.from(val.values())));
+          });
       });
 
 
@@ -411,10 +424,23 @@ export class SituationComponent implements OnInit {
       trigger.interface_name = this.selectedInterface.name;
       trigger.operation_name = this.selectedOperation.name;
       trigger.single_instance = String(this.selectSingleInstance);
-      trigger.on_activation = "true";
+      trigger.on_activation = String(this.selectOnActivation);
       trigger.input_params = this.selectedOperation._embedded.plan.input_parameters;
 
+      if(this.selectedInstance !== null && this.selectedInstance !== undefined) {
+          trigger.service_instance_id = String(this.selectedInstance.id);
+      }
+
       this.postSituationTrigger(trigger);
+  }
+
+  resetSituationTriggerInput(): void {
+      this.selectedSituations = new Array<Situation>();
+      this.selectedCsar = null;
+      this.selectedInterface = null;
+      this.selectedOperation = null;
+      this.selectedInstance = null;
+
   }
 
 
@@ -458,6 +484,7 @@ export class SituationComponent implements OnInit {
       operation_name: trigger.operation_name,
       input_params: trigger.input_params,
       on_activation: trigger.on_activation,
+      service_instance_id: trigger.service_instance_id,
       single_instance: trigger.single_instance
     });
     post.subscribe(() => { this.onCompletionSuccess('post'); this.refresh() }, err => { this.onCompletionErrorTrigger('post'); this.refresh() });

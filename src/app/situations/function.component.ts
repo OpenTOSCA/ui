@@ -271,6 +271,7 @@ export class FunctionComponent implements OnInit {
           planParam.value = obj.situation_triggers[i].input_params[j].value;
           inputParameter.push(planParam);
         }
+        trigger.input_params = inputParameter;
         situationtriggers.push(trigger);
       }
       return situationtriggers;

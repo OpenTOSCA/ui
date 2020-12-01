@@ -54,7 +54,7 @@
     </p-table>
 </p-fieldset>
 
-    <p-fieldset *ngIf="!(this.csars == null || this.csars == undefined || this.csars.length == 0)">
+    <p-fieldset *ngIf="!(this.csars == null || this.csars == undefined || this.csars.length == 0 || this.selectableSituations.length == 0)">
         <p-header><strong>Situation Triggers</strong></p-header>
         <p-toolbar>
             <div class="ui-toolbar-group-left">
@@ -62,7 +62,7 @@
                 class="ui-button-info" icon="fas fa-sync-alt"
                 pTooltip="refresh"  tooltipPosition="top"></button>
                 &nbsp;
-                <button pButton type="button" (click)="createSituationTrigger()"
+                <button pButton type="button" (click)="createSituationTrigger();resetSituationTriggerInput()"
                             class="ui-button-info" icon="fas fa-plus"
                             pTooltip="Add a situationtrigger"  tooltipPosition="top"></button>
                 &nbsp;
@@ -72,18 +72,20 @@
             </div>
         </p-toolbar>
         <p-toolbar>
-                Situation IDs : <p-multiSelect id="situation_ids" placeholder="Choose Situations" [options]="this.selectableSituations" [(ngModel)]="this.selectedSituations" optionLabel="id"></p-multiSelect>
+            <span> Situation IDs: <p-multiSelect showHeader=false showToggleAll=false filter=false id="situation_ids" placeholder="Choose Situations" [options]="this.selectableSituations" [(ngModel)]="this.selectedSituations" optionLabel="id"></p-multiSelect></span>
 
             <!--Aggregated Situation IDs : <input placeholder="3,5,7" type="text" name="aggregatedsituation_ids" id="aggregatedsituation_ids"> -->
-                CSAR ID:  <p-dropdown id="csar" [options]="this.csars" [(ngModel)]="this.selectedCsar" optionLabel="name" placeholder="Select a Csar"></p-dropdown>
+                <span *ngIf="!(this.selectedSituations == null || this.selectedSituations == undefined || this.selectedSituations.length == 0)">CSAR ID:  <p-dropdown id="csar" [options]="this.csars" [(ngModel)]="this.selectedCsar" optionLabel="name" placeholder="Select a Csar"></p-dropdown></span>
 
                 <!--active: <input placeholder="true|false" type="text" name="on_activation" id="on_activation">-->
+            <span *ngIf="!(this.selectedCsar == null || this.selectedCsar == undefined || this.csar2instance.get(this.selectedCsar) == undefined || this.csar2instance.get(this.selectedCsar) == null || this.csar2instance.get(this.selectedCsar).length == 0)">ServiceInstance: <p-dropdown id="serviceInstance-selection" showClear="true" placeholder="Select an (optional) Instance" [options]="this.csar2instance.get(this.selectedCsar)" [(ngModel)]="this.selectedInstance" optionLabel="id"></p-dropdown></span>
 
                 <span *ngIf="!(this.selectedCsar == null || this.selectedCsar == undefined)">Interface: <p-dropdown id="interface-selection" placeholder="Select an Interface" [options]="this.csar2interface.get(this.selectedCsar)" [(ngModel)]="this.selectedInterface" optionLabel="name"></p-dropdown></span>
 
             <span *ngIf="!(this.selectedInterface == null || this.selectedInterface == undefined)">Operation: <p-dropdown id="operation-selection" placeholder="Select an Operation" [options]="this.selectedInterface.operations" [(ngModel)]="this.selectedOperation" optionLabel="name"></p-dropdown></span>
 
-                Single Instance? : <p-checkbox name="single_instance" [binary]=true [(ngModel)]="this.selectSingleInstance"></p-checkbox>
+            <span *ngIf="!(this.selectedOperation == null || this.selectedOperation == undefined)"> Single Instance? : <p-checkbox name="single_instance" [binary]=true [(ngModel)]="this.selectSingleInstance"></p-checkbox></span>
+            <span *ngIf="!(this.selectedOperation == null || this.selectedOperation == undefined)"> On Activation? : <p-checkbox name="onActivation_instance" [binary]=true [(ngModel)]="this.selectOnActivation"></p-checkbox></span>
 
         </p-toolbar>
 
@@ -96,7 +98,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-parameter>
-                <tr>
+                <tr *ngIf="!this.hiddenParams.includes(parameter.name)">
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
@@ -131,7 +133,7 @@
             </ng-template>
         </p-table>
         &nbsp;
-        <p-table [columns]="colsOfTriggers" id="triggers" [value]="situationtriggers" [resizableColumns]="true" ng-mouseenter="rollClass = 'highlight'">
+        <p-table [columns]="colsOfTriggers" id="triggers" [value]="this.situationtriggers" [resizableColumns]="true" ng-mouseenter="rollClass = 'highlight'">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: center">
@@ -144,11 +146,9 @@
                 <ng-template pTemplate="body" let-instance let-columns="columns">
                     <tr>
                         <td *ngFor="let col of columns" class="ui-resizable-column">
-                            <span *ngIf="col.fields === 'input_params'; else default">
-                                <span *ngFor="let params of instance.input_params">
-                                  <span>name:{{params.name}}</span><br>
-                                  <span>type:{{params.type}}</span><br>
-                                  <span>value:{{params.value}}</span><br><br>
+                            <span *ngIf="col.field === 'input_params'; else default">
+                                <span *ngFor="let params of instance[col.field]">
+                                  <span *ngIf="!this.hiddenParams.includes(params['name'])">{{params["name"]}} : {{params["value"]}}</span><br>
                                 </span>
                             </span>
                             <span *ngIf="col.field === 'actions'">

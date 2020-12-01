@@ -6,6 +6,7 @@ import { PlanParameter } from '../../core/model/plan-parameter.model';
 export class SituationTrigger extends ResourceSupport {
     id: string;
     situation_ids: Array<string>;
+    service_instance_id: string;
     aggregated_situation_ids: Array<string>;
     csar_id: string;
     on_activation: string;
