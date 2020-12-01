@@ -23,6 +23,7 @@ import {
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
+import {FunctionComponent} from "./function.component";
 
 
 @NgModule({
@@ -46,7 +47,7 @@ import { FormsModule } from '@angular/forms';
         ToggleButtonModule,
         InputTextModule
     ],
-    declarations: [SituationComponent],
+    declarations: [SituationComponent, FunctionComponent],
 })
 export class SituationModule {
 }
