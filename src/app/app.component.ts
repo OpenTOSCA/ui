@@ -45,6 +45,11 @@ export class AppComponent {
             routerLink: ['/administration']
         },
         {
+            label: 'Situation',
+            icon: 'fas fa-tasks',
+            routerLink: ['/situation']
+        },
+        {
             label: 'About',
             icon: 'fa fa-info-circle',
             routerLink: ['/about']

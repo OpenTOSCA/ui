@@ -31,16 +31,16 @@
                     <p-fieldset>
                         <p-header><strong>Instances</strong></p-header>
                         <p-toolbar>
-                            <div class="ui-toolbar-group-left">
                                 <button pButton type="button" icon="fas fa-plus"
                                         pTooltip="Provision new instance..." showDelay="300" tooltipPosition="right"
                                         [disabled]="!buildPlanExists"
-                                        (click)="selectBuildPlan()"></button>
-                                &nbsp;
+                                        (click)="selectBuildPlan()"></button>&nbsp;
                                 <button pButton type="button" icon="fas fa-sync-alt"
-                                        pTooltip="Reload instances" showDelay="300" tooltipPosition="top"
-                                        (click)="triggerReloadAppInstances()"></button>
-                            </div>
+                                        pTooltip="Reload instances" showDelay="300" tooltipPosition="right"
+                                        (click)="triggerReloadAppInstances()" style="margin-right:10px"></button>
+                                <button pButton type="button" icon="fas fa-code-branch"
+                                        pTooltip="Generate Migration Plans" showDelay="300" tooltipPosition="right"
+                                        (click)="selectCSARForMigrationPlan(csar)" style="margin-right:10px"></button>
                         </p-toolbar>
                         <opentosca-application-instance-list
                             [terminationPlanAvailable]="terminationPlanExists"
@@ -78,3 +78,5 @@
                                             [instanceId]="instanceId"
                                             [inputValidation]="true">
 </opentosca-management-plan-execution-dialog>
+<opentosca-migration-plan-creation-dialog [(visible)]="csarSelectDialogVisible" [csar]="csar">
+</opentosca-migration-plan-creation-dialog>

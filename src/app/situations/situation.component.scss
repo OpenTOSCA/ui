@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2018 University of Stuttgart.
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -12,16 +12,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-export const globals = {
-    hiddenElements: [
-        'CorrelationID',
-        'csarID',
-        'serviceTemplateID',
-        'containerApiAddress',
-        'instanceDataAPIUrl',
-        'planCallbackAddress_invoker',
-        'csarEntrypoint',
-        'OpenTOSCAContainerAPIServiceInstanceID',
-        'OpenTOSCAContainerAPIServiceInstanceURL'
-    ]
-};
+
+.weiss{
+    background:#ffffff;
+    color: #000000;
+}
+

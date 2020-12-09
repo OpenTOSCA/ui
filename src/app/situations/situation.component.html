@@ -1,0 +1,166 @@
+<p-fieldset>
+    <p-header><strong>Situations</strong></p-header>
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" (click)="refreshSituations()"
+            class="ui-button-info" icon="fas fa-sync-alt"
+            pTooltip="refresh"  tooltipPosition="top"></button>
+            &nbsp;
+            <button pButton type="button" (click)="createSituation()"
+                        class="ui-button-info" icon="fas fa-plus"
+                        pTooltip="Add a situation"  tooltipPosition="top"></button>
+            &nbsp;
+            <button pButton type="button" (click)="deleteAllSituations()"
+                        class="ui-button-info" icon="far fa-trash-alt"
+                        pTooltip="Delete all situations"  tooltipPosition="top"></button>
+        </div>
+    </p-toolbar>
+    <p-toolbar>
+        Situation Template ID : <input placeholder="e.g. AtHome" type="text" name="st_id" id="st_id" pInputText [(ngModel)]="this.situationTemplateInput">
+        Thing ID: <input placeholder="e.g. Person" type="text" name="t_id" id="t_id" pInputText [(ngModel)]="this.situationThingInput">
+        Active: <p-toggleButton [(ngModel)]="this.situationStateInput"></p-toggleButton>
+    </p-toolbar>
+
+<p-table [columns]="cols" id="sit"[value]="this.situations" [resizableColumns]="true">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: left">
+                    {{col.header}}
+                    <span *ngIf="col.sortable"><p-sortIcon [field]="col.field"></p-sortIcon></span>
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-instance let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns" class="ui-resizable-column" >
+                    <span
+                        *ngIf="col.field === 'created_at'; else default" ng-click="fillTextField()">{{instance[col.field] | date:'yyyy-MM-dd HH:mm'}}</span>
+                    <span *ngIf="col.field === 'actions'">
+                        <button type="button" pButton icon="fas fa-check" class="ui-button-success"
+                                pTooltip="Deactivate/activate situation" tooltipPosition="top"
+                                (click)="putSituation(instance.id)">
+                        </button>
+                        &nbsp;
+                        <button type="button" pButton icon="far fa-trash-alt" class="ui-button-danger"
+                                pTooltip="Delete Instance" tooltipPosition="top"
+                                (click)="deleteSituation(instance.id)">
+                        </button>
+                    </span>
+                    <ng-template #default >{{instance[col.field]}}</ng-template>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-fieldset>
+
+    <p-fieldset *ngIf="!(this.csars == null || this.csars == undefined || this.csars.length == 0 || this.selectableSituations.length == 0)">
+        <p-header><strong>Situation Triggers</strong></p-header>
+        <p-toolbar>
+            <div class="ui-toolbar-group-left">
+                <button pButton type="button" (click)="refreshTriggers()"
+                class="ui-button-info" icon="fas fa-sync-alt"
+                pTooltip="refresh"  tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="createSituationTrigger();resetSituationTriggerInput()"
+                            class="ui-button-info" icon="fas fa-plus"
+                            pTooltip="Add a situationtrigger"  tooltipPosition="top"></button>
+                &nbsp;
+                <button pButton type="button" (click)="deleteAllTriggers()"
+                        class="ui-button-info" icon="far fa-trash-alt"
+                        pTooltip="Delete all situationtriggers"  tooltipPosition="top"></button>
+            </div>
+        </p-toolbar>
+        <p-toolbar>
+            <span> Situation IDs: <p-multiSelect showHeader=false showToggleAll=false filter=false id="situation_ids" placeholder="Choose Situations" [options]="this.selectableSituations" [(ngModel)]="this.selectedSituations" optionLabel="id"></p-multiSelect></span>
+
+            <!--Aggregated Situation IDs : <input placeholder="3,5,7" type="text" name="aggregatedsituation_ids" id="aggregatedsituation_ids"> -->
+                <span *ngIf="!(this.selectedSituations == null || this.selectedSituations == undefined || this.selectedSituations.length == 0)">CSAR ID:  <p-dropdown id="csar" [options]="this.csars" [(ngModel)]="this.selectedCsar" optionLabel="name" placeholder="Select a Csar"></p-dropdown></span>
+
+                <!--active: <input placeholder="true|false" type="text" name="on_activation" id="on_activation">-->
+            <span *ngIf="!(this.selectedCsar == null || this.selectedCsar == undefined || this.csar2instance.get(this.selectedCsar) == undefined || this.csar2instance.get(this.selectedCsar) == null || this.csar2instance.get(this.selectedCsar).length == 0)">ServiceInstance: <p-dropdown id="serviceInstance-selection" showClear="true" placeholder="Select an (optional) Instance" [options]="this.csar2instance.get(this.selectedCsar)" [(ngModel)]="this.selectedInstance" optionLabel="id"></p-dropdown></span>
+
+                <span *ngIf="!(this.selectedCsar == null || this.selectedCsar == undefined)">Interface: <p-dropdown id="interface-selection" placeholder="Select an Interface" [options]="this.csar2interface.get(this.selectedCsar)" [(ngModel)]="this.selectedInterface" optionLabel="name"></p-dropdown></span>
+
+            <span *ngIf="!(this.selectedInterface == null || this.selectedInterface == undefined)">Operation: <p-dropdown id="operation-selection" placeholder="Select an Operation" [options]="this.selectedInterface.operations" [(ngModel)]="this.selectedOperation" optionLabel="name"></p-dropdown></span>
+
+            <span *ngIf="!(this.selectedOperation == null || this.selectedOperation == undefined)"> Single Instance? : <p-checkbox name="single_instance" [binary]=true [(ngModel)]="this.selectSingleInstance"></p-checkbox></span>
+            <span *ngIf="!(this.selectedOperation == null || this.selectedOperation == undefined)"> On Activation? : <p-checkbox name="onActivation_instance" [binary]=true [(ngModel)]="this.selectOnActivation"></p-checkbox></span>
+
+        </p-toolbar>
+
+        <p-table *ngIf="!(this.selectedOperation == null || this.selectedOperation == undefined)" [value]="this.selectedOperation._embedded.plan.input_parameters" dataKey="name" >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Input Parameter</th>
+                    <th>Type</th>
+                    <th>value</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-parameter>
+                <tr *ngIf="!this.hiddenParams.includes(parameter.name)">
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="parameter.name">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{parameter.name}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="parameter.type">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{parameter.type}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="parameter.value">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{parameter.value}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        &nbsp;
+        <p-table [columns]="colsOfTriggers" id="triggers" [value]="this.situationtriggers" [resizableColumns]="true" ng-mouseenter="rollClass = 'highlight'">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field" style="text-align: center">
+                            {{col.header}}
+                            <span *ngIf="col.sortable"><p-sortIcon [field]="col.field"></p-sortIcon></span>
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-instance let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns" class="ui-resizable-column">
+                            <span *ngIf="col.field === 'input_params'; else default">
+                                <span *ngFor="let params of instance[col.field]">
+                                  <span *ngIf="!this.hiddenParams.includes(params['name'])">{{params["name"]}} : {{params["value"]}}</span><br>
+                                </span>
+                            </span>
+                            <span *ngIf="col.field === 'actions'">
+                                <button type="button" pButton icon="far fa-trash-alt" class="ui-button-danger"
+                                        pTooltip="Delete Instance" tooltipPosition="top"
+                                        (click)="deleteTrigger(instance.id)">
+                                </button>&nbsp;
+                            </span>
+
+                            <ng-template #default>{{instance[col.field]}}</ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+</p-fieldset>

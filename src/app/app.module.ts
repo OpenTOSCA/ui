@@ -16,6 +16,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AboutComponent } from './about.component';
+import { SituationModule } from './situations/situation.module';
 import { AppRoutingModule } from './app-routing.module';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { ApplicationManagementModule } from './application-management/application-management.module';
@@ -44,6 +45,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
         NgReduxModule,
         NgReduxRouterModule,
         GrowlModule,
+        SituationModule,
         TabMenuModule,
         CardModule,
         ApplicationManagementModule,
