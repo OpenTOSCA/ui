@@ -20,9 +20,9 @@ Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
 
 ## Run Development Server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4202/`. The app will automatically reload if you change any of the source files.
 
-> **Note:** Be sure that no other process is listening on port 4200.
+> **Note:** Be sure that no other process is listening on port 4202.
 > You can change the port in the **defaults** object in `.angular-cli.json`.
 
 ## Production Build
