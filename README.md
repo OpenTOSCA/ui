@@ -9,9 +9,8 @@ Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
 ## Prerequisites
 
 1. Install [Git](https://git-scm.com)
-2. Install and setup [Node.js](https://nodejs.org/en/) > 8.9 and [NPM](https://www.npmjs.com) > 5.6 for [Angular.io](https://angular.io/docs/ts/latest/quickstart.html)
+2. Install and setup [Node.js](https://nodejs.org/en/) > 8.9 and [NPM](https://www.npmjs.com) > 7.0 for [Angular.io](https://angular.io/docs/ts/latest/quickstart.html)
 3. Install angular-cli `npm install -g @angular/cli`
-4. Install proper [node-gyp](https://github.com/nodejs/node-gyp) dependencies for your OS (e.g. for Windows: `npm install --global --production windows-build-tools`)
 
 ## Local Development Setup
 
@@ -20,7 +19,7 @@ Part of the [OpenTOSCA Ecosystem](http://www.opentosca.org)
 
 ## Run Development Server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4202/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` (or `npm run start`) for a dev server. Navigate to `http://localhost:4202/`. The app will automatically reload if you change any of the source files.
 
 > **Note:** Be sure that no other process is listening on port 4202.
 > You can change the port in the **defaults** object in `.angular-cli.json`.
@@ -33,12 +32,15 @@ npm install --no-shrinkwrap
 npm shrinkwrap
 ```
 
-Afterwards, run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Afterwards, run `ng build` (or `npm run build`) to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag (or `npm run build:prod`) for a production build.
 
 ## Lint the TypeScript project
 
 ```shell
 ng lint
+
+# or run
+npm run lint
 ```
 
 ## Build the WAR archive
