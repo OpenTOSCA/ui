@@ -33,7 +33,10 @@ export interface Item {
 export class RepositoryConfigurationComponent implements OnInit {
 
     @select(['administration', 'repositoryItems']) repositoryItems: Observable<Array<Item>>;
+    @select(['repository', 'selectedRepository']) selectedRepository$: Observable<Item>;
+
     items: Item[] = [];
+    selectedRepository: Item = null;
 
     displayDialog: boolean;
     isNewItem: boolean;
@@ -60,6 +63,9 @@ export class RepositoryConfigurationComponent implements OnInit {
         this.repositoryItems.subscribe(items => {
             this.items = items;
         });
+        this.selectedRepository$.subscribe(item => {
+            this.selectedRepository = item;
+        });
     }
 
     showDialogToAdd() {
@@ -70,12 +76,26 @@ export class RepositoryConfigurationComponent implements OnInit {
 
     save() {
         const items = [...this.items];
+        let changedSelectedRepository = false;
         if (this.isNewItem) {
             items.push(this.newItem);
         } else {
-            items[this.items.indexOf(this.selectedItem)] = this.newItem;
+            const changedRepositoryIndex = this.items.indexOf(this.selectedItem);
+            items[changedRepositoryIndex] = this.newItem;
+            if (
+                this.selectedItem != null &&
+                this.selectedRepository != null &&
+                this.selectedItem.name === this.selectedRepository.name &&
+                this.selectedItem.url === this.selectedRepository.url
+            ) {
+                // name and url of currently selected repository match the changed item
+                changedSelectedRepository = true;
+            }
         }
         this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
+        if (changedSelectedRepository) { // changed the selected repository => need to update it in store
+            this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(this.newItem));
+        }
         this.newItem = null;
         this.displayDialog = false;
     }
