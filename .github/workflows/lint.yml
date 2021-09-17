@@ -1,6 +1,11 @@
 name: Lint
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - ustutt
+  pull_request:
 
 jobs:
   run-linters:
