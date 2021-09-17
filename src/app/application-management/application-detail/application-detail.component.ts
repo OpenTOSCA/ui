@@ -78,7 +78,7 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
                 }
                 this.triggerReloadAppInstances();
             },
-        error => {
+        (error) => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
                         severity: 'warn',

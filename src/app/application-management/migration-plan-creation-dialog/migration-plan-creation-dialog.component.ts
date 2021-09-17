@@ -60,17 +60,17 @@ export class MigrationPlanCreationDialogComponent implements OnInit, OnChanges {
 
     operationSelected(app: Csar): void {
         if (app) {
-            console.log('Selected following app:');
-            console.log(app);
+            this.logger.log('MigrationPlanCreationDialogComponent', 'Selected following app:' + app);
             this.selectedApp = app;
         }
     }
 
 
     ngOnInit(): void {
-        this.appService.getResolvedApplications().subscribe(
-            value => {console.log('Found following csars:'); console.log(value); this.updateSelectionList(value); }
-        );
+        this.appService.getResolvedApplications().subscribe((value) => {
+            this.logger.log('MigrationPlanCreationDialogComponent', 'Found following csars: ' + value);
+            this.updateSelectionList(value);
+        });
         this.creationInProgress = false;
     }
 
@@ -104,10 +104,9 @@ export class MigrationPlanCreationDialogComponent implements OnInit, OnChanges {
 
     createMigrationPlan(): void {
         this.creationInProgress = true;
-        this.csar.subscribe(csar => {
-            this.appService.createMigrationPlan(csar.id, this.selectedApp.id).subscribe( value => {
-                console.log('Following result was received:');
-                console.log(value);
+        this.csar.subscribe((csar) => {
+            this.appService.createMigrationPlan(csar.id, this.selectedApp.id).subscribe( (value) => {
+                this.logger.log('MigrationPlanCreationDialogComponent', 'Following result was received:' + value);
                 this.creationInProgress = false;
                 this.visible = false;
                 // TODO: remove this or place elsewhere
