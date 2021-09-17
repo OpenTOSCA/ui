@@ -54,8 +54,10 @@ import { ManagementPlanExecutionDialogComponent } from './management-plan-execut
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagementPlanInstanceListComponent } from './management-plan-instance-list/management-plan-instance-list.component';
 import { TableModule } from 'primeng/table';
-import { ApplicationInstanceBoundaryDefinitionInterfacesListComponent } from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component';
-import {MigrationPlanCreationDialogComponent} from "./migration-plan-creation-dialog/migration-plan-creation-dialog.component";
+import {
+    ApplicationInstanceBoundaryDefinitionInterfacesListComponent
+} from './application-instance-boundary-definition-interfaces-list/application-instance-boundary-definition-interfaces-list.component';
+import {MigrationPlanCreationDialogComponent} from './migration-plan-creation-dialog/migration-plan-creation-dialog.component';
 // tslint:disable-line:max-line-length
 
 @NgModule({

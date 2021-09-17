@@ -25,6 +25,13 @@ import { ApplicationInstanceManagementService } from '../../core/service/applica
 import { Interface } from '../../core/model/interface.model';
 import { PlanTypes } from '../../core/model/plan-types.model';
 
+interface RouteApplicationData {
+    csar: Csar;
+    buildPlanAvailable: boolean;
+    terminationPlanAvailable: boolean;
+    interfaces: Interface[];
+}
+
 @Component({
     selector: 'opentosca-application-detail',
     templateUrl: './application-detail.component.html'
@@ -48,38 +55,41 @@ export class ApplicationDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.route.data.subscribe((data: { application: { csar: Csar, buildPlanAvailable: boolean, terminationPlanAvailable: boolean, interfaces: Interface[] } }) => {
-            // Prepare breadcrumb
-            this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-                { label: 'Applications', routerLink: 'applications' },
-                { label: data.application.csar.id, routerLink: ['applications', data.application.csar.id] }
-            ]));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationCsar(data.application.csar));
-            this.ngRedux.dispatch(ApplicationManagementActions.updateInterfaces(data.application.interfaces));
+        this.route.data.subscribe(
+            (data: { application: RouteApplicationData }) => {
+                // Prepare breadcrumb
+                this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
+                    { label: 'Applications', routerLink: 'applications' },
+                    { label: data.application.csar.id, routerLink: ['applications', data.application.csar.id] }
+                ]));
+                this.ngRedux.dispatch(ApplicationManagementActions.updateApplicationCsar(data.application.csar));
+                this.ngRedux.dispatch(ApplicationManagementActions.updateInterfaces(data.application.interfaces));
 
-            this.buildPlanExists = data.application.buildPlanAvailable;
-            this.terminationPlanExists = data.application.terminationPlanAvailable;
-            if (!this.buildPlanExists) {
+                this.buildPlanExists = data.application.buildPlanAvailable;
+                this.terminationPlanExists = data.application.terminationPlanAvailable;
+                if (!this.buildPlanExists) {
+                    this.ngRedux.dispatch(GrowlActions.addGrowl(
+                        {
+                            severity: 'info',
+                            summary: 'No Build Plan Available',
+                            detail: 'There is no Build Plan associated with this app. No instances can be provisioned.'
+                        }
+                    ));
+                }
+                this.triggerReloadAppInstances();
+            },
+        (error) => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
                     {
-                        severity: 'info',
-                        summary: 'No Build Plan Available',
-                        detail: 'There is no Build Plan associated with this app. No instances can be provisioned.'
+                        severity: 'warn',
+                        summary: 'Loading of Data failed',
+                        detail: `Loading of data for the selected application failed.
+                        Please try to load it again. Server returned: ${error.message}`
                     }
                 ));
+                this.router.navigate(['/applications']);
             }
-            this.triggerReloadAppInstances();
-        }, error => {
-            this.ngRedux.dispatch(GrowlActions.addGrowl(
-                {
-                    severity: 'warn',
-                    summary: 'Loading of Data failed',
-                    detail: `Loading of data for the selected application failed.
-                     Please try to load it again. Server returned: ${error.message}`
-                }
-            ));
-            this.router.navigate(['/applications']);
-        });
+        );
     }
 
     ngOnDestroy(): void {

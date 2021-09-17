@@ -21,13 +21,20 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { Interface } from '../../core/model/interface.model';
 import { PlanTypes } from '../../core/model/plan-types.model';
 
+interface ResolverOutput {
+    csar: Csar;
+    buildPlanAvailable: boolean;
+    terminationPlanAvailable: boolean;
+    interfaces: Interface[];
+}
+
 @Injectable()
 export class ApplicationDetailResolverService implements Resolve<{ csar: Csar, interfaces: Interface[] }> {
 
-    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService,) {
+    constructor(private applicationService: ApplicationManagementService, private logger: LoggerService, ) {
     }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<{ csar: Csar, buildPlanAvailable: boolean, terminationPlanAvailable: boolean, interfaces: Interface[] }> {
+    resolve(route: ActivatedRouteSnapshot): Observable<ResolverOutput> {
         return forkJoin(
             this.applicationService.getCsar(route.params['id']),
             this.applicationService.getInterfaces(route.params['id']),

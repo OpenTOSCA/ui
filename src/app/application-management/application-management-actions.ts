@@ -29,8 +29,8 @@ export class ApplicationManagementActions {
     static CLEAR_APPLICATION_CSAR = 'CLEAR_APPLICATION_CSAR';
     static UPDATE_APPLICATION_INSTANCES = 'UPDATE_APPLICATION_INSTANCES';
     static CLEAR_APPLICATION_INSTANCES = 'CLEAR_APPLICATION_INSTANCES';
-    static UPDATE_APPLICATION_INTERFACES ='UPDATE_APPLICATION_INTERFACES';
-    static CLEAR_APPLICATION_INTERFACES ='CLEAR_APPLICATION_INTERFACES';
+    static UPDATE_APPLICATION_INTERFACES = 'UPDATE_APPLICATION_INTERFACES';
+    static CLEAR_APPLICATION_INTERFACES = 'CLEAR_APPLICATION_INTERFACES';
 
     static updateApplications(csars: Array<Csar>): Action {
         return {
@@ -72,12 +72,12 @@ export class ApplicationManagementActions {
         return {
             type: ApplicationManagementActions.UPDATE_APPLICATION_INTERFACES,
             payload: ifaces
-        }
+        };
     }
 
     static clearInterfaces(): Action {
         return {
             type: ApplicationManagementActions.CLEAR_APPLICATION_INTERFACES
-        }
+        };
     }
 }

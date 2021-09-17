@@ -16,5 +16,5 @@ import { ResourceSupport } from './resource-support.model';
 import { Interface } from './interface.model';
 
 export class InterfaceList extends ResourceSupport {
-    interfaces: Interface[]
+    interfaces: Interface[];
 }
