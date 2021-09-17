@@ -90,7 +90,7 @@ export class ApplicationManagementService {
                                         .toString();
                                     interfacesList.push(this.http.get<Interface>(operationsUrl, this.httpOptionsAcceptJson));
                                 }
-                                return forkJoin(...interfacesList)
+                                return forkJoin<Interface>(...interfacesList)
                                     .pipe(
                                         map((result) => {
                                             const interfaces: Array<Interface> = [];
@@ -130,7 +130,7 @@ export class ApplicationManagementService {
     }
 
     createMigrationPlan(sourceCsarId: string, targetCsarId: string): Observable<HttpResponse<string>> {
-        console.log("requesting migration plan creation");
+        console.log('requesting migration plan creation');
         const url = new Path(this.ngRedux.getState().administration.containerUrl).append('csars').append('transform').toString();
 
         const httpOptions = {
@@ -138,7 +138,11 @@ export class ApplicationManagementService {
                 'Accept': 'application/json'
             }),
         };
-        return this.http.post(url, {source_csar_name: sourceCsarId, target_csar_name: targetCsarId}, { ...httpOptions, responseType: 'text', observe: 'response' });
+        return this.http.post(
+            url,
+            {source_csar_name: sourceCsarId, target_csar_name: targetCsarId},
+            { ...httpOptions, responseType: 'text', observe: 'response' }
+        );
     }
 
     getFirstServiceTemplateOfCsar(csarId: string): Observable<string> {
@@ -200,7 +204,9 @@ export class ApplicationManagementService {
             .catch(() => false);
     }
 
-    getNodeTemplateInstanceProperties(serviceTemplateURL: string, nodeTemplateId: string, nodeTemplateInstanceId: string): Observable<Map<string, string>> {
+    getNodeTemplateInstanceProperties(
+        serviceTemplateURL: string, nodeTemplateId: string, nodeTemplateInstanceId: string
+    ): Observable<Map<string, string>> {
         const url = serviceTemplateURL + '/nodetemplates/' + nodeTemplateId + '/instances/' + nodeTemplateInstanceId + '/properties';
         return this.http.get<Map<string, string>>(url, this.httpOptionsAcceptJson);
     }

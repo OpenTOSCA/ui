@@ -59,11 +59,11 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     serviceTemplateURL: string;
 
     // abstract operating system node type
-    private operatingSystemNodeType = "{http://opentosca.org/nodetypes}OperatingSystem";
+    private operatingSystemNodeType = '{http://opentosca.org/nodetypes}OperatingSystem';
     // name of property where we set selected instance
-    operatingSystemProperty = "instanceRef";
-    vmIpProperty = "VMIP";
-    selectedInstanceDisplayLimiter = ",";
+    operatingSystemProperty = 'instanceRef';
+    vmIpProperty = 'VMIP';
+    selectedInstanceDisplayLimiter = ',';
 
     public allInstancesSelected = false;
     public abstractOSNodeTypeFound = false;
@@ -87,7 +87,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     isInitPlan(): boolean {
-        if (this.plan_type == PlanTypes.BuildPlan) {
+        if (this.plan_type === PlanTypes.BuildPlan) {
             return true;
         } else {
             return false;
@@ -108,7 +108,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             }
             if (this.plan) {
                 this.showInputs = true;
-                this.selectedPlan = this.plan
+                this.selectedPlan = this.plan;
                 this.checkInputs();
             }
         }
@@ -201,11 +201,14 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 for (const placementPair of this.placementPairs) {
                     for (const propertyKey of Object.keys(placementPair.nodeTemplate.properties)) {
                         const propertyValue = placementPair.nodeTemplate.properties[propertyKey];
-                        const separatorIndex = propertyValue.lastIndexOf(":");
+                        const separatorIndex = propertyValue.lastIndexOf(':');
                         const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
+                        /* tslint:disable-next-line */
                         if (propertyValueWithoutGetInput == name) {
-                            inputParam.value = placementPair.selectedInstance.service_template_instance_id + this.selectedInstanceDisplayLimiter
-                                + placementPair.selectedInstance.node_template_id + this.selectedInstanceDisplayLimiter
+                            inputParam.value = placementPair.selectedInstance.service_template_instance_id
+                                + this.selectedInstanceDisplayLimiter
+                                + placementPair.selectedInstance.node_template_id
+                                + this.selectedInstanceDisplayLimiter
                                 + placementPair.selectedInstance.node_template_instance_id;
                             this.disabledProperties.push(inputParam);
                         }
@@ -214,8 +217,9 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                         if (newInput.name.includes(this.vmIpProperty)) {
                             for (const propertyKey of Object.keys(placementPair.nodeTemplate.properties)) {
                                 const propertyValue = placementPair.nodeTemplate.properties[propertyKey];
-                                const separatorIndex = propertyValue.lastIndexOf(":");
+                                const separatorIndex = propertyValue.lastIndexOf(':');
                                 const propertyValueWithoutGetInput = propertyValue.substring(separatorIndex + 1).trim();
+                                /* tslint:disable-next-line */
                                 if (propertyValueWithoutGetInput == newInput.name) {
                                     newInput.value = placementPair.selectedInstance.properties[this.vmIpProperty];
                                     this.disabledProperties.push(newInput);
@@ -238,15 +242,15 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         this.checkForAbstractOSOngoing = true;
         // get (first) service template of CSAR
         this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
-            data => {
-                this.serviceTemplateURL = data;
+            firstServiceTemplate => {
+                this.serviceTemplateURL = firstServiceTemplate;
                 // get node templates of service template
-                this.appService.getNodeTemplatesOfServiceTemplate(data).subscribe(
-                    data => {
+                this.appService.getNodeTemplatesOfServiceTemplate(firstServiceTemplate).subscribe(
+                    nodeTemplates => {
                         this.inputPlacementModel = new PlacementModel();
                         this.inputPlacementModel.needToBePlaced = [];
                         // iterate over node templates of service template
-                        for (let nodeTemplate of data.node_templates) {
+                        for (const nodeTemplate of nodeTemplates.node_templates) {
                             // check if abstract OS node type contained
                             if (nodeTemplate.node_type === this.operatingSystemNodeType) {
                                 // if contained, add to need to be placed list
@@ -254,9 +258,9 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                                 this.abstractOSNodeTypeFound = true;
                             }
                         }
-                        if (this.abstractOSNodeTypeFound == false) {
+                        if (this.abstractOSNodeTypeFound === false) {
                             this.confirm();
-                            return
+                            return;
                         }
                         this.loading = false;
                         // get all running instances that "match" node templates that need to be placed
@@ -264,39 +268,46 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                         if (this.inputPlacementModel.needToBePlaced.length) {
                             // start placement if need to be placed not empty
                             this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
-                                data => {
-                                    const postURL = new Path(data)
+                                firstTemplate => {
+                                    const postURL = new Path(firstTemplate)
                                         .append('placement')
                                         .toString();
                                     // request all available, valid instances from container for node templates that
                                     // need to be placed
                                     this.placementService.getAvailableInstances(postURL, this.inputPlacementModel.needToBePlaced).subscribe(
-                                        data => {
-                                            const result = data;
+                                        availableInstances => {
+                                            const result = availableInstances;
                                             this.outputPlacementModel = [];
-                                            Object.keys(data).forEach(key => {
+                                            Object.keys(availableInstances).forEach(key => {
                                                 this.appService.getPropertiesOfNodeTemplate(this.serviceTemplateURL, key).subscribe(
-                                                    data => {
-                                                        let nodeTemplate = new PlacementNodeTemplate();
+                                                    templateProperties => {
+                                                        const nodeTemplate = new PlacementNodeTemplate();
                                                         nodeTemplate.id = key;
                                                         nodeTemplate.name = key;
-                                                        nodeTemplate.properties = data;
+                                                        nodeTemplate.properties = templateProperties;
                                                         nodeTemplate.valid_node_template_instances = [];
                                                         for (const instanceString of result[key]) {
                                                             const separated = instanceString.split('|||');
-                                                            let nodeTemplateInstance = new NodeTemplateInstance();
+                                                            const nodeTemplateInstance = new NodeTemplateInstance();
                                                             nodeTemplateInstance.node_template_instance_id = separated[0];
                                                             nodeTemplateInstance.node_template_id = separated[1];
                                                             nodeTemplateInstance.service_template_instance_id = separated[2];
-                                                            nodeTemplateInstance.label = 'Instance ID: ' + nodeTemplateInstance.node_template_instance_id + ' of Node Template: ' + nodeTemplateInstance.node_template_id;
+                                                            nodeTemplateInstance.label = (
+                                                                'Instance ID: ' + nodeTemplateInstance.node_template_instance_id
+                                                                + ' of Node Template: ' + nodeTemplateInstance.node_template_id
+                                                            );
                                                             nodeTemplateInstance.value = nodeTemplateInstance;
                                                             const csarId = separated[3];
                                                             this.appService.getFirstServiceTemplateOfCsar(csarId).subscribe(
-                                                                data => {
-                                                                    this.serviceTemplateURL = data;
-                                                                    this.appService.getNodeTemplateInstanceProperties(this.serviceTemplateURL, nodeTemplateInstance.node_template_id, nodeTemplateInstance.node_template_instance_id).subscribe(
-                                                                        data => {
-                                                                            nodeTemplateInstance.properties = data;
+                                                                data_ => {
+                                                                    this.serviceTemplateURL = data_;
+                                                                    this.appService.getNodeTemplateInstanceProperties(
+                                                                        this.serviceTemplateURL,
+                                                                        nodeTemplateInstance.node_template_id,
+                                                                        nodeTemplateInstance.node_template_instance_id
+                                                                    ).subscribe(
+                                                                        innerData => {
+                                                                            nodeTemplateInstance.properties = innerData;
                                                                         }
                                                                     );
                                                                     nodeTemplate.valid_node_template_instances.push(nodeTemplateInstance);
@@ -311,9 +322,9 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                             );
                         }
                     }
-                )
+                );
             }
-        )
+        );
     }
 
     onInstanceSelected(nodeTemplate: PlacementNodeTemplate, selectedInstance: NodeTemplateInstance) {
@@ -325,16 +336,18 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         placementPair.nodeTemplate = nodeTemplate;
         placementPair.selectedInstance = selectedInstance;
         // check if node template already exists in list of placement pairs
-        const checkPlacementPairExistence = placementParam => this.placementPairs.some(({ nodeTemplate }) => nodeTemplate == placementParam);
+        const checkPlacementPairExistence = placementParam => this.placementPairs.some(
+            ({ nodeTemplate: nodeTemplate_ }) => nodeTemplate_ === placementParam
+        );
 
         if (!checkPlacementPairExistence(placementPair.nodeTemplate)) {
             this.placementPairs.push(placementPair);
         } else {
             // if node template already exists in list, just update the selected instance
-            const index = this.placementPairs.findIndex(x => x.nodeTemplate == placementPair.nodeTemplate);
+            const index = this.placementPairs.findIndex(x => x.nodeTemplate === placementPair.nodeTemplate);
             this.placementPairs[index].selectedInstance = placementPair.selectedInstance;
         }
-        if (this.outputPlacementModel.length == this.placementPairs.length) {
+        if (this.outputPlacementModel.length === this.placementPairs.length) {
             this.allInstancesSelected = true;
         }
     }
