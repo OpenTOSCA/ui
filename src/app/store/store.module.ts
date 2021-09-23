@@ -62,12 +62,13 @@ export class StoreModule {
         ngReduxRouter.initialize();
 
         // loads hosts and ports from config file
-        http.get("assets/config.json").subscribe((conf: any) => {
+        http.get('assets/config.json').subscribe((conf: any) => {
             // gets values from response or uses default value
-            let api_endpoint_host: String = ((conf.API_ENDPOINT_HOST === "") ? `${this.document.location.hostname}` : conf.API_ENDPOINT_HOST);
-            let api_endpoint_port: String = ((conf.API_ENDPOINT_PORT === "") ? "1337" : conf.API_ENDPOINT_PORT);
-            let winery_host: String = ((conf.WINERY_HOST === "") ? `${this.document.location.hostname}` : conf.WINERY_HOST);
-            let winery_port: String = ((conf.WINERY_PORT === "") ? "8080" : conf.WINERY_PORT);
+            const api_endpoint_host: String =
+                ((conf.API_ENDPOINT_HOST === '') ? `${this.document.location.hostname}` : conf.API_ENDPOINT_HOST);
+            const api_endpoint_port: String = ((conf.API_ENDPOINT_PORT === '') ? '1337' : conf.API_ENDPOINT_PORT);
+            const winery_host: String = ((conf.WINERY_HOST === '') ? `${this.document.location.hostname}` : conf.WINERY_HOST);
+            const winery_port: String = ((conf.WINERY_PORT === '') ? '8080' : conf.WINERY_PORT);
 
             store.dispatch(ConfigurationActions.updateContainerUrl(`http://` + api_endpoint_host + `:` + api_endpoint_port));
             store.dispatch(ConfigurationActions.updateRepositoryItems([{
