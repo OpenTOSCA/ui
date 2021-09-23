@@ -18,6 +18,9 @@ import { NgReduxRouter, NgReduxRouterModule } from '@angular-redux/router';
 import { createLogger } from 'redux-logger';
 import { AppState } from './app-state.model';
 import { rootEnhancers, rootReducer } from './store.reducer';
+import { HttpClient } from '@angular/common/http';
+import { ConfigurationActions } from '../configuration/configuration-actions';
+import { RepositoryActions } from '../repository/repository-actions.service';
 
 @NgModule({
     imports: [
@@ -30,16 +33,16 @@ import { rootEnhancers, rootReducer } from './store.reducer';
 export class StoreModule {
 
     constructor(public store: NgRedux<AppState>, devTools: DevToolsExtension, ngReduxRouter: NgReduxRouter,
-                @Inject(DOCUMENT) private document: any) {
+                @Inject(DOCUMENT) private document: any, http: HttpClient) {
         const storeEnhancers = devTools.isEnabled() ? [...rootEnhancers, devTools.enhancer()] : [...rootEnhancers];
         store.configureStore(
             rootReducer,
             {
                 administration: {
-                    containerUrl: `http://${this.document.location.hostname}:1337`,
+                    containerUrl: ``,
                     repositoryItems: [{
                         name: 'OpenTOSCA',
-                        url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
+                        url: ``
                     }],
                     planLifecycleInterface: 'OpenTOSCA-Lifecycle-Interface',
                     planOperationInitiate: 'initiate',
@@ -48,7 +51,7 @@ export class StoreModule {
                 repository: {
                     selectedRepository: {
                         name: 'OpenTOSCA',
-                        url: `http://${this.document.location.hostname}:8080/winery/servicetemplates/`
+                        url: ``
                     }
                 },
             },
@@ -57,5 +60,24 @@ export class StoreModule {
         );
         // Enable syncing of Angular router state with our Redux store.
         ngReduxRouter.initialize();
+
+        // loads hosts and ports from config file
+        http.get("assets/config.json").subscribe((conf: any) => {
+            // gets values from response or uses default value
+            let api_endpoint_host: String = ((conf.API_ENDPOINT_HOST === "") ? `${this.document.location.hostname}` : conf.API_ENDPOINT_HOST);
+            let api_endpoint_port: String = ((conf.API_ENDPOINT_PORT === "") ? "1337" : conf.API_ENDPOINT_PORT);
+            let winery_host: String = ((conf.WINERY_HOST === "") ? `${this.document.location.hostname}` : conf.WINERY_HOST);
+            let winery_port: String = ((conf.WINERY_PORT === "") ? "8080" : conf.WINERY_PORT);
+
+            store.dispatch(ConfigurationActions.updateContainerUrl(`http://` + api_endpoint_host + `:` + api_endpoint_port));
+            store.dispatch(ConfigurationActions.updateRepositoryItems([{
+                name: 'OpenTOSCA',
+                url: `http://` + winery_host + `:` + winery_port + `/winery/servicetemplates/`
+            }]));
+            store.dispatch(RepositoryActions.setSelectedRepository({
+                name: 'OpenTOSCA',
+                url: `http://` + winery_host + `:` + winery_port + `/winery/servicetemplates/`
+            }));
+        });
     }
 }
