@@ -33,7 +33,7 @@ import { RepositoryActions } from '../repository/repository-actions.service';
 export class StoreModule {
 
     constructor(public store: NgRedux<AppState>, devTools: DevToolsExtension, ngReduxRouter: NgReduxRouter,
-                @Inject(DOCUMENT) private document: any, http: HttpClient) {
+        @Inject(DOCUMENT) private document: any, http: HttpClient) {
         const storeEnhancers = devTools.isEnabled() ? [...rootEnhancers, devTools.enhancer()] : [...rootEnhancers];
         store.configureStore(
             rootReducer,
@@ -64,20 +64,20 @@ export class StoreModule {
         // loads hosts and ports from config file
         http.get('assets/config.json').subscribe((conf: any) => {
             // gets values from response or uses default value
-            const api_endpoint_host: String =
+            const API_ENDPOINT_HOST: String =
                 ((conf.API_ENDPOINT_HOST === '') ? `${this.document.location.hostname}` : conf.API_ENDPOINT_HOST);
-            const api_endpoint_port: String = ((conf.API_ENDPOINT_PORT === '') ? '1337' : conf.API_ENDPOINT_PORT);
-            const winery_host: String = ((conf.WINERY_HOST === '') ? `${this.document.location.hostname}` : conf.WINERY_HOST);
-            const winery_port: String = ((conf.WINERY_PORT === '') ? '8080' : conf.WINERY_PORT);
+            const API_ENDPOINT_PORT: String = ((conf.API_ENDPOINT_PORT === '') ? '1337' : conf.API_ENDPOINT_PORT);
+            const WINERY_HOST: String = ((conf.WINERY_HOST === '') ? `${this.document.location.hostname}` : conf.WINERY_HOST);
+            const WINERY_PORT: String = ((conf.WINERY_PORT === '') ? '8080' : conf.WINERY_PORT);
 
-            store.dispatch(ConfigurationActions.updateContainerUrl(`http://` + api_endpoint_host + `:` + api_endpoint_port));
+            store.dispatch(ConfigurationActions.updateContainerUrl(`http://` + API_ENDPOINT_HOST + `:` + API_ENDPOINT_PORT));
             store.dispatch(ConfigurationActions.updateRepositoryItems([{
                 name: 'OpenTOSCA',
-                url: `http://` + winery_host + `:` + winery_port + `/winery/servicetemplates/`
+                url: `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/`
             }]));
             store.dispatch(RepositoryActions.setSelectedRepository({
                 name: 'OpenTOSCA',
-                url: `http://` + winery_host + `:` + winery_port + `/winery/servicetemplates/`
+                url: `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/`
             }));
         });
     }
