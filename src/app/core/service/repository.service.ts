@@ -19,11 +19,14 @@ import { MarketplaceApplicationReference } from '../model/marketplace-applicatio
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { PlanqkPlatformLoginService } from '../../services/planqk-platform-login.service';
 
 @Injectable()
 export class RepositoryService {
 
-    constructor(private http: HttpClient, private logger: LoggerService) {
+    constructor(private http: HttpClient,
+                private logger: LoggerService,
+                private planQkService: PlanqkPlatformLoginService) {
     }
 
     getApplications(url: string): Observable<Array<MarketplaceApplicationReference>> {
@@ -70,11 +73,22 @@ export class RepositoryService {
     }
 
     installApplication(app: CsarUploadReference, containerUrl: string): Observable<any> {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
-        return this.http.post(containerUrl, app, httpOptions);
+        return this.planQkService.getBearerToken()
+            .pipe(
+                map((bearerToken: string) => {
+                    const headers = new HttpHeaders({
+                        'Content-Type': 'application/json',
+                    });
+
+                    if (bearerToken) {
+                        headers.append('Authorization', bearerToken)
+                    }
+
+                    const httpOptions = {
+                        headers: headers
+                    };
+                    return this.http.post(containerUrl, app, httpOptions);
+                })
+            );
     }
 }

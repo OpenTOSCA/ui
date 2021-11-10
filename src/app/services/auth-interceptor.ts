@@ -37,13 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 .getBearerToken()
                 .pipe(
                     map((bearerToken: string) =>
-                        next.handle(this.addBearerToken(req, bearerToken)).pipe(
-                            catchError((err) => {
-                                debugger
-                                this.planqkPlatformLoginService.logoutFromPlanqkPlatform();
-                                return throwError('Request to PlanQK Platform failed!', err);
-                            })
-                        )
+                        next.handle(this.addBearerToken(req, bearerToken))
                     )
                 )
                 .pipe(concatAll());

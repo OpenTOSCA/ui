@@ -38,7 +38,7 @@
          *ngFor="let app of apps | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','csarName']; trackBy: trackFn">
         <p-card>
             <p-header>
-                <img class="img-fluid" [src]="app.iconUrl"
+                <img class="img-fluid" [src]="app.iconUrl" alt="{{ app.displayName + ' icon'}}"
                      onerror="this.src='/assets/Default_Application_Icon.png'">
             </p-header>
             <div class="ui-card-title truncate">
