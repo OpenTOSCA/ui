@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 import { ConfigurationActions } from '../configuration-actions';
 import { ConfirmationService } from 'primeng/api';
 import { RepositoryActions } from '../../repository/repository-actions.service';
+import {PlanqkPlatformLoginService} from "../../services/planqk-platform-login.service";
 
 export interface Item {
     name: string;
@@ -44,7 +45,7 @@ export class RepositoryConfigurationComponent implements OnInit {
     selectedItem: Item;
     cols: any[];
 
-    constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService) {
+    constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService, private planQKService: PlanqkPlatformLoginService) {
     }
 
     static cloneItem(item: Item): Item {
@@ -66,6 +67,18 @@ export class RepositoryConfigurationComponent implements OnInit {
         this.selectedRepository$.subscribe(item => {
             this.selectedRepository = item;
         });
+        this.planQKService.isLoggedIn().subscribe((isLoggedIn:boolean) => {
+            if(isLoggedIn) {
+                this.isNewItem = true;
+                this.newItem = {
+                    url : "https://platform.planqk.de/qc-catalog/tosca/servicetemplates/",
+                    name : "PlanQK Platform"
+                };
+                this.selectedItem = this.newItem;
+                this.save();
+            }
+
+        })
     }
 
     showDialogToAdd() {
@@ -74,24 +87,30 @@ export class RepositoryConfigurationComponent implements OnInit {
         this.displayDialog = true;
     }
 
+    logInToPlanQK() {
+        this.planQKService.loginToPlanqkPlatform()
+
+    }
+
     save() {
         const items = [...this.items];
         let changedSelectedRepository = false;
         if (this.isNewItem) {
             items.push(this.newItem);
-        } else {
-            const changedRepositoryIndex = this.items.indexOf(this.selectedItem);
-            items[changedRepositoryIndex] = this.newItem;
-            if (
-                this.selectedItem != null &&
-                this.selectedRepository != null &&
-                this.selectedItem.name === this.selectedRepository.name &&
-                this.selectedItem.url === this.selectedRepository.url
-            ) {
-                // name and url of currently selected repository match the changed item
-                changedSelectedRepository = true;
-            }
         }
+
+        const changedRepositoryIndex = this.items.indexOf(this.selectedItem);
+        items[changedRepositoryIndex] = this.newItem;
+        if (
+            this.selectedItem != null &&
+            this.selectedRepository != null &&
+            this.selectedItem.name !== this.selectedRepository.name &&
+            this.selectedItem.url !== this.selectedRepository.url
+        ) {
+            // name and url of currently selected repository match the changed item
+            changedSelectedRepository = true;
+        }
+
         this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
         if (changedSelectedRepository) { // changed the selected repository => need to update it in store
             this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(this.newItem));
