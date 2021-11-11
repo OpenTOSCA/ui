@@ -21,11 +21,11 @@ import {
 } from '@angular/common/http';
 import { catchError, map, concatAll } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { PlanqkPlatformLoginService } from './planqk-platform-login.service';
+import { PlanQkPlatformLoginService } from './plan-qk-platform-login.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    constructor(private planqkPlatformLoginService: PlanqkPlatformLoginService) {
+    constructor(private planqkPlatformLoginService: PlanQkPlatformLoginService) {
     }
 
     intercept(

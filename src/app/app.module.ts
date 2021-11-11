@@ -32,7 +32,7 @@ import {TabMenuModule} from 'primeng/tabmenu';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from './util/keycloak-init';
 import {AuthInterceptor} from "./services/auth-interceptor";
-import {PlanqkPlatformLoginService} from "./services/planqk-platform-login.service";
+import {PlanQkPlatformLoginService} from "./services/plan-qk-platform-login.service";
 
 @NgModule({
     declarations: [

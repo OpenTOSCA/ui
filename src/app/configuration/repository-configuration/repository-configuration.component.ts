@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 import { ConfigurationActions } from '../configuration-actions';
 import { ConfirmationService } from 'primeng/api';
 import { RepositoryActions } from '../../repository/repository-actions.service';
-import {PlanqkPlatformLoginService} from "../../services/planqk-platform-login.service";
+import {PlanQkPlatformLoginService} from "../../services/plan-qk-platform-login.service";
 
 export interface Item {
     name: string;
@@ -45,7 +45,7 @@ export class RepositoryConfigurationComponent implements OnInit {
     selectedItem: Item;
     cols: any[];
 
-    constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService, private planQKService: PlanqkPlatformLoginService) {
+    constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService, private planQKService: PlanQkPlatformLoginService) {
     }
 
     static cloneItem(item: Item): Item {
@@ -88,7 +88,7 @@ export class RepositoryConfigurationComponent implements OnInit {
     }
 
     logInToPlanQK() {
-        this.planQKService.loginToPlanqkPlatform()
+        this.planQKService.loginToPlanQkPlatform()
 
     }
 

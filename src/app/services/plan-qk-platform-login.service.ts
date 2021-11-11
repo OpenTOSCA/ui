@@ -13,13 +13,14 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
     providedIn: 'root',
 })
-export class PlanqkPlatformLoginService {
+export class PlanQkPlatformLoginService {
+
     constructor(private readonly keycloak: KeycloakService) {
         // this.keycloak.getKeycloakInstance().onTokenExpired = () => {
         //     console.log('expired ' + new Date());
@@ -36,7 +37,7 @@ export class PlanqkPlatformLoginService {
         // }
     }
 
-    public loginToPlanqkPlatform(): void {
+    public loginToPlanQkPlatform(): void {
         this.keycloak.login();
     }
 
@@ -52,9 +53,8 @@ export class PlanqkPlatformLoginService {
         return this.keycloak.getKeycloakInstance().refreshToken;
     }
 
-    public logoutFromPlanqkPlatform(): void {
+    public logoutFromPlanQkPlatform(): void {
         this.keycloak.logout();
     }
-
 
 }

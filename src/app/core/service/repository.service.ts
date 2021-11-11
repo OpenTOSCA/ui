@@ -19,14 +19,14 @@ import { MarketplaceApplicationReference } from '../model/marketplace-applicatio
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { PlanqkPlatformLoginService } from '../../services/planqk-platform-login.service';
+import { PlanQkPlatformLoginService } from '../../services/plan-qk-platform-login.service';
 
 @Injectable()
 export class RepositoryService {
 
     constructor(private http: HttpClient,
                 private logger: LoggerService,
-                private planQkService: PlanqkPlatformLoginService) {
+                private planQkService: PlanQkPlatformLoginService) {
     }
 
     getApplications(url: string): Observable<Array<MarketplaceApplicationReference>> {
