@@ -14,7 +14,8 @@
 
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakEvent, KeycloakEventType, KeycloakService } from 'keycloak-angular';
+
 
 @Injectable({
     providedIn: 'root',
@@ -22,19 +23,21 @@ import { KeycloakService } from 'keycloak-angular';
 export class PlanQkPlatformLoginService {
 
     constructor(private readonly keycloak: KeycloakService) {
-        // this.keycloak.getKeycloakInstance().onTokenExpired = () => {
-        //     console.log('expired ' + new Date());
-        //     from(this.keycloak.updateToken(50)).subscribe((refreshed) => {
-        //         if (refreshed) {
-        //             console.log('refreshed ' + new Date());
-        //         } else {
-        //             console.log('not refreshed ' + new Date());
-        //         }
-        //     }, (error) => {
-        //         console.error('Failed to refresh token ' + new Date());
-        //         console.error(error);
-        //     });
-        // }
+        this.keycloak.keycloakEvents$.subscribe((event: KeycloakEvent) => {
+            if (event.type === KeycloakEventType.OnTokenExpired) {
+                console.log('expired ' + new Date());
+                from(this.keycloak.updateToken(50)).subscribe((refreshed) => {
+                    if (refreshed) {
+                        console.log('refreshed ' + new Date());
+                    } else {
+                        console.log('not refreshed ' + new Date());
+                    }
+                }, (error) => {
+                    console.error('Failed to refresh token ' + new Date());
+                    console.error(error);
+                });
+            }
+        })
     }
 
     public loginToPlanQkPlatform(): void {
