@@ -21,9 +21,10 @@
         margin-bottom: 15px;
         margin-right: 15px;
 
-        img {
+        opentosca-auth-image  {
             width: auto;
             height: 80px;
+            display: flex;
         }
     }
 }

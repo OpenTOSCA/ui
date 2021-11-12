@@ -43,6 +43,7 @@ import { DebouncedValidatedInputComponent } from './component/input-debounce/deb
 import { DebounceDirective } from './directive/debounce.directive';
 import { ManagementPlanService } from './service/management-plan.service';
 import { DeploymentTestService } from './service/deployment-test.service';
+import { AuthImageComponent } from './component/auth-image/auth-image.component';
 
 @NgModule({
     imports: [
@@ -69,6 +70,7 @@ import { DeploymentTestService } from './service/deployment-test.service';
         SortPipe,
         HumanizeBytesPipe,
         FilterOutputParams,
+        AuthImageComponent,
     ],
     exports: [
         ActionBarComponent,
@@ -81,7 +83,8 @@ import { DeploymentTestService } from './service/deployment-test.service';
         DeploymentCompletionComponent,
         SortPipe,
         HumanizeBytesPipe,
-        FilterOutputParams
+        FilterOutputParams,
+        AuthImageComponent,
     ],
     providers: [
         ApplicationInstanceManagementService,
