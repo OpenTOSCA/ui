@@ -69,12 +69,15 @@ export class RepositoryConfigurationComponent implements OnInit {
         });
         this.planQKService.isLoggedIn().subscribe((isLoggedIn:boolean) => {
             if(isLoggedIn) {
-                this.isNewItem = true;
-                this.newItem = {
+                this.isNewItem = false;
+                this.selectedItem = {
                     url : "https://platform.planqk.de/qc-catalog/tosca/servicetemplates/",
                     name : "PlanQK Platform"
                 };
-                this.selectedItem = this.newItem;
+                if (!this.items.some(e => e.name === this.selectedItem.name)) {
+                    this.newItem = this.selectedItem
+                    this.isNewItem = true
+                }
                 this.save();
             }
 
