@@ -35,13 +35,14 @@ export class AuthImageComponent implements OnChanges {
                 private authImageLoader: AuthImageLoaderService,
                 private sanitizer: DomSanitizer
     ) {
+        this.imageURL = "/assets/Default_Application_Icon.png"
     }
 
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.src != null) {
             if (this.src == null) {
-                this.imageURL = null;
+                this.imageURL = "/assets/Default_Application_Icon.png";
                 return;
             }
             // TODO ingore for non PlanQK Repository
