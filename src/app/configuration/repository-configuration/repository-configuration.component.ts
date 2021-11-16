@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 import { ConfigurationActions } from '../configuration-actions';
 import { ConfirmationService } from 'primeng/api';
 import { RepositoryActions } from '../../repository/repository-actions.service';
-import {PlanQkPlatformLoginService} from "../../services/plan-qk-platform-login.service";
+import { PlanQkPlatformLoginService } from "../../services/plan-qk-platform-login.service";
 
 export interface Item {
     name: string;
@@ -36,6 +36,11 @@ export class RepositoryConfigurationComponent implements OnInit {
     @select(['administration', 'repositoryItems']) repositoryItems: Observable<Array<Item>>;
     @select(['repository', 'selectedRepository']) selectedRepository$: Observable<Item>;
 
+    readonly planQkPlatform = 'PlanQK Platform';
+    readonly planQkPlatformUrl = 'https://platform.planqk.de/qc-catalog/tosca/servicetemplates/';
+    readonly loginText = 'Log in to PlanQK';
+    readonly logoutText = 'Log out of PlanQK';
+
     items: Item[] = [];
     selectedRepository: Item = null;
 
@@ -44,6 +49,7 @@ export class RepositoryConfigurationComponent implements OnInit {
     newItem: Item;
     selectedItem: Item;
     cols: any[];
+    planQkButtonText = this.loginText;
 
     constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService, private planQKService: PlanQkPlatformLoginService) {
     }
@@ -67,17 +73,18 @@ export class RepositoryConfigurationComponent implements OnInit {
         this.selectedRepository$.subscribe(item => {
             this.selectedRepository = item;
         });
-        this.planQKService.isLoggedIn().subscribe((isLoggedIn:boolean) => {
-            if(isLoggedIn) {
+        this.planQKService.isLoggedIn().subscribe((isLoggedIn: boolean) => {
+            if (isLoggedIn) {
                 this.isNewItem = false;
                 this.selectedItem = {
-                    url : "https://platform.planqk.de/qc-catalog/tosca/servicetemplates/",
-                    name : "PlanQK Platform"
+                    url: this.planQkPlatformUrl,
+                    name: this.planQkPlatform
                 };
                 if (!this.items.some(e => e.name === this.selectedItem.name)) {
                     this.newItem = this.selectedItem
                     this.isNewItem = true
                 }
+                this.planQkButtonText = this.logoutText;
                 this.save();
             }
 
@@ -91,8 +98,14 @@ export class RepositoryConfigurationComponent implements OnInit {
     }
 
     logInToPlanQK() {
-        this.planQKService.loginToPlanQkPlatform()
-
+        if (this.planQkButtonText === this.loginText) {
+            this.planQKService.loginToPlanQkPlatform()
+        } else {
+            this.planQKService.logoutFromPlanQkPlatform();
+            this.planQkButtonText = this.logoutText;
+            this.selectedItem = this.items.find(value => value.name === this.planQkPlatform);
+            this.acceptedDelete();
+        }
     }
 
     save() {
@@ -133,14 +146,7 @@ export class RepositoryConfigurationComponent implements OnInit {
         this.confirmationService.confirm({
             message: 'Do you want to delete this record?',
             header: 'Delete Confirmation',
-            accept: () => {
-                const index = this.items.indexOf(this.selectedItem);
-                const items = this.items.filter((val, i) => i !== index);
-                this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
-                this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(null));
-                this.newItem = null;
-                this.displayDialog = false;
-            }
+            accept: () => this.acceptedDelete()
         });
     }
 
@@ -148,5 +154,14 @@ export class RepositoryConfigurationComponent implements OnInit {
         this.isNewItem = false;
         this.newItem = RepositoryConfigurationComponent.cloneItem(event.data);
         this.displayDialog = true;
+    }
+
+    private acceptedDelete() {
+        const index = this.items.indexOf(this.selectedItem);
+        const items = this.items.filter((val, i) => i !== index);
+        this.ngRedux.dispatch(ConfigurationActions.updateRepositoryItems(items));
+        this.ngRedux.dispatch(RepositoryActions.setSelectedRepository(null));
+        this.newItem = null;
+        this.displayDialog = false;
     }
 }
