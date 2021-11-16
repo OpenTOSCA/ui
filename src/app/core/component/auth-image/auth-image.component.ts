@@ -13,10 +13,10 @@
  */
 
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {PlanQkPlatformLoginService} from "../../../services/plan-qk-platform-login.service";
-import {take} from "rxjs/operators";
-import {AuthLoaderService} from "../../../services/auth-loader.service";
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {PlanQkPlatformLoginService} from '../../../services/plan-qk-platform-login.service';
+import {take} from 'rxjs/operators';
+import {AuthLoaderService} from '../../../services/auth-loader.service';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Component({
     selector: 'opentosca-auth-image',
@@ -26,7 +26,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 export class AuthImageComponent implements OnChanges {
 
     @Input() src: string;
-    @Input() alt: string
+    @Input() alt: string;
 
     public imageURL: string | SafeUrl;
     public altString: string;
@@ -35,14 +35,14 @@ export class AuthImageComponent implements OnChanges {
                 private authLoader: AuthLoaderService,
                 private sanitizer: DomSanitizer
     ) {
-        this.imageURL = "/assets/Default_Application_Icon.png"
+        this.imageURL = '/assets/Default_Application_Icon.png';
     }
 
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.src != null) {
             if (this.src == null) {
-                this.imageURL = "/assets/Default_Application_Icon.png";
+                this.imageURL = '/assets/Default_Application_Icon.png';
                 return;
             }
             // TODO ingore for non PlanQK Repository
@@ -52,7 +52,7 @@ export class AuthImageComponent implements OnChanges {
                     return;
                 }
                 this.authLoader.loadImage(this.src).subscribe(url => {
-                    this.imageURL = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+                    this.imageURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
                 });
             });
 

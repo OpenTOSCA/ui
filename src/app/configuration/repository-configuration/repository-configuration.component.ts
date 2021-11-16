@@ -12,14 +12,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import { Component, OnInit } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
-import { AppState } from '../../store/app-state.model';
-import { Observable } from 'rxjs';
-import { ConfigurationActions } from '../configuration-actions';
-import { ConfirmationService } from 'primeng/api';
-import { RepositoryActions } from '../../repository/repository-actions.service';
-import { PlanQkPlatformLoginService } from "../../services/plan-qk-platform-login.service";
+import {Component, OnInit} from '@angular/core';
+import {NgRedux, select} from '@angular-redux/store';
+import {AppState} from '../../store/app-state.model';
+import {Observable} from 'rxjs';
+import {ConfigurationActions} from '../configuration-actions';
+import {ConfirmationService} from 'primeng/api';
+import {RepositoryActions} from '../../repository/repository-actions.service';
+import {PlanQkPlatformLoginService} from '../../services/plan-qk-platform-login.service';
 
 export interface Item {
     name: string;
@@ -51,7 +51,11 @@ export class RepositoryConfigurationComponent implements OnInit {
     cols: any[];
     planQkButtonText = this.loginText;
 
-    constructor(private ngRedux: NgRedux<AppState>, private confirmationService: ConfirmationService, private planQKService: PlanQkPlatformLoginService) {
+    constructor(
+        private ngRedux: NgRedux<AppState>,
+        private confirmationService: ConfirmationService,
+        private planQKService: PlanQkPlatformLoginService
+    ) {
     }
 
     static cloneItem(item: Item): Item {
@@ -64,8 +68,8 @@ export class RepositoryConfigurationComponent implements OnInit {
 
     ngOnInit() {
         this.cols = [
-            { field: 'name', header: 'Name', width: '25%' },
-            { field: 'url', header: 'URL' },
+            {field: 'name', header: 'Name', width: '25%'},
+            {field: 'url', header: 'URL'},
         ];
         this.repositoryItems.subscribe(items => {
             this.items = items;
@@ -81,14 +85,14 @@ export class RepositoryConfigurationComponent implements OnInit {
                     name: this.planQkPlatform
                 };
                 if (!this.items.some(e => e.name === this.selectedItem.name)) {
-                    this.newItem = this.selectedItem
-                    this.isNewItem = true
+                    this.newItem = this.selectedItem;
+                    this.isNewItem = true;
                 }
                 this.planQkButtonText = this.logoutText;
                 this.save();
             }
 
-        })
+        });
     }
 
     showDialogToAdd() {
@@ -99,7 +103,7 @@ export class RepositoryConfigurationComponent implements OnInit {
 
     logInToPlanQK() {
         if (this.planQkButtonText === this.loginText) {
-            this.planQKService.loginToPlanQkPlatform()
+            this.planQKService.loginToPlanQkPlatform();
         } else {
             this.confirmationService.confirm({
                 message: 'Do you want to log out from the PlanQK Platform?',

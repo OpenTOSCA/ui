@@ -26,7 +26,7 @@ import {MarketplaceApplication} from '../core/model/marketplace-application.mode
 import {CsarUploadReference} from '../core/model/csar-upload-request.model';
 import {Path} from '../core/path';
 import {GrowlActions} from '../core/growl/growl-actions';
-import {AuthLoaderService} from "../services/auth-loader.service";
+import {AuthLoaderService} from '../services/auth-loader.service';
 
 @Component({
     selector: 'opentosca-repository',
@@ -143,14 +143,14 @@ export class RepositoryComponent implements OnInit {
             }
         ));
         this.authLoader.loadFile(app.csarURL).subscribe(blob => {
-            const a = document.createElement('a')
-            const objectUrl = URL.createObjectURL(blob)
-            a.href = objectUrl
-            a.download = filename + "." + filetype;
+            const a = document.createElement('a');
+            const objectUrl = URL.createObjectURL(blob);
+            a.href = objectUrl;
+            a.download = filename + '.' + filetype;
             a.click();
             URL.revokeObjectURL(objectUrl);
             app.isDownloading = false;
-        })
+        });
     }
 
     searchTermChanged(searchTerm: string) {

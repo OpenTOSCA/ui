@@ -30,5 +30,5 @@ export class MarketplaceApplication {
     options: Object[];
     inContainer: boolean;
     isInstalling: boolean;
-    isDownloading: boolean = false;
+    isDownloading = false;
 }

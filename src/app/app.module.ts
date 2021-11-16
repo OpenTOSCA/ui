@@ -29,10 +29,9 @@ import {NgReduxRouterModule} from '@angular-redux/router';
 import {StoreModule} from './store/store.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {TabMenuModule} from 'primeng/tabmenu';
-import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {initializeKeycloak} from './util/keycloak-init';
-import {AuthInterceptor} from "./services/auth-interceptor";
-import {PlanQkPlatformLoginService} from "./services/plan-qk-platform-login.service";
+import {AuthInterceptor} from './services/auth-interceptor';
 
 @NgModule({
     declarations: [
@@ -69,12 +68,12 @@ import {PlanQkPlatformLoginService} from "./services/plan-qk-platform-login.serv
             useFactory: initializeKeycloak,
             multi: true,
             deps: [KeycloakService]
-        },{
+        }, {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true,
         },
-        ],
+    ],
     bootstrap: [
         AppComponent
     ]

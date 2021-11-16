@@ -37,7 +37,7 @@ export class PlanQkPlatformLoginService {
                     console.error(error);
                 });
             }
-        })
+        });
     }
 
     public loginToPlanQkPlatform(): void {
