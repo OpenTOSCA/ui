@@ -102,7 +102,7 @@ export class RepositoryConfigurationComponent implements OnInit {
             this.planQKService.loginToPlanQkPlatform()
         } else {
             this.confirmationService.confirm({
-                message: 'Do you want to log out from the PlanQK Plattform?',
+                message: 'Do you want to log out from the PlanQK Platform?',
                 header: 'Logout from PlanQK',
                 acceptLabel: 'Logout',
                 accept: () => {
