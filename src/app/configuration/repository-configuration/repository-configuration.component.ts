@@ -101,10 +101,17 @@ export class RepositoryConfigurationComponent implements OnInit {
         if (this.planQkButtonText === this.loginText) {
             this.planQKService.loginToPlanQkPlatform()
         } else {
-            this.planQKService.logoutFromPlanQkPlatform();
-            this.planQkButtonText = this.logoutText;
-            this.selectedItem = this.items.find(value => value.name === this.planQkPlatform);
-            this.acceptedDelete();
+            this.confirmationService.confirm({
+                message: 'Do you want to log out from the PlanQK Plattform?',
+                header: 'Logout from PlanQK',
+                acceptLabel: 'Logout',
+                accept: () => {
+                    this.planQKService.logoutFromPlanQkPlatform();
+                    this.planQkButtonText = this.logoutText;
+                    this.selectedItem = this.items.find(value => value.name === this.planQkPlatform);
+                    this.acceptedDelete();
+                }
+            });
         }
     }
 
