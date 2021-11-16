@@ -11,21 +11,22 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import { Component, OnInit } from '@angular/core';
-import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
-import { NgRedux, select } from '@angular-redux/store';
-import { AppState } from '../store/app-state.model';
-import { forkJoin, Observable } from 'rxjs';
-import { RepositoryService } from '../core/service/repository.service';
-import { ConfigurationService } from '../configuration/configuration.service';
-import { ApplicationManagementService } from '../core/service/application-management.service';
-import { LoggerService } from '../core/service/logger.service';
-import { Item } from '../configuration/repository-configuration/repository-configuration.component';
-import { RepositoryActions } from './repository-actions.service';
-import { MarketplaceApplication } from '../core/model/marketplace-application.model';
-import { CsarUploadReference } from '../core/model/csar-upload-request.model';
-import { Path } from '../core/path';
-import { GrowlActions } from '../core/growl/growl-actions';
+import {Component, OnInit} from '@angular/core';
+import {BreadcrumbActions} from '../core/component/breadcrumb/breadcrumb-actions';
+import {NgRedux, select} from '@angular-redux/store';
+import {AppState} from '../store/app-state.model';
+import {forkJoin, Observable} from 'rxjs';
+import {RepositoryService} from '../core/service/repository.service';
+import {ConfigurationService} from '../configuration/configuration.service';
+import {ApplicationManagementService} from '../core/service/application-management.service';
+import {LoggerService} from '../core/service/logger.service';
+import {Item} from '../configuration/repository-configuration/repository-configuration.component';
+import {RepositoryActions} from './repository-actions.service';
+import {MarketplaceApplication} from '../core/model/marketplace-application.model';
+import {CsarUploadReference} from '../core/model/csar-upload-request.model';
+import {Path} from '../core/path';
+import {GrowlActions} from '../core/growl/growl-actions';
+import {AuthLoaderService} from "../services/auth-loader.service";
 
 @Component({
     selector: 'opentosca-repository',
@@ -57,7 +58,8 @@ export class RepositoryComponent implements OnInit {
 
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
-                private logger: LoggerService, private adminService: ConfigurationService, private repoService: RepositoryService ) {
+                private logger: LoggerService, private adminService: ConfigurationService, private repoService: RepositoryService,
+                private authLoader: AuthLoaderService) {
     }
 
     ngOnInit() {
@@ -69,8 +71,8 @@ export class RepositoryComponent implements OnInit {
                 this.selectRepository();
             }
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-                { label: 'Repository', routerLink: ['/repository'] },
-                { label: this.selectedRepository.name, routerLink: ['/repository'] }
+                {label: 'Repository', routerLink: ['/repository']},
+                {label: this.selectedRepository.name, routerLink: ['/repository']}
             ]));
             this.refresh();
         });
@@ -111,8 +113,34 @@ export class RepositoryComponent implements OnInit {
         window.open(_url.protocol + '//' + _url.host + '/', '_blank');
     }
 
-    openApplication(url: string): void {
+    openApplication(app: MarketplaceApplication): void {
+        if (app.repositoryURL.includes('platform.planqk.de')) {
+            this.downloadAuthApplication(app.csarURL)
+        } else {
+            this.openUrl(app.csarURL)
+        }
+    }
+
+    openUrl(url: string): void {
         window.open(url, '_blank');
+    }
+
+    /* TODO: Use the browser download dialog to download the CSAR.
+        Currently, to set the auth header, the CSAR is downloaded previously in the background,
+         and the already downloaded CSAR is then passed to the browser download dialog
+     */
+    downloadAuthApplication(url: string): void {
+        const pieces = url.split(/[\s/?]+/)
+        const filetype = pieces[pieces.length - 1]
+        const filename = pieces[pieces.length - 2]
+        this.authLoader.loadFile(url).subscribe(blob => {
+            const a = document.createElement('a')
+            const objectUrl = URL.createObjectURL(blob)
+            a.href = objectUrl
+            a.download = filename + "." + filetype;
+            a.click();
+            URL.revokeObjectURL(objectUrl);
+        })
     }
 
     searchTermChanged(searchTerm: string) {

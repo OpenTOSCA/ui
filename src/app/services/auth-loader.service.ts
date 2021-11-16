@@ -15,19 +15,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 
 @Injectable({
     providedIn: 'root',
 })
-export class AuthImageLoaderService {
+export class AuthLoaderService {
 
     constructor(private http: HttpClient) {
     }
 
-    public loadAuthImage(url: string) {
-        return this.http.get(url, {responseType: 'blob'}).pipe(map(blob => {
+    public loadImage(url: string): Observable<string> {
+        return this.loadFile(url).pipe(map(blob => {
             return URL.createObjectURL(blob);
         }));
+    }
+
+    public loadFile(url: string): Observable<Blob> {
+        return this.http.get(url, {responseType: 'blob'});
     }
 }

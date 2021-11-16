@@ -15,7 +15,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {PlanQkPlatformLoginService} from "../../../services/plan-qk-platform-login.service";
 import {take} from "rxjs/operators";
-import {AuthImageLoaderService} from "../../../services/auth-image-loader.service";
+import {AuthLoaderService} from "../../../services/auth-loader.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
@@ -32,7 +32,7 @@ export class AuthImageComponent implements OnChanges {
     public altString: string;
 
     constructor(private planqkPlatformLoginService: PlanQkPlatformLoginService,
-                private authImageLoader: AuthImageLoaderService,
+                private authLoader: AuthLoaderService,
                 private sanitizer: DomSanitizer
     ) {
         this.imageURL = "/assets/Default_Application_Icon.png"
@@ -51,7 +51,7 @@ export class AuthImageComponent implements OnChanges {
                     this.imageURL = this.src;
                     return;
                 }
-                this.authImageLoader.loadAuthImage(this.src).subscribe(url => {
+                this.authLoader.loadImage(this.src).subscribe(url => {
                     this.imageURL = this.sanitizer.bypassSecurityTrustResourceUrl(url)
                 });
             });
