@@ -115,9 +115,10 @@ export class RepositoryComponent implements OnInit {
 
     openApplication(app: MarketplaceApplication): void {
         if (app.repositoryURL.includes('platform.planqk.de')) {
-            this.downloadAuthApplication(app.csarURL)
+            app.isDownloading = true;
+            this.downloadAuthApplication(app);
         } else {
-            this.openUrl(app.csarURL)
+            this.openUrl(app.csarURL);
         }
     }
 
@@ -129,17 +130,26 @@ export class RepositoryComponent implements OnInit {
         Currently, to set the auth header, the CSAR is downloaded previously in the background,
          and the already downloaded CSAR is then passed to the browser download dialog
      */
-    downloadAuthApplication(url: string): void {
-        const pieces = url.split(/[\s/?]+/)
-        const filetype = pieces[pieces.length - 1]
-        const filename = pieces[pieces.length - 2]
-        this.authLoader.loadFile(url).subscribe(blob => {
+    downloadAuthApplication(app: MarketplaceApplication): void {
+        const pieces = app.csarURL.split(/[\s/?]+/);
+        const filetype = pieces[pieces.length - 1];
+        const filename = pieces[pieces.length - 2];
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'success',
+                summary: 'Download started',
+                detail: `The download of "${filename}" is started in the background.`,
+                life: 10
+            }
+        ));
+        this.authLoader.loadFile(app.csarURL).subscribe(blob => {
             const a = document.createElement('a')
             const objectUrl = URL.createObjectURL(blob)
             a.href = objectUrl
             a.download = filename + "." + filetype;
             a.click();
             URL.revokeObjectURL(objectUrl);
+            app.isDownloading = false;
         })
     }
 

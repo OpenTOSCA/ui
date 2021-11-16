@@ -54,7 +54,7 @@
                 &nbsp;
                 <button pButton type="button" (click)="openApplication(app)"
                         class="ui-button-info" icon="fas fa-download"
-                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"></button>
+                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top" [disabled]="app.isDownloading"></button>
                 &nbsp;
                 <button pButton type="button" (click)="openEnrichmentDialog(app)"
                         class="ui-button-info" icon="fas fa-plus-circle"
