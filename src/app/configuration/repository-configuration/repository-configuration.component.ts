@@ -12,14 +12,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {AppState} from '../../store/app-state.model';
-import {Observable} from 'rxjs';
-import {ConfigurationActions} from '../configuration-actions';
-import {ConfirmationService} from 'primeng/api';
-import {RepositoryActions} from '../../repository/repository-actions.service';
-import {PlanQkPlatformLoginService} from '../../services/plan-qk-platform-login.service';
+import { Component, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { AppState } from '../../store/app-state.model';
+import { Observable } from 'rxjs';
+import { ConfigurationActions } from '../configuration-actions';
+import { ConfirmationService } from 'primeng/api';
+import { RepositoryActions } from '../../repository/repository-actions.service';
+import { PlanQkPlatformLoginService } from '../../services/plan-qk-platform-login.service';
 
 export interface Item {
     name: string;
@@ -68,8 +68,8 @@ export class RepositoryConfigurationComponent implements OnInit {
 
     ngOnInit() {
         this.cols = [
-            {field: 'name', header: 'Name', width: '25%'},
-            {field: 'url', header: 'URL'},
+            { field: 'name', header: 'Name', width: '25%' },
+            { field: 'url', header: 'URL' },
         ];
         this.repositoryItems.subscribe(items => {
             this.items = items;
