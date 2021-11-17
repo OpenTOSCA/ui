@@ -13,14 +13,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-} from '@angular/common/http';
-import { catchError, map, concatAll } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, } from '@angular/common/http';
+import { concatAll, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { PlanQkPlatformLoginService } from './plan-qk-platform-login.service';
 
 @Injectable()
@@ -51,7 +46,7 @@ export class AuthInterceptor implements HttpInterceptor {
     ): HttpRequest<unknown> {
         if (bearerToken) {
             return request.clone({
-                setHeaders: {Authorization: 'Bearer ' + bearerToken},
+                setHeaders: { Authorization: 'Bearer ' + bearerToken },
             });
         }
         return request;

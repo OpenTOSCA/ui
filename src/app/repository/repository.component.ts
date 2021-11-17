@@ -11,22 +11,22 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
-import {Component, OnInit} from '@angular/core';
-import {BreadcrumbActions} from '../core/component/breadcrumb/breadcrumb-actions';
-import {NgRedux, select} from '@angular-redux/store';
-import {AppState} from '../store/app-state.model';
-import {forkJoin, Observable} from 'rxjs';
-import {RepositoryService} from '../core/service/repository.service';
-import {ConfigurationService} from '../configuration/configuration.service';
-import {ApplicationManagementService} from '../core/service/application-management.service';
-import {LoggerService} from '../core/service/logger.service';
-import {Item} from '../configuration/repository-configuration/repository-configuration.component';
-import {RepositoryActions} from './repository-actions.service';
-import {MarketplaceApplication} from '../core/model/marketplace-application.model';
-import {CsarUploadReference} from '../core/model/csar-upload-request.model';
-import {Path} from '../core/path';
-import {GrowlActions} from '../core/growl/growl-actions';
-import {AuthLoaderService} from '../services/auth-loader.service';
+import { Component, OnInit } from '@angular/core';
+import { BreadcrumbActions } from '../core/component/breadcrumb/breadcrumb-actions';
+import { NgRedux, select } from '@angular-redux/store';
+import { AppState } from '../store/app-state.model';
+import { forkJoin, Observable } from 'rxjs';
+import { RepositoryService } from '../core/service/repository.service';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { ApplicationManagementService } from '../core/service/application-management.service';
+import { LoggerService } from '../core/service/logger.service';
+import { Item } from '../configuration/repository-configuration/repository-configuration.component';
+import { RepositoryActions } from './repository-actions.service';
+import { MarketplaceApplication } from '../core/model/marketplace-application.model';
+import { CsarUploadReference } from '../core/model/csar-upload-request.model';
+import { Path } from '../core/path';
+import { GrowlActions } from '../core/growl/growl-actions';
+import { AuthLoaderService } from '../services/auth-loader.service';
 
 @Component({
     selector: 'opentosca-repository',
@@ -71,8 +71,8 @@ export class RepositoryComponent implements OnInit {
                 this.selectRepository();
             }
             this.ngRedux.dispatch(BreadcrumbActions.updateBreadcrumb([
-                {label: 'Repository', routerLink: ['/repository']},
-                {label: this.selectedRepository.name, routerLink: ['/repository']}
+                { label: 'Repository', routerLink: ['/repository'] },
+                { label: this.selectedRepository.name, routerLink: ['/repository'] }
             ]));
             this.refresh();
         });

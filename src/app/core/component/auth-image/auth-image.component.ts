@@ -12,11 +12,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {PlanQkPlatformLoginService} from '../../../services/plan-qk-platform-login.service';
-import {take} from 'rxjs/operators';
-import {AuthLoaderService} from '../../../services/auth-loader.service';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { PlanQkPlatformLoginService } from '../../../services/plan-qk-platform-login.service';
+import { take } from 'rxjs/operators';
+import { AuthLoaderService } from '../../../services/auth-loader.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'opentosca-auth-image',

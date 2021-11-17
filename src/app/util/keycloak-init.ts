@@ -14,9 +14,7 @@
 
 import { KeycloakService } from 'keycloak-angular';
 
-export const initializeKeycloak = (keycloak: KeycloakService) => (): Promise<
-    boolean
-    > =>
+export const initializeKeycloak = (keycloak: KeycloakService) => (): Promise<boolean> =>
     keycloak
         .init({
             config: {
