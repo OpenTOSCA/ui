@@ -18,12 +18,15 @@ import { MarketplaceApplication } from '../model/marketplace-application.model';
 import { MarketplaceApplicationReference } from '../model/marketplace-application-reference.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, flatMap, map } from 'rxjs/operators';
+import { PlanQkPlatformLoginService } from '../../services/plan-qk-platform-login.service';
 
 @Injectable()
 export class RepositoryService {
 
-    constructor(private http: HttpClient, private logger: LoggerService) {
+    constructor(private http: HttpClient,
+                private logger: LoggerService,
+                private planQkService: PlanQkPlatformLoginService) {
     }
 
     getApplications(url: string): Observable<Array<MarketplaceApplicationReference>> {
@@ -69,12 +72,32 @@ export class RepositoryService {
             );
     }
 
-    installApplication(app: CsarUploadReference, containerUrl: string): Observable<any> {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
-        return this.http.post(containerUrl, app, httpOptions);
+    installApplication(app: CsarUploadReference, containerUrl: string): Observable<string> {
+        return this.planQkService.isLoggedIn()
+            .pipe(
+                flatMap((isLoggedIn: boolean) =>
+                    this.installUsingPlanQk(app, containerUrl, isLoggedIn)
+                ));
+    }
+
+    private installUsingPlanQk(app: CsarUploadReference, containerUrl: string, isLoggedIn: boolean): Observable<string> {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+
+        if (isLoggedIn) {
+            return this.planQkService.getBearerToken()
+                .pipe(
+                    flatMap((bearerToken: string) => {
+                        headers = new HttpHeaders({
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + bearerToken
+                        });
+                        return this.http.post<string>(containerUrl, app, { headers: headers });
+                    })
+                );
+        }
+
+        return this.http.post<string>(containerUrl, app, { headers: headers });
     }
 }

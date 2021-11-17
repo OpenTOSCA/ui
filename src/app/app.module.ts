@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
  */
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AboutComponent } from './about.component';
@@ -27,8 +27,11 @@ import { AccordionModule, CardModule, ConfirmDialogModule, GrowlModule, PanelMod
 import { NgReduxModule } from '@angular-redux/store';
 import { NgReduxRouterModule } from '@angular-redux/router';
 import { StoreModule } from './store/store.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { initializeKeycloak } from './util/keycloak-init';
+import { AuthInterceptor } from './services/auth-interceptor';
 
 @NgModule({
     declarations: [
@@ -54,11 +57,23 @@ import { TabMenuModule } from 'primeng/tabmenu';
         CoreModule,
         StoreModule,
         ConfirmDialogModule,
+        KeycloakAngularModule,
 
         // AppRoutingModule must be the last routing module
         AppRoutingModule
     ],
-    providers: [],
+    providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeKeycloak,
+            multi: true,
+            deps: [KeycloakService]
+        }, {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
+    ],
     bootstrap: [
         AppComponent
     ]

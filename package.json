@@ -27,6 +27,7 @@
     "@fortawesome/fontawesome-free": "^5.6.3",
     "core-js": "^2.6.5",
     "fuse.js": "^3.4.4",
+    "keycloak-angular": "5.1.0",
     "lodash": "^4.17.11",
     "ng-spin-kit": "^5.1.1",
     "primeflex": "^1.0.0-rc.1",
@@ -58,8 +59,8 @@
     "karma-coverage-istanbul-reporter": "~2.0.4",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
-    "sass": "^1.41.0",
     "protractor": "~5.4.2",
+    "sass": "^1.41.0",
     "ts-node": "~7.0.1",
     "tslint": "~5.12.1",
     "typescript": "~3.2.2"

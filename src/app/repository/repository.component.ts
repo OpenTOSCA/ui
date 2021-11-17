@@ -26,6 +26,7 @@ import { MarketplaceApplication } from '../core/model/marketplace-application.mo
 import { CsarUploadReference } from '../core/model/csar-upload-request.model';
 import { Path } from '../core/path';
 import { GrowlActions } from '../core/growl/growl-actions';
+import { AuthLoaderService } from '../services/auth-loader.service';
 
 @Component({
     selector: 'opentosca-repository',
@@ -57,7 +58,8 @@ export class RepositoryComponent implements OnInit {
 
     constructor(private ngRedux: NgRedux<AppState>, private repositoryService: RepositoryService,
                 private configurationService: ConfigurationService, private applicationService: ApplicationManagementService,
-                private logger: LoggerService, private adminService: ConfigurationService, private repoService: RepositoryService ) {
+                private logger: LoggerService, private adminService: ConfigurationService, private repoService: RepositoryService,
+                private authLoader: AuthLoaderService) {
     }
 
     ngOnInit() {
@@ -111,8 +113,44 @@ export class RepositoryComponent implements OnInit {
         window.open(_url.protocol + '//' + _url.host + '/', '_blank');
     }
 
-    openApplication(url: string): void {
+    openApplication(app: MarketplaceApplication): void {
+        if (app.repositoryURL.includes('platform.planqk.de')) {
+            app.isDownloading = true;
+            this.downloadAuthApplication(app);
+        } else {
+            this.openUrl(app.csarURL);
+        }
+    }
+
+    openUrl(url: string): void {
         window.open(url, '_blank');
+    }
+
+    /* TODO: Use the browser download dialog to download the CSAR.
+        Currently, to set the auth header, the CSAR is downloaded previously in the background,
+         and the already downloaded CSAR is then passed to the browser download dialog
+     */
+    downloadAuthApplication(app: MarketplaceApplication): void {
+        const pieces = app.csarURL.split(/[\s/?]+/);
+        const filetype = pieces[pieces.length - 1];
+        const filename = pieces[pieces.length - 2];
+        this.ngRedux.dispatch(GrowlActions.addGrowl(
+            {
+                severity: 'success',
+                summary: 'Download started',
+                detail: `The download of "${filename}" is started in the background.`,
+                life: 10
+            }
+        ));
+        this.authLoader.loadFile(app.csarURL).subscribe(blob => {
+            const a = document.createElement('a');
+            const objectUrl = URL.createObjectURL(blob);
+            a.href = objectUrl;
+            a.download = filename + '.' + filetype;
+            a.click();
+            URL.revokeObjectURL(objectUrl);
+            app.isDownloading = false;
+        });
     }
 
     searchTermChanged(searchTerm: string) {

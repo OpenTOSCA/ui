@@ -33,6 +33,9 @@
     <ng-template pTemplate="summary" let-rowData>
         <div style="text-align:left">
             <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
+            &nbsp;
+            <button type="button" pButton icon="{{ planQkButtonText === loginText ? 'fa fa-plus' : 'fa fa-sign-out-alt' }}"
+                    (click)="logInToPlanQK()" [label]="planQkButtonText"></button>
         </div>
     </ng-template>
 </p-table>

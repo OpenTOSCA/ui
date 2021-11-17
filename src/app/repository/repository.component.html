@@ -38,8 +38,8 @@
          *ngFor="let app of apps | sort:['display-name']:['asc'] | fuzzySearch:searchTerm:['displayName','csarName']; trackBy: trackFn">
         <p-card>
             <p-header>
-                <img class="img-fluid" [src]="app.iconUrl"
-                     onerror="this.src='/assets/Default_Application_Icon.png'">
+                <opentosca-auth-image class="img-fluid" [src]="app.iconUrl"
+                                      [alt]="app.displayName + ' icon'"></opentosca-auth-image>
             </p-header>
             <div class="ui-card-title truncate">
                 {{ app.displayName }}
@@ -48,13 +48,13 @@
                 <i>{{ app.id }}</i> - {{ app.description }}
             </p-scrollPanel>
             <p-footer>
-                <button pButton type="button" (click)="openApplication(app.repositoryURL)"
+                <button pButton type="button" (click)="openUrl(app.repositoryURL)"
                         class="ui-button-info" icon="fas fa-external-link-alt"
                         pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
                 &nbsp;
-                <button pButton type="button" (click)="openApplication(app.csarURL)"
+                <button pButton type="button" (click)="openApplication(app)"
                         class="ui-button-info" icon="fas fa-download"
-                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"></button>
+                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top" [disabled]="app.isDownloading"></button>
                 &nbsp;
                 <button pButton type="button" (click)="openEnrichmentDialog(app)"
                         class="ui-button-info" icon="fas fa-plus-circle"
