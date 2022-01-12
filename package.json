@@ -28,7 +28,7 @@
     "core-js": "^2.6.5",
     "fuse.js": "^3.4.4",
     "keycloak-angular": "5.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "ng-spin-kit": "^5.1.1",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^1.0.0",
