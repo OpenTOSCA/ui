@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 University of Stuttgart.
+ * Copyright (c) 2018-2022 University of Stuttgart.
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -137,6 +137,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             const selectedOperation = selectedInterface.operations.find(operation => operation.name === names[1]);
 
             this.selectedPlan = selectedOperation._embedded.plan;
+            this.selectedPlan.input_parameters.sort((a, b) => a.name.localeCompare(b.name))
         }
     }
 
