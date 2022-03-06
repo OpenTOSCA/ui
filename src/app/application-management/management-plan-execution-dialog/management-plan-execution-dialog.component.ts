@@ -137,7 +137,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
             const selectedOperation = selectedInterface.operations.find(operation => operation.name === names[1]);
 
             this.selectedPlan = selectedOperation._embedded.plan;
-            this.selectedPlan.input_parameters.sort((a, b) => a.name.localeCompare(b.name))
+            this.selectedPlan.input_parameters.sort((a, b) => a.name.localeCompare(b.name));
         }
     }
 
