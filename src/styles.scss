@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2018 University of Stuttgart.
+ * Copyright (c) 2018-2022 University of Stuttgart.
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -42,4 +42,8 @@ body {
 
 .ui-growl-message {
   word-break: break-all;
+}
+
+.white-space-pre-line {
+    white-space: break-spaces;
 }
