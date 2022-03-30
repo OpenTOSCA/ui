@@ -87,11 +87,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     isInitPlan(): boolean {
-        if (this.plan_type === PlanTypes.BuildPlan) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.plan_type === PlanTypes.BuildPlan;
     }
 
     ngOnInit(): void {
@@ -237,7 +233,8 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
 
     confirmPlan(): void {
         if (!this.isInitPlan()) {
-            this.visible = false;
+            this.confirm();
+            return;
         }
         this.loading = true;
         this.checkForAbstractOSOngoing = true;
@@ -267,7 +264,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                         // get all running instances that "match" node templates that need to be placed
                         this.outputPlacementModel = [];
                         if (this.inputPlacementModel.needToBePlaced.length) {
-                            // start placement if need to be placed not empty
+                            // start placement if needToBePlaced is not empty
                             this.appService.getFirstServiceTemplateOfCsar(this.ngRedux.getState().container.application.csar.id).subscribe(
                                 firstTemplate => {
                                     const postURL = new Path(firstTemplate)

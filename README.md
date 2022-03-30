@@ -61,7 +61,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## License
 
-Copyright (c) 2016-2021 University of Stuttgart.
+Copyright (c) 2016-2022 University of Stuttgart.
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the [Eclipse Public License v1.0]
