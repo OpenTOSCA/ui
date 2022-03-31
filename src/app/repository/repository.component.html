@@ -53,8 +53,9 @@
             <p-footer>
                 <button pButton type="button" (click)="openUrl(app.repositoryURL)"
                         class="ui-button-info" icon="fas fa-external-link-alt"
-                        pTooltip="Show details..." showDelay="500" tooltipPosition="top"></button>
-                &nbsp;
+                        pTooltip="Show details..." showDelay="500" tooltipPosition="top"
+                        *ngIf="!app.repositoryURL.includes('platform.planqk.de')"></button>
+                {{ !app.repositoryURL.includes('platform.planqk.de') ? '&nbsp;' : ''}}
                 <button pButton type="button" (click)="openApplication(app)"
                         class="ui-button-info" icon="fas fa-download"
                         pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top" [disabled]="app.isDownloading"></button>
