@@ -63,7 +63,8 @@
                         </ng-template>
                     </p-dropdown>
                     <p-accordion>
-                        <p-accordionTab *ngFor="let placementPair of placementPairs" header="Properties of {{placementPair.selectedInstance.node_template_id}}">
+                        <p-accordionTab *ngFor="let placementPair of placementPairs"
+                                        header="Properties of {{placementPair.selectedInstance.node_template_id}}">
                             <li *ngFor="let property of placementPair.selectedInstance.properties | keyvalue">
                                 <div *ngIf="!(property.key.includes('Key') || property.value == null)">
                                     <b>{{property.key}}</b> : {{property.value}}
@@ -114,5 +115,29 @@
         <button type="button" pButton [disabled]="!runnable" (click)="runPlan()" label="Run">
         </button>
         <button type="button" pButton (click)="closeInputModal()" label="Close"></button>
+    </p-footer>
+</p-dialog>
+<p-dialog *ngIf="showDRError" [(visible)]="showDRError" styleClass="modal-scrollable"
+          [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
+          [draggable]="false" [resizable]="false" modal="true">
+    <p-header>{{ failedRules?.error_message }}</p-header>
+
+    <table style="width: 100%">
+        <tr>
+            <th>Unfulfilled Deployment Rule</th>
+            <th>Description</th>
+            <th>Open</th>
+        </tr>
+        <tr *ngFor="let failedRule of failedRules?.failed_deployment_rules">
+            <td style="text-align: center">{{"{"}}{{failedRule.target_namespace}}{{"}"}}{{failedRule.id}}</td>
+            <td *ngFor="let doc of failedRule.documentation" style="text-align: center">{{doc.content}}</td>
+            <td style="text-align: center"><a href="{{getRuleUrl(failedRule)}}" target="_blank"><i class="fas fa-external-link-alt"></i></a></td>
+        </tr>
+    </table>
+
+    <p-footer>
+        <button type="button" pButton label="Retry" (click)="visible=true;showInputs=true;showDRError=false">
+        </button>
+        <button type="button" pButton label="Close" (click)="showDRError=false"></button>
     </p-footer>
 </p-dialog>

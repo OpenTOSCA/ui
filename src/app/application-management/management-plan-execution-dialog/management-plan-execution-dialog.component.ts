@@ -30,6 +30,7 @@ import { PlacementNodeTemplate } from '../../core/model/placement-node-template.
 import { NodeTemplateInstance } from '../../core/model/node-template-instance.model';
 import { PlacementPair } from '../../core/model/placement-pair.model';
 import { PlanParameter } from '../../core/model/plan-parameter.model';
+import { FailedDeploymentRule, FailedDeploymentRules } from '../../core/model/failedDeploymentRules.model';
 
 @Component({
     selector: 'opentosca-management-plan-execution-dialog',
@@ -45,9 +46,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     @Input() instanceId: string;
 
     @select(['container', 'application', 'interfaces']) interfaces: Observable<Interface[]>;
-    private allInterfaces: Interface[];
     interfacesList: SelectItemGroup[];
-
     // placement model with node templates that need to be placed
     inputPlacementModel: PlacementModel;
     // return of container with valid instance list for each node template that need to nbe placed
@@ -55,23 +54,22 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     checkForAbstractOSOngoing = false;
     // list of placement pair, i.e. node template to be placed and selected instance (in dropdown)
     placementPairs: PlacementPair[];
-
     serviceTemplateURL: string;
-
-    // abstract operating system node type
-    private operatingSystemNodeType = '{http://opentosca.org/nodetypes}OperatingSystem';
     // name of property where we set selected instance
     operatingSystemProperty = 'instanceRef';
     vmIpProperty = 'VMIP';
     selectedInstanceDisplayLimiter = ',';
-
+    public failedRules: FailedDeploymentRules;
+    public showDRError = false;
     public allInstancesSelected = false;
     public abstractOSNodeTypeFound = false;
-
     public loading = false;
     public showInputs = false;
     public selectedPlan: Plan;
     public runnable: boolean;
+    private allInterfaces: Interface[];
+    // abstract operating system node type
+    private operatingSystemNodeType = '{http://opentosca.org/nodetypes}OperatingSystem';
     private readonly interfaceFromOperationDelimiter = '#';
     private disabledProperties = [];
 
@@ -115,8 +113,6 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
      */
     closeInputModal(): void {
         this.visible = false;
-        // TODO: remove this or place elsewhere
-        this.selectedPlan = null;
         this.placementPairs = [];
         this.visibleChange.emit(false);
     }
@@ -170,14 +166,25 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
                 }
             ));
         }, err => {
-            this.logger.handleError('[management-plan-execution-dialog][run management plan]', err);
-            this.ngRedux.dispatch(GrowlActions.addGrowl(
-                {
-                    severity: 'error',
-                    summary: 'Failure at Management Plan Execution',
-                    detail: 'The management plan ' + this.selectedPlan.id + ' was NOT propperly executed.'
-                }
-            ));
+            this.failedRules = JSON.parse(err.error);
+            if (err.status != 400 || !this.failedRules.error_message) {
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'error',
+                        summary: 'Failure at Management Plan Execution',
+                        detail: 'The management plan ' + this.selectedPlan.id + ' was NOT propperly executed.'
+                    }
+                ));
+            } else {
+                this.showDRError = true;
+                this.ngRedux.dispatch(GrowlActions.addGrowl(
+                    {
+                        severity: 'warn',
+                        summary: 'Execution of management plan ' + this.selectedPlan.id + ' aborted!',
+                        detail: 'Some Deployment Rules were not fulfilled.'
+                    }
+                ));
+            }
         });
     }
 
@@ -348,6 +355,11 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
         if (this.outputPlacementModel.length === this.placementPairs.length) {
             this.allInstancesSelected = true;
         }
+    }
+
+    getRuleUrl(failedRule: FailedDeploymentRule): string {
+        //todo: check winery ui ports instead of hardcoded dev ui port
+        return this.ngRedux.getState().repository.selectedRepository.url.replace("8080", "4200").replace("winery", "#").replace("servicetemplates", "deploymentrules") + encodeURIComponent(encodeURIComponent(failedRule.target_namespace)) + "/" + failedRule.id;
     }
 
     private updateInterfaceList(value?: Interface[]): void {

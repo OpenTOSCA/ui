@@ -22,7 +22,7 @@ import { Plan } from '../model/plan.model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../../store/app-state.model';
 import { Interface } from '../model/interface.model';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { InterfaceList } from '../model/interface-list.model';
@@ -140,7 +140,7 @@ export class ApplicationManagementService {
         };
         return this.http.post(
             url,
-            {source_csar_name: sourceCsarId, target_csar_name: targetCsarId},
+            { source_csar_name: sourceCsarId, target_csar_name: targetCsarId },
             { ...httpOptions, responseType: 'text', observe: 'response' }
         );
     }
@@ -180,7 +180,7 @@ export class ApplicationManagementService {
 
         const httpOptions = {
             headers: new HttpHeaders({
-                'Accept': 'text/plain'
+                'Accept': 'application/json'
             }),
         };
         return this.http.post(url, plan.input_parameters, { ...httpOptions, responseType: 'text', observe: 'response' })
@@ -188,7 +188,10 @@ export class ApplicationManagementService {
                 map(response => {
                     return response.headers.get('Location');
                 }),
-                catchError(err => this.logger.handleError('[application.service][triggerManagementPlan]', err))
+                catchError(err => {
+                    this.logger.handleError('[application.service][triggerManagementPlan]', err);
+                    return throwError(err);
+                })
             );
     }
 
