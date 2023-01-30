@@ -120,21 +120,23 @@
 <p-dialog *ngIf="showDRError" [(visible)]="showDRError" styleClass="modal-scrollable"
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [draggable]="false" [resizable]="false" modal="true">
-    <p-header>{{ failedRules?.error_message }}</p-header>
-
-    <table style="width: 100%">
-        <tr>
-            <th>Unfulfilled Deployment Rule</th>
-            <th>Description</th>
-            <th>Open</th>
-        </tr>
-        <tr *ngFor="let failedRule of failedRules?.failed_deployment_rules">
-            <td style="text-align: center">{{"{"}}{{failedRule.target_namespace}}{{"}"}}{{failedRule.id}}</td>
-            <td *ngFor="let doc of failedRule.documentation" style="text-align: center">{{doc.content}}</td>
-            <td style="text-align: center"><a href="{{getRuleUrl(failedRule)}}" target="_blank"><i class="fas fa-external-link-alt"></i></a></td>
-        </tr>
-    </table>
-
+    <p-header>{{ failedRules?.error_message }}!</p-header>
+    <p-table [value]="failedRules.failed_deployment_rules" [resizableColumns]="true" [autoLayout]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Unfulfilled Deployment Rule</th>
+                <th>Description</th>
+                <th>Open</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-failedRule>
+            <tr>
+                <td style="text-align: center">{{"{"}}{{failedRule.target_namespace}}{{"}"}}{{failedRule.id}}</td>
+                <td *ngFor="let doc of failedRule.documentation" style="text-align: center">{{doc.content}}</td>
+                <td style="text-align: center"><a href="{{getRuleUrl(failedRule)}}" target="_blank"><i class="fas fa-external-link-alt"></i></a></td>
+            </tr>
+        </ng-template>
+    </p-table>
     <p-footer>
         <button type="button" pButton label="Retry" (click)="visible=true;showInputs=true;showDRError=false">
         </button>
