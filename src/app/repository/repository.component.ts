@@ -45,7 +45,8 @@ export class RepositoryComponent implements OnInit {
     currentlySelectedApp: MarketplaceApplication;
 
     searchTerm: string;
-
+    selfContained: boolean;
+    enrichment: boolean;
 
     public applyEnrichment = false;
     public showEnrichmentDialog = false;
@@ -76,6 +77,8 @@ export class RepositoryComponent implements OnInit {
             ]));
             this.refresh();
         });
+        this.selfContained = JSON.parse(sessionStorage.getItem("selfContained"));
+        this.enrichment = JSON.parse(sessionStorage.getItem("enrichment"));
     }
 
     selectRepository() {
@@ -123,6 +126,9 @@ export class RepositoryComponent implements OnInit {
     }
 
     openUrl(url: string): void {
+        if (this.selfContained) {
+            url = url.concat("&includeDependencies");
+        }
         window.open(url, '_blank');
     }
 
@@ -158,15 +164,24 @@ export class RepositoryComponent implements OnInit {
     }
 
     openEnrichmentDialog(app): void {
-        this.showEnrichmentDialog = true;
-        this.currentlySelectedApp = app;
+        if (this.enrichment) {
+            this.showEnrichmentDialog = true;
+            this.currentlySelectedApp = app;
+        } else {
+            this.install(app);
+        }
+
     }
 
     install(app: MarketplaceApplication): void {
         this.showEnrichmentDialog = false;
         app.isInstalling = true;
         const url = new Path(this.configurationService.getContainerUrl()).append('csars').toString();
-        const app$ = new CsarUploadReference(app.csarURL, app.id, JSON.stringify(this.applyEnrichment));
+        let csarUrl = app.csarURL;
+        if (this.selfContained) {
+            csarUrl = csarUrl.concat("&includeDependencies");
+        }
+        const app$ = new CsarUploadReference(csarUrl, app.id, JSON.stringify(this.applyEnrichment));
         this.repositoryService.installApplication(app$, url)
             .subscribe(() => {
                 app.isInstalling = false;
@@ -210,7 +225,11 @@ export class RepositoryComponent implements OnInit {
         const postURL = new Path(this.adminService.getContainerUrl())
             .append('csars')
             .toString();
-        const completedApp = new CsarUploadReference(app.csarURL, app.csarName, JSON.stringify(this.applyEnrichment));
+        let csarUrl = app.csarURL;
+        if (this.selfContained) {
+            csarUrl = csarUrl.concat("&includeDependencies");
+        }
+        const completedApp = new CsarUploadReference(csarUrl, app.csarName, JSON.stringify(this.applyEnrichment));
         this.repoService.installApplication(completedApp, postURL)
             .subscribe(() => {
                 this.ngRedux.dispatch(GrowlActions.addGrowl(
@@ -264,5 +283,15 @@ export class RepositoryComponent implements OnInit {
         this.showCompletionDialog = false;
         this.appToComplete = null;
         this.linkToWineryResourceForCompletion = null;
+    }
+
+    handleSelfContainedChange(e): void {
+        this.selfContained = e.checked;
+        sessionStorage.setItem("selfContained", String(this.selfContained));
+    }
+
+    handleEnrichmentChange(e): void {
+        this.enrichment = e.checked;
+        sessionStorage.setItem("enrichment", String(this.enrichment));
     }
 }

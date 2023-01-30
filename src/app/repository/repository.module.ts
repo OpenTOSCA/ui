@@ -21,7 +21,7 @@ import { CoreModule } from '../core/core.module';
 import { NgSpinKitModule } from 'ng-spin-kit';
 import {
     ButtonModule, CardModule, CheckboxModule, ConfirmDialogModule, DialogModule,
-    DropdownModule, ScrollPanelModule, ToolbarModule,
+    DropdownModule, InputSwitchModule, ScrollPanelModule, ToolbarModule,
     TooltipModule
 } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
@@ -43,7 +43,8 @@ import { FormsModule } from '@angular/forms';
         CoreModule,
         RepositoryRoutingModule,
         CheckboxModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        InputSwitchModule
     ],
     declarations: [RepositoryComponent],
     providers: [ConfigurationService]

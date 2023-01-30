@@ -24,6 +24,16 @@
         &nbsp;
         <opentosca-filter [placeholder]="'Filter applications...'"
                           (searchTermChanged)="searchTermChanged($event)"></opentosca-filter>
+
+        <p-inputSwitch [(ngModel)]="enrichment" [style]="{'vertical-align': 'middle', 'margin-left': '20px'}" (onChange)="handleEnrichmentChange($event)"></p-inputSwitch>
+        <label style="vertical-align: middle;padding-left: 5px" [style.color]="this.enrichment ? 'black' : 'grey'">Feature-Enrichment
+            <span>{{ enrichment ? 'enabled' : 'disabled' }}</span>
+        </label>
+
+        <p-inputSwitch [(ngModel)]="selfContained" [style]="{'vertical-align': 'middle', 'margin-left': '20px'}" (onChange)="handleSelfContainedChange($event)"></p-inputSwitch>
+        <label style="vertical-align: middle;padding-left: 5px" [style.color]="this.selfContained ? 'black' : 'grey'">Self-Containment-Packager
+        <span>{{ selfContained ? 'enabled' : 'disabled' }}</span>
+        </label>
     </div>
     <div class="ui-toolbar-group-right">
         Selected Repository:
@@ -58,7 +68,8 @@
                 {{ !app.repositoryURL.includes('platform.planqk.de') ? '&nbsp;' : ''}}
                 <button pButton type="button" (click)="openApplication(app)"
                         class="ui-button-info" icon="fas fa-download"
-                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top" [disabled]="app.isDownloading"></button>
+                        pTooltip="Download as CSAR..." showDelay="500" tooltipPosition="top"
+                        [disabled]="app.isDownloading"></button>
                 &nbsp;
                 <button pButton type="button" (click)="openEnrichmentDialog(app)"
                         class="ui-button-info" icon="fas fa-plus-circle"
