@@ -24,6 +24,7 @@ import { PlanQkPlatformLoginService } from '../../services/plan-qk-platform-logi
 export interface Item {
     name: string;
     url: string;
+    ui: string;
 }
 
 @Component({
@@ -69,7 +70,8 @@ export class RepositoryConfigurationComponent implements OnInit {
     ngOnInit() {
         this.cols = [
             { field: 'name', header: 'Name', width: '25%' },
-            { field: 'url', header: 'URL' },
+            { field: 'url', header: 'API URL' },
+            { field: 'ui', header: 'UI URL' },
         ];
         this.repositoryItems.subscribe(items => {
             this.items = items;
@@ -82,7 +84,8 @@ export class RepositoryConfigurationComponent implements OnInit {
                 this.isNewItem = false;
                 this.selectedItem = {
                     url: this.planQkPlatformUrl,
-                    name: this.planQkPlatform
+                    name: this.planQkPlatform,
+                    ui: this.planQkPlatformUrl
                 };
                 if (!this.items.some(e => e.name === this.selectedItem.name)) {
                     this.newItem = this.selectedItem;
@@ -132,7 +135,8 @@ export class RepositoryConfigurationComponent implements OnInit {
             this.selectedItem != null &&
             this.selectedRepository != null &&
             this.selectedItem.name !== this.selectedRepository.name &&
-            this.selectedItem.url !== this.selectedRepository.url
+            this.selectedItem.url !== this.selectedRepository.url &&
+            this.selectedItem.ui !== this.selectedRepository.ui
         ) {
             // name and url of currently selected repository match the changed item
             changedSelectedRepository = true;

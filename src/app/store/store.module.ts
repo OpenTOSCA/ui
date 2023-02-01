@@ -42,7 +42,8 @@ export class StoreModule {
                     containerUrl: ``,
                     repositoryItems: [{
                         name: 'OpenTOSCA',
-                        url: ``
+                        url: ``,
+                        ui: ``
                     }],
                     planLifecycleInterface: 'OpenTOSCA-Lifecycle-Interface',
                     planOperationInitiate: 'initiate',
@@ -51,7 +52,8 @@ export class StoreModule {
                 repository: {
                     selectedRepository: {
                         name: 'OpenTOSCA',
-                        url: ``
+                        url: ``,
+                        ui: ``
                     }
                 },
             },
@@ -69,15 +71,18 @@ export class StoreModule {
             const API_ENDPOINT_PORT: String = ((conf.API_ENDPOINT_PORT === '') ? '1337' : conf.API_ENDPOINT_PORT);
             const WINERY_HOST: String = ((conf.WINERY_HOST === '') ? `${this.document.location.hostname}` : conf.WINERY_HOST);
             const WINERY_PORT: String = ((conf.WINERY_PORT === '') ? '8080' : conf.WINERY_PORT);
+            const WINERY_UI_ENDPOINT =   ((conf.WINERY_UI_ENDPOINT === '') ? `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/` : conf.WINERY_UI_ENDPOINT);
 
             store.dispatch(ConfigurationActions.updateContainerUrl(`http://` + API_ENDPOINT_HOST + `:` + API_ENDPOINT_PORT));
             store.dispatch(ConfigurationActions.updateRepositoryItems([{
                 name: 'OpenTOSCA',
-                url: `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/`
+                url: `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/`,
+                ui: WINERY_UI_ENDPOINT
             }]));
             store.dispatch(RepositoryActions.setSelectedRepository({
                 name: 'OpenTOSCA',
-                url: `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/`
+                url: `http://` + WINERY_HOST + `:` + WINERY_PORT + `/winery/servicetemplates/`,
+                ui: WINERY_UI_ENDPOINT
             }));
         });
     }

@@ -63,11 +63,11 @@
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-2 ot-input-label">
-                    <label for="url">URL:</label>
+                    <label for="url">API URL:</label>
                 </div>
                 <div class="ui-g-10">
                     <div class="ui-inputgroup">
-                        <input id="url" name="url" type="text" pInputText placeholder="Enter repository URL"
+                        <input id="url" name="url" type="text" pInputText placeholder="Enter repository API URL"
                                [(ngModel)]="newItem.url" #url="ngModel" required opentoscaRepositoryValid
                                [class.ot-has-success]="url.valid"
                                [class.ot-has-error]="url.invalid"
@@ -78,6 +78,28 @@
                             <span *ngIf="url.invalid"><i class="fa fa-times"></i></span>
                         </span>
                         <button *ngIf="url.pending" type="button" pButton class="ui-button-secondary spinner" disabled>
+                            <sk-three-bounce class="ui-button-icon"></sk-three-bounce>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-2 ot-input-label">
+                    <label for="url">UI URL:</label>
+                </div>
+                <div class="ui-g-10">
+                    <div class="ui-inputgroup">
+                        <input id="ui" name="ui" type="text" pInputText placeholder="Enter repository UI URL"
+                               [(ngModel)]="newItem.ui" #ui="ngModel" required opentoscaRepositoryValid
+                               [class.ot-has-success]="ui.valid"
+                               [class.ot-has-error]="ui.invalid"
+                               [opentoscaControlOptions]="{ debounce: 500 }"
+                               [attr.disabled]="ui.pending ? '' : null">
+                        <span *ngIf="ui.valid || ui.invalid" class="ui-inputgroup-addon">
+                            <span *ngIf="ui.valid"><i class="fa fa-check"></i></span>
+                            <span *ngIf="ui.invalid"><i class="fa fa-times"></i></span>
+                        </span>
+                        <button *ngIf="ui.pending" type="button" pButton class="ui-button-secondary spinner" disabled>
                             <sk-three-bounce class="ui-button-icon"></sk-three-bounce>
                         </button>
                     </div>

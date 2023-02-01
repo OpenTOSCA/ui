@@ -358,8 +358,7 @@ export class ManagementPlanExecutionDialogComponent implements OnInit, OnChanges
     }
 
     getRuleUrl(failedRule: FailedDeploymentRule): string {
-        //todo: check winery ui ports instead of hardcoded dev ui port
-        return this.ngRedux.getState().repository.selectedRepository.url.replace("8080", "4200").replace("winery", "#").replace("servicetemplates", "deploymentrules") + encodeURIComponent(encodeURIComponent(failedRule.target_namespace)) + "/" + failedRule.id;
+        return this.ngRedux.getState().repository.selectedRepository.ui.replace("servicetemplates", "deploymentrules") + encodeURIComponent(encodeURIComponent(failedRule.target_namespace)) + "/" + failedRule.id;
     }
 
     private updateInterfaceList(value?: Interface[]): void {

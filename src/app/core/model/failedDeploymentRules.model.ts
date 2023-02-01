@@ -11,5 +11,6 @@ export interface FailedDeploymentRule {
 
 export interface FailedDeploymentRules {
     error_message: string;
-    failed_deployment_rules: FailedDeploymentRule[];
+    failed_wldeployment_rules: FailedDeploymentRule[];
+    failed_bldeployment_rules: FailedDeploymentRule[];
 }

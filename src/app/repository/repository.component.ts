@@ -121,13 +121,20 @@ export class RepositoryComponent implements OnInit {
             app.isDownloading = true;
             this.downloadAuthApplication(app);
         } else {
-            this.openUrl(app.csarURL);
+            this.downloadApp(app.csarURL);
         }
     }
 
-    openUrl(url: string): void {
+    downloadApp(url: string): void {
         if (this.selfContained) {
             url = url.concat("&includeDependencies");
+        }
+        window.open(url, '_blank');
+    }
+
+    openUrl(url: string): void {
+        if (this.selectedRepository.url !== this.selectedRepository.ui) {
+            url = url.replace(this.selectedRepository.url, this.selectedRepository.ui);
         }
         window.open(url, '_blank');
     }

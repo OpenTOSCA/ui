@@ -121,22 +121,54 @@
           [contentStyle]="{'overflow': 'auto', 'height': '468px', 'min-height': '300px'}"
           [draggable]="false" [resizable]="false" modal="true">
     <p-header>{{ failedRules?.error_message }}!</p-header>
-    <p-table [value]="failedRules.failed_deployment_rules" [resizableColumns]="true" [autoLayout]="true">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Unfulfilled Deployment Rule</th>
-                <th>Description</th>
-                <th>Open</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-failedRule>
-            <tr>
-                <td style="text-align: center">{{"{"}}{{failedRule.target_namespace}}{{"}"}}{{failedRule.id}}</td>
-                <td *ngFor="let doc of failedRule.documentation" style="text-align: center">{{doc.content}}</td>
-                <td style="text-align: center"><a href="{{getRuleUrl(failedRule)}}" target="_blank"><i class="fas fa-external-link-alt"></i></a></td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <ng-container *ngIf="failedRules.failed_wldeployment_rules.length > 0">
+        <h4>Failed whitelisted Deployment Rules:</h4>
+        <p-table [value]="failedRules.failed_wldeployment_rules"
+                 [resizableColumns]="true" [autoLayout]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Unfulfilled Deployment Rule</th>
+                    <th>Description</th>
+                    <th>Open</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-failedRule>
+                <tr>
+                    <td style="text-align: center">{{"{"}}{{failedRule.target_namespace}}{{"}"}}{{failedRule.id}}</td>
+                    <td style="text-align: center"><span
+                            *ngFor="let doc of failedRule.documentation">{{doc.content}}</span>
+                    </td>
+                    <td style="text-align: center"><a href="{{getRuleUrl(failedRule)}}" target="_blank"><i
+                            class="fas fa-external-link-alt"></i></a></td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <br>
+    </ng-container>
+    <ng-container *ngIf="failedRules.failed_bldeployment_rules.length > 0">
+        <h4>Failed blacklisted Deployment Rules:</h4>
+        <p-table [value]="failedRules.failed_bldeployment_rules"
+                 [resizableColumns]="true" [autoLayout]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Unfulfilled Deployment Rule</th>
+                    <th>Description</th>
+                    <th>Open</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-failedRule>
+                <tr>
+                    <td style="text-align: center">{{"{"}}{{failedRule.target_namespace}}{{"}"}}{{failedRule.id}}</td>
+                    <td style="text-align: center"><span
+                            *ngFor="let doc of failedRule.documentation">{{doc.content}}</span>
+                    </td>
+                    <td style="text-align: center"><a href="{{getRuleUrl(failedRule)}}" target="_blank"><i
+                            class="fas fa-external-link-alt"></i></a></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </ng-container>
+    <br>
     <p-footer>
         <button type="button" pButton label="Retry" (click)="visible=true;showInputs=true;showDRError=false">
         </button>
