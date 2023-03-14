@@ -18,7 +18,7 @@ export const initializeKeycloak = (keycloak: KeycloakService) => (): Promise<boo
     keycloak
         .init({
             config: {
-                url: 'https://platform.planqk.de/auth',
+                url: 'https://login.planqk.de',
                 realm: 'planqk',
                 clientId: 'vue-frontend',
             },
