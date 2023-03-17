@@ -20,10 +20,10 @@ export const initializeKeycloak = (keycloak: KeycloakService) => (): Promise<boo
             config: {
                 url: 'https://login.planqk.de',
                 realm: 'planqk',
-                clientId: 'vue-frontend',
+                clientId: 'planqk-login',
             },
             initOptions: {
-                onLoad: 'check-sso',
+                // onLoad: 'check-sso',
             },
             enableBearerInterceptor: false,
         })
