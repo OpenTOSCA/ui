@@ -18,12 +18,12 @@ export const initializeKeycloak = (keycloak: KeycloakService) => (): Promise<boo
     keycloak
         .init({
             config: {
-                url: 'https://platform.planqk.de/auth',
+                url: 'https://login.planqk.de',
                 realm: 'planqk',
-                clientId: 'vue-frontend',
+                clientId: 'planqk-login',
             },
             initOptions: {
-                onLoad: 'check-sso',
+                // onLoad: 'check-sso',
             },
             enableBearerInterceptor: false,
         })
