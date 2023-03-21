@@ -11,19 +11,19 @@ jobs:
   run-linters:
     name: Run linters
     runs-on: ubuntu-latest
-    container:
-      image: node:14.17.4
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Upgrade NPM
-        run: npm install -g npm
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17
 
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies from package-lock.json
-        run: npm clean-install
+        run: npm clean-install --legacy-peer-deps
 
       - name: Run linters
         run: npm run lint
